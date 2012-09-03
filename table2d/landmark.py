@@ -264,6 +264,8 @@ class AbstractRepresentation(object):
         ''' Takes Representation, returns boolean '''
         raise NotImplementedError
 
+    def contains_point(self, xy):
+        raise NotImplementedError
 
 class PointRepresentation(AbstractRepresentation):
     def __init__(self, point, alt_of=None):

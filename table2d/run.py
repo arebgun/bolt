@@ -43,13 +43,13 @@ def construct_training_scene():
                     Color.PINK)
 
     obj4 = Landmark('purple_prism',
-                    RectangleRepresentation(rect=BoundingBox([Vec2(-0.3-0.03,0.7-0.05), Vec2(-0.3+0.03,0.7+0.05)]), landmarks_to_get=[]),
+                    RectangleRepresentation(rect=BoundingBox([Vec2(-0.3-0.035,0.7-0.045), Vec2(-0.3+0.035,0.7+0.045)]), landmarks_to_get=[]),
                     None,
                     ObjectClass.PRISM,
                     Color.PURPLE)
 
     obj5 = Landmark('orange_prism',
-                    RectangleRepresentation(rect=BoundingBox([Vec2(0.3-0.03,0.7-0.05), Vec2(0.3+0.03,0.7+0.05)]), landmarks_to_get=[]),
+                    RectangleRepresentation(rect=BoundingBox([Vec2(0.3-0.035,0.7-0.045), Vec2(0.3+0.035,0.7+0.045)]), landmarks_to_get=[]),
                     None,
                     ObjectClass.PRISM,
                     Color.ORANGE)
@@ -64,17 +64,17 @@ def construct_training_scene():
 
 if __name__ == '__main__':
     scene, speaker = construct_training_scene()
-    
+
 #    lmks = [lmk for lmk in scene.landmarks.values() if not lmk.name == 'table']
 #    groups = adapter.adapt(lmks)
-#    
+#
 #    for i,g in enumerate(groups):
 #        scene.add_landmark(Landmark('ol%d'%i, g, None, Landmark.LINE))
-        
+
     #perspectives = [ Vec2(5.5,4.5), Vec2(6.5,6.0)]
     #speaker.talk_to_baby(scene, perspectives, how_many_each=10)
 
-    dozen = 1
+    dozen = 12
     couple = 1
     for i in range(couple * dozen):
         location = Landmark( 'point', PointRepresentation(Vec2(random()*0.8-0.4,random()*0.6+0.4)), None, Landmark.POINT)

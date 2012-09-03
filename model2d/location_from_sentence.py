@@ -22,7 +22,8 @@ from models import CProduction, CWord
 
 
 
-def get_tree_probs(tree, lmk=None, rel=None):
+def get_tree_probs(tree, lmk=None, rel=None, default_prob=0.001, default_ent=1000, printing=True):
+
     lhs_rhs_parent_chain = []
     prob_chain = []
     entropy_chain = []
@@ -65,10 +66,12 @@ def get_tree_probs(tree, lmk=None, rel=None):
                                                   deg_class=deg_class)
 
         if cp_db.count() <= 0:
-            logger('Could not expand %s (parent: %s, lmk_class: %s, lmk_ori_rels: %s, lmk_color: %s, rel: %s, dist_class: %s, deg_class: %s)' % (lhs, parent, lmk_class, lmk_ori_rels, lmk_color, rel_class, dist_class, deg_class))
+            if printing: logger('Could not expand %s (parent: %s, lmk_class: %s, lmk_ori_rels: %s, lmk_color: %s, rel: %s, dist_class: %s, deg_class: %s)' % (lhs, parent, lmk_class, lmk_ori_rels, lmk_color, rel_class, dist_class, deg_class))
+            prob_chain.append( default_prob )
+            entropy_chain.append( default_ent )
         else:
             ckeys, ccounts = zip(*[(cprod.rhs,cprod.count) for cprod in cp_db.all()])
-            logger('Expanded %s (parent: %s, lmk_class: %s, lmk_ori_rels: %s, lmk_color: %s, rel: %s, dist_class: %s, deg_class: %s)' % (lhs, parent, lmk_class, lmk_ori_rels, lmk_color, rel_class, dist_class, deg_class))
+            if printing: logger('Expanded %s (parent: %s, lmk_class: %s, lmk_ori_rels: %s, lmk_color: %s, rel: %s, dist_class: %s, deg_class: %s)' % (lhs, parent, lmk_class, lmk_ori_rels, lmk_color, rel_class, dist_class, deg_class))
 
             ccounter = {}
             for cprod in cp_db.all():
@@ -96,7 +99,7 @@ def get_tree_probs(tree, lmk=None, rel=None):
         lhs_rhs_parent_chain.append( ( lhs, rhs, parent, lmk, rel ) )
 
         for subtree in tree:
-            pc, ec, lrpc, tps = get_tree_probs(subtree, lmk, rel)
+            pc, ec, lrpc, tps = get_tree_probs(subtree, lmk, rel, default_prob, default_ent, printing)
             prob_chain.extend( pc )
             entropy_chain.extend( ec )
             lhs_rhs_parent_chain.extend( lrpc )
@@ -114,9 +117,11 @@ def get_tree_probs(tree, lmk=None, rel=None):
         if cw_db.count() <= 0:
             # we don't know the probability or entropy values for the context we have never seen before
             # we just update the term_prods list
-            logger('Could not expand %s (lmk_class: %s, lmk_ori_rels: %s, lmk_color: %s, rel: %s, dist_class: %s, deg_class: %s)' % (lhs, lmk_class, lmk_ori_rels, lmk_color, rel_class, dist_class, deg_class))
+            if printing: logger('Could not expand %s (lmk_class: %s, lmk_ori_rels: %s, lmk_color: %s, rel: %s, dist_class: %s, deg_class: %s)' % (lhs, lmk_class, lmk_ori_rels, lmk_color, rel_class, dist_class, deg_class))
+            prob_chain.append( default_prob )
+            entropy_chain.append( default_ent )
         else:
-            logger('Expanded %s (lmk_class: %s, lmk_ori_rels: %s, lmk_color: %s, rel: %s, dist_class: %s, deg_class: %s)' % (lhs, lmk_class, lmk_ori_rels, lmk_color, rel_class, dist_class, deg_class))
+            if printing: logger('Expanded %s (lmk_class: %s, lmk_ori_rels: %s, lmk_color: %s, rel: %s, dist_class: %s, deg_class: %s)' % (lhs, lmk_class, lmk_ori_rels, lmk_color, rel_class, dist_class, deg_class))
 
             ckeys, ccounts = zip(*[(cword.word,cword.count) for cword in cw_db.all()])
 
@@ -192,9 +197,10 @@ def get_all_sentence_posteriors(sentence, meanings):
         if lmk.get_ancestor_count() != num_ancestors:
             p = 0
         else:
-            ps = get_tree_probs(t, lmk, rel)[0]
+            ps = get_tree_probs(t, lmk, rel, printing=False)[0]
             p = np.prod(ps)
         posteriors.append(p)
+        # print p, lmk, lmk.ori_relations, rel, (rel.distance, rel.measurement.best_degree_class, rel.measurement.best_distance_class ) if hasattr(rel,'measurement') else 'No measurement'
     return posteriors
 
 

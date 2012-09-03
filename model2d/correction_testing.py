@@ -44,9 +44,9 @@ if __name__ == '__main__':
 
     all_heatmaps_tuples = []
     for lmk, d in all_heatmaps_dict.items():
-        for rel, heatmap in d.items():
-            all_heatmaps_tuples.append( (lmk,rel,heatmap) )
-    lmks, rels, heatmaps = zip(*all_heatmaps_tuples)
+        for rel, heatmaps in d.items():
+            all_heatmaps_tuples.append( (lmk,rel,heatmaps) )
+    lmks, rels, heatmapss = zip(*all_heatmaps_tuples)
     meanings = zip(lmks,rels)
 
     demo_sentence = 'near to the left edge of the table'
@@ -54,30 +54,44 @@ if __name__ == '__main__':
     for iteration in range(args.num_iterations):
 
         posteriors = np.array(get_all_sentence_posteriors(demo_sentence, meanings))
-        print sorted(zip(posteriors, meanings))
+        # print sorted(zip(posteriors, meanings))
         posteriors /= posteriors.sum()
-        print sorted(zip(posteriors, meanings))
-        big_heatmap = None
-        for p,h in zip(posteriors, heatmaps):
-            if big_heatmap is None:
-                big_heatmap = p*h
+        for p,(l,r) in sorted(zip(posteriors, meanings)):
+            print p, l, l.ori_relations, r, (r.distance, r.measurement.best_degree_class, r.measurement.best_distance_class ) if hasattr(r,'measurement') else 'No measurement'
+        big_heatmap1 = None
+        big_heatmap2 = None
+        for p,(h1,h2) in zip(posteriors, heatmapss):
+            if big_heatmap1 is None:
+                big_heatmap1 = p*h1
+                big_heatmap2 = p*h2
             else:
-                big_heatmap += p*h
+                big_heatmap1 += p*h1
+                big_heatmap2 += p*h2
 
-        print big_heatmap.shape
+        print big_heatmap1.shape
         print xs.shape, ys.shape
 
-        probabilities = big_heatmap.reshape( (len(xs),len(ys)) ).T
-
-        # print probabilities
-
-        #print self.get_entropy(probabilities)
-        plt.pcolor(x, y, probabilities, cmap = 'jet', edgecolors='none', alpha=0.7)
+        probabilities1 = big_heatmap1.reshape( (len(xs),len(ys)) ).T
+        plt.pcolor(x, y, probabilities1, cmap = 'jet', edgecolors='none', alpha=0.7)
         plt.colorbar()
+        plt.title('Sentence given Location')
         plt.show()
+
+        plt.figure()
+
+        probabilities2 = big_heatmap2.reshape( (len(xs),len(ys)) ).T
+        plt.pcolor(x, y, probabilities2, cmap = 'jet', edgecolors='none', alpha=0.7)
+        plt.colorbar()
+        plt.title('Location given sentence')
+        plt.show()
+
         exit()
 
-
+        # for p,h in zip(posteriors, heatmaps):
+        #     probabilities = h.reshape( (len(xs),len(ys)) ).T
+        #     plt.pcolor(x, y, probabilities, cmap = 'jet', edgecolors='none', alpha=0.7)
+        #     plt.colorbar()
+        #     plt.show()
 
 
         logger('Iteration %d' % iteration)

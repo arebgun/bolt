@@ -1,4 +1,4 @@
-from numpy import array, arange, zeros, log, argmin, set_printoptions, random
+from numpy import array, arange, zeros, log, argmin, set_printoptions, random, copy as npcopy, mean
 from random import choice
 from matplotlib import pyplot as plt
 from textwrap import wrap
@@ -6,7 +6,7 @@ from itertools import product
 from planar import Vec2
 
 import language_generator
-from landmark import PointRepresentation, LineRepresentation, GroupLineRepresentation, RectangleRepresentation, Landmark
+from landmark import PointRepresentation, LineRepresentation, GroupLineRepresentation, RectangleRepresentation, Landmark, poly_to_vec_distance
 from relation import DistanceRelationSet, ContainmentRelationSet, OrientationRelationSet, Measurement, Degree
 
 
@@ -249,10 +249,15 @@ class Speaker(object):
 
     def sample_landmark(self, landmarks, trajector):
         ''' Weight by inverse of distance to landmark center and choose probabilistically  '''
-        epsilon = 0.000001
-        distances = array([trajector.distance_to( PointRepresentation(lmk.representation.middle) ) for lmk in landmarks])
-        scores = 1.0/(array(distances)**1.5 + epsilon)
-        # scores[distances == 0] = 0
+        epsilon = 0.02
+        distances = array([trajector.distance_to( lmk )
+            if not (isinstance(lmk.representation,RectangleRepresentation) and lmk.representation.contains(trajector))
+            else epsilon for lmk in landmarks])
+        # distances = array([trajector.distance_to( lmk )
+        #     if not (isinstance(lmk.representation,RectangleRepresentation) and lmk.representation.contains(trajector))
+        #     else min(poly_to_vec_distance(lmk.representation.get_geometry().to_polygon(), trajector.representation.location),lmk.representation.middle.distance_to(trajector.representation.location))
+        #     for lmk in landmarks])
+        scores = 1.0/(distances + epsilon)
         lm_probabilities = scores/sum(scores)
         index = lm_probabilities.cumsum().searchsorted( random.sample(1) )[0]
 
@@ -262,22 +267,62 @@ class Speaker(object):
 
         return sampled_landmark, lm_probabilities[index], self.get_entropy(lm_probabilities), head_on
 
-    def get_landmark_probs_for_points(self, landmarks, points):
-        def get_probabilities(landmarks, point):
-            epsilon = 0.000001
-            distances = array([lmk.representation.middle.distance_to(point) for lmk in landmarks])
-            scores = 1.0/(array(distances)**1.5 + epsilon)
-            # scores[distances == 0] = 0
-            return scores/sum(scores)
+    def get_landmark_probs_for_points(self, landmarks, points, xs, ys, x, y):
+        def get_probabilities(landmark, points):
+            epsilon = 0.02
+            distances = array([ landmark.distance_to_point(point)
+                if not (isinstance(landmark.representation,RectangleRepresentation) and landmark.representation.contains_point(point))
+                else epsilon for point in points])
+            # distances = array([ landmark.distance_to_point(point)
+            #     if not (isinstance(landmark.representation,RectangleRepresentation) and landmark.representation.contains_point(point))
+            #     else min(poly_to_vec_distance(landmark.representation.get_geometry().to_polygon(),point),landmark.representation.middle.distance_to(point))
+            #     for point in points])
+            scores = 1.0/(distances + epsilon)
+            # if scores.sum() != 0:
+            print landmark, scores.sum(), max(scores)
+            return scores/scores.sum()
+            # else: return scores
 
+        sum_probs = None
+        prob_lists = []
+        original_probs = []
+        for landmark in landmarks:
+            probs = get_probabilities(landmark, points)
+            original_probs.append( probs )
+            # probabilities = probs.reshape( (len(xs),len(ys)) ).T
+            # plt.pcolor(x, y, probabilities, cmap = 'jet', edgecolors='none', alpha=0.7)
+            # plt.colorbar()
+            # plt.title(str(landmark)+" before")
+            # plt.show()
 
-        prob_lists = [get_probabilities(landmarks, point) for point in points]
-        return zip(*prob_lists)
+            print landmark, probs.sum(), max(probs)
+            if sum_probs is None: sum_probs = npcopy(probs)
+            else: sum_probs += probs
+            prob_lists.append( probs )
 
-    def get_relation_probs_for_points(self, points, landmark, landmark_heatmap):
+        for lmk,probs in zip(landmarks, prob_lists):
+
+            # print
+            # probabilities = probs.reshape( (len(xs),len(ys)) ).T
+            # plt.pcolor(x, y, probabilities, cmap = 'jet', edgecolors='none', alpha=0.7)
+            # plt.colorbar()
+            # plt.title(str(lmk)+" before")
+            # plt.show()
+
+            probs /= sum_probs
+
+            # probabilities = probs.reshape( (len(xs),len(ys)) ).T
+            # plt.pcolor(x, y, probabilities, cmap = 'jet', edgecolors='none', alpha=0.7)
+            # plt.colorbar()
+            # plt.title(str(lmk)+" after")
+            # plt.show()
+
+        return prob_lists, original_probs
+
+    def get_relation_probs_for_points(self, points, landmark, landmark_heatmap, original_landmark_heatmap, perspective):
 
         def instantiate_relations(landmark):
-            perspective = self.get_head_on_viewpoint(landmark)
+
             bullshit_trajector = Landmark( None, PointRepresentation( Vec2(0,0) ), None )
             relations = []
             for rel in DistanceRelationSet.relations:
@@ -301,12 +346,14 @@ class Speaker(object):
 
         relations = instantiate_relations(landmark)
         rel_points_probs = []
+        original_probs = []
         sum_probs = None
         for relation in relations:
             probs = self.get_probabilities_points(points, relation, None, None)
             if probs.sum() != 0:
                 probs /= probs.sum()
-            if sum_probs is None: sum_probs = probs
+            original_probs.append( probs*original_landmark_heatmap )
+            if sum_probs is None: sum_probs = npcopy(probs)
             else: sum_probs += probs
             rel_points_probs.append( probs )
 
@@ -317,7 +364,7 @@ class Speaker(object):
 
         # TODO treat ori_relations differently
 
-        return relations, rel_points_probs
+        return relations, zip(rel_points_probs, original_probs)
 
     def generate_all_heatmaps(self, scene, max_level=1, step=0.02):
         scenes = [scene]
@@ -344,12 +391,15 @@ class Speaker(object):
         xs = arange(scene_bb.min_point.x, scene_bb.max_point.x, step)
         ys = arange(scene_bb.min_point.y, scene_bb.max_point.y, step)
         points = array(list(product(xs,ys)))
-
-        landmark_probs = self.get_landmark_probs_for_points(landmarks, points)
+        x = array( [list(xs-step*0.5)]*len(ys) )
+        y = array( [list(ys-step*0.5)]*len(xs) ).T
+        landmark_probs, original_landmark_probs = self.get_landmark_probs_for_points(landmarks, points, xs, ys, x, y)
 
         lmk_rel_dict = {}
-        for landmark,landmark_prob in zip(landmarks,landmark_probs):
-            lmk_rel_dict[landmark] = dict( zip(*self.get_relation_probs_for_points(points, landmark, landmark_prob)) )
+        for landmark,landmark_prob,original_landmark_prob in zip(landmarks,landmark_probs,original_landmark_probs):
+            perspective = self.get_head_on_viewpoint(landmark)
+            self.set_orientations(landmark, perspective)
+            lmk_rel_dict[landmark] = dict( zip(*self.get_relation_probs_for_points(points, landmark, landmark_prob, original_landmark_prob, perspective)) )
 
         return lmk_rel_dict, xs, ys
 
