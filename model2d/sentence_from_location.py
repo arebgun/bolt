@@ -22,7 +22,7 @@ from table2d.run import construct_training_scene
 
 import numpy as np
 
-np.seterr(all='raise')
+# np.seterr(all='raise')
 
 def get_expansion(lhs, parent=None, lmk=None, rel=None):
     lhs_rhs_parent_chain = []

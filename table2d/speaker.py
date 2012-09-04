@@ -1,4 +1,4 @@
-from numpy import array, arange, zeros, log, argmin, set_printoptions, random, copy as npcopy, mean
+from numpy import array, arange, zeros, log, argmin, set_printoptions, random, copy as npcopy, mean, exp
 from random import choice
 from matplotlib import pyplot as plt
 from textwrap import wrap
@@ -257,7 +257,9 @@ class Speaker(object):
         #     if not (isinstance(lmk.representation,RectangleRepresentation) and lmk.representation.contains(trajector))
         #     else min(poly_to_vec_distance(lmk.representation.get_geometry().to_polygon(), trajector.representation.location),lmk.representation.middle.distance_to(trajector.representation.location))
         #     for lmk in landmarks])
-        scores = 1.0/(distances + epsilon)
+        # scores = 1.0/(distances + epsilon)**0.5
+        std = .1
+        scores = exp( -(distances/std)**2)
         lm_probabilities = scores/sum(scores)
         index = lm_probabilities.cumsum().searchsorted( random.sample(1) )[0]
 
@@ -277,7 +279,9 @@ class Speaker(object):
             #     if not (isinstance(landmark.representation,RectangleRepresentation) and landmark.representation.contains_point(point))
             #     else min(poly_to_vec_distance(landmark.representation.get_geometry().to_polygon(),point),landmark.representation.middle.distance_to(point))
             #     for point in points])
-            scores = 1.0/(distances + epsilon)
+            # scores = 1.0/(distances + epsilon)**0.5
+            std = .1
+            scores = exp( -(distances/std)**2)
             # if scores.sum() != 0:
             print landmark, scores.sum(), max(scores)
             return scores/scores.sum()
@@ -288,7 +292,7 @@ class Speaker(object):
         original_probs = []
         for landmark in landmarks:
             probs = get_probabilities(landmark, points)
-            original_probs.append( probs )
+            original_probs.append( npcopy(probs) )
             # probabilities = probs.reshape( (len(xs),len(ys)) ).T
             # plt.pcolor(x, y, probabilities, cmap = 'jet', edgecolors='none', alpha=0.7)
             # plt.colorbar()
@@ -352,7 +356,7 @@ class Speaker(object):
             probs = self.get_probabilities_points(points, relation, None, None)
             if probs.sum() != 0:
                 probs /= probs.sum()
-            original_probs.append( probs*original_landmark_heatmap )
+            original_probs.append( npcopy(probs) )
             if sum_probs is None: sum_probs = npcopy(probs)
             else: sum_probs += probs
             rel_points_probs.append( probs )

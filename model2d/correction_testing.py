@@ -10,7 +10,7 @@ from sentence_from_location import (
 )
 
 from table2d.run import construct_training_scene
-from table2d.landmark import Landmark, PointRepresentation
+from table2d.landmark import Landmark, PointRepresentation, LineRepresentation, RectangleRepresentation, GroupLineRepresentation
 from nltk.metrics.distance import edit_distance
 from planar import Vec2
 from utils import logger, m2s
@@ -28,6 +28,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     scene, speaker = construct_training_scene()
+    scene_bb = scene.get_bounding_box()
+    scene_bb = scene_bb.inflate( Vec2(scene_bb.width*0.5,scene_bb.height*0.5) )
     table = scene.landmarks['table'].representation.get_geometry()
 
     window = 10
@@ -46,14 +48,20 @@ if __name__ == '__main__':
     for lmk, d in all_heatmaps_dict.items():
         for rel, heatmaps in d.items():
             all_heatmaps_tuples.append( (lmk,rel,heatmaps) )
+    # all_heatmaps_tuples = all_heatmaps_tuples[:10]
     lmks, rels, heatmapss = zip(*all_heatmaps_tuples)
     meanings = zip(lmks,rels)
 
-    demo_sentence = 'near to the left edge of the table'
+    demo_sentences = ['near to the left edge of the table', 
+                      'somewhat near to the right edge of the table', 
+                      'on the table', 
+                      'on the middle of the table',
+                      'at the lower left corner of the table',
+                      'far from the purple prism']
 
-    for iteration in range(args.num_iterations):
+    def heatmaps_for_sentence(sentence):
 
-        posteriors = np.array(get_all_sentence_posteriors(demo_sentence, meanings))
+        posteriors = np.array(get_all_sentence_posteriors(sentence, meanings))
         # print sorted(zip(posteriors, meanings))
         posteriors /= posteriors.sum()
         for p,(l,r) in sorted(zip(posteriors, meanings)):
@@ -71,20 +79,66 @@ if __name__ == '__main__':
         print big_heatmap1.shape
         print xs.shape, ys.shape
 
+        plt.figure()
+        plt.suptitle(sentence)
+        plt.subplot(121)
+
         probabilities1 = big_heatmap1.reshape( (len(xs),len(ys)) ).T
         plt.pcolor(x, y, probabilities1, cmap = 'jet', edgecolors='none', alpha=0.7)
         plt.colorbar()
-        plt.title('Sentence given Location')
-        plt.show()
 
-        plt.figure()
+        for lmk in scene.landmarks.values():
+            if isinstance(lmk.representation, GroupLineRepresentation):
+                xx = [lmk.representation.line.start.x, lmk.representation.line.end.x]
+                yy = [lmk.representation.line.start.y, lmk.representation.line.end.y]
+                plt.fill(xx,yy,facecolor='none',linewidth=2)
+            elif isinstance(lmk.representation, RectangleRepresentation):
+                rect = lmk.representation.rect
+                xx = [rect.min_point.x,rect.min_point.x,rect.max_point.x,rect.max_point.x]
+                yy = [rect.min_point.y,rect.max_point.y,rect.max_point.y,rect.min_point.y]
+                plt.fill(xx,yy,facecolor='none',linewidth=2)
+                plt.text(rect.min_point.x+0.01,rect.max_point.y+0.02,lmk.name)
+
+        plt.plot(speaker.location.x,
+                 speaker.location.y,
+                 'bx',markeredgewidth=2)
+        
+        plt.axis('scaled')
+        plt.axis([scene_bb.min_point.x, scene_bb.max_point.x, scene_bb.min_point.y, scene_bb.max_point.y])
+        plt.title('Likelihood of sentence given location(s)')
+
+        plt.subplot(122)
 
         probabilities2 = big_heatmap2.reshape( (len(xs),len(ys)) ).T
         plt.pcolor(x, y, probabilities2, cmap = 'jet', edgecolors='none', alpha=0.7)
         plt.colorbar()
-        plt.title('Location given sentence')
-        plt.show()
 
+        for lmk in scene.landmarks.values():
+            if isinstance(lmk.representation, GroupLineRepresentation):
+                xx = [lmk.representation.line.start.x, lmk.representation.line.end.x]
+                yy = [lmk.representation.line.start.y, lmk.representation.line.end.y]
+                plt.fill(xx,yy,facecolor='none',linewidth=2)
+            elif isinstance(lmk.representation, RectangleRepresentation):
+                rect = lmk.representation.rect
+                xx = [rect.min_point.x,rect.min_point.x,rect.max_point.x,rect.max_point.x]
+                yy = [rect.min_point.y,rect.max_point.y,rect.max_point.y,rect.min_point.y]
+                plt.fill(xx,yy,facecolor='none',linewidth=2)
+                plt.text(rect.min_point.x+0.01,rect.max_point.y+0.02,lmk.name)
+
+        plt.plot(speaker.location.x,
+                 speaker.location.y,
+                 'bx',markeredgewidth=2)
+
+        plt.axis('scaled')
+        plt.axis([scene_bb.min_point.x, scene_bb.max_point.x, scene_bb.min_point.y, scene_bb.max_point.y])
+        plt.title('Likelihood of location(s) given sentence')
+        plt.draw()
+
+    for iteration in range(args.num_iterations):
+
+        for sentence in demo_sentences:
+            heatmaps_for_sentence(sentence)
+        plt.show()
         exit()
 
         # for p,h in zip(posteriors, heatmaps):
