@@ -40,7 +40,8 @@ if __name__ == '__main__':
     max_mins = []
 
     step = 0.02
-    all_heatmaps_dict, xs, ys = speaker.generate_all_heatmaps(scene, step=step)
+    all_heatmaps_dicts, xs, ys = speaker.generate_all_heatmaps(scene, step=step)
+    all_heatmaps_dict = all_heatmaps_dicts[0]
     x = np.array( [list(xs-step*0.5)]*len(ys) )
     y = np.array( [list(ys-step*0.5)]*len(xs) ).T
 
@@ -48,13 +49,13 @@ if __name__ == '__main__':
     for lmk, d in all_heatmaps_dict.items():
         for rel, heatmaps in d.items():
             all_heatmaps_tuples.append( (lmk,rel,heatmaps) )
-    # all_heatmaps_tuples = all_heatmaps_tuples[:10]
+    all_heatmaps_tuples = all_heatmaps_tuples[:10]
     lmks, rels, heatmapss = zip(*all_heatmaps_tuples)
     meanings = zip(lmks,rels)
 
-    demo_sentences = ['near to the left edge of the table', 
-                      'somewhat near to the right edge of the table', 
-                      'on the table', 
+    demo_sentences = ['near to the left edge of the table',
+                      'somewhat near to the right edge of the table',
+                      'on the table',
                       'on the middle of the table',
                       'at the lower left corner of the table',
                       'far from the purple prism']
@@ -102,7 +103,7 @@ if __name__ == '__main__':
         plt.plot(speaker.location.x,
                  speaker.location.y,
                  'bx',markeredgewidth=2)
-        
+
         plt.axis('scaled')
         plt.axis([scene_bb.min_point.x, scene_bb.max_point.x, scene_bb.min_point.y, scene_bb.max_point.y])
         plt.title('Likelihood of sentence given location(s)')
@@ -132,14 +133,14 @@ if __name__ == '__main__':
         plt.axis('scaled')
         plt.axis([scene_bb.min_point.x, scene_bb.max_point.x, scene_bb.min_point.y, scene_bb.max_point.y])
         plt.title('Likelihood of location(s) given sentence')
-        plt.draw()
+        plt.show()
+        return probabilities1
 
     for iteration in range(args.num_iterations):
 
-        for sentence in demo_sentences:
-            heatmaps_for_sentence(sentence)
-        plt.show()
-        exit()
+        if iteration % 10 == 0:
+            # for sentence in demo_sentences[:1]:
+            heatmaps_for_sentence(demo_sentences[0])
 
         # for p,h in zip(posteriors, heatmaps):
         #     probabilities = h.reshape( (len(xs),len(ys)) ).T

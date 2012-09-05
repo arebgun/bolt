@@ -1,14 +1,36 @@
-from numpy import array, arange, zeros, log, argmin, set_printoptions, random, copy as npcopy, mean, exp
+from numpy import (
+    array,
+    arange,
+    log,
+    argmin,
+    set_printoptions,
+    random,
+    copy as npcopy,
+    exp
+)
+
 from random import choice
 from matplotlib import pyplot as plt
-from textwrap import wrap
 from itertools import product
 from planar import Vec2
 
 import language_generator
-from landmark import PointRepresentation, LineRepresentation, GroupLineRepresentation, RectangleRepresentation, Landmark, poly_to_vec_distance
-from relation import DistanceRelationSet, ContainmentRelationSet, OrientationRelationSet, Measurement, Degree
 
+from landmark import (
+    PointRepresentation,
+    LineRepresentation,
+    GroupLineRepresentation,
+    RectangleRepresentation,
+    Landmark,
+)
+
+from relation import (
+    DistanceRelationSet,
+    ContainmentRelationSet,
+    OrientationRelationSet,
+    Measurement,
+    Degree
+)
 
 
 class Speaker(object):
@@ -370,24 +392,8 @@ class Speaker(object):
 
         return relations, zip(rel_points_probs, original_probs)
 
-    def generate_all_heatmaps(self, scene, max_level=1, step=0.02):
+    def generate_all_heatmaps(self, scene, max_level=1, step=0.02, loi=[]):
         scenes = [scene]
-
-        all_landmarks = []
-
-        for s in scenes:
-            for scene_lmk in s.landmarks.values():
-
-                all_landmarks.append([s, scene_lmk])
-
-                representations = [scene_lmk.representation]
-                representations.extend(scene_lmk.representation.get_alt_representations())
-
-                for representation in representations:
-                    for lmk in representation.get_landmarks(max_level):
-                        all_landmarks.append([s, lmk])
-
-        sceness, landmarks = zip( *all_landmarks )
 
         scene_bb = scene.get_bounding_box()
         scene_bb = scene_bb.inflate( Vec2(scene_bb.width*0.5,scene_bb.height*0.5) )
@@ -397,15 +403,42 @@ class Speaker(object):
         points = array(list(product(xs,ys)))
         x = array( [list(xs-step*0.5)]*len(ys) )
         y = array( [list(ys-step*0.5)]*len(xs) ).T
-        landmark_probs, original_landmark_probs = self.get_landmark_probs_for_points(landmarks, points, xs, ys, x, y)
 
-        lmk_rel_dict = {}
-        for landmark,landmark_prob,original_landmark_prob in zip(landmarks,landmark_probs,original_landmark_probs):
-            perspective = self.get_head_on_viewpoint(landmark)
-            self.set_orientations(landmark, perspective)
-            lmk_rel_dict[landmark] = dict( zip(*self.get_relation_probs_for_points(points, landmark, landmark_prob, original_landmark_prob, perspective)) )
+        def __generate(lmk_to_exclude=None):
+            all_landmarks = []
 
-        return lmk_rel_dict, xs, ys
+            for s in scenes:
+                for scene_lmk in s.landmarks.values():
+                    if scene_lmk == lmk_to_exclude: continue
+
+                    all_landmarks.append([s, scene_lmk])
+
+                    representations = [scene_lmk.representation]
+                    representations.extend(scene_lmk.representation.get_alt_representations())
+
+                    for representation in representations:
+                        for lmk in representation.get_landmarks(max_level):
+                            all_landmarks.append([s, lmk])
+
+            sceness, landmarks = zip( *all_landmarks )
+
+            landmark_probs, original_landmark_probs = self.get_landmark_probs_for_points(landmarks, points, xs, ys, x, y)
+
+            lmk_rel_dict = {}
+            for landmark,landmark_prob,original_landmark_prob in zip(landmarks,landmark_probs,original_landmark_probs):
+                perspective = self.get_head_on_viewpoint(landmark)
+                self.set_orientations(landmark, perspective)
+                lmk_rel_dict[landmark] = dict( zip(*self.get_relation_probs_for_points(points, landmark, landmark_prob, original_landmark_prob, perspective)) )
+
+            return lmk_rel_dict
+
+        result = []
+        for l in loi:
+            result.append(__generate(l))
+        else:
+            result.append(__generate())
+
+        return result, xs, ys
 
 
     def get_landmark_probability(self, sampled_landmark, landmarks, trajector):

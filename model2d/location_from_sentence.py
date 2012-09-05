@@ -8,18 +8,29 @@ from operator import itemgetter
 import numpy as np
 from nltk.tree import ParentedTree
 from parse import get_modparse
-from utils import (parent_landmark,
-                   get_meaning,
-                   rel_type,
-                   m2s,
-                   count_lmk_phrases,
-                   logger,
-                   get_lmk_ori_rels_str,
-                   scene,
-                   NONTERMINALS)
+
+from utils import (
+    parent_landmark,
+    get_meaning,
+    rel_type,
+    m2s,
+    count_lmk_phrases,
+    logger,
+    get_lmk_ori_rels_str,
+    NONTERMINALS
+)
+
 from models import CProduction, CWord
+from table2d.run import construct_training_scene
 
+from table2d.landmark import (
+    GroupLineRepresentation,
+    RectangleRepresentation
+)
 
+import matplotlib.pyplot as plt
+from planar import Vec2
+from itertools import product
 
 
 def get_tree_probs(tree, lmk=None, rel=None, default_prob=0.001, default_ent=1000, printing=True):
@@ -34,7 +45,7 @@ def get_tree_probs(tree, lmk=None, rel=None, default_prob=0.001, default_ent=100
     if isinstance(tree[0], ParentedTree): rhs = ' '.join(n.node for n in tree)
     else: rhs = ' '.join(n for n in tree)
 
-    parent = tree.parent().node if tree.parent() else None
+    parent = tree.parent.node if tree.parent else None
 
     if lhs == 'RELATION':
         # everything under a RELATION node should ignore the landmark
@@ -215,14 +226,155 @@ def get_sentence_meaning_likelihood(sentence, lmk, rel):
     return np.prod(probs), sum(entropies), lrpc, tps
 
 
+def heatmaps_for_sentence(sentence, all_meanings, loi_infos, xs, ys, scene, speaker):
+    scene_bb = scene.get_bounding_box()
+    scene_bb = scene_bb.inflate( Vec2(scene_bb.width*0.5,scene_bb.height*0.5) )
+    x = np.array( [list(xs-step*0.5)]*len(ys) )
+    y = np.array( [list(ys-step*0.5)]*len(xs) ).T
+
+    posteriors = np.array(get_all_sentence_posteriors(sentence, all_meanings))
+    # print sorted(zip(posteriors, meanings))
+    posteriors /= posteriors.sum()
+    for p,(l,r) in sorted(zip(posteriors, all_meanings))[-5:]:
+        print p, l, l.ori_relations, r, (r.distance, r.measurement.best_degree_class, r.measurement.best_distance_class ) if hasattr(r,'measurement') else 'No measurement'
+
+    meaning_posteriors = dict( zip(all_meanings,posteriors) )
+
+    combined_heatmaps = []
+    # big_heatmap2 = None
+    for obj_lmk, meanings, heatmapss in loi_infos:
+
+        big_heatmap1 = None
+        for m,(h1,h2) in zip(meanings, heatmapss):
+            p = meaning_posteriors[m]
+            if big_heatmap1 is None:
+                big_heatmap1 = p*h1
+                # big_heatmap2 = p*h2
+            else:
+                big_heatmap1 += p*h1
+                # big_heatmap2 += p*h2
+
+        print big_heatmap1.shape
+        print xs.shape, ys.shape
+
+        plt.figure()
+        plt.suptitle(sentence)
+        # plt.subplot(121)
+
+        probabilities1 = big_heatmap1.reshape( (len(xs),len(ys)) ).T
+        plt.pcolor(x, y, probabilities1, cmap='jet', edgecolors='none', alpha=0.7)
+        plt.colorbar()
+
+        for lmk in scene.landmarks.values():
+            if isinstance(lmk.representation, GroupLineRepresentation):
+                xx = [lmk.representation.line.start.x, lmk.representation.line.end.x]
+                yy = [lmk.representation.line.start.y, lmk.representation.line.end.y]
+                plt.fill(xx,yy,facecolor='none',linewidth=2)
+            elif isinstance(lmk.representation, RectangleRepresentation):
+                rect = lmk.representation.rect
+                xx = [rect.min_point.x,rect.min_point.x,rect.max_point.x,rect.max_point.x]
+                yy = [rect.min_point.y,rect.max_point.y,rect.max_point.y,rect.min_point.y]
+                plt.fill(xx,yy,facecolor='none',linewidth=2)
+                plt.text(rect.min_point.x+0.01,rect.max_point.y+0.02,lmk.name)
+
+        plt.plot(speaker.location.x,
+                 speaker.location.y,
+                 'bx',markeredgewidth=2)
+
+        plt.axis('scaled')
+        plt.axis([scene_bb.min_point.x, scene_bb.max_point.x, scene_bb.min_point.y, scene_bb.max_point.y])
+        plt.title('Likelihood of sentence given location(s)')
+
+        # plt.subplot(122)
+
+        # probabilities2 = big_heatmap2.reshape( (len(xs),len(ys)) ).T
+        # plt.pcolor(x, y, probabilities2, cmap = 'jet', edgecolors='none', alpha=0.7)
+        # plt.colorbar()
+
+        # for lmk in scene.landmarks.values():
+        #     if isinstance(lmk.representation, GroupLineRepresentation):
+        #         xx = [lmk.representation.line.start.x, lmk.representation.line.end.x]
+        #         yy = [lmk.representation.line.start.y, lmk.representation.line.end.y]
+        #         plt.fill(xx,yy,facecolor='none',linewidth=2)
+        #     elif isinstance(lmk.representation, RectangleRepresentation):
+        #         rect = lmk.representation.rect
+        #         xx = [rect.min_point.x,rect.min_point.x,rect.max_point.x,rect.max_point.x]
+        #         yy = [rect.min_point.y,rect.max_point.y,rect.max_point.y,rect.min_point.y]
+        #         plt.fill(xx,yy,facecolor='none',linewidth=2)
+        #         plt.text(rect.min_point.x+0.01,rect.max_point.y+0.02,lmk.name)
+
+        # plt.plot(speaker.location.x,
+        #          speaker.location.y,
+        #          'bx',markeredgewidth=2)
+
+        # plt.axis('scaled')
+        # plt.axis([scene_bb.min_point.x, scene_bb.max_point.x, scene_bb.min_point.y, scene_bb.max_point.y])
+        # plt.title('Likelihood of location(s) given sentence')
+        plt.show()
+
+        combined_heatmaps.append(big_heatmap1)
+
+    return combined_heatmaps
+
+
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument('sentence')
     parser.add_argument('-i', '--iterations', type=int, default=1)
+    parser.add_argument('--return-object', action='store_true')
     args = parser.parse_args()
 
-    posteriors = get_sentence_posteriors(args.sentence, args.iterations)
+    if not args.return_object:
+        posteriors = get_sentence_posteriors(args.sentence, args.iterations)
 
-    for m,p in sorted(posteriors, key=itemgetter(1)):
-        print 'Meaning: %s \t\t Probability: %0.4f' % (m,p)
+        for m,p in sorted(posteriors, key=itemgetter(1)):
+            print 'Meaning: %s \t\t Probability: %0.4f' % (m,p)
+    else:
+        step = 0.02
+        scene, speaker = construct_training_scene()
+
+        loi = [lmk for lmk in scene.landmarks.values() if lmk.name != 'table']
+        all_heatmaps_dicts, xs, ys = speaker.generate_all_heatmaps(scene, step=step, loi=loi)
+
+        loi_infos = []
+        all_meanings = set()
+        for obj_lmk,all_heatmaps_dict in zip(loi, all_heatmaps_dicts):
+            all_heatmaps_tuples = []
+
+            for lmk, d in all_heatmaps_dict.items():
+                for rel, heatmaps in d.items():
+                    all_heatmaps_tuples.append( (lmk,rel,heatmaps) )
+
+            # all_heatmaps_tuples = all_heatmaps_tuples[:10]
+
+            lmks, rels, heatmapss = zip(*all_heatmaps_tuples)
+            meanings = zip(lmks,rels)
+            # print meanings
+            all_meanings.update(meanings)
+            loi_infos.append( (obj_lmk, meanings, heatmapss) )
+
+        demo_sentences = ['near to the left edge of the table',
+                          'somewhat near to the right edge of the table',
+                          'on the table',
+                          'on the middle of the table',
+                          'at the lower left corner of the table',
+                          'far from the purple prism']
+
+        while True:
+            sentence = raw_input('Location phrase: ')
+            if sentence == 'exit': break
+
+            lmk_probs = []
+            try:
+                combined_heatmaps = heatmaps_for_sentence(sentence, all_meanings, loi_infos, xs, ys, scene, speaker)
+                for combined_heatmap,obj_lmk in zip(combined_heatmaps, loi):
+
+                    ps = [p for (x,y),p in zip(list(product(xs,ys)),combined_heatmap) if obj_lmk.representation.contains_point( Vec2(x,y) )]
+                    # print ps, xs.shape, ys.shape, combined_heatmap.shape
+                    lmk_probs.append( (sum(ps)/len(ps), obj_lmk) )
+
+                top_p, top_lmk = sorted(lmk_probs, reverse=True)[0]
+                print 'I bet %f you are talking about a %s' % (top_p, top_lmk)
+            except:
+                print 'BAD SENTENCE!!!!'
