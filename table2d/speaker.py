@@ -272,8 +272,8 @@ class Speaker(object):
     def sample_landmark(self, landmarks, trajector):
         ''' Weight by inverse of distance to landmark center and choose probabilistically  '''
         epsilon = 0.02
-        distances = array([trajector.distance_to( lmk )
-            if not (isinstance(lmk.representation,RectangleRepresentation) and lmk.representation.contains(trajector))
+        distances = array([trajector.distance_to( lmk.representation )
+            if not (isinstance(lmk.representation,RectangleRepresentation) and lmk.representation.contains(trajector.representation))
             else epsilon for lmk in landmarks])
         # distances = array([trajector.distance_to( lmk )
         #     if not (isinstance(lmk.representation,RectangleRepresentation) and lmk.representation.contains(trajector))

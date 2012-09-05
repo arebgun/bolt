@@ -26,6 +26,7 @@ if __name__ == '__main__':
     parser.add_argument('-l', '--location', type=Point)
     parser.add_argument('--consistent', action='store_true')
     args = parser.parse_args()
+    plt.ion()
 
     scene, speaker = construct_training_scene()
     scene_bb = scene.get_bounding_box()
@@ -39,7 +40,7 @@ if __name__ == '__main__':
     avg_min = []
     max_mins = []
 
-    step = 0.02
+    step = 0.04
     all_heatmaps_dicts, xs, ys = speaker.generate_all_heatmaps(scene, step=step)
     all_heatmaps_dict = all_heatmaps_dicts[0]
     x = np.array( [list(xs-step*0.5)]*len(ys) )
@@ -49,7 +50,7 @@ if __name__ == '__main__':
     for lmk, d in all_heatmaps_dict.items():
         for rel, heatmaps in d.items():
             all_heatmaps_tuples.append( (lmk,rel,heatmaps) )
-    all_heatmaps_tuples = all_heatmaps_tuples[:10]
+    # all_heatmaps_tuples = all_heatmaps_tuples[:100]
     lmks, rels, heatmapss = zip(*all_heatmaps_tuples)
     meanings = zip(lmks,rels)
 
@@ -60,16 +61,17 @@ if __name__ == '__main__':
                       'at the lower left corner of the table',
                       'far from the purple prism']
 
-    def heatmaps_for_sentence(sentence):
+    epsilon = 0.0001
+    def heatmaps_for_sentence(sentence, iteration, good_meanings, good_heatmapss):
 
-        posteriors = np.array(get_all_sentence_posteriors(sentence, meanings))
+        posteriors = np.array(get_all_sentence_posteriors(sentence, good_meanings))
         # print sorted(zip(posteriors, meanings))
         posteriors /= posteriors.sum()
-        for p,(l,r) in sorted(zip(posteriors, meanings)):
+        for p,(l,r) in sorted(zip(posteriors, good_meanings)):
             print p, l, l.ori_relations, r, (r.distance, r.measurement.best_degree_class, r.measurement.best_distance_class ) if hasattr(r,'measurement') else 'No measurement'
         big_heatmap1 = None
         big_heatmap2 = None
-        for p,(h1,h2) in zip(posteriors, heatmapss):
+        for p,(h1,h2) in zip(posteriors, good_heatmapss):
             if big_heatmap1 is None:
                 big_heatmap1 = p*h1
                 big_heatmap2 = p*h2
@@ -77,10 +79,12 @@ if __name__ == '__main__':
                 big_heatmap1 += p*h1
                 big_heatmap2 += p*h2
 
+        good_meanings,good_heatmapss = zip(*[ (meaning,heatmaps) for posterior,meaning,heatmaps in zip(posteriors,good_meanings,good_heatmapss) if posterior > epsilon])
+
         print big_heatmap1.shape
         print xs.shape, ys.shape
 
-        plt.figure()
+        plt.figure(iteration)
         plt.suptitle(sentence)
         plt.subplot(121)
 
@@ -133,14 +137,17 @@ if __name__ == '__main__':
         plt.axis('scaled')
         plt.axis([scene_bb.min_point.x, scene_bb.max_point.x, scene_bb.min_point.y, scene_bb.max_point.y])
         plt.title('Likelihood of location(s) given sentence')
+        plt.draw()
         plt.show()
-        return probabilities1
+        return good_meanings, good_heatmapss
 
     for iteration in range(args.num_iterations):
 
         if iteration % 10 == 0:
             # for sentence in demo_sentences[:1]:
-            heatmaps_for_sentence(demo_sentences[0])
+            print 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX len(meanings)', len(meanings)
+            meanings, heatmapss = heatmaps_for_sentence(demo_sentences[0], iteration, meanings, heatmapss)
+            print 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX len(meanings)', len(meanings)
 
         # for p,h in zip(posteriors, heatmaps):
         #     probabilities = h.reshape( (len(xs),len(ys)) ).T
@@ -181,3 +188,5 @@ if __name__ == '__main__':
     plt.plot(avg_min, 'bo-')
     plt.plot(max_mins, 'rx-')
     plt.show()
+    plt.ioff()
+    raw_input()

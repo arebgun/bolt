@@ -376,5 +376,5 @@ if __name__ == '__main__':
 
                 top_p, top_lmk = sorted(lmk_probs, reverse=True)[0]
                 print 'I bet %f you are talking about a %s' % (top_p, top_lmk)
-            except:
-                print 'BAD SENTENCE!!!!'
+            except Exception as e:
+                print 'BAD SENTENCE!!!!', e
