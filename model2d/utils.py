@@ -3,7 +3,9 @@
 from __future__ import division
 
 import sys
-import random
+# import random
+sys.path.append("..")
+from myrandom import random
 from functools import partial
 import inspect
 

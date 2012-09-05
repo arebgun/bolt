@@ -1,12 +1,15 @@
 #!/usr/bin/env python
 
 import sys
+sys.path.append("..")
+from myrandom import random
+choice = random.choice
 from planar import Vec2
 from planar import BoundingBox
 from planar import Polygon
 from planar.line import LineSegment
 from planar.line import Line
-from random import choice
+# from random import choice
 from uuid import uuid4
 from math import sqrt
 import numpy as np

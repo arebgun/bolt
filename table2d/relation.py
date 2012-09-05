@@ -1,5 +1,10 @@
-from random import choice
-from numpy import array, random, zeros, maximum
+import sys
+sys.path.append("..")
+from myrandom import random
+choice = random.choice
+# from random import choice
+from myrandom import nprandom as random
+from numpy import array, zeros, maximum
 from scipy.stats import norm
 from planar import Vec2, Affine
 from planar.line import LineSegment, Ray

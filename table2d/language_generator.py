@@ -1,5 +1,9 @@
 from relation import *
-from random import choice
+# from random import choice
+import sys
+sys.path.append("..")
+from myrandom import random
+choice = random.choice
 from landmark import Landmark, ObjectClass, Color
 from itertools import product
 

@@ -24,7 +24,7 @@ import numpy as np
 
 # np.seterr(all='raise')
 
-def get_expansion(lhs, parent=None, lmk=None, rel=None):
+def get_expansion(lhs, parent=None, lmk=None, rel=None, printing=True):
     lhs_rhs_parent_chain = []
     prob_chain = []
     entropy_chain = []
@@ -55,11 +55,11 @@ def get_expansion(lhs, parent=None, lmk=None, rel=None):
                                                       deg_class=deg_class)
 
             if cp_db.count() <= 0:
-                logger('Could not expand %s (parent: %s, lmk_class: %s, lmk_ori_rels: %s, lmk_color: %s, rel: %s, dist_class: %s, deg_class: %s)' % (n, parent, lmk_class, lmk_ori_rels, lmk_color, rel_class, dist_class, deg_class))
+                if printing: logger('Could not expand %s (parent: %s, lmk_class: %s, lmk_ori_rels: %s, lmk_color: %s, rel: %s, dist_class: %s, deg_class: %s)' % (n, parent, lmk_class, lmk_ori_rels, lmk_color, rel_class, dist_class, deg_class))
                 terminals.append( n )
                 continue
                 
-            logger('Expanded %s (parent: %s, lmk_class: %s, lmk_ori_rels: %s, lmk_color: %s, rel: %s, dist_class: %s, deg_class: %s)' % (n, parent, lmk_class, lmk_ori_rels, lmk_color, rel_class, dist_class, deg_class))
+            if printing: logger('Expanded %s (parent: %s, lmk_class: %s, lmk_ori_rels: %s, lmk_color: %s, rel: %s, dist_class: %s, deg_class: %s)' % (n, parent, lmk_class, lmk_ori_rels, lmk_color, rel_class, dist_class, deg_class))
 
             ckeys, ccounts = zip(*[(cprod.rhs,cprod.count) for cprod in cp_db.all()])
 
@@ -122,7 +122,7 @@ def update_word_counts(update, pos, word, lmk_class=None, lmk_ori_rels=None, lmk
                              rel_dist_class=(rel.measurement.best_distance_class if hasattr(rel, 'measurement') else None),
                              rel_deg_class=(rel.measurement.best_degree_class if hasattr(rel, 'measurement') else None))
 
-def get_words(terminals, landmarks, rel=None):
+def get_words(terminals, landmarks, rel=None, printing=True):
     words = []
     probs = []
     entropy = []
@@ -151,11 +151,11 @@ def get_words(terminals, landmarks, rel=None):
                                       rel_deg_class=deg_class)
 
         if cp_db.count() <= 0:
-            logger( 'Could not expand %s (lmk_class: %s, lmk_color: %s, rel: %s, dist_class: %s, deg_class: %s)' % (n, lmk_class, lmk_color, rel_class, dist_class, deg_class) )
+            if printing: logger( 'Could not expand %s (lmk_class: %s, lmk_color: %s, rel: %s, dist_class: %s, deg_class: %s)' % (n, lmk_class, lmk_color, rel_class, dist_class, deg_class) )
             terminals.append( n )
             continue
 
-        logger( 'Expanded %s (lmk_class: %s, lmk_color: %s, rel: %s, dist_class: %s, deg_class: %s)' % (n, lmk_class, lmk_color, rel_class, dist_class, deg_class) )
+        if printing: logger( 'Expanded %s (lmk_class: %s, lmk_color: %s, rel: %s, dist_class: %s, deg_class: %s)' % (n, lmk_class, lmk_color, rel_class, dist_class, deg_class) )
 
         ckeys, ccounts = zip(*[(cword.word,cword.count) for cword in cp_db.all()])
 
@@ -194,7 +194,7 @@ class Meaning(object):
         self.args = args
 
 
-def generate_sentence(loc, consistent, scene=None, speaker=None):
+def generate_sentence(loc, consistent, scene=None, speaker=None, printing=True):
     utils.scene = utils.ModelScene(scene, speaker)
 
     (lmk, lmk_prob, lmk_ent), (rel, rel_prob, rel_ent) = get_meaning(loc=loc)
@@ -202,10 +202,10 @@ def generate_sentence(loc, consistent, scene=None, speaker=None):
     logger( meaning1 )
 
     while True:
-        rel_exp_chain, rele_prob_chain, rele_ent_chain, rel_terminals, rel_landmarks = get_expansion('RELATION', rel=rel)
-        lmk_exp_chain, lmke_prob_chain, lmke_ent_chain, lmk_terminals, lmk_landmarks = get_expansion('LANDMARK-PHRASE', lmk=lmk)
-        rel_words, relw_prob, relw_ent = get_words(rel_terminals, landmarks=rel_landmarks, rel=rel)
-        lmk_words, lmkw_prob, lmkw_ent = get_words(lmk_terminals, landmarks=lmk_landmarks)
+        rel_exp_chain, rele_prob_chain, rele_ent_chain, rel_terminals, rel_landmarks = get_expansion('RELATION', rel=rel, printing=printing)
+        lmk_exp_chain, lmke_prob_chain, lmke_ent_chain, lmk_terminals, lmk_landmarks = get_expansion('LANDMARK-PHRASE', lmk=lmk, printing=printing)
+        rel_words, relw_prob, relw_ent = get_words(rel_terminals, landmarks=rel_landmarks, rel=rel, printing=printing)
+        lmk_words, lmkw_prob, lmkw_ent = get_words(lmk_terminals, landmarks=lmk_landmarks, printing=printing)
         sentence = ' '.join(rel_words + lmk_words)
 
         logger( 'rel_exp_chain: %s' % rel_exp_chain )

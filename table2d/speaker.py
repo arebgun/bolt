@@ -4,12 +4,17 @@ from numpy import (
     log,
     argmin,
     set_printoptions,
-    random,
+    # random,
     copy as npcopy,
     exp
 )
+import sys
+sys.path.append("..")
+from myrandom import random
+choice = random.choice
+from myrandom import nprandom as random
+# from random import choice
 
-from random import choice
 from matplotlib import pyplot as plt
 from itertools import product
 from planar import Vec2
