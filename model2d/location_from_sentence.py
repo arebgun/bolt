@@ -258,13 +258,12 @@ def get_sentence_meaning_likelihood(sentence, lmk, rel, printing=True):
     return np.prod(probs), sum(entropies), lrpc, tps
 
 
-def heatmaps_for_sentence(sentence, all_meanings, loi_infos, xs, ys, scene, speaker):
+def heatmaps_for_sentence(sentence, all_meanings, loi_infos, xs, ys, scene, speaker, step=0.02):
     printing=False
     scene_bb = scene.get_bounding_box()
     scene_bb = scene_bb.inflate( Vec2(scene_bb.width*0.5,scene_bb.height*0.5) )
     x = np.array( [list(xs-step*0.5)]*len(ys) )
     y = np.array( [list(ys-step*0.5)]*len(xs) ).T
-    print blargh
 
     posteriors = get_all_sentence_posteriors(sentence, all_meanings, printing=printing)
     # posteriors_arr = np.array([posteriors[rel]*posteriors[lmk] for lmk,rel in all_meanings])
@@ -350,6 +349,53 @@ def heatmaps_for_sentence(sentence, all_meanings, loi_infos, xs, ys, scene, spea
     return combined_heatmaps
 
 
+def get_most_likely_object(scene, speaker, sentences):
+    step = 0.04
+
+    loi = [lmk for lmk in scene.landmarks.values() if lmk.name != 'table']
+    all_heatmaps_dicts, xs, ys = speaker.generate_all_heatmaps(scene, step=step, loi=loi)
+
+    loi_infos = []
+    all_meanings = set()
+    for obj_lmk,all_heatmaps_dict in zip(loi, all_heatmaps_dicts):
+        all_heatmaps_tuples = []
+
+        for lmk, d in all_heatmaps_dict.items():
+            for rel, heatmaps in d.items():
+                all_heatmaps_tuples.append( (lmk,rel,heatmaps) )
+
+        # all_heatmaps_tuples = all_heatmaps_tuples[:10]
+
+        lmks, rels, heatmapss = zip(*all_heatmaps_tuples)
+        meanings = zip(lmks,rels)
+        # print meanings
+        all_meanings.update(meanings)
+        loi_infos.append( (obj_lmk, meanings, heatmapss) )
+    
+    objects = []
+    for sentence in sentences:
+        lmk_probs = []
+        try:
+            combined_heatmaps = heatmaps_for_sentence(sentence, all_meanings, loi_infos, xs, ys, scene, speaker, step=step)
+            
+            for combined_heatmap,obj_lmk in zip(combined_heatmaps, loi):
+                ps = [p for (x,y),p in zip(list(product(xs,ys)),combined_heatmap) if obj_lmk.representation.contains_point( Vec2(x,y) )]
+                # print ps, xs.shape, ys.shape, combined_heatmap.shape
+                lmk_probs.append( (sum(ps)/len(ps), obj_lmk) )
+                
+            top_p, top_lmk = sorted(lmk_probs, reverse=True)[0]
+            lprobs, lmkss = zip(*lmk_probs)
+            
+            print
+            print sorted(zip(np.array(lprobs)/sum(lprobs), [(l.name, l.color, l.object_class) for l in lmkss]), reverse=True)
+            print 'I bet %f you are talking about a %s %s %s' % (top_p/sum(lprobs), top_lmk.name, top_lmk.color, top_lmk.object_class)
+            objects.append(top_lmk)
+        except Exception as e:
+            print 'Unable to get object from sentence. ', e
+            
+    return objects
+
+
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
@@ -364,54 +410,7 @@ if __name__ == '__main__':
         for m,p in sorted(posteriors, key=itemgetter(1)):
             print 'Meaning: %s \t\t Probability: %0.4f' % (m,p)
     else:
-        step = 0.04
-        blargh='blargh'
         scene, speaker = construct_training_scene()
+        sentence = raw_input('Location sentence: ')
+        get_most_likely_object(scene, speaker, [sentence])
 
-        loi = [lmk for lmk in scene.landmarks.values() if lmk.name != 'table']
-        all_heatmaps_tupless, xs, ys = speaker.generate_all_heatmaps(scene, step=step, loi=loi)
-
-        loi_infos = []
-        all_meanings = set()
-        for obj_lmk,all_heatmaps_tuples in zip(loi, all_heatmaps_tupless):
-            # all_heatmaps_tuples = []
-
-            # for lmk, d in all_heatmaps_dict.items():
-            #     for rel, heatmaps in d.items():
-            #         all_heatmaps_tuples.append( (lmk,rel,heatmaps) )
-
-            # all_heatmaps_tuples = all_heatmaps_tuples[:10]
-
-            lmks, rels, heatmapss = zip(*all_heatmaps_tuples)
-            meanings = zip(lmks,rels)
-            # print meanings
-            all_meanings.update(meanings)
-            loi_infos.append( (obj_lmk, meanings, heatmapss) )
-
-        demo_sentences = ['near to the left edge of the table',
-                          'somewhat near to the right edge of the table',
-                          'on the table',
-                          'on the middle of the table',
-                          'at the lower left corner of the table',
-                          'far from the purple prism']
-
-        while True:
-            sentence = raw_input('Location phrase: ')
-            if sentence == 'exit': break
-
-            lmk_probs = []
-            try:
-                combined_heatmaps = heatmaps_for_sentence(sentence, all_meanings, loi_infos, xs, ys, scene, speaker)
-                for combined_heatmap,obj_lmk in zip(combined_heatmaps, loi):
-
-                    ps = [p for (x,y),p in zip(list(product(xs,ys)),combined_heatmap) if obj_lmk.representation.contains_point( Vec2(x,y) )]
-                    # print ps, xs.shape, ys.shape, combined_heatmap.shape
-                    lmk_probs.append( (sum(ps)/len(ps), obj_lmk) )
-
-                top_p, top_lmk = sorted(lmk_probs, reverse=True)[0]
-                lprobs, lmkss = zip(*lmk_probs)
-                print
-                print sorted(zip(np.array(lprobs)/sum(lprobs), lmkss), reverse=True)
-                print 'I bet %f you are talking about a %s' % (top_p/sum(lprobs), top_lmk)
-            except Exception as e:
-                print 'BAD SENTENCE!!!!', e
