@@ -32,6 +32,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
     # plt.ion()
 
+    printing=True
+
     scene, speaker = construct_training_scene()
     scene_bb = scene.get_bounding_box()
     scene_bb = scene_bb.inflate( Vec2(scene_bb.width*0.5,scene_bb.height*0.5) )
@@ -69,14 +71,16 @@ if __name__ == '__main__':
     epsilon = 0.0001
     def heatmaps_for_sentence(sentence, iteration, good_meanings, good_heatmapss, graphmax1, graphmax2):
 
-        posteriors = np.array(get_all_sentence_posteriors(sentence, good_meanings))
+        posteriors = get_all_sentence_posteriors(sentence, good_meanings, printing)
         # print sorted(zip(posteriors, meanings))
-        posteriors /= posteriors.sum()
-        for p,(l,r) in sorted(zip(posteriors, good_meanings)):
-            print p, l, l.ori_relations, r, (r.distance, r.measurement.best_degree_class, r.measurement.best_distance_class ) if hasattr(r,'measurement') else 'No measurement'
+        # posteriors /= posteriors.sum()
+        # for p,(l,r) in sorted(zip(posteriors, good_meanings)):
+        #     print p, l, l.ori_relations, r, (r.distance, r.measurement.best_degree_class, r.measurement.best_distance_class ) if hasattr(r,'measurement') else 'No measurement'
         big_heatmap1 = None
         big_heatmap2 = None
-        for p,(h1,h2) in zip(posteriors, good_heatmapss):
+        for m,(h1,h2) in zip(meanings, good_heatmapss):
+            lmk,rel = m
+            p = posteriors[rel]*posteriors[lmk]
             graphmax1 = max(graphmax1,h1.max())
             graphmax2 = max(graphmax2,h2.max())
             if big_heatmap1 is None:
@@ -166,7 +170,7 @@ if __name__ == '__main__':
         logger('Iteration %d' % iteration)
         scale = 10000
         rand_p = Vec2(random()*table.width+table.min_point.x, random()*table.height+table.min_point.y)
-        meaning, sentence = generate_sentence(rand_p, args.consistent, scene, speaker, printing=False)
+        meaning, sentence = generate_sentence(rand_p, args.consistent, scene, speaker, printing=printing)
 
         logger( 'Generated sentence: %s' % sentence)
 
@@ -187,7 +191,7 @@ if __name__ == '__main__':
         max_mins.append( max(min_dists[-window:]) )
 
         correction = distances[0][1]
-        accept_correction( meaning, correction, update_scale=scale )
+        accept_correction( meaning, correction, update_scale=scale, printing=printing )
 
         print np.mean(min_dists), avg_min, max_mins
         print;print

@@ -21,6 +21,7 @@ from location_from_sentence import get_sentence_posteriors, get_sentence_meaning
 from table2d.run import construct_training_scene
 
 import numpy as np
+import sys
 
 # np.seterr(all='raise')
 
@@ -58,7 +59,7 @@ def get_expansion(lhs, parent=None, lmk=None, rel=None, printing=True):
                 if printing: logger('Could not expand %s (parent: %s, lmk_class: %s, lmk_ori_rels: %s, lmk_color: %s, rel: %s, dist_class: %s, deg_class: %s)' % (n, parent, lmk_class, lmk_ori_rels, lmk_color, rel_class, dist_class, deg_class))
                 terminals.append( n )
                 continue
-                
+
             if printing: logger('Expanded %s (parent: %s, lmk_class: %s, lmk_ori_rels: %s, lmk_color: %s, rel: %s, dist_class: %s, deg_class: %s)' % (n, parent, lmk_class, lmk_ori_rels, lmk_color, rel_class, dist_class, deg_class))
 
             ckeys, ccounts = zip(*[(cprod.rhs,cprod.count) for cprod in cp_db.all()])
@@ -83,7 +84,7 @@ def get_expansion(lhs, parent=None, lmk=None, rel=None, printing=True):
             prob_chain.append( cprod_prob )
             entropy_chain.append( cprod_entropy )
 
-            lrpc, pc, ec, t, ls = get_expansion( lhs=cprod, parent=n, lmk=lmk, rel=rel )
+            lrpc, pc, ec, t, ls = get_expansion( lhs=cprod, parent=n, lmk=lmk, rel=rel, printing=printing )
             lhs_rhs_parent_chain.extend( lrpc )
             prob_chain.extend( pc )
             entropy_chain.extend( ec )
@@ -208,8 +209,8 @@ def generate_sentence(loc, consistent, scene=None, speaker=None, printing=True):
         lmk_words, lmkw_prob, lmkw_ent = get_words(lmk_terminals, landmarks=lmk_landmarks, printing=printing)
         sentence = ' '.join(rel_words + lmk_words)
 
-        logger( 'rel_exp_chain: %s' % rel_exp_chain )
-        logger( 'lmk_exp_chain: %s' % lmk_exp_chain )
+        if printing: logger( 'rel_exp_chain: %s' % rel_exp_chain )
+        if printing: logger( 'lmk_exp_chain: %s' % lmk_exp_chain )
 
         meaning = Meaning((lmk, lmk_prob, lmk_ent,
                            rel, rel_prob, rel_ent,
@@ -262,7 +263,7 @@ update_funcs = {
 }
 
 
-def accept_correction( meaning, correction, update_func='geometric', update_scale=10 ):
+def accept_correction( meaning, correction, update_func='geometric', update_scale=10, printing=True ):
     (lmk, lmk_prob, lmk_ent,
      rel, rel_prob, rel_ent,
      rel_exp_chain, rele_prob_chain, rele_ent_chain, rel_terminals, rel_landmarks,
@@ -316,6 +317,31 @@ def accept_correction( meaning, correction, update_func='geometric', update_scal
                                               lmk_color=(lmk.color if lmk else None) )
 
 
+def accept_new_words( location, sentence, update_func='geometric', update_scale=10, num_meanings=10, printing=True ):
+    for _ in range(num_meanings):
+        print '.',
+        sys.stdout.flush()
+        (lmk, lmk_prob, lmk_ent), (rel, rel_prob, rel_ent) = get_meaning(loc=location)
+        old_meaning_prob, old_meaning_entropy, lrpc, tps = get_sentence_meaning_likelihood( sentence, lmk, rel, printing )
+
+        update = 10 * update_scale
+
+        # reward new words with old meaning
+        for lhs,rhs,parent,lmk,rel in lrpc:
+            # print 'Incrementing production - lhs: %s, rhs: %s, parent: %s' % (lhs,rhs,parent)
+            update_expansion_counts( update, lhs, rhs, parent, rel=rel,
+                                                               lmk_class=(lmk.object_class if lmk else None),
+                                                               lmk_ori_rels=get_lmk_ori_rels_str(lmk),
+                                                               lmk_color=(lmk.color if lmk else None) )
+
+        for lhs,rhs,lmk,rel in tps:
+            # print 'Incrementing word - pos: %s, word: %s, lmk_class: %s' % (lhs, rhs, (lmk.object_class if lmk else None) )
+            update_word_counts( update, lhs, rhs, lmk_class=(lmk.object_class if lmk else None),
+                                                  rel=rel,
+                                                  lmk_ori_rels=get_lmk_ori_rels_str(lmk),
+                                                  lmk_color=(lmk.color if lmk else None) )
+    print
+
 # this class is only used for the --location command line argument
 class Point(object):
     def __init__(self, s):
@@ -324,7 +350,7 @@ class Point(object):
         self.x, self.y = self.xy
 
     def __repr__(self):
-        return 'Point(%s, %s)' % self.xy
+        return 'Point(%s, %s)'  % self.xy
 
 
 if __name__ == '__main__':
@@ -332,10 +358,23 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-l', '--location', type=Point, required=True)
     parser.add_argument('--consistent', action='store_true')
+    parser.add_argument('--new-word-training', action='store_true')
     args = parser.parse_args()
 
     scene, speaker = construct_training_scene()
-    meaning, sentence = generate_sentence(args.location.xy, args.consistent, scene, speaker)
-    logger('Generated sentence: %s' % sentence)
-    correction = raw_input('Correction? ')
-    accept_correction( meaning, correction)
+
+    printing = True
+    if not args.new_word_training:
+        meaning, sentence = generate_sentence(args.location.xy, args.consistent, scene, speaker, printing=printing)
+        logger('Generated sentence: %s' % sentence)
+
+        correction = raw_input('Correction? ')
+        accept_correction( meaning, correction, printing=printing )
+    else:
+        new_sentence = raw_input('Sentence with new word: ')
+        accept_new_words( args.location.xy, new_sentence, update_scale=100, num_meanings=15, printing=printing)
+
+        for _ in range(10):
+            _, sentence = generate_sentence(args.location.xy, args.consistent, scene, speaker, printing=printing)
+            logger('Generated sentence: %s' % sentence)
+            logger('')

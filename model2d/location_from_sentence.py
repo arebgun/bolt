@@ -195,7 +195,7 @@ def get_sentence_posteriors(sentence, iterations=1, extra_meaning=None):
         meaning_probs[key] /= summ
     return meaning_probs.items()
 
-def get_all_sentence_posteriors(sentence, meanings):
+def get_all_sentence_posteriors(sentence, meanings, printing=True):
 
     print 'parsing ...'
     modparse = get_modparse(sentence)
@@ -203,25 +203,42 @@ def get_all_sentence_posteriors(sentence, meanings):
     print '\n%s\n' % t.pprint()
     num_ancestors = count_lmk_phrases(t) - 1
 
-    posteriors = []
-    for meaning in meanings:
-        lmk,rel = meaning
+    lmks, rels = zip(*meanings)
+    lmks = set(lmks)
+    rels = set(rels)
+
+    posteriors = {}
+    for lmk in lmks:
         if lmk.get_ancestor_count() != num_ancestors:
             p = 0
         else:
-            ps = get_tree_probs(t, lmk, rel, printing=False)[0]
+            ps = get_tree_probs(t[1], lmk, printing=printing)[0]
             p = np.prod(ps)
-        posteriors.append(p)
+        posteriors[lmk] = p
+
+    for rel in rels:
+        ps = get_tree_probs(t[0], rel=rel, printing=printing)[0]
+        posteriors[rel] = np.prod(ps)
+
+
+    # for meaning in meanings:
+    #     lmk,rel = meaning
+    #     if lmk.get_ancestor_count() != num_ancestors:
+    #         p = 0
+    #     else:
+    #         ps = get_tree_probs(t, lmk, rel, printing=False)[0]
+    #         p = np.prod(ps)
+    #     posteriors.append(p)
         # print p, lmk, lmk.ori_relations, rel, (rel.distance, rel.measurement.best_degree_class, rel.measurement.best_distance_class ) if hasattr(rel,'measurement') else 'No measurement'
     return posteriors
 
 
-def get_sentence_meaning_likelihood(sentence, lmk, rel):
+def get_sentence_meaning_likelihood(sentence, lmk, rel, printing=True):
     modparse = get_modparse(sentence)
     t = ParentedTree.parse(modparse)
-    print '\n%s\n' % t.pprint()
+    if printing: print '\n%s\n' % t.pprint()
 
-    probs, entropies, lrpc, tps = get_tree_probs(t, lmk, rel)
+    probs, entropies, lrpc, tps = get_tree_probs(t, lmk, rel, printing=printing)
     if np.prod(probs) == 0.0:
         logger('ERROR: Probability product is 0 for sentence: %s, lmk: %s, rel: %s, probs: %s' % (sentence, lmk, rel, str(probs)))
     return np.prod(probs), sum(entropies), lrpc, tps
@@ -233,13 +250,14 @@ def heatmaps_for_sentence(sentence, all_meanings, loi_infos, xs, ys, scene, spea
     x = np.array( [list(xs-step*0.5)]*len(ys) )
     y = np.array( [list(ys-step*0.5)]*len(xs) ).T
 
-    posteriors = np.array(get_all_sentence_posteriors(sentence, all_meanings))
-    # print sorted(zip(posteriors, meanings))
-    posteriors /= posteriors.sum()
-    for p,(l,r) in sorted(zip(posteriors, all_meanings))[-5:]:
-        print p, l, l.ori_relations, r, (r.distance, r.measurement.best_degree_class, r.measurement.best_distance_class ) if hasattr(r,'measurement') else 'No measurement'
+    posteriors = get_all_sentence_posteriors(sentence, all_meanings)
+    # posteriors_arr = np.array([posteriors[rel]*posteriors[lmk] for lmk,rel in all_meanings])
+    # # print sorted(zip(posteriors, meanings))
+    # posteriors_arr /= posteriors_arr.sum()
+    # for p,(l,r) in sorted(zip(posteriors, all_meanings))[-5:]:
+    #     print p, l, l.ori_relations, r, (r.distance, r.measurement.best_degree_class, r.measurement.best_distance_class ) if hasattr(r,'measurement') else 'No measurement'
 
-    meaning_posteriors = dict( zip(all_meanings,posteriors) )
+    # meaning_posteriors = dict( zip(all_meanings,posteriors) )
 
     combined_heatmaps = []
     # big_heatmap2 = None
@@ -247,7 +265,8 @@ def heatmaps_for_sentence(sentence, all_meanings, loi_infos, xs, ys, scene, spea
 
         big_heatmap1 = None
         for m,(h1,h2) in zip(meanings, heatmapss):
-            p = meaning_posteriors[m]
+            lmk,rel = m
+            p = posteriors[rel]*posteriors[lmk]
             if big_heatmap1 is None:
                 big_heatmap1 = p*h1
                 # big_heatmap2 = p*h2
@@ -332,7 +351,7 @@ if __name__ == '__main__':
         for m,p in sorted(posteriors, key=itemgetter(1)):
             print 'Meaning: %s \t\t Probability: %0.4f' % (m,p)
     else:
-        step = 0.02
+        step = 0.04
         scene, speaker = construct_training_scene()
 
         loi = [lmk for lmk in scene.landmarks.values() if lmk.name != 'table']
@@ -376,6 +395,7 @@ if __name__ == '__main__':
                     lmk_probs.append( (sum(ps)/len(ps), obj_lmk) )
 
                 top_p, top_lmk = sorted(lmk_probs, reverse=True)[0]
-                print 'I bet %f you are talking about a %s' % (top_p, top_lmk)
+                lprobs, _ = zip(*lmk_probs)
+                print 'I bet %f you are talking about a %s' % (top_p/sum(lprobs), top_lmk)
             except Exception as e:
                 print 'BAD SENTENCE!!!!', e

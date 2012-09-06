@@ -279,7 +279,7 @@ class Speaker(object):
         epsilon = 0.02
         distances = array([trajector.distance_to( lmk.representation )
             if not (isinstance(lmk.representation,RectangleRepresentation) and lmk.representation.contains(trajector.representation))
-            else epsilon for lmk in landmarks])
+            else 3*epsilon for lmk in landmarks])
         # distances = array([trajector.distance_to( lmk )
         #     if not (isinstance(lmk.representation,RectangleRepresentation) and lmk.representation.contains(trajector))
         #     else min(poly_to_vec_distance(lmk.representation.get_geometry().to_polygon(), trajector.representation.location),lmk.representation.middle.distance_to(trajector.representation.location))
@@ -301,7 +301,7 @@ class Speaker(object):
             epsilon = 0.02
             distances = array([ landmark.distance_to_point(point)
                 if not (isinstance(landmark.representation,RectangleRepresentation) and landmark.representation.contains_point(point))
-                else epsilon for point in points])
+                else 3*epsilon for point in points])
             # distances = array([ landmark.distance_to_point(point)
             #     if not (isinstance(landmark.representation,RectangleRepresentation) and landmark.representation.contains_point(point))
             #     else min(poly_to_vec_distance(landmark.representation.get_geometry().to_polygon(),point),landmark.representation.middle.distance_to(point))
