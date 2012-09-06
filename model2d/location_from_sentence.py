@@ -204,11 +204,11 @@ def get_all_sentence_posteriors(sentence, meanings, printing=True):
     print '\n%s\n' % t.pprint()
     num_ancestors = count_lmk_phrases(t) - 1
 
-    logger(len(meanings))
+    # logger(len(meanings))
     lmks, rels = zip(*meanings)
     lmks = set(lmks)
     rels = set(rels)
-    logger('num things ' + str(len(lmks))+' '+str(len(rels)))
+    # logger('num things ' + str(len(lmks))+' '+str(len(rels)))
 
     syms = ['\\', '|', '/', '-']
     sys.stdout.write('processing...\\')
@@ -264,6 +264,7 @@ def heatmaps_for_sentence(sentence, all_meanings, loi_infos, xs, ys, scene, spea
     scene_bb = scene_bb.inflate( Vec2(scene_bb.width*0.5,scene_bb.height*0.5) )
     x = np.array( [list(xs-step*0.5)]*len(ys) )
     y = np.array( [list(ys-step*0.5)]*len(xs) ).T
+    print blargh
 
     posteriors = get_all_sentence_posteriors(sentence, all_meanings, printing=printing)
     # posteriors_arr = np.array([posteriors[rel]*posteriors[lmk] for lmk,rel in all_meanings])
@@ -364,19 +365,20 @@ if __name__ == '__main__':
             print 'Meaning: %s \t\t Probability: %0.4f' % (m,p)
     else:
         step = 0.04
+        blargh='blargh'
         scene, speaker = construct_training_scene()
 
         loi = [lmk for lmk in scene.landmarks.values() if lmk.name != 'table']
-        all_heatmaps_dicts, xs, ys = speaker.generate_all_heatmaps(scene, step=step, loi=loi)
+        all_heatmaps_tupless, xs, ys = speaker.generate_all_heatmaps(scene, step=step, loi=loi)
 
         loi_infos = []
         all_meanings = set()
-        for obj_lmk,all_heatmaps_dict in zip(loi, all_heatmaps_dicts):
-            all_heatmaps_tuples = []
+        for obj_lmk,all_heatmaps_tuples in zip(loi, all_heatmaps_tupless):
+            # all_heatmaps_tuples = []
 
-            for lmk, d in all_heatmaps_dict.items():
-                for rel, heatmaps in d.items():
-                    all_heatmaps_tuples.append( (lmk,rel,heatmaps) )
+            # for lmk, d in all_heatmaps_dict.items():
+            #     for rel, heatmaps in d.items():
+            #         all_heatmaps_tuples.append( (lmk,rel,heatmaps) )
 
             # all_heatmaps_tuples = all_heatmaps_tuples[:10]
 

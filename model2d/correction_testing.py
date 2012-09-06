@@ -78,7 +78,7 @@ if __name__ == '__main__':
         #     print p, l, l.ori_relations, r, (r.distance, r.measurement.best_degree_class, r.measurement.best_distance_class ) if hasattr(r,'measurement') else 'No measurement'
         big_heatmap1 = None
         big_heatmap2 = None
-        for m,(h1,h2) in zip(meanings, good_heatmapss):
+        for m,(h1,h2) in zip(good_meanings, good_heatmapss):
             lmk,rel = m
             p = posteriors[rel]*posteriors[lmk]
             graphmax1 = max(graphmax1,h1.max())
@@ -100,8 +100,8 @@ if __name__ == '__main__':
         plt.subplot(121)
 
         probabilities1 = big_heatmap1.reshape( (len(xs),len(ys)) ).T
-        plt.pcolor(x, y, probabilities1, cmap = 'jet', edgecolors='none', alpha=0.7, vmin=0, vmax=0.02)
-        plt.colorbar()
+        plt.pcolor(x, y, probabilities1, cmap = 'jet', edgecolors='none', alpha=0.7)#, vmin=0, vmax=0.02)
+
 
         for lmk in scene.landmarks.values():
             if isinstance(lmk.representation, GroupLineRepresentation):
@@ -121,13 +121,13 @@ if __name__ == '__main__':
 
         plt.axis('scaled')
         plt.axis([scene_bb.min_point.x, scene_bb.max_point.x, scene_bb.min_point.y, scene_bb.max_point.y])
+        plt.colorbar()
         plt.title('Likelihood of sentence given location(s)')
 
         plt.subplot(122)
 
         probabilities2 = big_heatmap2.reshape( (len(xs),len(ys)) ).T
-        plt.pcolor(x, y, probabilities2, cmap = 'jet', edgecolors='none', alpha=0.7, vmin=0, vmax=0.02)
-        plt.colorbar()
+        plt.pcolor(x, y, probabilities2, cmap = 'jet', edgecolors='none', alpha=0.7)#, vmin=0, vmax=0.02)
 
         for lmk in scene.landmarks.values():
             if isinstance(lmk.representation, GroupLineRepresentation):
@@ -147,6 +147,7 @@ if __name__ == '__main__':
 
         plt.axis('scaled')
         plt.axis([scene_bb.min_point.x, scene_bb.max_point.x, scene_bb.min_point.y, scene_bb.max_point.y])
+        plt.colorbar()
         plt.title('Likelihood of location(s) given sentence')
         plt.draw()
         plt.show()
@@ -168,7 +169,7 @@ if __name__ == '__main__':
 
 
         logger('Iteration %d' % iteration)
-        scale = 10000
+        scale = 10
         rand_p = Vec2(random()*table.width+table.min_point.x, random()*table.height+table.min_point.y)
         meaning, sentence = generate_sentence(rand_p, args.consistent, scene, speaker, printing=printing)
 

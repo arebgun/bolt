@@ -437,22 +437,24 @@ class Speaker(object):
 
             sceness, landmarks = zip( *all_landmarks )
 
-            sys.stdout.write('generating landmark heatmaps...\\')
+            sys.stdout.write('generating landmark heatmaps sans %s...\\' % lmk_to_exclude)
             sys.stdout.flush()
             landmark_probs, original_landmark_probs = self.get_landmark_probs_for_points(landmarks, points, xs, ys, x, y)
 
-            lmk_rel_dict = {}
+            # lmk_rel_dict = {}
+            lmk_rel_tuples = []
             print
-            sys.stdout.write('generating relation heatmaps...\\')
+            sys.stdout.write('generating relation heatmaps sans %s...\\'  % lmk_to_exclude)
             sys.stdout.flush()
             for landmark,landmark_prob,original_landmark_prob in zip(landmarks,landmark_probs,original_landmark_probs):
                 perspective = self.get_head_on_viewpoint(landmark)
                 self.set_orientations(landmark, perspective)
-                lmk_rel_dict[landmark] = dict( zip(*self.get_relation_probs_for_points(points, landmark, landmark_prob, original_landmark_prob, perspective)) )
+                # lmk_rel_dict[landmark] = dict( zip(*self.get_relation_probs_for_points(points, landmark, landmark_prob, original_landmark_prob, perspective)) )
+                lmk_rel_tuples.extend( [(landmark, rels, heatmaps) for rels,heatmaps in zip(*self.get_relation_probs_for_points(points, landmark, landmark_prob, original_landmark_prob, perspective))] )
                 sys.stdout.write('\b.\\')
                 sys.stdout.flush()
             print
-            return lmk_rel_dict
+            return lmk_rel_tuples
 
         result = []
         for l in loi:

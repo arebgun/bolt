@@ -17,11 +17,19 @@ from utils import (get_meaning,
                    NONTERMINALS)
 from models import Word, Production, CProduction, CWord
 
-from location_from_sentence import get_sentence_posteriors, get_sentence_meaning_likelihood
+from location_from_sentence import get_sentence_posteriors, get_sentence_meaning_likelihood, get_all_sentence_posteriors
 from table2d.run import construct_training_scene
 
 import numpy as np
 import sys
+from matplotlib import pyplot as plt
+
+from table2d.landmark import (
+    GroupLineRepresentation,
+    RectangleRepresentation
+)
+
+from planar import Vec2
 
 # np.seterr(all='raise')
 
@@ -342,6 +350,29 @@ def accept_new_words( location, sentence, update_func='geometric', update_scale=
                                                   lmk_color=(lmk.color if lmk else None) )
     print
 
+def accept_new_words_meaning( lmk, rel, sentence, update_func='geometric', update_scale=10, num_meanings=10, printing=True ):
+
+    lmk, rel
+    old_meaning_prob, old_meaning_entropy, lrpc, tps = get_sentence_meaning_likelihood( sentence, lmk, rel, printing )
+
+    update = 10 * update_scale
+
+    # reward new words with old meaning
+    for lhs,rhs,parent,lmk,rel in lrpc:
+        # print 'Incrementing production - lhs: %s, rhs: %s, parent: %s' % (lhs,rhs,parent)
+        update_expansion_counts( update, lhs, rhs, parent, rel=rel,
+                                                           lmk_class=(lmk.object_class if lmk else None),
+                                                           lmk_ori_rels=get_lmk_ori_rels_str(lmk),
+                                                           lmk_color=(lmk.color if lmk else None) )
+
+    for lhs,rhs,lmk,rel in tps:
+        # print 'Incrementing word - pos: %s, word: %s, lmk_class: %s' % (lhs, rhs, (lmk.object_class if lmk else None) )
+        update_word_counts( update, lhs, rhs, lmk_class=(lmk.object_class if lmk else None),
+                                              rel=rel,
+                                              lmk_ori_rels=get_lmk_ori_rels_str(lmk),
+                                              lmk_color=(lmk.color if lmk else None) )
+    print
+
 # this class is only used for the --location command line argument
 class Point(object):
     def __init__(self, s):
@@ -353,24 +384,21 @@ class Point(object):
         return 'Point(%s, %s)'  % self.xy
 
 
+
+
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument('-l', '--location', type=Point, required=True)
     parser.add_argument('--consistent', action='store_true')
     parser.add_argument('--new-word-training', action='store_true')
+    parser.add_argument('--new-word-training2', action='store_true')
     args = parser.parse_args()
 
     scene, speaker = construct_training_scene()
 
-    printing = True
-    if not args.new_word_training:
-        meaning, sentence = generate_sentence(args.location.xy, args.consistent, scene, speaker, printing=printing)
-        logger('Generated sentence: %s' % sentence)
-
-        correction = raw_input('Correction? ')
-        accept_correction( meaning, correction, printing=printing )
-    else:
+    printing = False
+    if args.new_word_training:
         new_sentence = raw_input('Sentence with new word: ')
         accept_new_words( args.location.xy, new_sentence, update_scale=100, num_meanings=15, printing=printing)
 
@@ -378,3 +406,145 @@ if __name__ == '__main__':
             _, sentence = generate_sentence(args.location.xy, args.consistent, scene, speaker, printing=printing)
             logger('Generated sentence: %s' % sentence)
             logger('')
+
+    elif args.new_word_training2:
+
+        step = 0.04
+
+        scene_bb = scene.get_bounding_box()
+        scene_bb = scene_bb.inflate( Vec2(scene_bb.width*0.5,scene_bb.height*0.5) )
+        all_heatmaps_tupless, xs, ys = speaker.generate_all_heatmaps(scene, step=step)
+        all_heatmaps_tuples = all_heatmaps_tupless[0]
+        x = np.array( [list(xs-step*0.5)]*len(ys) )
+        y = np.array( [list(ys-step*0.5)]*len(xs) ).T
+
+        def heatmaps_for_sentence(sentence, iteration, good_meanings, good_heatmapss):
+
+            posteriors = get_all_sentence_posteriors(sentence, good_meanings, printing)
+            # print sorted(zip(posteriors, meanings))
+            # posteriors /= posteriors.sum()
+            # for p,(l,r) in sorted(zip(posteriors, good_meanings)):
+            #     print p, l, l.ori_relations, r, (r.distance, r.measurement.best_degree_class, r.measurement.best_distance_class ) if hasattr(r,'measurement') else 'No measurement'
+            big_heatmap1 = None
+            big_heatmap2 = None
+            meanings = []
+            for m,(h1,h2) in zip(good_meanings, good_heatmapss):
+                lmk,rel = m
+                p = posteriors[rel]*posteriors[lmk]
+                meanings.append((p,m))
+                if big_heatmap1 is None:
+                    big_heatmap1 = p*h1
+                    big_heatmap2 = p*h2
+                else:
+                    big_heatmap1 += p*h1
+                    big_heatmap2 += p*h2
+
+            # good_meanings,good_heatmapss = zip(*[ (meaning,heatmaps) for posterior,meaning,heatmaps in zip(posteriors,good_meanings,good_heatmapss) if posterior > epsilon])
+
+            print big_heatmap1.shape
+            print xs.shape, ys.shape
+
+            plt.figure(iteration)
+            plt.suptitle(sentence)
+            plt.subplot(121)
+
+            probabilities1 = big_heatmap1.reshape( (len(xs),len(ys)) ).T
+            plt.pcolor(x, y, probabilities1, cmap = 'jet', edgecolors='none', alpha=0.7)#, vmin=0, vmax=0.02)
+
+
+            for lmk in scene.landmarks.values():
+                if isinstance(lmk.representation, GroupLineRepresentation):
+                    xx = [lmk.representation.line.start.x, lmk.representation.line.end.x]
+                    yy = [lmk.representation.line.start.y, lmk.representation.line.end.y]
+                    plt.fill(xx,yy,facecolor='none',linewidth=2)
+                elif isinstance(lmk.representation, RectangleRepresentation):
+                    rect = lmk.representation.rect
+                    xx = [rect.min_point.x,rect.min_point.x,rect.max_point.x,rect.max_point.x]
+                    yy = [rect.min_point.y,rect.max_point.y,rect.max_point.y,rect.min_point.y]
+                    plt.fill(xx,yy,facecolor='none',linewidth=2)
+                    plt.text(rect.min_point.x+0.01,rect.max_point.y+0.02,lmk.name)
+
+            plt.plot(speaker.location.x,
+                     speaker.location.y,
+                     'bx',markeredgewidth=2)
+
+            plt.axis('scaled')
+            plt.axis([scene_bb.min_point.x, scene_bb.max_point.x, scene_bb.min_point.y, scene_bb.max_point.y])
+            plt.colorbar()
+            plt.title('Likelihood of sentence given location(s)')
+
+            plt.subplot(122)
+
+            probabilities2 = big_heatmap2.reshape( (len(xs),len(ys)) ).T
+            plt.pcolor(x, y, probabilities2, cmap = 'jet', edgecolors='none', alpha=0.7)#, vmin=0, vmax=0.02)
+
+            for lmk in scene.landmarks.values():
+                if isinstance(lmk.representation, GroupLineRepresentation):
+                    xx = [lmk.representation.line.start.x, lmk.representation.line.end.x]
+                    yy = [lmk.representation.line.start.y, lmk.representation.line.end.y]
+                    plt.fill(xx,yy,facecolor='none',linewidth=2)
+                elif isinstance(lmk.representation, RectangleRepresentation):
+                    rect = lmk.representation.rect
+                    xx = [rect.min_point.x,rect.min_point.x,rect.max_point.x,rect.max_point.x]
+                    yy = [rect.min_point.y,rect.max_point.y,rect.max_point.y,rect.min_point.y]
+                    plt.fill(xx,yy,facecolor='none',linewidth=2)
+                    plt.text(rect.min_point.x+0.01,rect.max_point.y+0.02,lmk.name)
+
+            plt.plot(speaker.location.x,
+                     speaker.location.y,
+                     'bx',markeredgewidth=2)
+
+            plt.axis('scaled')
+            plt.axis([scene_bb.min_point.x, scene_bb.max_point.x, scene_bb.min_point.y, scene_bb.max_point.y])
+            plt.colorbar()
+            plt.title('Likelihood of location(s) given sentence')
+            plt.draw()
+            plt.show()
+            return sorted(meanings,reverse=True)
+
+        lmks, rels, heatmapss = zip(*all_heatmaps_tuples)
+        meanings = zip(lmks,rels)
+        # for i,m in enumerate(meanings[:100]):
+        #     l,r = m
+        #     print i, l, l.ori_relations, r, (r.distance, r.measurement.best_degree_class, r.measurement.best_distance_class ) if hasattr(r,'measurement') else 'No measurement'
+        # exit()
+
+        THE_meaning = meanings[14]
+        landmark, relation = THE_meaning
+
+        def gen_sentence(lmk, rel, printing):
+            _,_,_, rel_terminals, rel_landmarks = get_expansion('RELATION', rel=rel, printing=printing)
+            _,_,_, lmk_terminals, lmk_landmarks = get_expansion('LANDMARK-PHRASE', lmk=lmk, printing=printing)
+            rel_words, _,_ = get_words(rel_terminals, landmarks=rel_landmarks, rel=rel, printing=printing)
+            lmk_words, _,_ = get_words(lmk_terminals, landmarks=lmk_landmarks, printing=printing)
+            sentence = ' '.join(rel_words + lmk_words)
+            return sentence
+
+        print
+        print
+        print "Today we're learning new words for: ", landmark, landmark.ori_relations, relation, (relation.distance, relation.measurement.best_degree_class, relation.measurement.best_distance_class ) if hasattr(relation,'measurement') else 'No measurement'
+        print
+        print
+
+        while True:
+
+            print "Well I think it's " + gen_sentence(landmark,relation,printing=printing)
+
+            new_sentence = raw_input('Sentence with new word: ')
+            if new_sentence == 'exit':
+                exit()
+            accept_new_words_meaning( landmark, relation, new_sentence, update_scale=100, printing=printing)
+
+            sorted_meanings = heatmaps_for_sentence(new_sentence, 0, meanings, heatmapss)
+            print "I think your sentence means:"
+            for _ in range(10):
+                print "         " + gen_sentence(*sorted_meanings[0][1], printing=printing)
+
+
+    else:
+        meaning, sentence = generate_sentence(args.location.xy, args.consistent, scene, speaker, printing=printing)
+        logger('Generated sentence: %s' % sentence)
+
+        correction = raw_input('Correction? ')
+        accept_correction( meaning, correction, printing=printing )
+    
