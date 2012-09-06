@@ -23,24 +23,15 @@ from matplotlib import pyplot as plt
 
 from location_from_sentence import get_all_sentence_posteriors
 
-if __name__ == '__main__':
-    import argparse
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-n', '--num_iterations', type=int, default=1)
-    parser.add_argument('-l', '--location', type=Point)
-    parser.add_argument('--consistent', action='store_true')
-    args = parser.parse_args()
-    # plt.ion()
+def autocorrect(scene, speaker, num_iterations=1, window=10, scale=1000, consistent=False):
+    plt.ion()
 
-    printing=True
+    printing=False
 
-    scene, speaker = construct_training_scene()
     scene_bb = scene.get_bounding_box()
     scene_bb = scene_bb.inflate( Vec2(scene_bb.width*0.5,scene_bb.height*0.5) )
     table = scene.landmarks['table'].representation.get_geometry()
 
-    window = 10
-    scales = [100]
     min_dists = []
     max_dists = []
     avg_min = []
@@ -92,15 +83,15 @@ if __name__ == '__main__':
 
         # good_meanings,good_heatmapss = zip(*[ (meaning,heatmaps) for posterior,meaning,heatmaps in zip(posteriors,good_meanings,good_heatmapss) if posterior > epsilon])
 
-        print big_heatmap1.shape
-        print xs.shape, ys.shape
+#        print big_heatmap1.shape
+#        print xs.shape, ys.shape
 
         plt.figure(iteration)
         plt.suptitle(sentence)
         plt.subplot(121)
 
         probabilities1 = big_heatmap1.reshape( (len(xs),len(ys)) ).T
-        plt.pcolor(x, y, probabilities1, cmap = 'jet', edgecolors='none', alpha=0.7, vmin=0, vmax=0.02)
+        plt.pcolor(x, y, probabilities1, cmap = 'jet', edgecolors='none', alpha=0.7)#, vmin=0, vmax=0.02)
         plt.colorbar()
 
         for lmk in scene.landmarks.values():
@@ -126,7 +117,7 @@ if __name__ == '__main__':
         plt.subplot(122)
 
         probabilities2 = big_heatmap2.reshape( (len(xs),len(ys)) ).T
-        plt.pcolor(x, y, probabilities2, cmap = 'jet', edgecolors='none', alpha=0.7, vmin=0, vmax=0.02)
+        plt.pcolor(x, y, probabilities2, cmap = 'jet', edgecolors='none', alpha=0.7)#, vmin=0, vmax=0.02)
         plt.colorbar()
 
         for lmk in scene.landmarks.values():
@@ -152,7 +143,7 @@ if __name__ == '__main__':
         plt.show()
         return good_meanings, good_heatmapss, graphmax1, graphmax2
 
-    for iteration in range(args.num_iterations):
+    for iteration in range(num_iterations):
 
         if iteration % 10 == 0:
             # for sentence in demo_sentences[:1]:
@@ -168,9 +159,8 @@ if __name__ == '__main__':
 
 
         logger('Iteration %d' % iteration)
-        scale = 10000
         rand_p = Vec2(random()*table.width+table.min_point.x, random()*table.height+table.min_point.y)
-        meaning, sentence = generate_sentence(rand_p, args.consistent, scene, speaker, printing=printing)
+        meaning, sentence = generate_sentence(rand_p, consistent, scene, speaker, printing=printing)
 
         logger( 'Generated sentence: %s' % sentence)
 
@@ -198,6 +188,20 @@ if __name__ == '__main__':
 
     plt.plot(avg_min, 'bo-')
     plt.plot(max_mins, 'rx-')
-    plt.show()
     plt.ioff()
-    raw_input()
+    plt.show()
+    plt.draw()
+
+if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-n', '--num_iterations', type=int, default=1)
+    parser.add_argument('-l', '--location', type=Point)
+    parser.add_argument('--consistent', action='store_true')
+    args = parser.parse_args()
+
+    scene, speaker = construct_training_scene()
+
+    autocorrect(scene, speaker, args.num_iterations, consistent=args.consistent)
+
+
