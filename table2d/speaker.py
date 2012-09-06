@@ -297,7 +297,8 @@ class Speaker(object):
         return sampled_landmark, lm_probabilities[index], self.get_entropy(lm_probabilities), head_on
 
     def get_landmark_probs_for_points(self, landmarks, points, xs, ys, x, y):
-        def get_probabilities(landmark, points):
+
+        def get_probabilities(landmark):
             epsilon = 0.02
             distances = array([ landmark.distance_to_point(point)
                 if not (isinstance(landmark.representation,RectangleRepresentation) and landmark.representation.contains_point(point))
@@ -310,15 +311,18 @@ class Speaker(object):
             std = .1
             scores = exp( -(distances/std)**2)
             # if scores.sum() != 0:
-            print landmark, scores.sum(), max(scores)
+            # print landmark, scores.sum(), max(scores)
             return scores/scores.sum()
             # else: return scores
 
         sum_probs = None
         prob_lists = []
         original_probs = []
-        for landmark in landmarks:
-            probs = get_probabilities(landmark, points)
+
+        syms = ['\\', '|', '/', '-']
+
+        for i, landmark in enumerate(landmarks):
+            probs = get_probabilities(landmark)
             original_probs.append( npcopy(probs) )
             # probabilities = probs.reshape( (len(xs),len(ys)) ).T
             # plt.pcolor(x, y, probabilities, cmap = 'jet', edgecolors='none', alpha=0.7)
@@ -326,10 +330,12 @@ class Speaker(object):
             # plt.title(str(landmark)+" before")
             # plt.show()
 
-            print landmark, probs.sum(), max(probs)
+            # print landmark, probs.sum(), max(probs)
             if sum_probs is None: sum_probs = npcopy(probs)
             else: sum_probs += probs
             prob_lists.append( probs )
+            sys.stdout.write("\b%s" % syms[i % len(syms)])
+            sys.stdout.flush()
 
         for lmk,probs in zip(landmarks, prob_lists):
 
@@ -375,11 +381,13 @@ class Speaker(object):
                     relations.append(relation)
             return relations
 
+        syms = ['\\', '|', '/', '-']
+
         relations = instantiate_relations(landmark)
         rel_points_probs = []
         original_probs = []
         sum_probs = None
-        for relation in relations:
+        for i,relation in enumerate(relations):
             probs = self.get_probabilities_points(points, relation, None, None)
             if probs.sum() != 0:
                 probs /= probs.sum()
@@ -387,6 +395,8 @@ class Speaker(object):
             if sum_probs is None: sum_probs = npcopy(probs)
             else: sum_probs += probs
             rel_points_probs.append( probs )
+            sys.stdout.write("\b%s" % syms[i % len(syms)])
+            sys.stdout.flush()
 
         # normalize across relations
         for probs in rel_points_probs:
@@ -397,7 +407,7 @@ class Speaker(object):
 
         return relations, zip(rel_points_probs, original_probs)
 
-    def generate_all_heatmaps(self, scene, max_level=1, step=0.02, loi=[]):
+    def generate_all_heatmaps(self, scene, max_level=1, step=0.02, loi=[None]):
         scenes = [scene]
 
         scene_bb = scene.get_bounding_box()
@@ -427,21 +437,26 @@ class Speaker(object):
 
             sceness, landmarks = zip( *all_landmarks )
 
+            sys.stdout.write('generating landmark heatmaps...\\')
+            sys.stdout.flush()
             landmark_probs, original_landmark_probs = self.get_landmark_probs_for_points(landmarks, points, xs, ys, x, y)
 
             lmk_rel_dict = {}
+            print
+            sys.stdout.write('generating relation heatmaps...\\')
+            sys.stdout.flush()
             for landmark,landmark_prob,original_landmark_prob in zip(landmarks,landmark_probs,original_landmark_probs):
                 perspective = self.get_head_on_viewpoint(landmark)
                 self.set_orientations(landmark, perspective)
                 lmk_rel_dict[landmark] = dict( zip(*self.get_relation_probs_for_points(points, landmark, landmark_prob, original_landmark_prob, perspective)) )
-
+                sys.stdout.write('\b.\\')
+                sys.stdout.flush()
+            print
             return lmk_rel_dict
 
         result = []
         for l in loi:
             result.append(__generate(l))
-        else:
-            result.append(__generate())
 
         return result, xs, ys
 

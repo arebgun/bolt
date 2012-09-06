@@ -90,7 +90,7 @@ if __name__ == '__main__':
                 big_heatmap1 += p*h1
                 big_heatmap2 += p*h2
 
-        good_meanings,good_heatmapss = zip(*[ (meaning,heatmaps) for posterior,meaning,heatmaps in zip(posteriors,good_meanings,good_heatmapss) if posterior > epsilon])
+        # good_meanings,good_heatmapss = zip(*[ (meaning,heatmaps) for posterior,meaning,heatmaps in zip(posteriors,good_meanings,good_heatmapss) if posterior > epsilon])
 
         print big_heatmap1.shape
         print xs.shape, ys.shape
