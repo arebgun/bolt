@@ -6,6 +6,9 @@
 [submodule "semantics"]
 	path = semantics
 	url = https://github.com/arebgun/bolt-semantics.git
+    update = merge
+
 [submodule "configurations"]
 	path = configurations
 	url = https://github.com/arebgun/bolt-configurations.git
+    update = merge
