@@ -102,6 +102,9 @@ class Measurement(object):
     def __repr__(self):
         return 'Measurement< req: %i, bdegree: %s, bdistance: %s >' % (self.required, self.best_degree_class, self.best_distance_class)
 
+    def __hash__(self):
+        return self.__repr__()
+
     @staticmethod
     def get_applicability(distances, distance_class, degree_class):
         mu,std,sign = Measurement.distance_classes[distance_class]
@@ -144,6 +147,12 @@ class DistanceRelation(Relation):
             distances[i] = self.landmark.distance_to_point(point)
         return self.measurement.are_applicable(distances)
 
+    def __hash__(self):
+        return hash(self.__class__.__name__ + ' ' + self.measurement.__hash__())
+
+    def __cmp__(self, other):
+        return cmp(self.__hash__(), other.__hash__())
+
     @classmethod
     def any_are_applicable(cls, perspective, landmark, point_array):
         distances = zeros( point_array.shape[0] )
@@ -184,6 +193,12 @@ class ContainmentRelation(Relation):
 
     def are_applicable(self, point_array):
         return array( [float(self.landmark.representation.contains_point( point )) for point in point_array] )
+
+    def __hash__(self):
+        return hash(self.__class__.__name__)
+
+    def __cmp__(self, other):
+        return cmp(self.__hash__(), other.__hash__())
 
     @classmethod
     def any_are_applicable(cls, perspective, landmark, point_array):
@@ -257,7 +272,11 @@ class OrientationRelation(Relation):
             distances[i] = self.ori_ray.start.distance_to(self.ori_ray.line.project(point))
         return self.measurement.any_are_applicable(distances)*applies
 
+    def __hash__(self):
+        return hash(self.__class__.__name__ + ' ' + self.measurement.__hash__())
 
+    def __cmp__(self, other):
+        return cmp(self.__hash__(), other.__hash__())
 
     @classmethod
     def any_are_applicable(cls, perspective, landmark, point_array):
