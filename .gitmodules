@@ -1,12 +1,11 @@
-[submodule "bolt-semantics"]
-    path = semantics
-    url = https://github.com/arebgun/bolt-semantics.git
-
-[submodule "bolt-configurations"]
-    path = configurations
-    url = https://github.com/arebgun/bolt-configurations.git
-
 [submodule "bllip-parser"]
 	path = bllip-parser
 	url = https://github.com/BLLIP/bllip-parser.git
-    ignore = dirty
+	ignore = dirty
+
+[submodule "semantics"]
+	path = semantics
+	url = https://github.com/arebgun/bolt-semantics.git
+[submodule "configurations"]
+	path = configurations
+	url = https://github.com/arebgun/bolt-configurations.git
