@@ -10,6 +10,8 @@ from planar import Vec2, Affine
 from planar.line import LineSegment, Ray
 from landmark import PointRepresentation
 from itertools import product
+from logistic_regression import train_w, accuracy, logistic
+from matplotlib import pyplot as plt
 
 class Relation(object):
     def __init__(self, perspective, landmark, trajector):
@@ -52,6 +54,10 @@ class Measurement(object):
 
     def __init__(self, distance, required=True, distance_class=None, degree_class=None):
 
+        if not hasattr(Measurement,'insts_and_trained_classifiers'):
+            Measurement.seed_init()
+        assert( hasattr(Measurement,'insts_and_trained_classifiers') )
+
         self.distance_classes = Measurement.distance_classes.copy()
         if distance_class is not None:
             self.distance_classes = { distance_class: self.distance_classes[distance_class] }
@@ -81,7 +87,11 @@ class Measurement(object):
     def are_applicable(self, distances):
         degree_class = self.best_degree_class
         distance_class = self.best_distance_class
-        return Measurement.get_applicability(distances, distance_class, degree_class)
+        ps = Measurement.get_applicability(distances, distance_class, degree_class)
+        # plt.plot(distances,ps)
+        # plt.title(degree_class + ' ' + distance_class)
+        # plt.show()
+        return ps
 
     def evaluate_all(self):
         epsilon = 1e-6
@@ -106,7 +116,53 @@ class Measurement(object):
         return self.__repr__()
 
     @staticmethod
+    def seed_init():
+        sampled_distances = arange(0,2,0.001)
+        sd = array([sampled_distances]).T
+        weights = ones(sampled_distances.shape)
+        insts_and_trained_classifiers = {}
+        for distc,degc in product(Measurement.distance_classes.keys(), Measurement.degree_classes.keys()):
+            ps = Measurement.get_initial_applicability(sampled_distances, distc, degc)
+            rs = random.random(ps.shape)
+            labels = (rs < ps)*2 - 1
+
+            print sd.shape, labels.shape, weights.shape
+            w = train_w(sd, labels, weights)
+
+            # print degc,distc
+            # print w
+            # print accuracy(sd, labels, weights, w)
+            # temp = logistic(dot(append(ones((len(sd),1)),sd,axis=1),w))
+            # print temp
+            # plt.plot(sampled_distances,temp)
+            # plt.title(degc + ' ' + distc)
+            # plt.show()
+            insts_and_trained_classifiers[(distc,degc)] = {'instances': zip(sampled_distances, labels, weights),
+                                                           'w': w}
+
+            # sampled_distances, labels, weights = zip(*self.insts_and_trained_classifiers[(distc,degc)]['instances'])
+            # sd = array([sampled_distances]).T
+            # labels = array(labels)
+            # weights = array(weights)
+            # w = train_w(sd, labels, weights)
+
+            # print ' ',w
+            # print ' ',accuracy(sd, labels, weights, w)
+        Measurement.insts_and_trained_classifiers = insts_and_trained_classifiers
+
+    @staticmethod
     def get_applicability(distances, distance_class, degree_class):
+        w = Measurement.insts_and_trained_classifiers[(distance_class, degree_class)]['w']
+        if isinstance(distances,ndarray):
+            ps = logistic(dot(array([ones(len(distances)),distances]).T,w))
+        else:
+            ps = logistic(dot(array([[1,distances]]),w))[0]
+            # print ps, ps[0]
+            # ps = ps[0]
+        return ps
+
+    @staticmethod
+    def get_initial_applicability(distances, distance_class, degree_class):
         mu,std,sign = Measurement.distance_classes[distance_class]
         mult = Measurement.degree_classes[degree_class]
         ps = norm.cdf(distances, mu * (mult ** sign), std)
@@ -115,6 +171,11 @@ class Measurement(object):
 
     @staticmethod
     def any_are_applicable(distances, required=False):
+
+        if not hasattr(Measurement,'insts_and_trained_classifiers'):
+            Measurement.seed_init()
+        assert( hasattr(Measurement,'insts_and_trained_classifiers') )
+
         dist_classes = Measurement.distance_classes.copy()
         if required:
             del dist_classes[Measurement.NONE]
@@ -128,6 +189,17 @@ class Measurement(object):
 
         return last
 
+    @staticmethod
+    def update(distance, update, distance_class, degree_class):
+        if update != 0:
+            record = Measurement.insts_and_trained_classifiers[(distance_class,degree_class)]
+            record['instances'].append( (distance, cmp(update,0), abs(update)) )
+            distances, labels, weights = zip( *record['instances'] )
+            distances = array([distances]).T
+            labels = array(labels)
+            weights = array(weights)
+            print distances.shape, labels.shape, weights.shape
+            record['w'] = train_w(distances, labels, weights )
 
 class DistanceRelation(Relation):
     def __init__(self, perspective, landmark, trajector):
