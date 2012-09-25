@@ -18,13 +18,13 @@ from utils import (get_meaning,
 from models import Word, Production, CProduction, CWord
 
 from location_from_sentence import get_sentence_posteriors, get_sentence_meaning_likelihood, get_all_sentence_posteriors
-from table2d.run import construct_training_scene
+from semantics.run import construct_training_scene
 
 import numpy as np
 import sys
 from matplotlib import pyplot as plt
 
-from table2d.landmark import (
+from semantics.representation import (
     GroupLineRepresentation,
     RectangleRepresentation
 )

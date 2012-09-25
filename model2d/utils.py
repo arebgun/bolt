@@ -12,12 +12,14 @@ import inspect
 import numpy as np
 from planar import Vec2, BoundingBox
 
-# import stuff from table2d
+# import stuff from semantics
 sys.path.append('..')
-from table2d.speaker import Speaker
-from table2d.landmark import RectangleRepresentation, Scene, Landmark, PointRepresentation, ObjectClass
-from table2d.relation import OrientationRelationSet
-from table2d.run import construct_training_scene
+from semantics.speaker import Speaker
+from semantics.landmark import Landmark, ObjectClass
+from semantics.representation import RectangleRepresentation, PointRepresentation
+from semantics.scene import Scene
+from semantics.relation import OrientationRelationSet
+from semantics.run import construct_training_scene
 
 NONTERMINALS = ('LOCATION-PHRASE', 'RELATION', 'LANDMARK-PHRASE', 'LANDMARK')
 
@@ -41,7 +43,7 @@ def count_lmk_phrases(t):
 
 
 
-# a wrapper for a table2d scene
+# a wrapper for a semantics scene
 class ModelScene(object):
     def __init__(self, scene=None, speaker=None):
         self.scene = scene
