@@ -165,6 +165,7 @@ class CWord(Base):
     relation = Column(String)
     relation_distance_class = Column(String)
     relation_degree_class = Column(String)
+    prev_word = Column(String)
 
     count = Column(Float, nullable=False, default=0)
 
@@ -227,7 +228,7 @@ class CWord(Base):
         cp_db = cls.get_word_counts(pos, word, lmk, lmk_class, lmk_ori_rels, lmk_color, rel, rel_dist_class, rel_deg_class, prev_word)
 
         if cp_db.count() <= 0:
-            if update > 0: return
+            if update < 0: return
             CWord(word=word,
                   pos=pos,
                   prev_word=prev_word,

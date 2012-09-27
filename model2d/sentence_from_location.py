@@ -119,7 +119,7 @@ def update_expansion_counts(update, lhs, rhs, parent=None, lmk_class=None, lmk_o
                                          dist_class=(rel.measurement.best_distance_class if hasattr(rel, 'measurement') else None),
                                          deg_class=(rel.measurement.best_degree_class if hasattr(rel, 'measurement') else None))
 
-def update_word_counts(update, pos, word, lmk_class=None, lmk_ori_rels=None, lmk_color=None, rel=None):
+def update_word_counts(update, pos, word, prev_word='<no prev word>', lmk_class=None, lmk_ori_rels=None, lmk_color=None, rel=None):
     CWord.update_word_counts(update=update,
                              pos=pos,
                              word=word,
