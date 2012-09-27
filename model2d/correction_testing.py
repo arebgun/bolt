@@ -13,8 +13,9 @@ from sentence_from_location import (
     Point
 )
 
-from table2d.run import construct_training_scene
-from table2d.landmark import Landmark, PointRepresentation, LineRepresentation, RectangleRepresentation, GroupLineRepresentation
+from semantics.run import construct_training_scene
+from semantics.landmark import Landmark
+from semantics.representation import PointRepresentation, LineRepresentation, RectangleRepresentation, GroupLineRepresentation
 from nltk.metrics.distance import edit_distance
 from planar import Vec2
 from utils import logger, m2s
@@ -38,15 +39,16 @@ def autocorrect(scene, speaker, num_iterations=1, window=10, scale=1000, consist
     max_mins = []
 
     step = 0.04
-    all_heatmaps_dicts, xs, ys = speaker.generate_all_heatmaps(scene, step=step)
-    all_heatmaps_dict = all_heatmaps_dicts[0]
+    all_heatmaps_tupless, xs, ys = speaker.generate_all_heatmaps(scene, step=step)
+    print
+    all_heatmaps_tuples = all_heatmaps_tupless[0]
     x = np.array( [list(xs-step*0.5)]*len(ys) )
     y = np.array( [list(ys-step*0.5)]*len(xs) ).T
 
-    all_heatmaps_tuples = []
-    for lmk, d in all_heatmaps_dict.items():
-        for rel, heatmaps in d.items():
-            all_heatmaps_tuples.append( (lmk,rel,heatmaps) )
+    # all_heatmaps_tuples = []
+    # for lmk, d in all_heatmaps_dict.items():
+    #     for rel, heatmaps in d.items():
+    #         all_heatmaps_tuples.append( (lmk,rel,heatmaps) )
     # all_heatmaps_tuples = all_heatmaps_tuples[:100]
     lmks, rels, heatmapss = zip(*all_heatmaps_tuples)
     graphmax1 = graphmax2 = 0
@@ -148,9 +150,7 @@ def autocorrect(scene, speaker, num_iterations=1, window=10, scale=1000, consist
 
         if iteration % 10 == 0:
             # for sentence in demo_sentences[:1]:
-            print 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX len(meanings)', len(meanings)
             meanings, heatmapss, graphmax1, graphmax2 = heatmaps_for_sentence(demo_sentences[0], iteration, meanings, heatmapss, graphmax1, graphmax2)
-            print 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX len(meanings)', len(meanings)
 
         # for p,h in zip(posteriors, heatmaps):
         #     probabilities = h.reshape( (len(xs),len(ys)) ).T

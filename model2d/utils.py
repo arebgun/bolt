@@ -20,6 +20,7 @@ from semantics.representation import RectangleRepresentation, PointRepresentatio
 from semantics.scene import Scene
 from semantics.relation import OrientationRelationSet
 from semantics.run import construct_training_scene
+import warnings
 
 NONTERMINALS = ('LOCATION-PHRASE', 'RELATION', 'LANDMARK-PHRASE', 'LANDMARK')
 
@@ -137,6 +138,13 @@ def get_meaning(loc=None, num_ancestors=None):
     # print 'landmark: %s (%s)' % (lmk, lmk_id(lmk))
     # print 'relation:', rel_type(rel)
     return lmk, rel
+
+def correct_meaning(loc, lmk, rel, update):
+    if hasattr(scene.speaker, 'accept_correction'):
+        scene.speaker.accept_correction(lmk, rel, update)
+    else:
+        warning.warn("Can't correct semantics")
+
 
 def m2s(lmk, rel):
     """returns a string that describes the gives landmark and relation"""
