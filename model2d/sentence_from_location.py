@@ -49,7 +49,6 @@ def get_expansion(lhs, parent=None, lmk=None, rel=None, printing=True):
             lmk_class = (lmk.object_class if lmk else None)
             lmk_ori_rels = get_lmk_ori_rels_str(lmk)
             lmk_color = (lmk.color if lmk else None)
-            #if lmk: print lmk, lmk_class, lmk_ori_rels, lmk.ori_relations
             rel_class = rel_type(rel)
             dist_class = (rel.measurement.best_distance_class if hasattr(rel, 'measurement') else None)
             deg_class = (rel.measurement.best_degree_class if hasattr(rel, 'measurement') else None)
@@ -124,6 +123,7 @@ def update_word_counts(update, pos, word, lmk_class=None, lmk_ori_rels=None, lmk
     CWord.update_word_counts(update=update,
                              pos=pos,
                              word=word,
+                             prev_word=prev_word,
                              lmk_class=lmk_class,
                              lmk_ori_rels=lmk_ori_rels,
                              lmk_color=lmk_color,
@@ -131,10 +131,12 @@ def update_word_counts(update, pos, word, lmk_class=None, lmk_ori_rels=None, lmk
                              rel_dist_class=(rel.measurement.best_distance_class if hasattr(rel, 'measurement') else None),
                              rel_deg_class=(rel.measurement.best_degree_class if hasattr(rel, 'measurement') else None))
 
-def get_words(terminals, landmarks, rel=None, printing=True):
+def get_words(terminals, landmarks, rel=None, prevword=None, printing=True):
     words = []
     probs = []
+    alphas = []
     entropy = []
+    C = CWord.get_count
 
     for n,lmk in zip(terminals, landmarks):
         # if we could not get an expansion for the LHS, we just pass down the unexpanded nonterminal symbol
@@ -151,44 +153,73 @@ def get_words(terminals, landmarks, rel=None, printing=True):
         dist_class = (rel.measurement.best_distance_class if hasattr(rel, 'measurement') else None)
         deg_class = (rel.measurement.best_degree_class if hasattr(rel, 'measurement') else None)
 
-        cp_db = CWord.get_word_counts(pos=n,
-                                      lmk_class=lmk_class,
-                                      lmk_ori_rels=get_lmk_ori_rels_str(lmk),
-                                      lmk_color=lmk_color,
-                                      rel=rel_class,
-                                      rel_dist_class=dist_class,
-                                      rel_deg_class=deg_class)
 
-        if cp_db.count() <= 0:
-            if printing: logger( 'Could not expand %s (lmk_class: %s, lmk_color: %s, rel: %s, dist_class: %s, deg_class: %s)' % (n, lmk_class, lmk_color, rel_class, dist_class, deg_class) )
-            terminals.append( n )
-            continue
 
-        if printing: logger( 'Expanded %s (lmk_class: %s, lmk_color: %s, rel: %s, dist_class: %s, deg_class: %s)' % (n, lmk_class, lmk_color, rel_class, dist_class, deg_class) )
+        meaning = dict(pos=n,
+                       lmk_class=lmk_class,
+                       lmk_ori_rels=get_lmk_ori_rels_str(lmk),
+                       lmk_color=lmk_color,
+                       rel=rel_class,
+                       rel_dist_class=dist_class,
+                       rel_deg_class=deg_class)
 
-        ckeys, ccounts = zip(*[(cword.word,cword.count) for cword in cp_db.all()])
+        cp_db_uni = CWord.get_word_counts(**meaning)
 
         ccounter = {}
-        for cword in cp_db.all():
-            if cword.word in ccounter: ccounter[cword.word] += cword.count
-            else: ccounter[cword.word] = cword.count
+        for c in cp_db_uni:
+            ccounter[c.word] = ccounter.get(c.word, 0) + c.count
+        ckeys, ccounts_uni = zip(*ccounter.items())
+        ccounts_uni = np.array(ccounts_uni, dtype=float)
+        ccounts_uni /= ccounts_uni.sum()
 
-        ckeys, ccounts = zip(*ccounter.items())
+
+        prev_word = words[-1] if words else prevword
+        alpha = C(prev_word=prev_word, **meaning) / C(**meaning)
+        alphas.append(alpha)
+
+        if alpha:
+            cp_db_bi = CWord.get_word_counts(prev_word=prev_word, **meaning)
+
+            ccounter = {}
+            for c in cp_db_bi:
+                ccounter[c.word] = ccounter.get(c.word, 0) + c.count
+            ccounts_bi = np.array([ccounter.get(k,0) for k in ckeys], dtype=float)
+            ccounts_bi /= ccounts_bi.sum()
+
+            cprob = (alpha * ccounts_bi) + ((1-alpha) * ccounts_uni)
+
+        else:
+            cprob = ccounts_uni
+
+
+        if cp_db_uni.count() <= 0:
+            logger( 'Could not expand %s (lmk_class: %s, lmk_color: %s, rel: %s, dist_class: %s, deg_class: %s)' % (n, lmk_class, lmk_color, rel_class, dist_class, deg_class) )
+            # terminals.append( n )
+            # continue
+
+        # ckeys, ccounts = zip(*[(cword.word,cword.count) for cword in cp_db.all()])
+
+        # ccounter = {}
+        # for cword in cp_db.all():
+        #     if cword.word in ccounter: ccounter[cword.word] += cword.count
+        #     else: ccounter[cword.word] = cword.count
+
+        # ckeys, ccounts = zip(*ccounter.items())
 
         # print 'ckeys', ckeys
         # print 'ccounts', ccounts
 
-        ccounts = np.array(ccounts, dtype=float)
-        ccounts /= ccounts.sum()
+        # ccounts = np.array(ccounts, dtype=float)
+        # ccounts /= ccounts.sum()
 
-        w, w_prob, w_entropy = categorical_sample(ckeys, ccounts)
+        w, w_prob, w_entropy = categorical_sample(ckeys, cprob)
         words.append(w)
         probs.append(w_prob)
         entropy.append(w_entropy)
 
     p, H = np.prod(probs), np.sum(entropy)
     # print 'expanding %s to %s (p: %f, H: %f)' % (terminals, words, p, H)
-    return words, p, H
+    return words, p, H, alphas
 
 def delete_word(limit, terminals, words, lmk=None, rel=None):
 
@@ -211,10 +242,10 @@ def generate_sentence(loc, consistent, scene=None, speaker=None, printing=True):
     logger( meaning1 )
 
     while True:
-        rel_exp_chain, rele_prob_chain, rele_ent_chain, rel_terminals, rel_landmarks = get_expansion('RELATION', rel=rel, printing=printing)
-        lmk_exp_chain, lmke_prob_chain, lmke_ent_chain, lmk_terminals, lmk_landmarks = get_expansion('LANDMARK-PHRASE', lmk=lmk, printing=printing)
-        rel_words, relw_prob, relw_ent = get_words(rel_terminals, landmarks=rel_landmarks, rel=rel, printing=printing)
-        lmk_words, lmkw_prob, lmkw_ent = get_words(lmk_terminals, landmarks=lmk_landmarks, printing=printing)
+        rel_exp_chain, rele_prob_chain, rele_ent_chain, rel_terminals, rel_landmarks = get_expansion('RELATION', rel=rel, printing=True)
+        lmk_exp_chain, lmke_prob_chain, lmke_ent_chain, lmk_terminals, lmk_landmarks = get_expansion('LANDMARK-PHRASE', lmk=lmk, printing=True)
+        rel_words, relw_prob, relw_ent, rel_a = get_words(rel_terminals, landmarks=rel_landmarks, rel=rel, printing=True)
+        lmk_words, lmkw_prob, lmkw_ent, lmk_a = get_words(lmk_terminals, landmarks=lmk_landmarks, prevword=(rel_words[-1] if rel_words else None), printing=True)
         sentence = ' '.join(rel_words + lmk_words)
 
         if printing: logger( 'rel_exp_chain: %s' % rel_exp_chain )
@@ -226,6 +257,8 @@ def generate_sentence(loc, consistent, scene=None, speaker=None, printing=True):
                            lmk_exp_chain, lmke_prob_chain, lmke_ent_chain, lmk_terminals, lmk_landmarks,
                            rel_words, relw_prob, relw_ent,
                            lmk_words, lmkw_prob, lmkw_ent))
+        meaning.rel_a = rel_a
+        meaning.lmk_a = lmk_a
 
         if consistent:
              # get the most likely meaning for the generated sentence
@@ -278,6 +311,9 @@ def accept_correction( meaning, correction, update_func='geometric', update_scal
      lmk_exp_chain, lmke_prob_chain, lmke_ent_chain, lmk_terminals, lmk_landmarks,
      rel_words, relw_prob, relw_ent,
      lmk_words, lmkw_prob, lmkw_ent) = meaning.args
+    rel_a = meaning.rel_a
+    lmk_a = meaning.lmk_a
+
 
     old_meaning_prob, old_meaning_entropy, lrpc, tps = get_sentence_meaning_likelihood( correction, lmk, rel )
 
@@ -299,15 +335,27 @@ def accept_correction( meaning, correction, update_func='geometric', update_scal
                                                                lmk_ori_rels=get_lmk_ori_rels_str(lmk),
                                                                lmk_color=(lmk.color if lmk else None) )
 
-    for term,word in zip(rel_terminals,rel_words):
+    data = zip(rel_terminals, rel_words)
+    for i in xrange(len(data)):
+        term,word = data[i]
+        prev_word = data[i-1][1] if i > 0 else None
+        a = rel_a[i]
         # print 'Decrementing word - pos: %s, word: %s, rel: %s' % (term, word, rel)
-        update_word_counts( dec_update, term, word, rel=rel )
+        update_word_counts( (1-a)*dec_update, term, word, rel=rel )
+        update_word_counts(a*dec_update, term, word, rel=rel, prev_word=prev_word)
 
-    for term,word,lmk in zip(lmk_terminals,lmk_words,lmk_landmarks):
+    data = zip(lmk_terminals, lmk_words, lmk_landmarks)
+    for i in xrange(len(data)):
+        term, word, lmk = data[i]
+        prev_word = data[i-1][1] if i > 0 else rel_words[-1]
+        a = lmk_a[i]
         # print 'Decrementing word - pos: %s, word: %s, lmk_class: %s' % (term, word, lmk.object_class)
-        update_word_counts( dec_update, term, word, lmk_class=lmk.object_class,
-                                                    lmk_ori_rels=get_lmk_ori_rels_str(lmk),
-                                                    lmk_color=(lmk.color if lmk else None) )
+        update_word_counts((1-a)*dec_update, term, word, lmk_class=lmk.object_class,
+                                                         lmk_ori_rels=get_lmk_ori_rels_str(lmk),
+                                                         lmk_color=(lmk.color if lmk else None))
+        update_word_counts( a*dec_update, term, word, prev_word, lmk_class=lmk.object_class,
+                                                                 lmk_ori_rels=get_lmk_ori_rels_str(lmk),
+                                                                 lmk_color=(lmk.color if lmk else None) )
 
     # reward new words with old meaning
     for lhs,rhs,parent,lmk,rel in lrpc:
@@ -317,12 +365,14 @@ def accept_correction( meaning, correction, update_func='geometric', update_scal
                                                            lmk_ori_rels=get_lmk_ori_rels_str(lmk),
                                                            lmk_color=(lmk.color if lmk else None) )
 
-    for lhs,rhs,lmk,rel in tps:
+    for i in xrange(len(tps)):
+        lhs,rhs,lmk,rel = tps[i]
+        prev_word = tps[i-1][1] if i > 0 else None
         # print 'Incrementing word - pos: %s, word: %s, lmk_class: %s' % (lhs, rhs, (lmk.object_class if lmk else None) )
-        update_word_counts( update, lhs, rhs, lmk_class=(lmk.object_class if lmk else None),
-                                              rel=rel,
-                                              lmk_ori_rels=get_lmk_ori_rels_str(lmk),
-                                              lmk_color=(lmk.color if lmk else None) )
+        update_word_counts( update, lhs, rhs, prev_word, lmk_class=(lmk.object_class if lmk else None),
+                                                         rel=rel,
+                                                         lmk_ori_rels=get_lmk_ori_rels_str(lmk),
+                                                         lmk_color=(lmk.color if lmk else None) )
 
 
 def accept_new_words( location, sentence, update_func='geometric', update_scale=10, num_meanings=10, printing=True ):
@@ -381,9 +431,7 @@ class Point(object):
         self.x, self.y = self.xy
 
     def __repr__(self):
-        return 'Point(%s, %s)'  % self.xy
-
-
+        return 'Point(%s, %s)' % self.xy
 
 
 if __name__ == '__main__':
