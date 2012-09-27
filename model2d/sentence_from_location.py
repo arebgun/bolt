@@ -282,7 +282,7 @@ def accept_correction( meaning, correction, update_func='geometric', update_scal
      rel_words, relw_prob, relw_ent,
      lmk_words, lmkw_prob, lmkw_ent) = meaning.args
 
-    old_meaning_prob, old_meaning_entropy, lrpc, tps = get_sentence_meaning_likelihood( correction, lmk, rel )
+    old_meaning_prob, old_meaning_entropy, lrpc, tps = get_sentence_meaning_likelihood( correction, lmk, rel, printing=printing )
 
     update = update_funcs[update_func](lmk_prob * rel_prob, old_meaning_prob, lmk_ent + rel_ent, old_meaning_entropy) * update_scale
 
@@ -328,10 +328,13 @@ def accept_correction( meaning, correction, update_func='geometric', update_scal
                                               lmk_color=(lmk1.color if lmk1 else None) )
 
     if correct_semantics:
+      sem_update = 1-update
       # update semantics
-      logger('Semantics update:%f\n' % dec_update*1000)
+      logger('Semantics update:%f\n' % (-sem_update*update_scale))
       # decrement old meaning
-      correct_meaning(None, lmk, rel, dec_update*1000)
+      correct_meaning(None, lmk, rel, sem_update*update_scale)
+
+      # get_all_sentence_posteriors( )
 
 
 
@@ -554,20 +557,8 @@ if __name__ == '__main__':
 
     else:
         plt.ion()
-        if args.correct_semantics:
-            step = 0.04
 
-            scene_bb = scene.get_bounding_box()
-            scene_bb = scene_bb.inflate( Vec2(scene_bb.width*0.5,scene_bb.height*0.5) )
-            all_heatmaps_tupless, xs, ys = speaker.generate_all_heatmaps(scene, step=step)
-            all_heatmaps_tuples = all_heatmaps_tupless[0]
-            x = np.array( [list(xs-step*0.5)]*len(ys) )
-            y = np.array( [list(ys-step*0.5)]*len(xs) ).T
-
-            lmks, rels, heatmapss = zip(*all_heatmaps_tuples)
-            meanings = zip(lmks,rels)
-
-        def heatmaps_for_relation(iteration, lmk, rel, loc, meanings, heatmapss):
+        def heatmaps_for_relation(iteration, lmk, rel, loc, meanings, heatmapss, vmax1, vmax2):
 
             big_heatmap1 = None
             big_heatmap2 = None
@@ -583,11 +574,14 @@ if __name__ == '__main__':
             print xs.shape, ys.shape
 
             plt.figure(iteration)
-            plt.suptitle('lmk: %s, rel: %s' % (lmk, rel) )
+            plt.suptitle( m2s(lmk, rel) )
             plt.subplot(121)
 
             probabilities1 = big_heatmap1.reshape( (len(xs),len(ys)) ).T
-            plt.pcolor(x, y, probabilities1, cmap = 'jet', edgecolors='none', alpha=0.7)#, vmin=0, vmax=0.02)
+            if vmax1 is None:
+                vmax1 = probabilities1.max()
+            plt.pcolor(x, y, probabilities1, cmap = 'jet', edgecolors='none', alpha=0.7, vmin=0, vmax=vmax1)
+
 
 
             for lmk1 in scene.landmarks.values():
@@ -632,7 +626,9 @@ if __name__ == '__main__':
             plt.subplot(122)
 
             probabilities2 = big_heatmap2.reshape( (len(xs),len(ys)) ).T
-            plt.pcolor(x, y, probabilities2, cmap = 'jet', edgecolors='none', alpha=0.7)#, vmin=0, vmax=0.02)
+            if vmax2 is None:
+                vmax2 = probabilities2.max()
+            plt.pcolor(x, y, probabilities2, cmap = 'jet', edgecolors='none', alpha=0.7, vmin=0, vmax=vmax2)
 
             for lmk1 in scene.landmarks.values():
                 if isinstance(lmk1.representation, GroupLineRepresentation):
@@ -673,24 +669,38 @@ if __name__ == '__main__':
             plt.title('Likelihood of location(s) given sentence')
             plt.draw()
             plt.show()
-            return sorted(meanings,reverse=True)
+            return vmax1, vmax2
 
         i = 0
         lmk = rel = None
+        correction = ''
+        vmax1 = vmax2 = None
         while True:
             meaning, sentence = generate_sentence(args.location.xy, args.consistent, scene, speaker, printing=printing)
             if lmk is None:
                 lmk = meaning.args[0]
                 rel = meaning.args[3]
-                logger('I\'m gonna show lmk: %s and rel: %s' % (lmk, rel) )
+                logger('I\'m gonna show %s' % m2s(lmk, rel) )
             logger('Generated sentence: %s' % sentence)
 
-            if args.correct_semantics:
-                heatmaps_for_relation(i, lmk, rel, args.location, meanings, heatmapss)
+            if args.correct_semantics and correction.lower() not in ['no','nope']:
+                step = 0.04
+
+                scene_bb = scene.get_bounding_box()
+                scene_bb = scene_bb.inflate( Vec2(scene_bb.width*0.5,scene_bb.height*0.5) )
+                all_heatmaps_tupless, xs, ys = speaker.generate_all_heatmaps(scene, step=step)
+                all_heatmaps_tuples = all_heatmaps_tupless[0]
+                x = np.array( [list(xs-step*0.5)]*len(ys) )
+                y = np.array( [list(ys-step*0.5)]*len(xs) ).T
+
+                lmks, rels, heatmapss = zip(*all_heatmaps_tuples)
+                meanings = zip(lmks,rels)
+
+                vmax1, vmax2 = heatmaps_for_relation(i, lmk, rel, args.location, meanings, heatmapss, vmax1, vmax2)
             correction = raw_input('Correction? ')
             if correction == 'exit': break
-            if correction not in ['No','no','Nope','nope']:
-                accept_correction( meaning, correction, printing=printing, correct_semantics=args.correct_semantics )
+            if correction.lower() not in ['no','nope']:
+                accept_correction( meaning, correction, update_scale=10, printing=printing, correct_semantics=args.correct_semantics )
             # if args.correct_semantics:
             #     heatmaps_for_relation(i, lmk, rel, args.location, meanings, heatmapss)
             i += 1

@@ -1,6 +1,6 @@
 import random
 from numpy import random as nprandom
 
-seed=7
+seed=22
 random.seed(seed)
 nprandom.seed(seed)
