@@ -274,7 +274,7 @@ update_funcs = {
 }
 
 
-def accept_correction( meaning, correction, update_func='geometric', update_scale=10, printing=True, correct_semantics=False):
+def accept_correction( meaning, correction, update_func='geometric', update_scale=10, printing=True, correct_semantics=False, all_meanings=None):
     (lmk, lmk_prob, lmk_ent,
      rel, rel_prob, rel_ent,
      rel_exp_chain, rele_prob_chain, rele_ent_chain, rel_terminals, rel_landmarks,
@@ -292,49 +292,67 @@ def accept_correction( meaning, correction, update_func='geometric', update_scal
 
     dec_update = -update
 
-    for lhs,rhs,parent,_ in rel_exp_chain:
-        # print 'Decrementing production - lhs: %s, rhs: %s, parent: %s' % (lhs,rhs,parent)
-        update_expansion_counts( dec_update, lhs, rhs, parent, rel=rel )
+    # for lhs,rhs,parent,_ in rel_exp_chain:
+    #     # print 'Decrementing production - lhs: %s, rhs: %s, parent: %s' % (lhs,rhs,parent)
+    #     update_expansion_counts( dec_update, lhs, rhs, parent, rel=rel )
 
-    for lhs,rhs,parent,lmk in lmk_exp_chain:
-        # print 'Decrementing production - lhs: %s, rhs: %s, parent: %s' % (lhs,rhs,parent)
-        update_expansion_counts( dec_update, lhs, rhs, parent, lmk_class=(lmk.object_class if lmk else None),
-                                                               lmk_ori_rels=get_lmk_ori_rels_str(lmk),
-                                                               lmk_color=(lmk.color if lmk else None) )
+    # for lhs,rhs,parent,lmk in lmk_exp_chain:
+    #     # print 'Decrementing production - lhs: %s, rhs: %s, parent: %s' % (lhs,rhs,parent)
+    #     update_expansion_counts( dec_update, lhs, rhs, parent, lmk_class=(lmk.object_class if lmk else None),
+    #                                                            lmk_ori_rels=get_lmk_ori_rels_str(lmk),
+    #                                                            lmk_color=(lmk.color if lmk else None) )
 
-    for term,word in zip(rel_terminals,rel_words):
-        # print 'Decrementing word - pos: %s, word: %s, rel: %s' % (term, word, rel)
-        update_word_counts( dec_update, term, word, rel=rel )
+    # for term,word in zip(rel_terminals,rel_words):
+    #     # print 'Decrementing word - pos: %s, word: %s, rel: %s' % (term, word, rel)
+    #     update_word_counts( dec_update, term, word, rel=rel )
 
-    for term,word,lmk in zip(lmk_terminals,lmk_words,lmk_landmarks):
-        # print 'Decrementing word - pos: %s, word: %s, lmk_class: %s' % (term, word, lmk.object_class)
-        update_word_counts( dec_update, term, word, lmk_class=lmk.object_class,
-                                                    lmk_ori_rels=get_lmk_ori_rels_str(lmk),
-                                                    lmk_color=(lmk.color if lmk else None) )
+    # for term,word,lmk in zip(lmk_terminals,lmk_words,lmk_landmarks):
+    #     # print 'Decrementing word - pos: %s, word: %s, lmk_class: %s' % (term, word, lmk.object_class)
+    #     update_word_counts( dec_update, term, word, lmk_class=lmk.object_class,
+    #                                                 lmk_ori_rels=get_lmk_ori_rels_str(lmk),
+    #                                                 lmk_color=(lmk.color if lmk else None) )
 
-    # reward new words with old meaning
-    for lhs,rhs,parent,lmk1,rel1 in lrpc:
-        # print 'Incrementing production - lhs: %s, rhs: %s, parent: %s' % (lhs,rhs,parent)
-        update_expansion_counts( update, lhs, rhs, parent, rel=rel1,
-                                                           lmk_class=(lmk1.object_class if lmk1 else None),
-                                                           lmk_ori_rels=get_lmk_ori_rels_str(lmk1),
-                                                           lmk_color=(lmk1.color if lmk1 else None) )
+    # # reward new words with old meaning
+    # for lhs,rhs,parent,lmk1,rel1 in lrpc:
+    #     # print 'Incrementing production - lhs: %s, rhs: %s, parent: %s' % (lhs,rhs,parent)
+    #     update_expansion_counts( update, lhs, rhs, parent, rel=rel1,
+    #                                                        lmk_class=(lmk1.object_class if lmk1 else None),
+    #                                                        lmk_ori_rels=get_lmk_ori_rels_str(lmk1),
+    #                                                        lmk_color=(lmk1.color if lmk1 else None) )
 
-    for lhs,rhs,lmk1,rel1 in tps:
-        # print 'Incrementing word - pos: %s, word: %s, lmk_class: %s' % (lhs, rhs, (lmk.object_class if lmk else None) )
-        update_word_counts( update, lhs, rhs, lmk_class=(lmk1.object_class if lmk1 else None),
-                                              rel=rel1,
-                                              lmk_ori_rels=get_lmk_ori_rels_str(lmk1),
-                                              lmk_color=(lmk1.color if lmk1 else None) )
+    # for lhs,rhs,lmk1,rel1 in tps:
+    #     # print 'Incrementing word - pos: %s, word: %s, lmk_class: %s' % (lhs, rhs, (lmk.object_class if lmk else None) )
+    #     update_word_counts( update, lhs, rhs, lmk_class=(lmk1.object_class if lmk1 else None),
+    #                                           rel=rel1,
+    #                                           lmk_ori_rels=get_lmk_ori_rels_str(lmk1),
+    #                                           lmk_color=(lmk1.color if lmk1 else None) )
 
     if correct_semantics:
-      sem_update = 1-update
-      # update semantics
-      logger('Semantics update:%f\n' % (-sem_update*update_scale))
-      # decrement old meaning
-      correct_meaning(None, lmk, rel, sem_update*update_scale)
+        sem_update = 1-update
+        # update semantics
+        logger('Semantics update:%f\n' % (-sem_update*update_scale))
+        # decrement old meaning
+        correct_meaning(None, lmk, rel, -sem_update*update_scale)
 
-      # get_all_sentence_posteriors( )
+        if all_meanings:
+            posteriors = get_all_sentence_posteriors(correction, all_meanings, printing=printing)
+            sortable = []
+            for meaning in all_meanings:
+                sortable.append( (posteriors[meaning[0]]*posteriors[meaning[1]], meaning) )
+            sortable.sort()
+            x = 10
+            logger('')
+            # logger('Top %i meanings:' % x)
+            # logger(sortable)
+            # for l,r in sortable[:x]:
+            #     logger('    %s' % m2s( l,r )  )
+
+            new_lmk, new_rel = sortable[0][1]
+            logger('Best meaning: %s' % m2s(new_lmk, new_rel) )
+            logger('Semantics update:%f' % (sem_update*update_scale))
+            correct_meaning(None, new_lmk, new_rel, sem_update*update_scale)
+
+
 
 
 
@@ -700,7 +718,7 @@ if __name__ == '__main__':
             correction = raw_input('Correction? ')
             if correction == 'exit': break
             if correction.lower() not in ['no','nope']:
-                accept_correction( meaning, correction, update_scale=10, printing=printing, correct_semantics=args.correct_semantics )
+                accept_correction( meaning, correction, update_scale=100, printing=printing, correct_semantics=args.correct_semantics, all_meanings=meanings )
             # if args.correct_semantics:
             #     heatmaps_for_relation(i, lmk, rel, args.location, meanings, heatmapss)
             i += 1
