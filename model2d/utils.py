@@ -144,6 +144,10 @@ def m2s(lmk, rel):
                                                 rel.measurement.best_degree_class if hasattr(rel,'measurement') else None,
                                                 rel.measurement.best_distance_class if hasattr(rel,'measurement') else None)
 
+def entropy_of_counts(counts):
+    counts = np.array(counts, dtype=float)
+    probs = counts / counts.sum()
+    return -np.sum( (probs * np.log(probs)) )
 
 
 
