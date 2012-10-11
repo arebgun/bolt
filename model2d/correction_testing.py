@@ -13,6 +13,10 @@ from sentence_from_location import (
     Point
 )
 
+from location_from_sentence import get_tree_probs
+from parse import get_modparse
+from nltk.tree import ParentedTree
+
 from semantics.run import construct_training_scene
 from semantics.landmark import Landmark
 from semantics.representation import PointRepresentation, LineRepresentation, RectangleRepresentation, GroupLineRepresentation
@@ -37,6 +41,8 @@ def autocorrect(scene, speaker, num_iterations=1, window=10, scale=1000, consist
     max_dists = []
     avg_min = []
     max_mins = []
+    golden_log_probs = []
+    avg_golden_log_probs = []
 
     step = 0.1
     all_heatmaps_tupless, xs, ys = speaker.generate_all_heatmaps(scene, step=step)
@@ -63,7 +69,7 @@ def autocorrect(scene, speaker, num_iterations=1, window=10, scale=1000, consist
     epsilon = 0.0001
     def heatmaps_for_sentence(sentence, iteration, good_meanings, good_heatmapss, graphmax1, graphmax2):
 
-        posteriors = get_all_sentence_posteriors(sentence, good_meanings, printing)
+        posteriors = get_all_sentence_posteriors(sentence, good_meanings, printing=printing)
         # print sorted(zip(posteriors, meanings))
         # posteriors /= posteriors.sum()
         # for p,(l,r) in sorted(zip(posteriors, good_meanings)):
@@ -149,9 +155,10 @@ def autocorrect(scene, speaker, num_iterations=1, window=10, scale=1000, consist
 
         if iteration % 10 == 0:
             # for sentence in demo_sentences[:1]:
-            print 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX len(meanings)', len(meanings)
-            meanings, heatmapss, graphmax1, graphmax2 = heatmaps_for_sentence(demo_sentences[0], iteration, meanings, heatmapss, graphmax1, graphmax2)
-            print 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX len(meanings)', len(meanings)
+            # print 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX len(meanings)', len(meanings)
+            #meanings, heatmapss, graphmax1, graphmax2 = heatmaps_for_sentence(demo_sentences[0], iteration, meanings, heatmapss, graphmax1, graphmax2)
+            # print 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX len(meanings)', len(meanings)
+            pass
 
         # for p,h in zip(posteriors, heatmaps):
         #     probabilities = h.reshape( (len(xs),len(ys)) ).T
@@ -163,8 +170,19 @@ def autocorrect(scene, speaker, num_iterations=1, window=10, scale=1000, consist
         logger('Iteration %d' % iteration)
         rand_p = Vec2(random()*table.width+table.min_point.x, random()*table.height+table.min_point.y)
         meaning, sentence = generate_sentence(rand_p, consistent, scene, speaker, printing=printing)
+        bestmeaning, bestsentence = generate_sentence(rand_p, consistent, scene, speaker, usebest=True, printing=printing)
 
         logger( 'Generated sentence: %s' % sentence)
+        logger( 'Best sentence: %s' % bestsentence)
+
+
+        print 'parsing ...'
+        _, modparse = get_modparse(bestsentence)
+        t = ParentedTree.parse(modparse)
+        lmk, rel = bestmeaning.args[0], bestmeaning.args[3]
+        p = np.sum(np.log(get_tree_probs(t, lmk, rel, golden=True, printing=printing)[0]))
+        golden_log_probs.append(p)
+        avg_golden_log_probs.append(np.mean(golden_log_probs[-window:]))
 
         trajector = Landmark( 'point', PointRepresentation(rand_p), None, Landmark.POINT )
         landmark, relation = meaning.args[0], meaning.args[3]
@@ -185,11 +203,18 @@ def autocorrect(scene, speaker, num_iterations=1, window=10, scale=1000, consist
         correction = distances[0][1]
         accept_correction( meaning, correction, update_scale=scale, printing=printing )
 
-        print np.mean(min_dists), avg_min, max_mins
+        print np.mean(min_dists), avg_min, max_mins, golden_log_probs
         print;print
 
     plt.plot(avg_min, 'bo-')
     plt.plot(max_mins, 'rx-')
+    plt.show()
+    plt.draw()
+
+    plt.figure()
+    plt.plot(golden_log_probs, 'bo-')
+    plt.plot(avg_golden_log_probs, 'rx-')
+
     plt.ioff()
     plt.show()
     plt.draw()
@@ -204,6 +229,6 @@ if __name__ == '__main__':
 
     scene, speaker = construct_training_scene()
 
-    autocorrect(scene, speaker, args.num_iterations, consistent=args.consistent)
+    autocorrect(scene, speaker, args.num_iterations, window=20, consistent=args.consistent)
 
 

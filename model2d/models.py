@@ -17,6 +17,7 @@ import numpy as np
 ### configuration ###
 
 db_url = 'sqlite:///table2d.db'
+golden_db_url = 'sqlite:///golden-table2d.db'
 #db_url = 'postgresql+pg8000://postgres:postgres@localhost:5432/table2d'
 echo = False
 
@@ -45,6 +46,11 @@ Session = sessionmaker()
 Session.configure(bind=engine)
 session = Session()
 
+golden_engine = create_engine(golden_db_url, echo=echo)
+golden_Session = sessionmaker()
+golden_Session.configure(bind=golden_engine)
+golden_session = golden_Session()
+
 class Base(object):
     # if you have a __unicode__ method
     # you get __str__ and __repr__ for free!
@@ -61,15 +67,18 @@ class Base(object):
         return cls.__name__.lower() + 's'
 
     # easy access to `Query` object
-    @ClassProperty
+    #@ClassProperty
     @classmethod
-    def query(cls):
-        return session.query(cls)
+    def query(cls, golden=False):
+        if golden:
+            return golden_session.query(cls)
+        else:
+            return session.query(cls)
 
     # like in elixir
     @classmethod
     def get_by(cls, **kwargs):
-        return cls.query.filter_by(**kwargs).first()
+        return cls.query().filter_by(**kwargs).first()
 
     # like in django
     @classmethod
@@ -122,7 +131,7 @@ class Word(Base):
 
     @classmethod
     def get_words(cls, pos=None, lmk=None, rel=None):
-        q = cls.query.join(Production)
+        q = cls.query().join(Production)
 
         if pos is not None:
             q = q.filter(Word.pos==pos)
@@ -137,7 +146,7 @@ class Word(Base):
 
     @classmethod
     def delete_words(cls, limit, pos, word, lmk=None, rel=None):
-        q = cls.query.join(Production)
+        q = cls.query().join(Production)
 
         if pos is not None:
             q = q.filter(Word.pos==pos)
@@ -185,8 +194,9 @@ class CWord(Base):
                         rel=None,
                         rel_dist_class=None,
                         rel_deg_class=None,
-                        prev_word='<no prev word>'):
-        q = cls.query
+                        prev_word='<no prev word>',
+                        golden=False):
+        q = cls.query(golden=golden)
         if word != None:
             q = q.filter(CWord.word==word)
         if pos != None:
@@ -224,11 +234,12 @@ class CWord(Base):
                            lmk_color=None,
                            rel=None,
                            rel_dist_class=None,
-                           rel_deg_class=None):
-        cp_db = cls.get_word_counts(pos, word, lmk, lmk_class, lmk_ori_rels, lmk_color, rel, rel_dist_class, rel_deg_class, prev_word)
+                           rel_deg_class=None,
+                           golden=False):
+        cp_db = cls.get_word_counts(pos, word, lmk, lmk_class, lmk_ori_rels, lmk_color, rel, rel_dist_class, rel_deg_class, prev_word, golden)
 
         if cp_db.count() <= 0:
-            if update < 0: return
+            if update <= 0: return
             CWord(word=word,
                   pos=pos,
                   prev_word=prev_word,
@@ -346,7 +357,7 @@ class Production(Base):
 
     @classmethod
     def get_productions(cls, lhs=None, parent=None, lmk=None, rel=None):
-        q = cls.query
+        q = cls.query()
 
         if lhs is not None:
             q = q.filter(Production.lhs==lhs)
@@ -396,8 +407,9 @@ class CProduction(Base):
                               lmk_color=None,
                               rel=None,
                               dist_class=None,
-                              deg_class=None):
-        q = cls.query
+                              deg_class=None,
+                              golden=False):
+        q = cls.query(golden=golden)
         if lhs != None:
             q = q.filter(CProduction.lhs==lhs)
         if rhs != None:
@@ -430,8 +442,9 @@ class CProduction(Base):
                                  lmk_color=None,
                                  rel=None,
                                  dist_class=None,
-                                 deg_class=None):
-        cp_db = cls.get_production_counts(lhs,rhs,parent,lmk_class,lmk_ori_rels,lmk_color,rel,dist_class,deg_class)
+                                 deg_class=None,
+                                 golden=False):
+        cp_db = cls.get_production_counts(lhs,rhs,parent,lmk_class,lmk_ori_rels,lmk_color,rel,dist_class,deg_class,golden)
 
         if cp_db.count() <= 0:
             assert(update > 0)
@@ -513,7 +526,7 @@ class WordCPT(Base):
         """gets probability from db"""
         params = dict((f,None) for f in cls.fields)
         params.update(given)
-        return cls.query.filter_by(word=word, **given).one()
+        return cls.query().filter_by(word=word, **given).one()
 
     @classmethod
     def probability(cls, word, **given):
@@ -576,7 +589,7 @@ class ExpansionCPT(Base):
         """gets probability stored in db"""
         params = dict((f, None) for f in cls.fields)
         params.update(given)
-        return cls.query.filter_by(rhs=rhs, **params).one()
+        return cls.query().filter_by(rhs=rhs, **params).one()
 
     @classmethod
     def probability(cls, rhs, **given):
@@ -608,7 +621,7 @@ class SentenceParse(Base):
 
     @classmethod
     def get_sentence_parse(cls, sentence, orig_parse=None, mod_parse=None):
-        q = cls.query
+        q = cls.query()
         q = q.filter(SentenceParse.sentence==sentence)
 
         # if orig_parse != None:

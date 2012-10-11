@@ -8,6 +8,7 @@ from operator import itemgetter
 import utils
 from utils import (get_meaning,
                    categorical_sample,
+                   pick_best,
                    parent_landmark,
                    lmk_id,
                    rel_type,
@@ -31,9 +32,12 @@ from semantics.representation import (
 
 from planar import Vec2
 
+from myrandom import random
+random = random.random
+
 # np.seterr(all='raise')
 
-def get_expansion(lhs, parent=None, lmk=None, rel=None, printing=True):
+def get_expansion(lhs, parent=None, lmk=None, rel=None, usebest=False, printing=True):
     lhs_rhs_parent_chain = []
     prob_chain = []
     entropy_chain = []
@@ -84,7 +88,10 @@ def get_expansion(lhs, parent=None, lmk=None, rel=None, printing=True):
             ccounts = np.array(ccounts, dtype=float)
             ccounts /= ccounts.sum()
 
-            cprod, cprod_prob, cprod_entropy = categorical_sample(ckeys, ccounts)
+            if usebest:
+                cprod, cprod_prob, cprod_entropy = pick_best(ckeys, ccounts)
+            else:
+                cprod, cprod_prob, cprod_entropy = categorical_sample(ckeys, ccounts)
             # print cprod, cprod_prob, cprod_entropy
 
             lhs_rhs_parent_chain.append( ( n,cprod,parent,lmk ) )
@@ -131,7 +138,7 @@ def update_word_counts(update, pos, word, prev_word='<no prev word>', lmk_class=
                              rel_dist_class=(rel.measurement.best_distance_class if hasattr(rel, 'measurement') else None),
                              rel_deg_class=(rel.measurement.best_degree_class if hasattr(rel, 'measurement') else None))
 
-def get_words(terminals, landmarks, rel=None, prevword=None, printing=True):
+def get_words(terminals, landmarks, rel=None, prevword=None, usebest=False, printing=True):
     words = []
     probs = []
     alphas = []
@@ -212,7 +219,11 @@ def get_words(terminals, landmarks, rel=None, prevword=None, printing=True):
         # ccounts = np.array(ccounts, dtype=float)
         # ccounts /= ccounts.sum()
 
-        w, w_prob, w_entropy = categorical_sample(ckeys, cprob)
+
+        if usebest:
+             w, w_prob, w_entropy = pick_best(ckeys, cprob)
+        else:
+            w, w_prob, w_entropy = categorical_sample(ckeys, cprob)
         words.append(w)
         probs.append(w_prob)
         entropy.append(w_entropy)
@@ -234,7 +245,7 @@ class Meaning(object):
         self.args = args
 
 
-def generate_sentence(loc, consistent, scene=None, speaker=None, printing=True):
+def generate_sentence(loc, consistent, scene=None, speaker=None, usebest=False, printing=True):
     utils.scene = utils.ModelScene(scene, speaker)
 
     (lmk, lmk_prob, lmk_ent), (rel, rel_prob, rel_ent) = get_meaning(loc=loc)
@@ -242,10 +253,10 @@ def generate_sentence(loc, consistent, scene=None, speaker=None, printing=True):
     logger( meaning1 )
 
     while True:
-        rel_exp_chain, rele_prob_chain, rele_ent_chain, rel_terminals, rel_landmarks = get_expansion('RELATION', rel=rel, printing=True)
-        lmk_exp_chain, lmke_prob_chain, lmke_ent_chain, lmk_terminals, lmk_landmarks = get_expansion('LANDMARK-PHRASE', lmk=lmk, printing=True)
-        rel_words, relw_prob, relw_ent, rel_a = get_words(rel_terminals, landmarks=rel_landmarks, rel=rel, printing=True)
-        lmk_words, lmkw_prob, lmkw_ent, lmk_a = get_words(lmk_terminals, landmarks=lmk_landmarks, prevword=(rel_words[-1] if rel_words else None), printing=True)
+        rel_exp_chain, rele_prob_chain, rele_ent_chain, rel_terminals, rel_landmarks = get_expansion('RELATION', rel=rel, usebest=usebest, printing=printing)
+        lmk_exp_chain, lmke_prob_chain, lmke_ent_chain, lmk_terminals, lmk_landmarks = get_expansion('LANDMARK-PHRASE', lmk=lmk, usebest=usebest, printing=printing)
+        rel_words, relw_prob, relw_ent, rel_a = get_words(rel_terminals, landmarks=rel_landmarks, rel=rel, usebest=usebest, printing=printing)
+        lmk_words, lmkw_prob, lmkw_ent, lmk_a = get_words(lmk_terminals, landmarks=lmk_landmarks, prevword=(rel_words[-1] if rel_words else None), usebest=usebest, printing=printing)
         sentence = ' '.join(rel_words + lmk_words)
 
         if printing: logger( 'rel_exp_chain: %s' % rel_exp_chain )
@@ -315,7 +326,7 @@ def accept_correction( meaning, correction, update_func='geometric', update_scal
     lmk_a = meaning.lmk_a
 
 
-    old_meaning_prob, old_meaning_entropy, lrpc, tps = get_sentence_meaning_likelihood( correction, lmk, rel )
+    old_meaning_prob, old_meaning_entropy, lrpc, tps = get_sentence_meaning_likelihood( correction, lmk, rel, printing=printing)
 
     update = update_funcs[update_func](lmk_prob * rel_prob, old_meaning_prob, lmk_ent + rel_ent, old_meaning_entropy) * update_scale
 
@@ -437,11 +448,15 @@ class Point(object):
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('-l', '--location', type=Point, required=True)
+    parser.add_argument('-l', '--location', type=Point)
     parser.add_argument('--consistent', action='store_true')
     parser.add_argument('--new-word-training', action='store_true')
     parser.add_argument('--new-word-training2', action='store_true')
+    parser.add_argument('-b', '--best', action='store_true')
     args = parser.parse_args()
+
+    if not args.location:
+        args.location = Point(str(random()*0.8-0.4)+','+str(random()*0.6+0.4))
 
     scene, speaker = construct_training_scene()
 
@@ -561,10 +576,10 @@ if __name__ == '__main__':
         landmark, relation = THE_meaning
 
         def gen_sentence(lmk, rel, printing):
-            _,_,_, rel_terminals, rel_landmarks = get_expansion('RELATION', rel=rel, printing=printing)
-            _,_,_, lmk_terminals, lmk_landmarks = get_expansion('LANDMARK-PHRASE', lmk=lmk, printing=printing)
-            rel_words, _,_ = get_words(rel_terminals, landmarks=rel_landmarks, rel=rel, printing=printing)
-            lmk_words, _,_ = get_words(lmk_terminals, landmarks=lmk_landmarks, printing=printing)
+            _,_,_, rel_terminals, rel_landmarks = get_expansion('RELATION', rel=rel, usebest=args.best, printing=printing)
+            _,_,_, lmk_terminals, lmk_landmarks = get_expansion('LANDMARK-PHRASE', lmk=lmk, usebest=args.best, printing=printing)
+            rel_words, _,_ = get_words(rel_terminals, landmarks=rel_landmarks, rel=rel, usebest=args.best, printing=printing)
+            lmk_words, _,_ = get_words(lmk_terminals, landmarks=lmk_landmarks, usebest=args.best, printing=printing)
             sentence = ' '.join(rel_words + lmk_words)
             return sentence
 
@@ -590,7 +605,7 @@ if __name__ == '__main__':
 
 
     else:
-        meaning, sentence = generate_sentence(args.location.xy, args.consistent, scene, speaker, printing=printing)
+        meaning, sentence = generate_sentence(args.location.xy, args.consistent, scene, speaker, usebest=args.best, printing=printing)
         logger('Generated sentence: %s' % sentence)
 
         correction = raw_input('Correction? ')

@@ -80,7 +80,7 @@ def print_totalss_entropy(totalss,totalentropy,columns,printlength):
         print rjust(name.name,printlength), \
               rjust("%02.4f" % entropy_of_counts( totals.values() ),7), \
               rjust("%02.4f" % totalentropy[name.name],7), \
-              max(zip(*reversed(zip(*totals.items()))))[1]
+              zip(*sorted(zip(*reversed(zip(*totals.items()))),reverse=True))[1]
     print
     print
 

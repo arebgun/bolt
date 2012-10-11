@@ -34,7 +34,7 @@ from itertools import product
 import sys
 
 
-def get_tree_probs(tree, lmk=None, rel=None, default_prob=0.001, default_ent=1000, printing=True):
+def get_tree_probs(tree, lmk=None, rel=None, default_prob=0.001, default_ent=1000, golden=False, printing=True):
 
     lhs_rhs_parent_chain = []
     prob_chain = []
@@ -76,7 +76,8 @@ def get_tree_probs(tree, lmk=None, rel=None, default_prob=0.001, default_ent=100
                                                   lmk_color=lmk_color,
                                                   rel=rel_class,
                                                   dist_class=dist_class,
-                                                  deg_class=deg_class)
+                                                  deg_class=deg_class,
+                                                  golden=golden)
 
         if cp_db.count() <= 0:
             if printing: logger('Could not expand %s (parent: %s, lmk_class: %s, lmk_ori_rels: %s, lmk_color: %s, rel: %s, dist_class: %s, deg_class: %s)' % (lhs, parent, lmk_class, lmk_ori_rels, lmk_color, rel_class, dist_class, deg_class))
@@ -112,7 +113,7 @@ def get_tree_probs(tree, lmk=None, rel=None, default_prob=0.001, default_ent=100
         lhs_rhs_parent_chain.append( ( lhs, rhs, parent, lmk, rel ) )
 
         for subtree in tree:
-            pc, ec, lrpc, tps = get_tree_probs(subtree, lmk, rel, default_prob, default_ent, printing)
+            pc, ec, lrpc, tps = get_tree_probs(subtree, lmk, rel, default_prob, default_ent, golden=golden, printing=printing)
             prob_chain.extend( pc )
             entropy_chain.extend( ec )
             lhs_rhs_parent_chain.extend( lrpc )
@@ -125,7 +126,8 @@ def get_tree_probs(tree, lmk=None, rel=None, default_prob=0.001, default_ent=100
                                       lmk_color=lmk_color,
                                       rel=rel_class,
                                       rel_dist_class=dist_class,
-                                      rel_deg_class=deg_class)
+                                      rel_deg_class=deg_class,
+                                      golden=golden)
 
         if cw_db.count() <= 0:
             # we don't know the probability or entropy values for the context we have never seen before
@@ -165,11 +167,11 @@ def get_tree_probs(tree, lmk=None, rel=None, default_prob=0.001, default_ent=100
 
     return prob_chain, entropy_chain, lhs_rhs_parent_chain, term_prods
 
-def get_sentence_posteriors(sentence, iterations=1, extra_meaning=None):
+def get_sentence_posteriors(sentence, iterations=1, extra_meaning=None, golden=False, printing=True):
     meaning_probs = {}
     # parse sentence with charniak and apply surgeries
     print 'parsing ...'
-    modparse = get_modparse(sentence)
+    _, modparse = get_modparse(sentence)
     t = ParentedTree.parse(modparse)
     print '\n%s\n' % t.pprint()
     num_ancestors = count_lmk_phrases(t) - 1
@@ -178,7 +180,7 @@ def get_sentence_posteriors(sentence, iterations=1, extra_meaning=None):
         (lmk, _, _), (rel, _, _) = get_meaning(num_ancestors=num_ancestors)
         meaning = m2s(lmk,rel)
         if meaning not in meaning_probs:
-            ps = get_tree_probs(t, lmk, rel)[0]
+            ps = get_tree_probs(t, lmk, rel, golden=golden, printing=printing)[0]
             # print "Tree probs: ", zip(ps,rls)
             meaning_probs[meaning] = np.prod(ps)
         print '.'
@@ -186,7 +188,7 @@ def get_sentence_posteriors(sentence, iterations=1, extra_meaning=None):
     if extra_meaning:
         meaning = m2s(*extra_meaning)
         if meaning not in meaning_probs:
-            ps = get_tree_probs(t, lmk, rel)[0]
+            ps = get_tree_probs(t, lmk, rel, golden=golden, printing=printing)[0]
             # print "Tree prob: ", zip(ps,rls)
             meaning_probs[meaning] = np.prod(ps)
         print '.'
@@ -196,10 +198,10 @@ def get_sentence_posteriors(sentence, iterations=1, extra_meaning=None):
         meaning_probs[key] /= summ
     return meaning_probs.items()
 
-def get_all_sentence_posteriors(sentence, meanings, printing=True):
+def get_all_sentence_posteriors(sentence, meanings, golden=False, printing=True):
 
     print 'parsing ...'
-    modparse = get_modparse(sentence)
+    _, modparse = get_modparse(sentence)
     t = ParentedTree.parse(modparse)
     print '\n%s\n' % t.pprint()
     num_ancestors = count_lmk_phrases(t) - 1
@@ -218,14 +220,14 @@ def get_all_sentence_posteriors(sentence, meanings, printing=True):
         if lmk.get_ancestor_count() != num_ancestors:
             p = 0
         else:
-            ps = get_tree_probs(t[1], lmk, printing=printing)[0]
+            ps = get_tree_probs(t[1], lmk, golden=golden, printing=printing)[0]
             p = np.prod(ps)
         posteriors[lmk] = p
         sys.stdout.write("\b%s" % syms[i % len(syms)])
         sys.stdout.flush()
 
     for i,rel in enumerate(rels):
-        ps = get_tree_probs(t[0], rel=rel, printing=printing)[0]
+        ps = get_tree_probs(t[0], rel=rel, golden=golden, printing=printing)[0]
         posteriors[rel] = np.prod(ps)
         sys.stdout.write("\b%s" % syms[i % len(syms)])
         sys.stdout.flush()
@@ -248,7 +250,7 @@ def get_all_sentence_posteriors(sentence, meanings, printing=True):
 
 
 def get_sentence_meaning_likelihood(sentence, lmk, rel, printing=True):
-    modparse = get_modparse(sentence)
+    _, modparse = get_modparse(sentence)
     t = ParentedTree.parse(modparse)
     if printing: print '\n%s\n' % t.pprint()
 

@@ -86,16 +86,16 @@ def parse_generator_data(datafile):
 def get_modparse(sentence):
     """returns the modified parse tree for a sentence"""
     sp_db = SentenceParse.get_sentence_parse(sentence)
-
     try:
         res = sp_db.one()
+        parsetree = res.original_parse
         modparsetree = res.modified_parse
     except NoResultFound:
         parsetree = parse_sentences([sentence])[0]
         modparsetree = modify_parses([parsetree])[0]
         SentenceParse.add_sentence_parse(sentence, parsetree, modparsetree)
 
-    return modparsetree
+    return parsetree, modparsetree
 
 
 

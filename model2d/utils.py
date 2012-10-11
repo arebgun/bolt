@@ -157,6 +157,9 @@ def categorical_sample(values, probs):
     value = values[index]
     return value, probs[index], -np.sum( (probs * np.log(probs)) )
 
+def pick_best(values, probs):
+    prob, value = max(zip(probs,values))
+    return value, prob, -np.sum( (probs * np.log(probs)) )
 
 
 # based on matlab's mvnpdf

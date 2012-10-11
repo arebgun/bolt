@@ -7,9 +7,14 @@ import csv
 
 from models import (Location, Word, Production, Bigram, Trigram,
                     CWord, CProduction, SentenceParse, session)
-from utils import parent_landmark, count_lmk_phrases, get_meaning, rel_type, lmk_id, get_lmk_ori_rels_str
-
+from utils import parent_landmark, count_lmk_phrases, get_meaning, rel_type, lmk_id, get_lmk_ori_rels_str, scene
+from parse import get_modparse
+from semantics.landmark import Landmark
+from semantics.representation import PointRepresentation
+from planar import Vec2
 from nltk.tree import ParentedTree
+from myrandom import random
+random = random.random
 
 from sqlalchemy import func
 from sqlalchemy.orm import aliased
@@ -62,29 +67,27 @@ def save_tree(tree, loc, rel, lmk, parent=None):
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('csvfile', type=file)
     parser.add_argument('-v', '--verbose', action='store_true')
     parser.add_argument('-i', '--iterations', type=int, default=1)
     args = parser.parse_args()
 
-    reader = csv.reader(args.csvfile, lineterminator='\n')
-    next(reader)  # skip headers
-
     unique_sentences = {}
 
-    for i,row in enumerate(reader, start=1):
+    scene, speaker = scene.scene, scene.speaker
+
+    for i in range(args.iterations):
         print 'sentence', i
 
-        # unpack row
-        xloc, yloc, sentence, parse, modparse = row
-        unique_sentences[sentence] = (parse, modparse)
+        xloc,yloc = random()*0.8-0.4,random()*0.6+0.4
+        trajector = Landmark( 'point', PointRepresentation(Vec2(xloc,yloc)), None, Landmark.POINT)
+        sentence, rel, lmk = speaker.describe(trajector, scene, False, 1)
+        parsestring, modparsestring = get_modparse(sentence)
+        unique_sentences[sentence] = (parsestring, modparsestring)
 
         # convert variables to the right types
-        xloc = float(xloc)
-        yloc = float(yloc)
         loc = (xloc, yloc)
-        parse = ParentedTree.parse(parse)
-        modparse = ParentedTree.parse(modparse)
+        parse = ParentedTree.parse(parsestring)
+        modparse = ParentedTree.parse(modparsestring)
 
         # how many ancestors should the sampled landmark have?
         num_ancestors = count_lmk_phrases(modparse) - 1
@@ -93,39 +96,31 @@ if __name__ == '__main__':
             print 'Failed to parse %d [%s] [%s] [%s]' % (i, sentence, parse, modparse)
             continue
 
-        # sample `args.iterations` times for each sentence
-        for _ in xrange(args.iterations):
-            lmk, rel = get_meaning(loc, num_ancestors)
-            lmk, _, _ = lmk
-            rel, _, _ = rel
+        assert(not isinstance(lmk, tuple))
+        assert(not isinstance(rel, tuple))
 
-            assert(not isinstance(lmk, tuple))
-            assert(not isinstance(rel, tuple))
+        if args.verbose:
+            print 'utterance:', repr(sentence)
+            print 'location: %s' % repr(loc)
+            print 'landmark: %s (%s)' % (lmk, lmk_id(lmk))
+            print 'relation: %s' % rel_type(rel)
+            print 'parse:'
+            print parse.pprint()
+            print 'modparse:'
+            print modparse.pprint()
+            print '-' * 70
 
-            if args.verbose:
-                print 'utterance:', repr(sentence)
-                print 'location: %s' % repr(loc)
-                print 'landmark: %s (%s)' % (lmk, lmk_id(lmk))
-                print 'relation: %s' % rel_type(rel)
-                print 'parse:'
-                print parse.pprint()
-                print 'modparse:'
-                print modparse.pprint()
-                print '-' * 70
-
-            location = Location(x=xloc, y=yloc)
-            save_tree(modparse, location, rel, lmk)
-            Bigram.make_bigrams(location.words)
-            Trigram.make_trigrams(location.words)
+        location = Location(x=xloc, y=yloc)
+        save_tree(modparse, location, rel, lmk)
+        Bigram.make_bigrams(location.words)
+        Trigram.make_trigrams(location.words)
 
         if i % 200 == 0: session.commit()
 
-    if SentenceParse.query().count() == 0:
-        print 'BLIND ADDING!!!!!!!!!!!'
+    if SentenceParse.query.count() == 0:
         for sentence,(parse,modparse) in unique_sentences.items():
             SentenceParse.add_sentence_parse_blind(sentence, parse, modparse)
     else:
-        print 'NOT BLIND ADDING!!!!!!!!!!!!'
         for sentence,(parse,modparse) in unique_sentences.items():
             SentenceParse.add_sentence_parse(sentence, parse, modparse)
 
