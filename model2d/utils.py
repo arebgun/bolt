@@ -147,6 +147,9 @@ def m2s(lmk, rel):
 def entropy_of_counts(counts):
     counts = np.array(counts, dtype=float)
     probs = counts / counts.sum()
+    return entropy_of_probs(probs)
+
+def entropy_of_probs(probs):
     return -np.sum( (probs * np.log(probs)) )
 
 

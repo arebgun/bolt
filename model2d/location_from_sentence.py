@@ -235,6 +235,7 @@ def get_all_sentence_posteriors(sentence, meanings, golden=False, printing=True)
     for j in range(50):
         sys.stdout.write("\b.%s" % syms[(i+j) % len(syms)])
         sys.stdout.flush()
+    print
 
 
     # for meaning in meanings:

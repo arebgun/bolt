@@ -175,14 +175,29 @@ def autocorrect(scene, speaker, num_iterations=1, window=10, scale=1000, consist
         logger( 'Generated sentence: %s' % sentence)
         logger( 'Best sentence: %s' % bestsentence)
 
+        golden_posteriors = get_all_sentence_posteriors(sentence, meanings, golden=True, printing=printing)
+        epsilon = 1e-15
+        ps = np.array([golden_posteriors[lmk]*golden_posteriors[rel] for lmk, rel in meanings])
 
-        print 'parsing ...'
-        _, modparse = get_modparse(bestsentence)
-        t = ParentedTree.parse(modparse)
-        lmk, rel = bestmeaning.args[0], bestmeaning.args[3]
-        p = np.sum(np.log(get_tree_probs(t, lmk, rel, golden=True, printing=printing)[0]))
-        golden_log_probs.append(p)
-        avg_golden_log_probs.append(np.mean(golden_log_probs[-window:]))
+        def probs_metric(ps):
+            ps = np.array(ps)
+            temp = None
+            for i,p in enumerate(ps):
+                lmk,rel = meanings[i]
+                # logger( '%f, %s' % (p, m2s(lmk,rel)))
+                head_on = speaker.get_head_on_viewpoint(lmk)
+                ps[i] *= speaker.get_landmark_probability(lmk, landmarks, PointRepresentation(rand_p))[0]
+                ps[i] *= speaker.get_probabilities_points( np.array([rand_p]), rel, head_on, lmk)
+                if lmk == meaning.args[0] and rel == meaning.args[3]:
+                    temp = i
+
+            ps += epsilon
+            ps = ps/ps.sum()
+            temp = ps[temp]
+            return temp
+
+        golden_log_probs.append( probs_metric(ps) )
+        avg_golden_log_probs.append( np.mean(golden_log_probs[-window:]) )
 
         trajector = Landmark( 'point', PointRepresentation(rand_p), None, Landmark.POINT )
         landmark, relation = meaning.args[0], meaning.args[3]
@@ -206,14 +221,14 @@ def autocorrect(scene, speaker, num_iterations=1, window=10, scale=1000, consist
         print np.mean(min_dists), avg_min, max_mins, golden_log_probs
         print;print
 
-    plt.plot(avg_min, 'bo-')
-    plt.plot(max_mins, 'rx-')
+    plt.plot(avg_min, 'o-', color='RoyalBlue')
+    plt.plot(max_mins, 'x-', color='Orange')
     plt.show()
     plt.draw()
 
     plt.figure()
-    plt.plot(golden_log_probs, 'bo-')
-    plt.plot(avg_golden_log_probs, 'rx-')
+    plt.plot(golden_log_probs, 'o-', color='RoyalBlue')
+    plt.plot(avg_golden_log_probs, 'x-', color='Orange')
 
     plt.ioff()
     plt.show()
