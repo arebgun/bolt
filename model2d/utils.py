@@ -23,6 +23,22 @@ from semantics.run import construct_training_scene
 
 NONTERMINALS = ('LOCATION-PHRASE', 'RELATION', 'LANDMARK-PHRASE', 'LANDMARK')
 
+class printcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+
+    def disable(self):
+        self.HEADER = ''
+        self.OKBLUE = ''
+        self.OKGREEN = ''
+        self.WARNING = ''
+        self.FAIL = ''
+        self.ENDC = ''
+
 def get_lmk_ori_rels_str(lmk):
     rel_str = ( ','.join([rel.__name__ if rel.__name__ in [r.__name__ for r in lmk.ori_relations] else '' for rel in OrientationRelationSet.relations]) ) if lmk else None
     #if lmk: print 'getting rel str', OrientationRelationSet.relations, lmk, lmk.ori_relations, rel_str

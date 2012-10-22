@@ -7,7 +7,7 @@ from operator import itemgetter
 
 import numpy as np
 from nltk.tree import ParentedTree
-from parse import get_modparse
+from parse import get_modparse, ParseError
 
 from utils import (
     parent_landmark,

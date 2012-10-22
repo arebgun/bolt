@@ -11,6 +11,8 @@ import fileinput
 import subprocess
 from models import SentenceParse
 from sqlalchemy.orm.exc import NoResultFound
+from utils import count_lmk_phrases, printcolors
+from nltk.tree import ParentedTree
 
 
 
@@ -82,6 +84,8 @@ def parse_generator_data(datafile):
     return xlocs, ylocs, sentences
 
 
+class ParseError(Exception):
+    pass
 
 def get_modparse(sentence):
     """returns the modified parse tree for a sentence"""
@@ -94,6 +98,9 @@ def get_modparse(sentence):
         parsetree = parse_sentences([sentence])[0]
         modparsetree = modify_parses([parsetree])[0]
         SentenceParse.add_sentence_parse(sentence, parsetree, modparsetree)
+
+    if count_lmk_phrases(ParentedTree.parse(modparsetree)) < 1:
+        raise ParseError(printcolors.WARNING + 'ParseError: Parse contained no Landmark phrase')
 
     return parsetree, modparsetree
 

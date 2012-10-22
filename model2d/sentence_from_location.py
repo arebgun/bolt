@@ -346,68 +346,71 @@ def accept_correction( meaning, correction, update_func='geometric', update_scal
     lmk_a = meaning.lmk_a
 
 
-    old_meaning_prob, old_meaning_entropy, lrpc, tps = get_sentence_meaning_likelihood( correction, lmk, rel, printing=printing)
+    try:
+        old_meaning_prob, old_meaning_entropy, lrpc, tps = get_sentence_meaning_likelihood( correction, lmk, rel, printing=printing)
 
-    if eval_lmk:
-        update = update_funcs[update_func](lmk_prob * rel_prob, old_meaning_prob, lmk_ent + rel_ent, old_meaning_entropy) * update_scale
-    else:
-        update = rel_prob * update_scale
+        if eval_lmk:
+            update = update_funcs[update_func](lmk_prob * rel_prob, old_meaning_prob, lmk_ent + rel_ent, old_meaning_entropy) * update_scale
+        else:
+            update = rel_prob * update_scale
 
-    logger('Update functions is %s and update value is: %f' % (update_func, update))
-    # print 'lmk_prob, lmk_ent, rel_prob, rel_ent, old_meaning_prob, old_meaning_entropy, update', lmk_prob, lmk_ent, rel_prob, rel_ent, old_meaning_prob, old_meaning_entropy, update
-    # print lmk.object_class, type(rel)
+        logger('Update functions is %s and update value is: %f' % (update_func, update))
+        # print 'lmk_prob, lmk_ent, rel_prob, rel_ent, old_meaning_prob, old_meaning_entropy, update', lmk_prob, lmk_ent, rel_prob, rel_ent, old_meaning_prob, old_meaning_entropy, update
+        # print lmk.object_class, type(rel)
 
-    dec_update = -update
+        dec_update = -update
 
-    for lhs,rhs,parent,_ in rel_exp_chain:
-        # print 'Decrementing production - lhs: %s, rhs: %s, parent: %s' % (lhs,rhs,parent)
-        update_expansion_counts( dec_update, lhs, rhs, parent, rel=rel )
+        for lhs,rhs,parent,_ in rel_exp_chain:
+            # print 'Decrementing production - lhs: %s, rhs: %s, parent: %s' % (lhs,rhs,parent)
+            update_expansion_counts( dec_update, lhs, rhs, parent, rel=rel )
 
-    for lhs,rhs,parent,lmk in lmk_exp_chain:
-        # print 'Decrementing production - lhs: %s, rhs: %s, parent: %s' % (lhs,rhs,parent)
-        update_expansion_counts( dec_update, lhs, rhs, parent, lmk_class=(lmk.object_class if lmk else None),
+        for lhs,rhs,parent,lmk in lmk_exp_chain:
+            # print 'Decrementing production - lhs: %s, rhs: %s, parent: %s' % (lhs,rhs,parent)
+            update_expansion_counts( dec_update, lhs, rhs, parent, lmk_class=(lmk.object_class if lmk else None),
+                                                                   lmk_ori_rels=get_lmk_ori_rels_str(lmk),
+                                                                   lmk_color=(lmk.color if lmk else None) )
+
+        data = zip(rel_terminals, rel_words)
+        for i in xrange(len(data)):
+            term,word = data[i]
+            prev_word = data[i-1][1] if i > 0 else None
+            a = rel_a[i]
+            # print 'Decrementing word - pos: %s, word: %s, rel: %s' % (term, word, rel)
+            update_word_counts( (1-a)*dec_update, term, word, rel=rel )
+            update_word_counts(a*dec_update, term, word, rel=rel, prev_word=prev_word)
+
+        data = zip(lmk_terminals, lmk_words, lmk_landmarks)
+        for i in xrange(len(data)):
+            term, word, lmk = data[i]
+            prev_word = data[i-1][1] if i > 0 else rel_words[-1]
+            a = lmk_a[i]
+            # print 'Decrementing word - pos: %s, word: %s, lmk_class: %s' % (term, word, lmk.object_class)
+            update_word_counts((1-a)*dec_update, term, word, lmk_class=lmk.object_class,
+                                                             lmk_ori_rels=get_lmk_ori_rels_str(lmk),
+                                                             lmk_color=(lmk.color if lmk else None))
+            update_word_counts( a*dec_update, term, word, prev_word, lmk_class=lmk.object_class,
+                                                                     lmk_ori_rels=get_lmk_ori_rels_str(lmk),
+                                                                     lmk_color=(lmk.color if lmk else None) )
+
+        # reward new words with old meaning
+        for lhs,rhs,parent,lmk,rel in lrpc:
+            # print 'Incrementing production - lhs: %s, rhs: %s, parent: %s' % (lhs,rhs,parent)
+            update_expansion_counts( update, lhs, rhs, parent, rel=rel,
+                                                               lmk_class=(lmk.object_class if lmk else None),
                                                                lmk_ori_rels=get_lmk_ori_rels_str(lmk),
                                                                lmk_color=(lmk.color if lmk else None) )
 
-    data = zip(rel_terminals, rel_words)
-    for i in xrange(len(data)):
-        term,word = data[i]
-        prev_word = data[i-1][1] if i > 0 else None
-        a = rel_a[i]
-        # print 'Decrementing word - pos: %s, word: %s, rel: %s' % (term, word, rel)
-        update_word_counts( (1-a)*dec_update, term, word, rel=rel )
-        update_word_counts(a*dec_update, term, word, rel=rel, prev_word=prev_word)
-
-    data = zip(lmk_terminals, lmk_words, lmk_landmarks)
-    for i in xrange(len(data)):
-        term, word, lmk = data[i]
-        prev_word = data[i-1][1] if i > 0 else rel_words[-1]
-        a = lmk_a[i]
-        # print 'Decrementing word - pos: %s, word: %s, lmk_class: %s' % (term, word, lmk.object_class)
-        update_word_counts((1-a)*dec_update, term, word, lmk_class=lmk.object_class,
-                                                         lmk_ori_rels=get_lmk_ori_rels_str(lmk),
-                                                         lmk_color=(lmk.color if lmk else None))
-        update_word_counts( a*dec_update, term, word, prev_word, lmk_class=lmk.object_class,
-                                                                 lmk_ori_rels=get_lmk_ori_rels_str(lmk),
-                                                                 lmk_color=(lmk.color if lmk else None) )
-
-    # reward new words with old meaning
-    for lhs,rhs,parent,lmk,rel in lrpc:
-        # print 'Incrementing production - lhs: %s, rhs: %s, parent: %s' % (lhs,rhs,parent)
-        update_expansion_counts( update, lhs, rhs, parent, rel=rel,
-                                                           lmk_class=(lmk.object_class if lmk else None),
-                                                           lmk_ori_rels=get_lmk_ori_rels_str(lmk),
-                                                           lmk_color=(lmk.color if lmk else None) )
-
-    for i in xrange(len(tps)):
-        lhs,rhs,lmk,rel = tps[i]
-        prev_word = tps[i-1][1] if i > 0 else None
-        # print 'Incrementing word - pos: %s, word: %s, lmk_class: %s' % (lhs, rhs, (lmk.object_class if lmk else None) )
-        update_word_counts( update, lhs, rhs, prev_word, lmk_class=(lmk.object_class if lmk else None),
-                                                         rel=rel,
-                                                         lmk_ori_rels=get_lmk_ori_rels_str(lmk),
-                                                         lmk_color=(lmk.color if lmk else None) )
-
+        for i in xrange(len(tps)):
+            lhs,rhs,lmk,rel = tps[i]
+            prev_word = tps[i-1][1] if i > 0 else None
+            # print 'Incrementing word - pos: %s, word: %s, lmk_class: %s' % (lhs, rhs, (lmk.object_class if lmk else None) )
+            update_word_counts( update, lhs, rhs, prev_word, lmk_class=(lmk.object_class if lmk else None),
+                                                             rel=rel,
+                                                             lmk_ori_rels=get_lmk_ori_rels_str(lmk),
+                                                             lmk_color=(lmk.color if lmk else None) )
+    except ParseException as pe:
+        logger( pe )
+        logger( 'No update performed' )
 
 def accept_new_words( location, sentence, update_func='geometric', update_scale=10, num_meanings=10, printing=True ):
     for _ in range(num_meanings):
