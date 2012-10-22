@@ -43,6 +43,8 @@ def autocorrect(scene, speaker, num_iterations=1, window=10, scale=1000, consist
     max_mins = []
     golden_log_probs = []
     avg_golden_log_probs = []
+    golden_entropies = []
+    avg_golden_entropies = []
 
     step = 0.1
     all_heatmaps_tupless, xs, ys = speaker.generate_all_heatmaps(scene, step=step)
@@ -176,11 +178,11 @@ def autocorrect(scene, speaker, num_iterations=1, window=10, scale=1000, consist
         logger( 'Best sentence: %s' % bestsentence)
 
         golden_posteriors = get_all_sentence_posteriors(sentence, meanings, golden=True, printing=printing)
-        epsilon = 1e-15
-        ps = np.array([golden_posteriors[lmk]*golden_posteriors[rel] for lmk, rel in meanings])
+        # epsilon = 1e-15
+        # ps = np.array([golden_posteriors[lmk]*golden_posteriors[rel] for lmk, rel in meanings])
 
-        def probs_metric(ps):
-            ps = np.array(ps)
+        def probs_metric():
+            ps = np.array([golden_posteriors[lmk]*golden_posteriors[rel] for lmk, rel in meanings])
             temp = None
             for i,p in enumerate(ps):
                 lmk,rel = meanings[i]
@@ -193,11 +195,18 @@ def autocorrect(scene, speaker, num_iterations=1, window=10, scale=1000, consist
 
             ps += epsilon
             ps = ps/ps.sum()
-            temp = ps[temp]
-            return temp
+            prob = ps[temp]
+            entropy = entropy_of_probs(ps)
+            return prob,entropy
 
-        golden_log_probs.append( probs_metric(ps) )
+        prob,entropy = probs_metric()
+        golden_log_probs.append( prob )
+        golden_entropies.append( entropy )
         avg_golden_log_probs.append( np.mean(golden_log_probs[-window:]) )
+        avg_golden_entropies.append( np.mean(golden_entropies[-window:]) )
+
+        # golden_log_probs.append( probs_metric(ps) )
+        # avg_golden_log_probs.append( np.mean(golden_log_probs[-window:]) )
 
         trajector = Landmark( 'point', PointRepresentation(rand_p), None, Landmark.POINT )
         landmark, relation = meaning.args[0], meaning.args[3]
@@ -223,13 +232,22 @@ def autocorrect(scene, speaker, num_iterations=1, window=10, scale=1000, consist
 
     plt.plot(avg_min, 'o-', color='RoyalBlue')
     plt.plot(max_mins, 'x-', color='Orange')
+    plt.ylabel('Edit Distance')
+    plt.title('Explicit Pointing\n (Telepathing Landmark only)')
     plt.show()
     plt.draw()
 
     plt.figure()
+    plt.suptitle('Explicit Pointing\n (Telepathing Landmark only)')
+    plt.subplot(211)
     plt.plot(golden_log_probs, 'o-', color='RoyalBlue')
     plt.plot(avg_golden_log_probs, 'x-', color='Orange')
+    plt.ylabel('Golden Probability')
 
+    plt.subplot(212)
+    plt.plot(golden_entropies, 'o-', color='RoyalBlue')
+    plt.plot(avg_golden_entropies, 'x-', color='Orange')
+    plt.ylabel('Golden Entropy')
     plt.ioff()
     plt.show()
     plt.draw()

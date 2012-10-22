@@ -248,7 +248,7 @@ class Meaning(object):
 def generate_sentence(loc, consistent, scene=None, speaker=None, usebest=False, printing=True):
     utils.scene = utils.ModelScene(scene, speaker)
 
-    (lmk, lmk_prob, lmk_ent), (rel, rel_prob, rel_ent) = get_meaning(loc=loc)
+    (lmk, lmk_prob, lmk_ent), (rel, rel_prob, rel_ent) = get_meaning(loc=loc, usebest=usebest)
     meaning1 = m2s(lmk, rel)
     logger( meaning1 )
 
@@ -314,8 +314,28 @@ update_funcs = {
     'geometric': compute_update_geometric,
 }
 
+def train( meaning, sentence, printing=False):
+    lmk,rel = meaning
+    _, _, lrpc, tps = get_sentence_meaning_likelihood( sentence, lmk, rel, printing=printing)
 
-def accept_correction( meaning, correction, update_func='geometric', update_scale=10, printing=True ):
+    update = 1
+    for lhs,rhs,parent,lmk,rel in lrpc:
+        # print 'Incrementing production - lhs: %s, rhs: %s, parent: %s' % (lhs,rhs,parent)
+        update_expansion_counts( update, lhs, rhs, parent, rel=rel,
+                                                           lmk_class=(lmk.object_class if lmk else None),
+                                                           lmk_ori_rels=get_lmk_ori_rels_str(lmk),
+                                                           lmk_color=(lmk.color if lmk else None) )
+
+    for i in xrange(len(tps)):
+        lhs,rhs,lmk,rel = tps[i]
+        prev_word = tps[i-1][1] if i > 0 else None
+        # print 'Incrementing word - pos: %s, word: %s, lmk_class: %s' % (lhs, rhs, (lmk.object_class if lmk else None) )
+        update_word_counts( update, lhs, rhs, prev_word, lmk_class=(lmk.object_class if lmk else None),
+                                                         rel=rel,
+                                                         lmk_ori_rels=get_lmk_ori_rels_str(lmk),
+                                                         lmk_color=(lmk.color if lmk else None) )
+
+def accept_correction( meaning, correction, update_func='geometric', update_scale=10, eval_lmk=True, printing=True ):
     (lmk, lmk_prob, lmk_ent,
      rel, rel_prob, rel_ent,
      rel_exp_chain, rele_prob_chain, rele_ent_chain, rel_terminals, rel_landmarks,
@@ -328,7 +348,10 @@ def accept_correction( meaning, correction, update_func='geometric', update_scal
 
     old_meaning_prob, old_meaning_entropy, lrpc, tps = get_sentence_meaning_likelihood( correction, lmk, rel, printing=printing)
 
-    update = update_funcs[update_func](lmk_prob * rel_prob, old_meaning_prob, lmk_ent + rel_ent, old_meaning_entropy) * update_scale
+    if eval_lmk:
+        update = update_funcs[update_func](lmk_prob * rel_prob, old_meaning_prob, lmk_ent + rel_ent, old_meaning_entropy) * update_scale
+    else:
+        update = rel_prob * update_scale
 
     logger('Update functions is %s and update value is: %f' % (update_func, update))
     # print 'lmk_prob, lmk_ent, rel_prob, rel_ent, old_meaning_prob, old_meaning_entropy, update', lmk_prob, lmk_ent, rel_prob, rel_ent, old_meaning_prob, old_meaning_entropy, update

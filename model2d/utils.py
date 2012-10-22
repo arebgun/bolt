@@ -101,7 +101,7 @@ class ModelScene(object):
     def get_landmark_by_id(self, lmk_id):
         return self.landmarks[lmk_id]
 
-    def sample_lmk_rel(self, loc, num_ancestors=None):
+    def sample_lmk_rel(self, loc, num_ancestors=None, usebest=False):
         """gets a location and returns a landmark and a relation
         that can be used to describe the given location"""
         landmarks = self.landmarks
@@ -110,8 +110,8 @@ class ModelScene(object):
             landmarks = [l for l in landmarks if l.get_ancestor_count() == num_ancestors]
 
         loc = Landmark(None, PointRepresentation(loc), None, None)
-        lmk, lmk_prob, lmk_entropy, head_on = self.speaker.sample_landmark( landmarks, loc )
-        rel, rel_prob, rel_entropy = self.speaker.sample_relation(loc, self.table.representation.get_geometry(), head_on, lmk, step=0.5)
+        lmk, lmk_prob, lmk_entropy, head_on = self.speaker.sample_landmark( landmarks, loc, usebest=usebest)
+        rel, rel_prob, rel_entropy = self.speaker.sample_relation(loc, self.table.representation.get_geometry(), head_on, lmk, step=0.5, usebest=usebest)
         rel = rel(head_on,lmk,loc)
 
         return (lmk, lmk_prob, lmk_entropy), (rel, rel_prob, rel_entropy)
@@ -129,11 +129,11 @@ def lmk_id(lmk):
 def rel_type(rel):
     if rel: return rel.__class__.__name__
 
-def get_meaning(loc=None, num_ancestors=None):
+def get_meaning(loc=None, num_ancestors=None, usebest=False):
     if not loc:
         loc = scene.get_rand_loc()
 
-    lmk, rel = scene.sample_lmk_rel(Vec2(*loc), num_ancestors)
+    lmk, rel = scene.sample_lmk_rel(Vec2(*loc), num_ancestors, usebest=usebest)
     # print 'landmark: %s (%s)' % (lmk, lmk_id(lmk))
     # print 'relation:', rel_type(rel)
     return lmk, rel
