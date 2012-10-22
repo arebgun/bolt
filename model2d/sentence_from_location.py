@@ -34,6 +34,7 @@ from planar import Vec2
 
 from myrandom import random
 random = random.random
+from parse import ParseError
 
 # np.seterr(all='raise')
 

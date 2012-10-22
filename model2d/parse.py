@@ -84,7 +84,7 @@ def parse_generator_data(datafile):
     return xlocs, ylocs, sentences
 
 
-class ParseError(Exception):
+class ParseError(RuntimeError):
     pass
 
 def get_modparse(sentence):
