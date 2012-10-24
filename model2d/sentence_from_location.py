@@ -317,24 +317,62 @@ update_funcs = {
 
 def train( meaning, sentence, printing=False):
     lmk,rel = meaning
-    _, _, lrpc, tps = get_sentence_meaning_likelihood( sentence, lmk, rel, printing=printing)
+    _, modparse = get_modparse(sentence)
+    t = ParentedTree.parse(modparse)
 
-    update = 1
-    for lhs,rhs,parent,lmk,rel in lrpc:
-        # print 'Incrementing production - lhs: %s, rhs: %s, parent: %s' % (lhs,rhs,parent)
-        update_expansion_counts( update, lhs, rhs, parent, rel=rel,
-                                                           lmk_class=(lmk.object_class if lmk else None),
-                                                           lmk_ori_rels=get_lmk_ori_rels_str(lmk),
-                                                           lmk_color=(lmk.color if lmk else None) )
+    train_rec( tree=t, lmk=lmk, rel=rel, printing=printing)
 
-    for i in xrange(len(tps)):
-        lhs,rhs,lmk,rel = tps[i]
-        prev_word = tps[i-1][1] if i > 0 else None
-        # print 'Incrementing word - pos: %s, word: %s, lmk_class: %s' % (lhs, rhs, (lmk.object_class if lmk else None) )
-        update_word_counts( update, lhs, rhs, prev_word, lmk_class=(lmk.object_class if lmk else None),
-                                                         rel=rel,
-                                                         lmk_ori_rels=get_lmk_ori_rels_str(lmk),
-                                                         lmk_color=(lmk.color if lmk else None) )
+def train_rec( tree, parent=None, lmk=None, rel=None, prev_word='<no prev word>', printing=False):
+
+    lhs = tree.node
+
+    if isinstance(tree[0], ParentedTree): rhs = ' '.join(n.node for n in tree)
+    else: rhs = ' '.join(n for n in tree)
+
+    # parent = tree.parent.node if tree.parent else None
+    parent = tree.parent.node if tree.parent else None
+
+    if lhs == 'RELATION':
+        # everything under a RELATION node should ignore the landmark
+        lmk = None
+
+    if lhs == 'LANDMARK-PHRASE':
+        # everything under a LANDMARK-PHRASE node should ignore the relation
+        rel = None
+
+    if lhs == parent == 'LANDMARK-PHRASE':
+        # we need to move to the parent landmark
+        lmk = parent_landmark(lmk)
+
+    lmk_class = (lmk.object_class if lmk and lhs != 'LOCATION-PHRASE' else None)
+    lmk_ori_rels = get_lmk_ori_rels_str(lmk) if lhs != 'LOCATION-PHRASE' else None
+    lmk_color = (lmk.color if lmk and lhs != 'LOCATION-PHRASE' else None)
+
+    if lhs in NONTERMINALS:
+
+        update_expansion_counts(update=1, 
+                                lhs=lhs, 
+                                rhs=rhs, 
+                                parent=parent, 
+                                lmk_class=lmk_class, 
+                                lmk_ori_rels=lmk_ori_rels, 
+                                lmk_color=lmk_color, 
+                                rel=rel)
+
+        for subtree in tree:
+            prev_word = train_rec(subtree, lmk, rel, prev_word, printing=printing)
+
+    else:
+        update_word_counts(update=1,
+                           pos=lhs,
+                           word=rhs,
+                           prev_word=prev_word,
+                           lmk_class=lmk_class,
+                           lmk_ori_rels=lmk_ori_rels,
+                           lmk_color=lmk_color,
+                           rel=rel)
+        return rhs
+
 
 def accept_correction( meaning, correction, update_func='geometric', update_scale=10, eval_lmk=True, printing=True ):
     (lmk, lmk_prob, lmk_ent,
@@ -409,7 +447,7 @@ def accept_correction( meaning, correction, update_func='geometric', update_scal
                                                              rel=rel,
                                                              lmk_ori_rels=get_lmk_ori_rels_str(lmk),
                                                              lmk_color=(lmk.color if lmk else None) )
-    except ParseException as pe:
+    except ParseError as pe:
         logger( pe )
         logger( 'No update performed' )
 

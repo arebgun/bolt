@@ -8,6 +8,7 @@ sys.path.append("..")
 from myrandom import random
 from functools import partial
 import inspect
+from collections import defaultdict
 
 import numpy as np
 from planar import Vec2, BoundingBox
@@ -38,6 +39,13 @@ class printcolors:
         self.WARNING = ''
         self.FAIL = ''
         self.ENDC = ''
+
+    map = {'header':HEADER,
+           'okblue':OKBLUE,
+           'okgreen':OKGREEN,
+           'warning':WARNING,
+           'fail':FAIL,
+           'endc':ENDC}
 
 def get_lmk_ori_rels_str(lmk):
     rel_str = ( ','.join([rel.__name__ if rel.__name__ in [r.__name__ for r in lmk.ori_relations] else '' for rel in OrientationRelationSet.relations]) ) if lmk else None
@@ -238,10 +246,12 @@ def force_unicode(s, encoding='utf-8', errors='strict'):
         return str(s).decode(encoding, errors)
 
 
-def logger(msg):
+def logger(msg, color=''):
+    color = printcolors.map[color] if color in printcolors.map else ''
+    end = '' if color == '' else ''
     fn, line = inspect.stack()[1][1:3]
     fn = fn[fn.rfind('/')+1:]
-    print "%s:%d - %s" % (fn, line, msg)
+    print "%s%s:%d - %s%s" % (color, fn, line, msg, printcolors.ENDC)
 
 
 # generates a list of tuples of size `n`
