@@ -201,6 +201,14 @@ def autocorrect(scene, speaker, num_iterations=1, window=20, scale=1000, num_pro
                     golden_posteriors = get_all_sentence_posteriors(sentence, meanings, golden=True, printing=printing)
                 except ParseError as e:
                     logger( e )
+                    prob = 0
+                    rank = len(meanings)-1
+                    entropy = 0
+                    ed = len(sentence)
+                    golden_log_probs.append( prob )
+                    golden_entropies.append( entropy )
+                    golden_ranks.append( rank )
+                    min_dists.append( ed )
                     continue
                 epsilon = 1e-15
                 ps = [[golden_posteriors[lmk]*golden_posteriors[rel],(lmk,rel)] for lmk, rel in meanings if ((not explicit_pointing) or lmk == landmark)]
@@ -250,24 +258,29 @@ def autocorrect(scene, speaker, num_iterations=1, window=20, scale=1000, num_pro
             def probs_metric():
                 bestmeaning, bestsentence = generate_sentence(rand_p, consistent, scene, speaker, usebest=True, printing=printing)
                 sampled_landmark, sampled_relation = bestmeaning.args[0], bestmeaning.args[3]
-                golden_posteriors = get_all_sentence_posteriors(bestsentence, meanings, golden=True, printing=printing)
-                ps = np.array([golden_posteriors[lmk]*golden_posteriors[rel] for lmk, rel in meanings])
-                rank = None
-                for i,p in enumerate(ps):
-                    lmk,rel = meanings[i]
-                    # logger( '%f, %s' % (p, m2s(lmk,rel)))
-                    head_on = speaker.get_head_on_viewpoint(lmk)
-                    ps[i] *= speaker.get_landmark_probability(lmk, landmarks, PointRepresentation(rand_p))[0]
-                    ps[i] *= speaker.get_probabilities_points( np.array([rand_p]), rel, head_on, lmk)
-                    if lmk == sampled_landmark and rel == sampled_relation:
-                        idx = i
+                try:
+                    golden_posteriors = get_all_sentence_posteriors(bestsentence, meanings, golden=True, printing=printing)
+                    ps = np.array([golden_posteriors[lmk]*golden_posteriors[rel] for lmk, rel in meanings])
+                    rank = None
+                    for i,p in enumerate(ps):
+                        lmk,rel = meanings[i]
+                        # logger( '%f, %s' % (p, m2s(lmk,rel)))
+                        head_on = speaker.get_head_on_viewpoint(lmk)
+                        ps[i] *= speaker.get_landmark_probability(lmk, landmarks, PointRepresentation(rand_p))[0]
+                        ps[i] *= speaker.get_probabilities_points( np.array([rand_p]), rel, head_on, lmk)
+                        if lmk == sampled_landmark and rel == sampled_relation:
+                            idx = i
 
-                ps += epsilon
-                ps = ps/ps.sum()
-                prob = ps[idx]
-                rank = sorted(ps, reverse=True).index(prob)
-                entropy = entropy_of_probs(ps)
-
+                    ps += epsilon
+                    ps = ps/ps.sum()
+                    prob = ps[idx]
+                    rank = sorted(ps, reverse=True).index(prob)
+                    entropy = entropy_of_probs(ps)
+                except ParseError as e:
+                    logger( e )
+                    prob = 0
+                    rank = len(meanings)-1
+                    entropy = 0
 
                 head_on = speaker.get_head_on_viewpoint(sampled_landmark)
                 all_descs = speaker.get_all_meaning_descriptions(trajector, scene, sampled_landmark, sampled_relation, head_on, 1)
@@ -277,32 +290,13 @@ def autocorrect(scene, speaker, num_iterations=1, window=20, scale=1000, num_pro
                 distances.sort()
                 return prob,entropy,rank,distances[0][0]
 
-            try:
-                prob,entropy,rank,ed = probs_metric()
-            except ParseError as e:
-                logger( e )
-                continue
+            prob,entropy,rank,ed = probs_metric()
 
             golden_log_probs.append( prob )
-            # avg_golden_log_probs.append( np.mean(golden_log_probs[-window:]) )
-
             golden_entropies.append( entropy )
-            # avg_golden_entropies.append( np.mean(golden_entropies[-window:]) )
-
             golden_ranks.append( rank )
-            # avg_golden_ranks.append( np.mean(golden_ranks[-window:]) )
-
             min_dists.append( ed )
-            # avg_min.append( np.mean(min_dists[-window:]) )
-            # max_mins.append( max(min_dists[-window:]) )
 
-            # if iteration % 200 == 0:
-            #     f = open('data.txt','a')
-            #     f.write(str(datetime.now())+'\n')
-            #     f.write('max_mins\n')
-            #     f.write(str(max_mins)+'\n')
-            #     f.write('golden_probs\n')
-            #     f.write(str(golden_log_probs)+'\n')
         return zip(golden_log_probs, golden_entropies, golden_ranks, min_dists)
 
     num_each = int(num_iterations/num_processors)

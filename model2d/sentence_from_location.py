@@ -30,11 +30,12 @@ from semantics.representation import (
     RectangleRepresentation
 )
 
-from planar import Vec2
 
+from parse import get_modparse, ParseError
+from nltk.tree import ParentedTree
 from myrandom import random
 random = random.random
-from parse import ParseError
+from planar import Vec2
 
 # np.seterr(all='raise')
 
@@ -315,14 +316,14 @@ update_funcs = {
     'geometric': compute_update_geometric,
 }
 
-def train( meaning, sentence, printing=False):
+def train( meaning, sentence, update=1, printing=False):
     lmk,rel = meaning
     _, modparse = get_modparse(sentence)
     t = ParentedTree.parse(modparse)
 
-    train_rec( tree=t, lmk=lmk, rel=rel, printing=printing)
+    train_rec( tree=t, lmk=lmk, rel=rel, update=update, printing=printing)
 
-def train_rec( tree, parent=None, lmk=None, rel=None, prev_word='<no prev word>', printing=False):
+def train_rec( tree, parent=None, lmk=None, rel=None, prev_word='<no prev word>', update=1, printing=False):
 
     lhs = tree.node
 
@@ -350,7 +351,7 @@ def train_rec( tree, parent=None, lmk=None, rel=None, prev_word='<no prev word>'
 
     if lhs in NONTERMINALS:
 
-        update_expansion_counts(update=1, 
+        update_expansion_counts(update=update, 
                                 lhs=lhs, 
                                 rhs=rhs, 
                                 parent=parent, 
@@ -360,10 +361,10 @@ def train_rec( tree, parent=None, lmk=None, rel=None, prev_word='<no prev word>'
                                 rel=rel)
 
         for subtree in tree:
-            prev_word = train_rec(subtree, lmk, rel, prev_word, printing=printing)
+            prev_word = train_rec(tree=subtree, parent=parent, lmk=lmk, rel=rel, prev_word=prev_word, printing=printing)
 
     else:
-        update_word_counts(update=1,
+        update_word_counts(update=update,
                            pos=lhs,
                            word=rhs,
                            prev_word=prev_word,
