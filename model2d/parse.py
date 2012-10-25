@@ -91,10 +91,10 @@ def get_modparse(sentence):
     """returns the modified parse tree for a sentence"""
     sp_db = SentenceParse.get_sentence_parse(sentence)
     try:
-        res = sp_db.one()
+        res = sp_db.all()[0]
         parsetree = res.original_parse
         modparsetree = res.modified_parse
-    except NoResultFound:
+    except IndexError:
         parsetree = parse_sentences([sentence])[0]
         modparsetree = modify_parses([parsetree])[0]
         SentenceParse.add_sentence_parse(sentence, parsetree, modparsetree)

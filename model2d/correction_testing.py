@@ -47,7 +47,7 @@ def parmap(f,X):
     [p.join() for p in proc]
     return ret
 
-def autocorrect(scene, speaker, num_iterations=1, window=10, scale=1000, consistent=False,
+def autocorrect(scene, speaker, num_iterations=1, window=20, scale=1000, num_processors=7, consistent=False,
                 cheating=False, explicit_pointing=False, ambiguous_pointing=False):
     plt.ion()
 
@@ -305,19 +305,19 @@ def autocorrect(scene, speaker, num_iterations=1, window=10, scale=1000, consist
             #     f.write(str(golden_log_probs)+'\n')
         return zip(golden_log_probs, golden_entropies, golden_ranks, min_dists)
 
-    num_processors = 1
     num_each = int(num_iterations/num_processors)
     num_iterationss = [num_each]*num_processors
     # num_iterationss[-1] += num_iterations-num_each*num_processors
-    print num_iterationss
+    logger( num_iterationss )
     lists = parmap(loop,num_iterationss)
-    print num_processors, num_each
+    logger( '%s, %s' % (num_processors,num_each) )
+    print lists
     print len(lists), len(lists[0])
     result = []
     for i in range(num_each):
-        print i
+        logger( i )
         for j in range(num_processors):
-            print '  ',j,len(lists),len(lists[j])
+            logger( '  %i %i %i' % (j,len(lists),len(lists[j])) )
             result.append( lists[j][i] )
 
     golden_log_probs,golden_entropies,golden_ranks,min_dists = zip(*result)
@@ -362,6 +362,9 @@ if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument('-n', '--num_iterations', type=int, default=1)
+    parser.add_argument('-u', '--update_scale', type=int, default=1000)
+    parser.add_argument('-p', '--num_processors', type=int, default=7)
+    parser.add_argument('-w', '--window_size', type=int, default=20)
     parser.add_argument('-l', '--location', type=Point)
     parser.add_argument('-c','--cheating', action='store_true')
     parser.add_argument('-e','--explicit', action='store_true')
@@ -371,7 +374,8 @@ if __name__ == '__main__':
 
     scene, speaker = construct_training_scene()
 
-    autocorrect(scene, speaker, args.num_iterations, window=20, scale=1000, consistent=args.consistent,
-        cheating=args.cheating, explicit_pointing=args.explicit, ambiguous_pointing=args.ambiguous)
+    autocorrect(scene, speaker, args.num_iterations, window=args.window_size, 
+        scale=args.update_scale, consistent=args.consistent, cheating=args.cheating, 
+        explicit_pointing=args.explicit, ambiguous_pointing=args.ambiguous)
 
 
