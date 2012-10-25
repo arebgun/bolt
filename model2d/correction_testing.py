@@ -375,7 +375,7 @@ if __name__ == '__main__':
     scene, speaker = construct_training_scene()
 
     autocorrect(scene, speaker, args.num_iterations, window=args.window_size, 
-        scale=args.update_scale, consistent=args.consistent, cheating=args.cheating, 
-        explicit_pointing=args.explicit, ambiguous_pointing=args.ambiguous)
+        scale=args.update_scale, num_processors=args.num_processors, consistent=args.consistent, 
+        cheating=args.cheating, explicit_pointing=args.explicit, ambiguous_pointing=args.ambiguous)
 
 
