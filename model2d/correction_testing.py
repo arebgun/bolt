@@ -170,6 +170,7 @@ def autocorrect(scene, speaker, num_iterations=1, window=20, scale=1000, num_pro
         return good_meanings, good_heatmapss, graphmax1, graphmax2
 
 
+
     def loop(num_iterations):
         min_dists = []
         # max_dists = []
@@ -299,29 +300,75 @@ def autocorrect(scene, speaker, num_iterations=1, window=20, scale=1000, num_pro
 
         return zip(golden_log_probs, golden_entropies, golden_ranks, min_dists)
 
-    num_each = int(num_iterations/num_processors)
-    num_iterationss = [num_each]*num_processors
-    # num_iterationss[-1] += num_iterations-num_each*num_processors
-    logger( num_iterationss )
-    lists = parmap(loop,num_iterationss)
-    logger( '%s, %s' % (num_processors,num_each) )
-    print lists
-    print len(lists), len(lists[0])
-    result = []
-    for i in range(num_each):
-        logger( i )
-        for j in range(num_processors):
-            logger( '  %i %i %i' % (j,len(lists),len(lists[j])) )
-            result.append( lists[j][i] )
+    filename = ''
+    if cheating: filename+= 'cheating'
+    if explicit_pointing: filename+='explicit_pointing'
+    if ambiguous_pointing: filename+='ambiguous_pointing'
+    filename += ('_p%i_n%i_u%i.shelf' % (num_processors,num_iterations,scale))
+    import shelve
+    f = shelve.open(filename)
+    f['golden_log_probs'] = []
+    f['golden_entropies'] = []
+    f['golden_ranks'] = []
+    f['min_dists'] = []
+    f['cheating'] = cheating
+    f['explicit_pointing'] = explicit_pointing
+    f['ambiguous_pointing'] = ambiguous_pointing
+    f.close()
 
-    golden_log_probs,golden_entropies,golden_ranks,min_dists = zip(*result)
+    chunk_size = 10
+    num_each = int(num_iterations/num_processors)
+    n = int(num_each / chunk_size)
+    extra = num_each % chunk_size
+    logger( "num_each: %i, chunk_size: %i, n: %i, extra: %i" % (num_each, chunk_size, n, extra) )
+
+    for i in range(n):    
+        lists = parmap(loop,[chunk_size]*num_processors)
+        result = []
+        for i in range(chunk_size):
+	        for j in range(num_processors):
+	            result.append( lists[j][i] )
+        golden_log_probs,golden_entropies,golden_ranks,min_dists = zip(*result)
+        f = shelve.open(filename)
+        f['golden_log_probs'] += golden_log_probs
+        f['golden_entropies'] += golden_entropies
+        f['golden_ranks'] += golden_ranks
+        f['min_dists'] += min_dists
+        f.close()
+        
+    if extra:
+        lists = parmap(loop,[extra]*num_processors)
+        result = []
+        for i in range(extra):
+	        for j in range(num_processors):
+	            result.append( lists[j][i] )
+        golden_log_probs,golden_entropies,golden_ranks,min_dists = zip(*result)
+        f = shelve.open(filename)
+        f['golden_log_probs'] += golden_log_probs
+        f['golden_entropies'] += golden_entropies
+        f['golden_ranks'] += golden_ranks
+        f['min_dists'] += min_dists
+        f.close()
+
+    f = shelve.open(filename)
+    golden_log_probs,golden_entropies,golden_ranks,min_dists = f['golden_log_probs'],f['golden_entropies'],f['golden_ranks'],f['min_dists']
+    logger( 'lens: %i %i %i %i' % (len(golden_log_probs),len(golden_entropies),len(golden_ranks),len(min_dists)) )
+    logger( 'lens: %i %i %i %i' % (len(f['golden_log_probs']),len(f['golden_entropies']),len(f['golden_ranks']),len(f['min_dists'])) )
+
     def running_avg(arr):
-        return [np.mean(arr[i:i+window]) for i in range(len(arr)-window)]
+        return [None]*window + [np.mean(arr[i-window:i]) for i in range(window, len(arr))]
+
     avg_golden_log_probs = running_avg(golden_log_probs)
     avg_golden_entropies = running_avg(golden_entropies)
     avg_golden_ranks = running_avg(golden_ranks)
     avg_min = running_avg(min_dists)
+    f['avg_golden_log_probs'] = avg_golden_log_probs
+    f['avg_golden_entropies'] = avg_golden_entropies
+    f['avg_golden_ranks'] = avg_golden_ranks
+    f['avg_min'] = avg_min
+    f.close()
 
+    exit()
 
     if cheating:
         title = 'Cheating (Telepathy)'
