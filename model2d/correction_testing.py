@@ -31,6 +31,7 @@ from datetime import datetime
 from location_from_sentence import get_all_sentence_posteriors
 from multiprocessing import Process, Pipe
 from itertools import izip
+from models import CProduction, CWord
 
 def spawn(f):
     def fun(ppipe, cpipe,x):
@@ -47,8 +48,8 @@ def parmap(f,X):
     [p.join() for p in proc]
     return ret
 
-def autocorrect(scene, speaker, num_iterations=1, window=20, scale=1000, num_processors=7, consistent=False,
-                cheating=False, explicit_pointing=False, ambiguous_pointing=False):
+def autocorrect(scene, speaker, num_iterations=1, scale=1000, num_processors=7, consistent=False,
+                cheating=False, explicit_pointing=False, ambiguous_pointing=False, multiply=False):
     plt.ion()
 
     assert cheating + explicit_pointing + ambiguous_pointing == 1, \
@@ -173,15 +174,15 @@ def autocorrect(scene, speaker, num_iterations=1, window=20, scale=1000, num_pro
 
     def loop(num_iterations):
         min_dists = []
-        # max_dists = []
-        # avg_min = []
-        # max_mins = []
+        lmk_priors = []
+        rel_priors = []
+        lmk_posts = []
+        rel_posts = []
         golden_log_probs = []
-        # avg_golden_log_probs = []
         golden_entropies = []
-        # avg_golden_entropies = []
         golden_ranks = []
-        # avg_golden_ranks = []
+        rel_types = []
+        total_mass = []
         epsilon = 1e-15
         for iteration in range(num_iterations):
             logger(('Iteration %d' % iteration),'okblue')
@@ -214,15 +215,23 @@ def autocorrect(scene, speaker, num_iterations=1, window=20, scale=1000, num_pro
                 epsilon = 1e-15
                 ps = [[golden_posteriors[lmk]*golden_posteriors[rel],(lmk,rel)] for lmk, rel in meanings if ((not explicit_pointing) or lmk == landmark)]
 
+                if not explicit_pointing:
+                    all_lmk_probs = speaker.all_landmark_probs(landmarks, Landmark(None, PointRepresentation(rand_p), None))
+                    all_lmk_probs = dict(zip(landmarks, all_lmk_probs))
+                if ambiguous_pointing:
+                    all_lmk_pointing_probs = speaker.all_landmark_probs(landmarks, Landmark(None, PointRepresentation(pointing_point), None))
+                    all_lmk_pointing_probs = dict(zip(landmarks, all_lmk_pointing_probs))
                 temp = None
                 for i,(p,(lmk,rel)) in enumerate(ps):
                     # lmk,rel = meanings[i]
                     # logger( '%f, %s' % (p, m2s(lmk,rel)))
                     head_on = speaker.get_head_on_viewpoint(lmk)
                     if not explicit_pointing:
-                        ps[i][0] *= speaker.get_landmark_probability(lmk, landmarks, PointRepresentation(rand_p))[0]
+                        # ps[i][0] *= speaker.get_landmark_probability(lmk, landmarks, PointRepresentation(rand_p))[0]
+                        ps[i][0] *= all_lmk_probs[lmk]
                     if ambiguous_pointing:
-                        ps[i][0] *= speaker.get_landmark_probability(lmk, landmarks, PointRepresentation(pointing_point))[0]
+                        # ps[i][0] *= speaker.get_landmark_probability(lmk, landmarks, PointRepresentation(pointing_point))[0]
+                        ps[i][0] *= all_lmk_pointing_probs[lmk]
                     ps[i][0] *= speaker.get_probabilities_points( np.array([rand_p]), rel, head_on, lmk)[0]
                     if lmk == meaning.args[0] and rel == meaning.args[3]:
                         temp = i
@@ -254,20 +263,35 @@ def autocorrect(scene, speaker, num_iterations=1, window=20, scale=1000, num_pro
             print distances
 
             correction = distances[0][1]
-            accept_correction( meaning, correction, update_scale=scale, eval_lmk=(not explicit_pointing), printing=printing )
+            if correction == sentence: 
+                correction = None
+                logger( 'No correction!!!!!!!!!!!!!!!!!!', 'okgreen' )
+            accept_correction( meaning, correction, update_scale=scale, eval_lmk=(not explicit_pointing), multiply=multiply, printing=printing )
 
             def probs_metric():
                 bestmeaning, bestsentence = generate_sentence(rand_p, consistent, scene, speaker, usebest=True, printing=printing)
                 sampled_landmark, sampled_relation = bestmeaning.args[0], bestmeaning.args[3]
                 try:
                     golden_posteriors = get_all_sentence_posteriors(bestsentence, meanings, golden=True, printing=printing)
+
+                    # lmk_prior = speaker.get_landmark_probability(sampled_landmark, landmarks, PointRepresentation(rand_p))[0]
+                    all_lmk_probs = speaker.all_landmark_probs(landmarks, Landmark(None, PointRepresentation(rand_p), None))
+                    all_lmk_probs = dict(zip(landmarks, all_lmk_probs))
+
+                    lmk_prior = all_lmk_probs[sampled_landmark]
+                    head_on = speaker.get_head_on_viewpoint(sampled_landmark)
+                    rel_prior = speaker.get_probabilities_points( np.array([rand_p]), sampled_relation, head_on, sampled_landmark)
+                    lmk_post = golden_posteriors[sampled_landmark]
+                    rel_post = golden_posteriors[sampled_relation]
+
                     ps = np.array([golden_posteriors[lmk]*golden_posteriors[rel] for lmk, rel in meanings])
                     rank = None
                     for i,p in enumerate(ps):
                         lmk,rel = meanings[i]
                         # logger( '%f, %s' % (p, m2s(lmk,rel)))
                         head_on = speaker.get_head_on_viewpoint(lmk)
-                        ps[i] *= speaker.get_landmark_probability(lmk, landmarks, PointRepresentation(rand_p))[0]
+                        # ps[i] *= speaker.get_landmark_probability(lmk, landmarks, PointRepresentation(rand_p))[0]
+                        ps[i] *= all_lmk_probs[lmk]
                         ps[i] *= speaker.get_probabilities_points( np.array([rand_p]), rel, head_on, lmk)
                         if lmk == sampled_landmark and rel == sampled_relation:
                             idx = i
@@ -289,28 +313,52 @@ def autocorrect(scene, speaker, num_iterations=1, window=20, scale=1000, num_pro
                 for desc in all_descs:
                     distances.append([edit_distance( sentence, desc ), desc])
                 distances.sort()
-                return prob,entropy,rank,distances[0][0]
+                return lmk_prior,rel_prior,lmk_post,rel_post,\
+                       prob,entropy,rank,distances[0][0],type(sampled_relation)
 
-            prob,entropy,rank,ed = probs_metric()
+            def db_mass():
+                total = CProduction.get_production_sum(None)
+                total += CWord.get_word_sum(None)
+                return total
 
+
+
+            lmk_prior,rel_prior,lmk_post,rel_post,prob,entropy,rank,ed,rel_type = probs_metric()
+
+            lmk_priors.append( lmk_prior )
+            rel_priors.append( rel_prior )
+            lmk_posts.append( lmk_post )
+            rel_posts.append( rel_post )
             golden_log_probs.append( prob )
             golden_entropies.append( entropy )
             golden_ranks.append( rank )
             min_dists.append( ed )
+            rel_types.append( rel_type )
 
-        return zip(golden_log_probs, golden_entropies, golden_ranks, min_dists)
+            total_mass.append( db_mass() )
+
+        return zip(lmk_priors, rel_priors, lmk_posts, rel_posts,
+                   golden_log_probs, golden_entropies, golden_ranks, 
+                   min_dists, rel_types, total_mass)
 
     filename = ''
     if cheating: filename+= 'cheating'
     if explicit_pointing: filename+='explicit_pointing'
     if ambiguous_pointing: filename+='ambiguous_pointing'
+    if multiply: filename+='_multiply'
     filename += ('_p%i_n%i_u%i.shelf' % (num_processors,num_iterations,scale))
     import shelve
     f = shelve.open(filename)
+    f['lmk_priors'] = []
+    f['rel_priors'] = []
+    f['lmk_posts'] = []
+    f['rel_posts'] = []
     f['golden_log_probs'] = []
     f['golden_entropies'] = []
     f['golden_ranks'] = []
     f['min_dists'] = []
+    f['rel_types'] = []
+    f['total_mass'] = []
     f['cheating'] = cheating
     f['explicit_pointing'] = explicit_pointing
     f['ambiguous_pointing'] = ambiguous_pointing
@@ -328,12 +376,20 @@ def autocorrect(scene, speaker, num_iterations=1, window=20, scale=1000, num_pro
         for i in range(chunk_size):
 	        for j in range(num_processors):
 	            result.append( lists[j][i] )
-        golden_log_probs,golden_entropies,golden_ranks,min_dists = zip(*result)
+        lmk_priors, rel_priors, lmk_posts, rel_posts, \
+            golden_log_probs,golden_entropies,golden_ranks,min_dists,rel_types,total_mass = zip(*result)
         f = shelve.open(filename)
+        f['lmk_priors'] += lmk_priors
+        f['rel_priors'] += rel_priors
+        f['lmk_posts'] += lmk_posts
+        f['rel_posts'] += rel_posts
         f['golden_log_probs'] += golden_log_probs
         f['golden_entropies'] += golden_entropies
         f['golden_ranks'] += golden_ranks
         f['min_dists'] += min_dists
+        f['rel_types'] += rel_types
+
+        f['total_mass'] += total_mass
         f.close()
         
     if extra:
@@ -342,62 +398,44 @@ def autocorrect(scene, speaker, num_iterations=1, window=20, scale=1000, num_pro
         for i in range(extra):
 	        for j in range(num_processors):
 	            result.append( lists[j][i] )
-        golden_log_probs,golden_entropies,golden_ranks,min_dists = zip(*result)
+        lmk_priors, rel_priors, lmk_posts, rel_posts, \
+            golden_log_probs,golden_entropies,golden_ranks,min_dists,rel_types,total_mass = zip(*result)
         f = shelve.open(filename)
+        f['lmk_priors'] += lmk_priors
+        f['rel_priors'] += rel_priors
+        f['lmk_posts'] += lmk_posts
+        f['rel_posts'] += rel_posts
         f['golden_log_probs'] += golden_log_probs
         f['golden_entropies'] += golden_entropies
         f['golden_ranks'] += golden_ranks
         f['min_dists'] += min_dists
+        f['rel_types'] += rel_types
+
+        f['total_mass'] += total_mass
         f.close()
 
-    f = shelve.open(filename)
-    golden_log_probs,golden_entropies,golden_ranks,min_dists = f['golden_log_probs'],f['golden_entropies'],f['golden_ranks'],f['min_dists']
-    logger( 'lens: %i %i %i %i' % (len(golden_log_probs),len(golden_entropies),len(golden_ranks),len(min_dists)) )
-    logger( 'lens: %i %i %i %i' % (len(f['golden_log_probs']),len(f['golden_entropies']),len(f['golden_ranks']),len(f['min_dists'])) )
+    # f = shelve.obone]*window + [np.mean(arr[i-window:i]) for i in range(window, len(arr))]
 
-    def running_avg(arr):
-        return [None]*window + [np.mean(arr[i-window:i]) for i in range(window, len(arr))]
-
-    avg_golden_log_probs = running_avg(golden_log_probs)
-    avg_golden_entropies = running_avg(golden_entropies)
-    avg_golden_ranks = running_avg(golden_ranks)
-    avg_min = running_avg(min_dists)
-    f['avg_golden_log_probs'] = avg_golden_log_probs
-    f['avg_golden_entropies'] = avg_golden_entropies
-    f['avg_golden_ranks'] = avg_golden_ranks
-    f['avg_min'] = avg_min
-    f.close()
+    # avg_lmk_priors = running_avg(lmk_priors)
+    # avg_rel_priors = running_avg(rel_priors)
+    # avg_lmk_posts = running_avg(lmk_posts)
+    # avg_rel_posts = running_avg(rel_posts)
+    # avg_golden_log_probs = running_avg(golden_log_probs)
+    # avg_golden_entropies = running_avg(golden_entropies)
+    # avg_golden_ranks = running_avg(golden_ranks)
+    # avg_min = running_avg(min_dists)
+    # f['avg_lmk_priors'] = avg_lmk_priors
+    # f['avg_rel_priors'] = avg_rel_priors
+    # f['avg_lmk_posts'] = avg_lmk_posts
+    # f['avg_rel_posts'] = avg_rel_posts
+    # f['avg_golden_log_probs'] = avg_golden_log_probs
+    # f['avg_golden_entropies'] = avg_golden_entropies
+    # f['avg_golden_ranks'] = avg_golden_ranks
+    # f['avg_min'] = avg_min
+    # f.close()
 
     exit()
 
-    if cheating:
-        title = 'Cheating (Telepathy)'
-    if explicit_pointing:
-        title = 'Explicit Pointing\n(Telepath Landmark only)'
-    if ambiguous_pointing:
-        title = 'Ambiguous Pointing'
-    plt.plot(avg_min, 'o-', color='RoyalBlue')
-    # plt.plot(max_mins, 'x-', color='Orange')
-    plt.ylabel('Edit Distance')
-    plt.title(title)
-    plt.show()
-    plt.draw()
-
-    plt.figure()
-    plt.suptitle(title)
-    plt.subplot(211)
-    plt.plot(golden_log_probs, 'o-', color='RoyalBlue')
-    plt.plot(avg_golden_log_probs, 'x-', color='Orange')
-    plt.ylabel('Golden Probability')
-
-    plt.subplot(212)
-    plt.plot(golden_ranks, 'o-', color='RoyalBlue')
-    plt.plot(avg_golden_ranks, 'x-', color='Orange')
-    plt.ylim([0,max(avg_golden_ranks)+10])
-    plt.ylabel('Golden Rank')
-    plt.ioff()
-    plt.show()
-    plt.draw()
 
 if __name__ == '__main__':
     import argparse
@@ -405,18 +443,20 @@ if __name__ == '__main__':
     parser.add_argument('-n', '--num_iterations', type=int, default=1)
     parser.add_argument('-u', '--update_scale', type=int, default=1000)
     parser.add_argument('-p', '--num_processors', type=int, default=7)
-    parser.add_argument('-w', '--window_size', type=int, default=20)
+    # parser.add_argument('-w', '--window_size', type=int, default=20)
     parser.add_argument('-l', '--location', type=Point)
     parser.add_argument('-c','--cheating', action='store_true')
     parser.add_argument('-e','--explicit', action='store_true')
     parser.add_argument('-a','--ambiguous', action='store_true')
+    parser.add_argument('-m','--multiply', action='store_true')
     parser.add_argument('--consistent', action='store_true')
     args = parser.parse_args()
 
     scene, speaker = construct_training_scene()
 
-    autocorrect(scene, speaker, args.num_iterations, window=args.window_size, 
+    autocorrect(scene, speaker, args.num_iterations, # window=args.window_size, 
         scale=args.update_scale, num_processors=args.num_processors, consistent=args.consistent, 
-        cheating=args.cheating, explicit_pointing=args.explicit, ambiguous_pointing=args.ambiguous)
+        cheating=args.cheating, explicit_pointing=args.explicit, ambiguous_pointing=args.ambiguous,
+        multiply=args.multiply)
 
 

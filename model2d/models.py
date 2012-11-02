@@ -8,10 +8,12 @@ from sqlalchemy import Column, Integer, Float, String, ForeignKey
 from sqlalchemy.orm import relationship, backref, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
 from sqlalchemy.ext.declarative import _declarative_constructor
+from sqlalchemy import func
 
-from utils import force_unicode, bigrams, trigrams, lmk_id
+from utils import force_unicode, bigrams, trigrams, lmk_id, logger
 
 import numpy as np
+from collections import defaultdict
 
 
 ### configuration ###
@@ -69,11 +71,11 @@ class Base(object):
     # easy access to `Query` object
     #@ClassProperty
     @classmethod
-    def query(cls, golden=False):
-        if golden:
-            return golden_session.query(cls)
+    def query(cls, *args, **kwargs):
+        if 'golden' in kwargs and kwargs['golden']:
+            return golden_session.query(cls, *args)
         else:
-            return session.query(cls)
+            return session.query(cls, *args)
 
     # like in elixir
     @classmethod
@@ -223,6 +225,49 @@ class CWord(Base):
         return q
 
     @classmethod
+    def get_word_sum(cls,
+                        pos=None,
+                        word=None,
+                        lmk=None,
+                        lmk_class=None,
+                        lmk_ori_rels=None,
+                        lmk_color=None,
+                        rel=None,
+                        rel_dist_class=None,
+                        rel_deg_class=None,
+                        prev_word='<no prev word>',
+                        golden=False):
+        if golden:
+            q = golden_session.query(func.sum(CWord.count))
+        else:
+            q = session.query(func.sum(CWord.count))
+
+        if word != None:
+            q = q.filter(CWord.word==word)
+        if pos != None:
+            q = q.filter(CWord.pos==pos)
+        if lmk != None:
+            q = q.filter(CWord.landmark==lmk)
+        if lmk_class != None:
+            q = q.filter(CWord.landmark_class==lmk_class)
+        if lmk_ori_rels is not None:
+            q = q.filter(CWord.landmark_orientation_relations==lmk_ori_rels)
+        if lmk_color is not None:
+            q = q.filter(CWord.landmark_color==lmk_color)
+        if rel != None:
+            q = q.filter(CWord.relation==rel)
+        if rel_dist_class != None:
+            q = q.filter(CWord.relation_distance_class==rel_dist_class)
+        if rel_deg_class != None:
+            q = q.filter(CWord.relation_degree_class==rel_deg_class)
+        # NOTE `None` is a valid value for `prev_word`, it means the current
+        # word is the beginning of the sentence.
+        if prev_word != '<no prev word>':
+            q = q.filter(CWord.prev_word==prev_word)
+
+        return q.scalar()
+
+    @classmethod
     def update_word_counts(cls,
                            update,
                            pos,
@@ -235,11 +280,52 @@ class CWord(Base):
                            rel=None,
                            rel_dist_class=None,
                            rel_deg_class=None,
-                           golden=False):
-        cp_db = cls.get_word_counts(pos, word, lmk, lmk_class, lmk_ori_rels, lmk_color, rel, rel_dist_class, rel_deg_class, prev_word, golden)
+                           golden=False,
+                           multiply=False):
 
-        if cp_db.count() <= 0:
+        # logger( 'Really gonna multiply??? %s' % multiply, 'okgreen' )
+        # if multiply:
+        #     cp_db = cls.get_word_counts(pos=pos,
+        #                                 lmk=lmk,
+        #                                 lmk_class=lmk_class,
+        #                                 lmk_ori_rels=lmk_ori_rels,
+        #                                 lmk_color=lmk_color,
+        #                                 rel=rel,
+        #                                 rel_dist_class=rel_dist_class,
+        #                                 rel_deg_class=rel_deg_class, 
+        #                                 prev_word=prev_word,
+        #                                 golden=golden)
+        #     if cp_db.count() <= 0:
+        #         update *= 10
+        #         # logger( 'Count was zero', 'okgreen' )
+        #     else:
+        #         ccounter = defaultdict(int)
+        #         ccounter[word] = 0
+        #         for cword in cp_db.all():
+        #             ccounter[cword.word] += cword.count
+
+        #         ckeys, ccounts = zip(*ccounter.items())
+        #         ccounts = np.array(ccounts, dtype=float)
+        #         total = ccounts.sum()
+        #         update *= total
+
+        cp_db = cls.get_word_counts(pos=pos, 
+                                    word=word,
+                                    lmk=lmk,
+                                    lmk_class=lmk_class,
+                                    lmk_ori_rels=lmk_ori_rels,
+                                    lmk_color=lmk_color,
+                                    rel=rel,
+                                    rel_dist_class=rel_dist_class,
+                                    rel_deg_class=rel_deg_class, 
+                                    prev_word=prev_word,
+                                    golden=golden)
+
+        num_results = cp_db.count()
+        if num_results <= 0:
             if update <= 0: return
+            # logger( 'Updating by %f, %f' % (update, update), 'warning')
+            count = update
             CWord(word=word,
                   pos=pos,
                   prev_word=prev_word,
@@ -250,12 +336,21 @@ class CWord(Base):
                   relation=rel,
                   relation_distance_class=rel_dist_class,
                   relation_degree_class=rel_deg_class,
-                  count=update)
+                  count=count)
+
+        elif num_results == 1:
+
+            cword = cp_db.one()
+            if multiply:
+                # logger( 'Updating by %f, %f' % (update, ups[cword.word]), 'warning')
+                cword.count *= 1+update
+                if cword.count < 1: cword.count = 1
+            else:
+                # logger( 'Updating by %f, %f' % (update, ups[cword.word]), 'warning')
+                if cword.count <= -update: cword.count = 1
+                else: cword.count += update
+
         else:
-            # for cword in cp_db.all():
-            #     print 'Count for %s before: %f' % (cword.word, cword.count)
-            #     cword.count *= (1.0 + update)
-            #     print 'Count for %s after: %f' % (cword.word, cword.count)
 
             ccounter = {}
             for cword in cp_db.all():
@@ -272,10 +367,17 @@ class CWord(Base):
             updates = ccounts * update
             ups = dict( zip(ckeys, updates) )
 
-            for cword in cp_db.all():
-                if cword.count <= -ups[cword.word]: cword.count = 1
-                else: cword.count += ups[cword.word]
-                # print cword.word, cword.count
+            if multiply:
+                for cword in cp_db.all():
+                    # logger( 'Updating by %f, %f' % (update, ups[cword.word]), 'warning')
+                    assert( not np.isnan( ups[cword.word] ) )
+                    cword.count *= 1+ups[cword.word]
+                    if cword.count < 1: cword.count = 1
+            else:
+                for cword in cp_db.all():
+                    # logger( 'Updating by %f, %f' % (update, ups[cword.word]), 'warning')
+                    if cword.count <= -ups[cword.word]: cword.count = 1
+                    else: cword.count += ups[cword.word]
 
         session.commit()
 
@@ -393,7 +495,7 @@ class CProduction(Base):
     relation_degree_class = Column(String)
 
     count = Column(Float, nullable=False, default=0)
-
+    
     def __unicode__(self):
         return u'%s -> %s (%s)' % (self.lhs, self.rhs, self.count)
 
@@ -431,6 +533,45 @@ class CProduction(Base):
 
         return q
 
+    @classmethod 
+    def get_production_sum(cls,
+                          lhs,
+                          rhs=None,
+                          parent=None,
+                          lmk_class=None,
+                          lmk_ori_rels=None,
+                          lmk_color=None,
+                          rel=None,
+                          dist_class=None,
+                          deg_class=None,
+                          golden=False):
+        if golden:
+            q = golden_session.query(func.sum(CProduction.count))
+        else:
+            q = session.query(func.sum(CProduction.count))
+        q = q.filter(CProduction.lhs!='LOCATION-PHRASE')
+
+        if lhs != None:
+            q = q.filter(CProduction.lhs==lhs)
+        if rhs != None:
+            q = q.filter(CProduction.rhs==rhs)
+        if parent != None:
+            q = q.filter(CProduction.parent==parent)
+        if lmk_class != None:
+            q = q.filter(CProduction.landmark_class==lmk_class)
+        if lmk_ori_rels is not None:
+            q = q.filter(CProduction.landmark_orientation_relations==lmk_ori_rels)
+        if lmk_color is not None:
+            q = q.filter(CProduction.landmark_color==lmk_color)
+        if rel != None:
+            q = q.filter(CProduction.relation==rel)
+        if dist_class != None:
+            q = q.filter(CProduction.relation_distance_class==dist_class)
+        if deg_class != None:
+            q = q.filter(CProduction.relation_degree_class==deg_class)
+
+        return q.scalar()
+
     @classmethod
     def update_production_counts(cls,
                                  update,
@@ -443,11 +584,48 @@ class CProduction(Base):
                                  rel=None,
                                  dist_class=None,
                                  deg_class=None,
-                                 golden=False):
-        cp_db = cls.get_production_counts(lhs,rhs,parent,lmk_class,lmk_ori_rels,lmk_color,rel,dist_class,deg_class,golden)
+                                 golden=False,
+                                 multiply=False):
 
-        if cp_db.count() <= 0:
+        # if multiply:
+        #     cp_db = cls.get_production_counts(lhs=lhs,
+        #                                       parent=parent,
+        #                                       lmk_class=lmk_class,
+        #                                       lmk_ori_rels=lmk_ori_rels,
+        #                                       lmk_color=lmk_color,
+        #                                       rel=rel,
+        #                                       dist_class=dist_class,
+        #                                       deg_class=deg_class,
+        #                                       golden=golden)
+        #     if cp_db.count() <= 0:
+        #         update *= 10
+        #     else:
+        #         ccounter = defaultdict(int)
+        #         ccounter[rhs] = 0
+        #         for cprod in cp_db.all():
+        #             ccounter[cprod.rhs] += cprod.count
+
+        #         ckeys, ccounts = zip(*ccounter.items())
+        #         ccounts = np.array(ccounts, dtype=float)
+        #         total = ccounts.sum()
+        #         update *= total
+
+        cp_db = cls.get_production_counts(lhs=lhs,
+                                          rhs=rhs,
+                                          parent=parent,
+                                          lmk_class=lmk_class,
+                                          lmk_ori_rels=lmk_ori_rels,
+                                          lmk_color=lmk_color,
+                                          rel=rel,
+                                          dist_class=dist_class,
+                                          deg_class=deg_class,
+                                          golden=golden)
+
+        num_results = cp_db.count()
+        if num_results <= 0:
             assert(update > 0)
+            # logger( 'Updating by %f, %f' % (update, update), 'warning')
+            count = update
             CProduction(lhs=lhs,
                         rhs=rhs,
                         parent=parent,
@@ -457,12 +635,21 @@ class CProduction(Base):
                         relation=rel,
                         relation_distance_class=dist_class,
                         relation_degree_class=deg_class,
-                        count=update)
+                        count=count)
+
+        elif num_results == 1:
+
+            cprod = cp_db.one()
+            if multiply:
+                # logger( 'Updating by %f, %f' % (update, ups[cprod.rhs]), 'warning')
+                cprod.count *= 1+update
+                if cprod.count < 1: cprod.count = 1
+            else:
+                # logger( 'Updating by %f, %f' % (update, ups[cprod.rhs]), 'warning')
+                if cprod.count <= -update: cprod.count = 1
+                else: cprod.count += update
+
         else:
-            # for cprod in cp_db.all():
-            #     print 'Count for %s before: %f' % (cprod.rhs, cprod.count)
-            #     cprod.count *= (1.0 + update)
-            #     print 'Count for %s after: %f' % (cprod.rhs, cprod.count)
 
             ccounter = {}
             for cprod in cp_db.all():
@@ -475,14 +662,23 @@ class CProduction(Base):
             ckeys, ccounts = zip(*ccounter.items())
 
             ccounts = np.array(ccounts, dtype=float)
+            # print 'models.py:559', ccounts
             ccounts /= ccounts.sum()
             updates = ccounts * update
             ups = dict( zip(ckeys, updates) )
 
-            for cprod in cp_db.all():
-                if cprod.count <= -ups[cprod.rhs]: cprod.count = 1
-                else: cprod.count += ups[cprod.rhs]
-                # print cprod.rhs, cprod.count
+            if multiply:
+                for cprod in cp_db.all():
+                    # logger( 'Updating by %f, %f' % (update, ups[cprod.rhs]), 'warning')
+                    assert( not np.isnan( ups[cprod.rhs] ) )
+                    cprod.count *= 1+ups[cprod.rhs]
+                    if cprod.count < 1: cprod.count = 1
+            else:
+                for cprod in cp_db.all():
+                    # logger( 'Updating by %f, %f' % (update, ups[cprod.rhs]), 'warning')
+                    if cprod.count <= -ups[cprod.rhs]: cprod.count = 1
+                    else: cprod.count += ups[cprod.rhs]
+
 
         session.commit()
 

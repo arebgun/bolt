@@ -116,7 +116,7 @@ def remove_expansion(limit, lhs, rhs, parent=None, lmk=None, rel=None):
     return Production.delete_productions(limit, lhs=lhs, rhs=rhs, parent=parent,
                                   lmk=lmk_id(lmk), rel=rel_type(rel))
 
-def update_expansion_counts(update, lhs, rhs, parent=None, lmk_class=None, lmk_ori_rels=None, lmk_color=None, rel=None):
+def update_expansion_counts(update, lhs, rhs, parent=None, lmk_class=None, lmk_ori_rels=None, lmk_color=None, rel=None, multiply=False):
     CProduction.update_production_counts(update=update,
                                          lhs=lhs,
                                          rhs=rhs,
@@ -126,9 +126,10 @@ def update_expansion_counts(update, lhs, rhs, parent=None, lmk_class=None, lmk_o
                                          lmk_color=lmk_color,
                                          rel=rel_type(rel),
                                          dist_class=(rel.measurement.best_distance_class if hasattr(rel, 'measurement') else None),
-                                         deg_class=(rel.measurement.best_degree_class if hasattr(rel, 'measurement') else None))
+                                         deg_class=(rel.measurement.best_degree_class if hasattr(rel, 'measurement') else None),
+                                         multiply=multiply)
 
-def update_word_counts(update, pos, word, prev_word='<no prev word>', lmk_class=None, lmk_ori_rels=None, lmk_color=None, rel=None):
+def update_word_counts(update, pos, word, prev_word='<no prev word>', lmk_class=None, lmk_ori_rels=None, lmk_color=None, rel=None, multiply=False):
     CWord.update_word_counts(update=update,
                              pos=pos,
                              word=word,
@@ -138,7 +139,8 @@ def update_word_counts(update, pos, word, prev_word='<no prev word>', lmk_class=
                              lmk_color=lmk_color,
                              rel=rel_type(rel),
                              rel_dist_class=(rel.measurement.best_distance_class if hasattr(rel, 'measurement') else None),
-                             rel_deg_class=(rel.measurement.best_degree_class if hasattr(rel, 'measurement') else None))
+                             rel_deg_class=(rel.measurement.best_degree_class if hasattr(rel, 'measurement') else None),
+                             multiply=multiply)
 
 def get_words(terminals, landmarks, rel=None, prevword=None, usebest=False, printing=True):
     words = []
@@ -375,7 +377,7 @@ def train_rec( tree, parent=None, lmk=None, rel=None, prev_word='<no prev word>'
         return rhs
 
 
-def accept_correction( meaning, correction, update_func='geometric', update_scale=10, eval_lmk=True, printing=True ):
+def accept_correction( meaning, correction, update_func='geometric', update_scale=10, eval_lmk=True, multiply=False, printing=True ):
     (lmk, lmk_prob, lmk_ent,
      rel, rel_prob, rel_ent,
      rel_exp_chain, rele_prob_chain, rele_ent_chain, rel_terminals, rel_landmarks,
@@ -387,28 +389,37 @@ def accept_correction( meaning, correction, update_func='geometric', update_scal
 
 
     try:
-        old_meaning_prob, old_meaning_entropy, lrpc, tps = get_sentence_meaning_likelihood( correction, lmk, rel, printing=printing)
 
-        if eval_lmk:
-            update = update_funcs[update_func](lmk_prob * rel_prob, old_meaning_prob, lmk_ent + rel_ent, old_meaning_entropy) * update_scale
+        if correction is None:
+            # If we recieved no correction, reward our generated sentence INSTEAD of decrementing
+            dec_update = (1 if multiply else update_scale)
         else:
-            update = rel_prob * update_scale
+            # otherwise we decrement it
+            old_meaning_prob, old_meaning_entropy, lrpc, tps = get_sentence_meaning_likelihood( correction, lmk, rel, printing=printing)
 
-        logger('Update functions is %s and update value is: %f' % (update_func, update))
-        # print 'lmk_prob, lmk_ent, rel_prob, rel_ent, old_meaning_prob, old_meaning_entropy, update', lmk_prob, lmk_ent, rel_prob, rel_ent, old_meaning_prob, old_meaning_entropy, update
-        # print lmk.object_class, type(rel)
+            if eval_lmk:
+                update = update_funcs[update_func](lmk_prob * rel_prob, old_meaning_prob, lmk_ent + rel_ent, old_meaning_entropy) * (1 if multiply else update_scale)
+            else:
+                update = rel_prob * (0.1 if multiply else update_scale)
 
-        dec_update = -update
+
+            logger('Update functions is %s and update value is: %f (using multiply: %s)' % (update_func, update, multiply))
+            # print 'lmk_prob, lmk_ent, rel_prob, rel_ent, old_meaning_prob, old_meaning_entropy, update', lmk_prob, lmk_ent, rel_prob, rel_ent, old_meaning_prob, old_meaning_entropy, update
+            # print lmk.object_class, type(rel)
+
+            dec_update = -update
+
 
         for lhs,rhs,parent,_ in rel_exp_chain:
             # print 'Decrementing production - lhs: %s, rhs: %s, parent: %s' % (lhs,rhs,parent)
-            update_expansion_counts( dec_update, lhs, rhs, parent, rel=rel )
+            update_expansion_counts( dec_update, lhs, rhs, parent, rel=rel, multiply=multiply )
 
         for lhs,rhs,parent,lmk in lmk_exp_chain:
             # print 'Decrementing production - lhs: %s, rhs: %s, parent: %s' % (lhs,rhs,parent)
             update_expansion_counts( dec_update, lhs, rhs, parent, lmk_class=(lmk.object_class if lmk else None),
                                                                    lmk_ori_rels=get_lmk_ori_rels_str(lmk),
-                                                                   lmk_color=(lmk.color if lmk else None) )
+                                                                   lmk_color=(lmk.color if lmk else None),
+                                                                   multiply=multiply )
 
         data = zip(rel_terminals, rel_words)
         for i in xrange(len(data)):
@@ -416,8 +427,8 @@ def accept_correction( meaning, correction, update_func='geometric', update_scal
             prev_word = data[i-1][1] if i > 0 else None
             a = rel_a[i]
             # print 'Decrementing word - pos: %s, word: %s, rel: %s' % (term, word, rel)
-            update_word_counts( (1-a)*dec_update, term, word, rel=rel )
-            update_word_counts(a*dec_update, term, word, rel=rel, prev_word=prev_word)
+            update_word_counts( (1-a)*dec_update, term, word, rel=rel, multiply=multiply )
+            update_word_counts(a*dec_update, term, word, rel=rel, prev_word=prev_word, multiply=multiply )
 
         data = zip(lmk_terminals, lmk_words, lmk_landmarks)
         for i in xrange(len(data)):
@@ -427,27 +438,33 @@ def accept_correction( meaning, correction, update_func='geometric', update_scal
             # print 'Decrementing word - pos: %s, word: %s, lmk_class: %s' % (term, word, lmk.object_class)
             update_word_counts((1-a)*dec_update, term, word, lmk_class=lmk.object_class,
                                                              lmk_ori_rels=get_lmk_ori_rels_str(lmk),
-                                                             lmk_color=(lmk.color if lmk else None))
+                                                             lmk_color=(lmk.color if lmk else None),
+                                                             multiply=multiply )
             update_word_counts( a*dec_update, term, word, prev_word, lmk_class=lmk.object_class,
                                                                      lmk_ori_rels=get_lmk_ori_rels_str(lmk),
-                                                                     lmk_color=(lmk.color if lmk else None) )
+                                                                     lmk_color=(lmk.color if lmk else None),
+                                                                     multiply=multiply )
 
-        # reward new words with old meaning
-        for lhs,rhs,parent,lmk,rel in lrpc:
-            # print 'Incrementing production - lhs: %s, rhs: %s, parent: %s' % (lhs,rhs,parent)
-            update_expansion_counts( update, lhs, rhs, parent, rel=rel,
-                                                               lmk_class=(lmk.object_class if lmk else None),
-                                                               lmk_ori_rels=get_lmk_ori_rels_str(lmk),
-                                                               lmk_color=(lmk.color if lmk else None) )
+        # Only enforce the correction if we got one
+        if correction is not None:
+            # reward new words with old meaning
+            for lhs,rhs,parent,lmk,rel in lrpc:
+                # print 'Incrementing production - lhs: %s, rhs: %s, parent: %s' % (lhs,rhs,parent)
+                update_expansion_counts( update, lhs, rhs, parent, rel=rel,
+                                                                   lmk_class=(lmk.object_class if lmk else None),
+                                                                   lmk_ori_rels=get_lmk_ori_rels_str(lmk),
+                                                                   lmk_color=(lmk.color if lmk else None), 
+                                                                   multiply=multiply )
 
-        for i in xrange(len(tps)):
-            lhs,rhs,lmk,rel = tps[i]
-            prev_word = tps[i-1][1] if i > 0 else None
-            # print 'Incrementing word - pos: %s, word: %s, lmk_class: %s' % (lhs, rhs, (lmk.object_class if lmk else None) )
-            update_word_counts( update, lhs, rhs, prev_word, lmk_class=(lmk.object_class if lmk else None),
-                                                             rel=rel,
-                                                             lmk_ori_rels=get_lmk_ori_rels_str(lmk),
-                                                             lmk_color=(lmk.color if lmk else None) )
+            for i in xrange(len(tps)):
+                lhs,rhs,lmk,rel = tps[i]
+                prev_word = tps[i-1][1] if i > 0 else None
+                # print 'Incrementing word - pos: %s, word: %s, lmk_class: %s' % (lhs, rhs, (lmk.object_class if lmk else None) )
+                update_word_counts( update, lhs, rhs, prev_word, lmk_class=(lmk.object_class if lmk else None),
+                                                                 rel=rel,
+                                                                 lmk_ori_rels=get_lmk_ori_rels_str(lmk),
+                                                                 lmk_color=(lmk.color if lmk else None),
+                                                                 multiply=multiply )
     except ParseError as pe:
         logger( pe )
         logger( 'No update performed' )

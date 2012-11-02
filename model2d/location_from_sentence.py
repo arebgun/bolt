@@ -47,7 +47,7 @@ def get_tree_probs(tree, lmk=None, rel=None, default_prob=0.001, default_ent=100
     else: rhs = ' '.join(n for n in tree)
 
     # parent = tree.parent.node if tree.parent else None
-    parent = tree.parent.node if tree.parent else None
+    parent = tree.parent().node if tree.parent() else None
 
     if lhs == 'RELATION':
         # everything under a RELATION node should ignore the landmark
