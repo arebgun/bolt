@@ -46,8 +46,10 @@ def get_tree_probs(tree, lmk=None, rel=None, default_prob=0.001, default_ent=100
     if isinstance(tree[0], ParentedTree): rhs = ' '.join(n.node for n in tree)
     else: rhs = ' '.join(n for n in tree)
 
-    # parent = tree.parent.node if tree.parent else None
-    parent = tree.parent().node if tree.parent() else None
+    if hasattr( tree.parent, 'node' ):
+        parent = tree.parent.node if tree.parent else None
+    else:
+        parent = tree.parent().node if tree.parent() else None
 
     if lhs == 'RELATION':
         # everything under a RELATION node should ignore the landmark
@@ -405,6 +407,7 @@ if __name__ == '__main__':
     parser.add_argument('sentence')
     parser.add_argument('-i', '--iterations', type=int, default=1)
     parser.add_argument('--return-object', action='store_true')
+    parser.add_argument('-n', '--number_of_sentences', type=int, default=1)
     args = parser.parse_args()
 
     if not args.return_object:
@@ -414,6 +417,8 @@ if __name__ == '__main__':
             print 'Meaning: %s \t\t Probability: %0.4f' % (m,p)
     else:
         scene, speaker = construct_training_scene()
-        sentence = raw_input('Location sentence: ')
-        get_most_likely_object(scene, speaker, [sentence])
+        sentences = []
+        for _ in range(args.number_of_sentences):
+            sentences.append( raw_input('Location sentence: ') )
+        get_most_likely_object(scene, speaker, sentences)
 

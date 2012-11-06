@@ -321,65 +321,75 @@ class CWord(Base):
                                     prev_word=prev_word,
                                     golden=golden)
 
-        num_results = cp_db.count()
-        if num_results <= 0:
-            if update <= 0: return
-            # logger( 'Updating by %f, %f' % (update, update), 'warning')
-            count = update
-            CWord(word=word,
-                  pos=pos,
-                  prev_word=prev_word,
-                  landmark=lmk_id(lmk),
-                  landmark_class=lmk_class,
-                  landmark_orientation_relations=lmk_ori_rels,
-                  landmark_color=lmk_color,
-                  relation=rel,
-                  relation_distance_class=rel_dist_class,
-                  relation_degree_class=rel_deg_class,
-                  count=count)
+        committed = False
+        while not committed:
 
-        elif num_results == 1:
+            try:
+                num_results = cp_db.count()
+                if num_results <= 0:
+                    if update <= 0: return
+                    # logger( 'Updating by %f, %f' % (update, update), 'warning')
+                    count = update
+                    CWord(word=word,
+                          pos=pos,
+                          prev_word=prev_word,
+                          landmark=lmk_id(lmk),
+                          landmark_class=lmk_class,
+                          landmark_orientation_relations=lmk_ori_rels,
+                          landmark_color=lmk_color,
+                          relation=rel,
+                          relation_distance_class=rel_dist_class,
+                          relation_degree_class=rel_deg_class,
+                          count=count)
 
-            cword = cp_db.one()
-            if multiply:
-                # logger( 'Updating by %f, %f' % (update, ups[cword.word]), 'warning')
-                cword.count *= 1+update
-                if cword.count < 1: cword.count = 1
-            else:
-                # logger( 'Updating by %f, %f' % (update, ups[cword.word]), 'warning')
-                if cword.count <= -update: cword.count = 1
-                else: cword.count += update
+                # elif num_results == 1:
 
-        else:
+                #     cword = cp_db.one()
+                #     if multiply:
+                #         # logger( 'Updating by %f, %f' % (update, ups[cword.word]), 'warning')
+                #         cword.count *= 1+update
+                #         if cword.count < 1: cword.count = 1
+                #     else:
+                #         # logger( 'Updating by %f, %f' % (update, ups[cword.word]), 'warning')
+                #         if cword.count <= -update: cword.count = 1
+                #         else: cword.count += update
 
-            ccounter = {}
-            for cword in cp_db.all():
-                # print cword.word, cword.count
-                if cword.word in ccounter: ccounter[cword.word] += cword.count
-                else: ccounter[cword.word] = cword.count
+                else:
 
-            # print '----------------'
+                    ccounter = {}
+                    for cword in cp_db.all():
+                        # print cword.word, cword.count
+                        if cword.word in ccounter: ccounter[cword.word] += cword.count
+                        else: ccounter[cword.word] = cword.count
 
-            ckeys, ccounts = zip(*ccounter.items())
+                    # print '----------------'
 
-            ccounts = np.array(ccounts, dtype=float)
-            ccounts /= ccounts.sum()
-            updates = ccounts * update
-            ups = dict( zip(ckeys, updates) )
+                    ckeys, ccounts = zip(*ccounter.items())
 
-            if multiply:
-                for cword in cp_db.all():
-                    # logger( 'Updating by %f, %f' % (update, ups[cword.word]), 'warning')
-                    assert( not np.isnan( ups[cword.word] ) )
-                    cword.count *= 1+ups[cword.word]
-                    if cword.count < 1: cword.count = 1
-            else:
-                for cword in cp_db.all():
-                    # logger( 'Updating by %f, %f' % (update, ups[cword.word]), 'warning')
-                    if cword.count <= -ups[cword.word]: cword.count = 1
-                    else: cword.count += ups[cword.word]
+                    ccounts = np.array(ccounts, dtype=float)
+                    ccounts /= ccounts.sum()
+                    updates = ccounts * update
+                    ups = dict( zip(ckeys, updates) )
 
-        session.commit()
+                    if multiply:
+                        for cword in cp_db.all():
+                            # logger( 'Updating by %f, %f' % (update, ups[cword.word]), 'warning')
+                            assert( not np.isnan( ups[cword.word] ) )
+                            cword.count *= 1+ups[cword.word]
+                            if cword.count < 1: cword.count = 1
+                    else:
+                        for cword in cp_db.all():
+                            # logger( 'Updating by %f, %f' % (update, ups[cword.word]), 'warning')
+                            if cword.count <= -ups[cword.word]: cword.count = 1
+                            else: cword.count += ups[cword.word]
+
+                session.commit()
+                committed = True
+            except Exception as e:
+                logger( 'Could not commit', 'warning' )
+                logger( e )
+                session.rollback()
+                continue
 
     def __unicode__(self):
         return u'%s (%s)' % (self.word, self.count)
@@ -610,77 +620,87 @@ class CProduction(Base):
         #         total = ccounts.sum()
         #         update *= total
 
-        cp_db = cls.get_production_counts(lhs=lhs,
-                                          rhs=rhs,
-                                          parent=parent,
-                                          lmk_class=lmk_class,
-                                          lmk_ori_rels=lmk_ori_rels,
-                                          lmk_color=lmk_color,
-                                          rel=rel,
-                                          dist_class=dist_class,
-                                          deg_class=deg_class,
-                                          golden=golden)
+        committed = False
+        while not committed:
 
-        num_results = cp_db.count()
-        if num_results <= 0:
-            assert(update > 0)
-            # logger( 'Updating by %f, %f' % (update, update), 'warning')
-            count = update
-            CProduction(lhs=lhs,
-                        rhs=rhs,
-                        parent=parent,
-                        landmark_class=lmk_class,
-                        landmark_orientation_relations=lmk_ori_rels,
-                        landmark_color=lmk_color,
-                        relation=rel,
-                        relation_distance_class=dist_class,
-                        relation_degree_class=deg_class,
-                        count=count)
+            try:
+                cp_db = cls.get_production_counts(lhs=lhs,
+                                                  rhs=rhs,
+                                                  parent=parent,
+                                                  lmk_class=lmk_class,
+                                                  lmk_ori_rels=lmk_ori_rels,
+                                                  lmk_color=lmk_color,
+                                                  rel=rel,
+                                                  dist_class=dist_class,
+                                                  deg_class=deg_class,
+                                                  golden=golden)
 
-        elif num_results == 1:
+                num_results = cp_db.count()
+                if num_results <= 0:
+                    assert(update > 0)
+                    # logger( 'Updating by %f, %f' % (update, update), 'warning')
+                    count = update
+                    CProduction(lhs=lhs,
+                                rhs=rhs,
+                                parent=parent,
+                                landmark_class=lmk_class,
+                                landmark_orientation_relations=lmk_ori_rels,
+                                landmark_color=lmk_color,
+                                relation=rel,
+                                relation_distance_class=dist_class,
+                                relation_degree_class=deg_class,
+                                count=count)
 
-            cprod = cp_db.one()
-            if multiply:
-                # logger( 'Updating by %f, %f' % (update, ups[cprod.rhs]), 'warning')
-                cprod.count *= 1+update
-                if cprod.count < 1: cprod.count = 1
-            else:
-                # logger( 'Updating by %f, %f' % (update, ups[cprod.rhs]), 'warning')
-                if cprod.count <= -update: cprod.count = 1
-                else: cprod.count += update
+                # elif num_results == 1:
 
-        else:
+                #     cprod = cp_db.one()
+                #     if multiply:
+                #         # logger( 'Updating by %f, %f' % (update, ups[cprod.rhs]), 'warning')
+                #         cprod.count *= 1+update
+                #         if cprod.count < 1: cprod.count = 1
+                #     else:
+                #         # logger( 'Updating by %f, %f' % (update, ups[cprod.rhs]), 'warning')
+                #         if cprod.count <= -update: cprod.count = 1
+                #         else: cprod.count += update
 
-            ccounter = {}
-            for cprod in cp_db.all():
-                # print cprod.rhs, cprod.count
-                if cprod.rhs in ccounter: ccounter[cprod.rhs] += cprod.count
-                else: ccounter[cprod.rhs] = cprod.count
+                else:
 
-            # print '----------------'
+                    ccounter = {}
+                    for cprod in cp_db.all():
+                        # print cprod.rhs, cprod.count
+                        if cprod.rhs in ccounter: ccounter[cprod.rhs] += cprod.count
+                        else: ccounter[cprod.rhs] = cprod.count
 
-            ckeys, ccounts = zip(*ccounter.items())
+                    # print '----------------'
 
-            ccounts = np.array(ccounts, dtype=float)
-            # print 'models.py:559', ccounts
-            ccounts /= ccounts.sum()
-            updates = ccounts * update
-            ups = dict( zip(ckeys, updates) )
+                    ckeys, ccounts = zip(*ccounter.items())
 
-            if multiply:
-                for cprod in cp_db.all():
-                    # logger( 'Updating by %f, %f' % (update, ups[cprod.rhs]), 'warning')
-                    assert( not np.isnan( ups[cprod.rhs] ) )
-                    cprod.count *= 1+ups[cprod.rhs]
-                    if cprod.count < 1: cprod.count = 1
-            else:
-                for cprod in cp_db.all():
-                    # logger( 'Updating by %f, %f' % (update, ups[cprod.rhs]), 'warning')
-                    if cprod.count <= -ups[cprod.rhs]: cprod.count = 1
-                    else: cprod.count += ups[cprod.rhs]
+                    ccounts = np.array(ccounts, dtype=float)
+                    # print 'models.py:559', ccounts
+                    ccounts /= ccounts.sum()
+                    updates = ccounts * update
+                    ups = dict( zip(ckeys, updates) )
+
+                    if multiply:
+                        for cprod in cp_db.all():
+                            # logger( 'Updating by %f, %f' % (update, ups[cprod.rhs]), 'warning')
+                            assert( not np.isnan( ups[cprod.rhs] ) )
+                            cprod.count *= 1+ups[cprod.rhs]
+                            if cprod.count < 1: cprod.count = 1
+                    else:
+                        for cprod in cp_db.all():
+                            # logger( 'Updating by %f, %f' % (update, ups[cprod.rhs]), 'warning')
+                            if cprod.count <= -ups[cprod.rhs]: cprod.count = 1
+                            else: cprod.count += ups[cprod.rhs]
 
 
-        session.commit()
+                    session.commit()
+                    committed = True
+            except Exception as e:
+                logger( 'Could not commit', 'warning' )
+                logger( e )
+                session.rollback()
+                continue
 
 class WordCPT(Base):
     id = Column(Integer, primary_key=True)

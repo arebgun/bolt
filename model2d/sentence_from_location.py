@@ -39,7 +39,7 @@ from planar import Vec2
 
 # np.seterr(all='raise')
 
-def get_expansion(lhs, parent=None, lmk=None, rel=None, usebest=False, printing=True):
+def get_expansion(lhs, parent=None, lmk=None, rel=None, usebest=False, golden=False, printing=True):
     lhs_rhs_parent_chain = []
     prob_chain = []
     entropy_chain = []
@@ -66,7 +66,8 @@ def get_expansion(lhs, parent=None, lmk=None, rel=None, usebest=False, printing=
                                                       lmk_color=lmk_color,
                                                       rel=rel_class,
                                                       dist_class=dist_class,
-                                                      deg_class=deg_class)
+                                                      deg_class=deg_class,
+                                                      golden=golden)
 
             if cp_db.count() <= 0:
                 if printing: logger('Could not expand %s (parent: %s, lmk_class: %s, lmk_ori_rels: %s, lmk_color: %s, rel: %s, dist_class: %s, deg_class: %s)' % (n, parent, lmk_class, lmk_ori_rels, lmk_color, rel_class, dist_class, deg_class))
@@ -100,7 +101,7 @@ def get_expansion(lhs, parent=None, lmk=None, rel=None, usebest=False, printing=
             prob_chain.append( cprod_prob )
             entropy_chain.append( cprod_entropy )
 
-            lrpc, pc, ec, t, ls = get_expansion( lhs=cprod, parent=n, lmk=lmk, rel=rel, printing=printing )
+            lrpc, pc, ec, t, ls = get_expansion( lhs=cprod, parent=n, lmk=lmk, rel=rel, golden=golden, printing=printing )
             lhs_rhs_parent_chain.extend( lrpc )
             prob_chain.extend( pc )
             entropy_chain.extend( ec )
@@ -142,7 +143,7 @@ def update_word_counts(update, pos, word, prev_word='<no prev word>', lmk_class=
                              rel_deg_class=(rel.measurement.best_degree_class if hasattr(rel, 'measurement') else None),
                              multiply=multiply)
 
-def get_words(terminals, landmarks, rel=None, prevword=None, usebest=False, printing=True):
+def get_words(terminals, landmarks, rel=None, prevword=None, usebest=False, golden=False, printing=True):
     words = []
     probs = []
     alphas = []
@@ -172,7 +173,8 @@ def get_words(terminals, landmarks, rel=None, prevword=None, usebest=False, prin
                        lmk_color=lmk_color,
                        rel=rel_class,
                        rel_dist_class=dist_class,
-                       rel_deg_class=deg_class)
+                       rel_deg_class=deg_class,
+                       golden=golden)
 
         cp_db_uni = CWord.get_word_counts(**meaning)
 
@@ -249,7 +251,7 @@ class Meaning(object):
         self.args = args
 
 
-def generate_sentence(loc, consistent, scene=None, speaker=None, usebest=False, printing=True):
+def generate_sentence(loc, consistent, scene=None, speaker=None, usebest=False, golden=False, printing=True):
     utils.scene = utils.ModelScene(scene, speaker)
 
     (lmk, lmk_prob, lmk_ent), (rel, rel_prob, rel_ent) = get_meaning(loc=loc, usebest=usebest)
@@ -257,10 +259,10 @@ def generate_sentence(loc, consistent, scene=None, speaker=None, usebest=False, 
     logger( meaning1 )
 
     while True:
-        rel_exp_chain, rele_prob_chain, rele_ent_chain, rel_terminals, rel_landmarks = get_expansion('RELATION', rel=rel, usebest=usebest, printing=printing)
-        lmk_exp_chain, lmke_prob_chain, lmke_ent_chain, lmk_terminals, lmk_landmarks = get_expansion('LANDMARK-PHRASE', lmk=lmk, usebest=usebest, printing=printing)
-        rel_words, relw_prob, relw_ent, rel_a = get_words(rel_terminals, landmarks=rel_landmarks, rel=rel, usebest=usebest, printing=printing)
-        lmk_words, lmkw_prob, lmkw_ent, lmk_a = get_words(lmk_terminals, landmarks=lmk_landmarks, prevword=(rel_words[-1] if rel_words else None), usebest=usebest, printing=printing)
+        rel_exp_chain, rele_prob_chain, rele_ent_chain, rel_terminals, rel_landmarks = get_expansion('RELATION', rel=rel, usebest=usebest, golden=golden, printing=printing)
+        lmk_exp_chain, lmke_prob_chain, lmke_ent_chain, lmk_terminals, lmk_landmarks = get_expansion('LANDMARK-PHRASE', lmk=lmk, usebest=usebest, golden=golden, printing=printing)
+        rel_words, relw_prob, relw_ent, rel_a = get_words(rel_terminals, landmarks=rel_landmarks, rel=rel, usebest=usebest, golden=golden, printing=printing)
+        lmk_words, lmkw_prob, lmkw_ent, lmk_a = get_words(lmk_terminals, landmarks=lmk_landmarks, prevword=(rel_words[-1] if rel_words else None), usebest=usebest, golden=golden, printing=printing)
         sentence = ' '.join(rel_words + lmk_words)
 
         if printing: logger( 'rel_exp_chain: %s' % rel_exp_chain )
@@ -332,8 +334,10 @@ def train_rec( tree, parent=None, lmk=None, rel=None, prev_word='<no prev word>'
     if isinstance(tree[0], ParentedTree): rhs = ' '.join(n.node for n in tree)
     else: rhs = ' '.join(n for n in tree)
 
-    # parent = tree.parent.node if tree.parent else None
-    parent = tree.parent.node if tree.parent else None
+    if hasattr( tree.parent, 'node' ):
+        parent = tree.parent.node if tree.parent else None
+    else:
+        parent = tree.parent().node if tree.parent() else None
 
     if lhs == 'RELATION':
         # everything under a RELATION node should ignore the landmark

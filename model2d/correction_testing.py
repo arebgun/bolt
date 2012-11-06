@@ -10,6 +10,7 @@ random = random.random
 from sentence_from_location import (
     generate_sentence,
     accept_correction,
+    train,
     Point
 )
 
@@ -48,12 +49,13 @@ def parmap(f,X):
     [p.join() for p in proc]
     return ret
 
-def autocorrect(scene, speaker, num_iterations=1, scale=1000, num_processors=7, consistent=False,
-                cheating=False, explicit_pointing=False, ambiguous_pointing=False, multiply=False):
+def autocorrect(scene, speaker, num_iterations=1, scale=1000, num_processors=7, num_samples=10, 
+                best_samples=False, consistent=False, initial_training=False, cheating=False, 
+                explicit_pointing=False, ambiguous_pointing=False, multiply=False):
     plt.ion()
 
-    assert cheating + explicit_pointing + ambiguous_pointing == 1, \
-        'Must choose Cheating, Explicit or Ambiguous'
+    assert initial_training + cheating + explicit_pointing + ambiguous_pointing == 1, \
+        'Must choose Initial Training, Cheating, Explicit or Ambiguous'
 
     printing=False
 
@@ -182,97 +184,116 @@ def autocorrect(scene, speaker, num_iterations=1, scale=1000, num_processors=7, 
         golden_entropies = []
         golden_ranks = []
         rel_types = []
+        student_probs = []
+        student_entropies = []
+        student_ranks = []
+        student_rel_types = []
         total_mass = []
         epsilon = 1e-15
         for iteration in range(num_iterations):
             logger(('Iteration %d' % iteration),'okblue')
             rand_p = Vec2(random()*table.width+table.min_point.x, random()*table.height+table.min_point.y)
-            meaning, sentence = generate_sentence(rand_p, consistent, scene, speaker, usebest=True, printing=printing)
-            logger( 'Generated sentence: %s' % sentence)
             trajector = Landmark( 'point', PointRepresentation(rand_p), None, Landmark.POINT )
-            if cheating:
-                landmark, relation = meaning.args[0],meaning.args[3]
+            
+            if initial_training:
+
+                sentence, sampled_relation, sampled_landmark = speaker.describe(trajector, scene, False, 1)
+
+                if num_samples:
+                    for i in range(num_samples):
+                        landmark, relation, _ = speaker.sample_meaning(trajector, scene, 1)
+                        train((landmark,relation), sentence, update=1, printing=printing)
+                else:
+                    for (landmark,relation),prob in speaker.all_meaning_probs( trajector, scene, 1 ):
+                        train((landmark,relation), sentence, update=prob, printing=printing)
+
             else:
-                if explicit_pointing:
-                    landmark = meaning.args[0]
-                if ambiguous_pointing:
-                    pointing_point = landmark.representation.middle + Vec2(random()*0.1-0.05,random()*0.1-0.05)
-                #_, bestsentence = generate_sentence(rand_p, consistent, scene, speaker, usebest=True, printing=printing)
+                meaning, sentence = generate_sentence(rand_p, consistent, scene, speaker, usebest=True, printing=printing)
+                logger( 'Generated sentence: %s' % sentence)
 
-                try:
-                    golden_posteriors = get_all_sentence_posteriors(sentence, meanings, golden=True, printing=printing)
-                except ParseError as e:
-                    logger( e )
-                    prob = 0
-                    rank = len(meanings)-1
-                    entropy = 0
-                    ed = len(sentence)
-                    golden_log_probs.append( prob )
-                    golden_entropies.append( entropy )
-                    golden_ranks.append( rank )
-                    min_dists.append( ed )
-                    continue
-                epsilon = 1e-15
-                ps = [[golden_posteriors[lmk]*golden_posteriors[rel],(lmk,rel)] for lmk, rel in meanings if ((not explicit_pointing) or lmk == landmark)]
-
-                if not explicit_pointing:
-                    all_lmk_probs = speaker.all_landmark_probs(landmarks, Landmark(None, PointRepresentation(rand_p), None))
-                    all_lmk_probs = dict(zip(landmarks, all_lmk_probs))
-                if ambiguous_pointing:
-                    all_lmk_pointing_probs = speaker.all_landmark_probs(landmarks, Landmark(None, PointRepresentation(pointing_point), None))
-                    all_lmk_pointing_probs = dict(zip(landmarks, all_lmk_pointing_probs))
-                temp = None
-                for i,(p,(lmk,rel)) in enumerate(ps):
-                    # lmk,rel = meanings[i]
-                    # logger( '%f, %s' % (p, m2s(lmk,rel)))
-                    head_on = speaker.get_head_on_viewpoint(lmk)
-                    if not explicit_pointing:
-                        # ps[i][0] *= speaker.get_landmark_probability(lmk, landmarks, PointRepresentation(rand_p))[0]
-                        ps[i][0] *= all_lmk_probs[lmk]
+                if cheating:
+                    landmark, relation = meaning.args[0],meaning.args[3]
+                else:
+                    if explicit_pointing:
+                        landmark = meaning.args[0]
                     if ambiguous_pointing:
-                        # ps[i][0] *= speaker.get_landmark_probability(lmk, landmarks, PointRepresentation(pointing_point))[0]
-                        ps[i][0] *= all_lmk_pointing_probs[lmk]
-                    ps[i][0] *= speaker.get_probabilities_points( np.array([rand_p]), rel, head_on, lmk)[0]
-                    if lmk == meaning.args[0] and rel == meaning.args[3]:
-                        temp = i
+                        pointing_point = landmark.representation.middle + Vec2(random()*0.1-0.05,random()*0.1-0.05)
+                    #_, bestsentence = generate_sentence(rand_p, consistent, scene, speaker, usebest=True, printing=printing)
 
-                ps,_meanings = zip(*ps)
-                print ps
-                ps = np.array(ps)
-                ps += epsilon
-                ps = ps/ps.sum()
-                temp = ps[temp]
+                    try:
+                        golden_posteriors = get_all_sentence_posteriors(sentence, meanings, golden=True, printing=printing)
+                    except ParseError as e:
+                        logger( e )
+                        prob = 0
+                        rank = len(meanings)-1
+                        entropy = 0
+                        ed = len(sentence)
+                        golden_log_probs.append( prob )
+                        golden_entropies.append( entropy )
+                        golden_ranks.append( rank )
+                        min_dists.append( ed )
+                        continue
+                    epsilon = 1e-15
+                    ps = [[golden_posteriors[lmk]*golden_posteriors[rel],(lmk,rel)] for lmk, rel in meanings if ((not explicit_pointing) or lmk == landmark)]
 
-                ps = sorted(zip(ps,_meanings),reverse=True)
+                    if not explicit_pointing:
+                        all_lmk_probs = speaker.all_landmark_probs(landmarks, Landmark(None, PointRepresentation(rand_p), None))
+                        all_lmk_probs = dict(zip(landmarks, all_lmk_probs))
+                    if ambiguous_pointing:
+                        all_lmk_pointing_probs = speaker.all_landmark_probs(landmarks, Landmark(None, PointRepresentation(pointing_point), None))
+                        all_lmk_pointing_probs = dict(zip(landmarks, all_lmk_pointing_probs))
+                    temp = None
+                    for i,(p,(lmk,rel)) in enumerate(ps):
+                        # lmk,rel = meanings[i]
+                        # logger( '%f, %s' % (p, m2s(lmk,rel)))
+                        head_on = speaker.get_head_on_viewpoint(lmk)
+                        if not explicit_pointing:
+                            # ps[i][0] *= speaker.get_landmark_probability(lmk, landmarks, PointRepresentation(rand_p))[0]
+                            ps[i][0] *= all_lmk_probs[lmk]
+                        if ambiguous_pointing:
+                            # ps[i][0] *= speaker.get_landmark_probability(lmk, landmarks, PointRepresentation(pointing_point))[0]
+                            ps[i][0] *= all_lmk_pointing_probs[lmk]
+                        ps[i][0] *= speaker.get_probabilities_points( np.array([rand_p]), rel, head_on, lmk)[0]
+                        if lmk == meaning.args[0] and rel == meaning.args[3]:
+                            temp = i
 
-                logger( 'Attempted to say: %s' %  m2s(meaning.args[0],meaning.args[3]) )
-                logger( 'Interpreted as: %s' % m2s(ps[0][1][0],ps[0][1][1]) )
-                logger( 'Attempted: %f vs Interpreted: %f' % (temp, ps[0][0]))
+                    ps,_meanings = zip(*ps)
+                    print ps
+                    ps = np.array(ps)
+                    ps += epsilon
+                    ps = ps/ps.sum()
+                    temp = ps[temp]
 
-                # logger( 'Golden entropy: %f, Max entropy %f' % (golden_entropy, max_entropy))
+                    ps = sorted(zip(ps,_meanings),reverse=True)
 
-                landmark, relation = ps[0][1]
-            head_on = speaker.get_head_on_viewpoint(landmark)
-            all_descs = speaker.get_all_meaning_descriptions(trajector, scene, landmark, relation, head_on, 1)
+                    logger( 'Attempted to say: %s' %  m2s(meaning.args[0],meaning.args[3]) )
+                    logger( 'Interpreted as: %s' % m2s(ps[0][1][0],ps[0][1][1]) )
+                    logger( 'Attempted: %f vs Interpreted: %f' % (temp, ps[0][0]))
 
-            distances = []
-            for desc in all_descs:
-                distances.append([edit_distance( sentence, desc ), desc])
+                    # logger( 'Golden entropy: %f, Max entropy %f' % (golden_entropy, max_entropy))
 
-            distances.sort()
-            print distances
+                    landmark, relation = ps[0][1]
+                head_on = speaker.get_head_on_viewpoint(landmark)
+                all_descs = speaker.get_all_meaning_descriptions(trajector, scene, landmark, relation, head_on, 1)
 
-            correction = distances[0][1]
-            if correction == sentence: 
-                correction = None
-                logger( 'No correction!!!!!!!!!!!!!!!!!!', 'okgreen' )
-            accept_correction( meaning, correction, update_scale=scale, eval_lmk=(not explicit_pointing), multiply=multiply, printing=printing )
+                distances = []
+                for desc in all_descs:
+                    distances.append([edit_distance( sentence, desc ), desc])
 
-            def probs_metric():
-                bestmeaning, bestsentence = generate_sentence(rand_p, consistent, scene, speaker, usebest=True, printing=printing)
+                distances.sort()
+                print distances
+
+                correction = distances[0][1]
+                if correction == sentence: 
+                    correction = None
+                    logger( 'No correction!!!!!!!!!!!!!!!!!!', 'okgreen' )
+                accept_correction( meaning, correction, update_scale=scale, eval_lmk=(not explicit_pointing), multiply=multiply, printing=printing )
+
+            def probs_metric(inverse=False):
+                bestmeaning, bestsentence = generate_sentence(rand_p, consistent, scene, speaker, usebest=True, golden=inverse, printing=printing)
                 sampled_landmark, sampled_relation = bestmeaning.args[0], bestmeaning.args[3]
                 try:
-                    golden_posteriors = get_all_sentence_posteriors(bestsentence, meanings, golden=True, printing=printing)
+                    golden_posteriors = get_all_sentence_posteriors(bestsentence, meanings, golden=(not inverse), printing=printing)
 
                     # lmk_prior = speaker.get_landmark_probability(sampled_landmark, landmarks, PointRepresentation(rand_p))[0]
                     all_lmk_probs = speaker.all_landmark_probs(landmarks, Landmark(None, PointRepresentation(rand_p), None))
@@ -311,7 +332,7 @@ def autocorrect(scene, speaker, num_iterations=1, scale=1000, num_processors=7, 
                 all_descs = speaker.get_all_meaning_descriptions(trajector, scene, sampled_landmark, sampled_relation, head_on, 1)
                 distances = []
                 for desc in all_descs:
-                    distances.append([edit_distance( sentence, desc ), desc])
+                    distances.append([edit_distance( bestsentence, desc ), desc])
                 distances.sort()
                 return lmk_prior,rel_prior,lmk_post,rel_post,\
                        prob,entropy,rank,distances[0][0],type(sampled_relation)
@@ -320,8 +341,6 @@ def autocorrect(scene, speaker, num_iterations=1, scale=1000, num_processors=7, 
                 total = CProduction.get_production_sum(None)
                 total += CWord.get_word_sum(None)
                 return total
-
-
 
             lmk_prior,rel_prior,lmk_post,rel_post,prob,entropy,rank,ed,rel_type = probs_metric()
 
@@ -335,13 +354,21 @@ def autocorrect(scene, speaker, num_iterations=1, scale=1000, num_processors=7, 
             min_dists.append( ed )
             rel_types.append( rel_type )
 
+            _,_,_,_,student_prob,student_entropy,student_rank,_,student_rel_type = probs_metric(inverse=True)
+            student_probs.append( student_prob )
+            student_entropies.append( student_entropy )
+            student_ranks.append( student_rank )
+            student_rel_types.append( student_rel_type )
+
             total_mass.append( db_mass() )
 
         return zip(lmk_priors, rel_priors, lmk_posts, rel_posts,
                    golden_log_probs, golden_entropies, golden_ranks, 
-                   min_dists, rel_types, total_mass)
+                   min_dists, rel_types, student_probs, student_entropies,
+                   student_ranks, student_rel_types, total_mass)
 
     filename = ''
+    if initial_training: filename += 'initial_training'
     if cheating: filename+= 'cheating'
     if explicit_pointing: filename+='explicit_pointing'
     if ambiguous_pointing: filename+='ambiguous_pointing'
@@ -349,18 +376,23 @@ def autocorrect(scene, speaker, num_iterations=1, scale=1000, num_processors=7, 
     filename += ('_p%i_n%i_u%i.shelf' % (num_processors,num_iterations,scale))
     import shelve
     f = shelve.open(filename)
-    f['lmk_priors'] = []
-    f['rel_priors'] = []
-    f['lmk_posts'] = []
-    f['rel_posts'] = []
-    f['golden_log_probs'] = []
-    f['golden_entropies'] = []
-    f['golden_ranks'] = []
-    f['min_dists'] = []
-    f['rel_types'] = []
-    f['total_mass'] = []
-    f['cheating'] = cheating
-    f['explicit_pointing'] = explicit_pointing
+    f['lmk_priors']         = []
+    f['rel_priors']         = []
+    f['lmk_posts']          = []
+    f['rel_posts']          = []
+    f['golden_log_probs']   = []
+    f['golden_entropies']   = []
+    f['golden_ranks']       = []
+    f['min_dists']          = []
+    f['rel_types']          = []
+    f['student_probs']      = []
+    f['student_entropies']  = []
+    f['student_ranks']      = []
+    f['student_rel_types']  = []
+    f['total_mass']         = []
+    f['initial_training']   = initial_training
+    f['cheating']           = cheating
+    f['explicit_pointing']  = explicit_pointing
     f['ambiguous_pointing'] = ambiguous_pointing
     f.close()
 
@@ -377,19 +409,24 @@ def autocorrect(scene, speaker, num_iterations=1, scale=1000, num_processors=7, 
 	        for j in range(num_processors):
 	            result.append( lists[j][i] )
         lmk_priors, rel_priors, lmk_posts, rel_posts, \
-            golden_log_probs,golden_entropies,golden_ranks,min_dists,rel_types,total_mass = zip(*result)
+            golden_log_probs, golden_entropies, golden_ranks, \
+            min_dists, rel_types, student_probs, student_entropies, \
+            student_ranks, student_rel_types, total_mass = zip(*result)
         f = shelve.open(filename)
-        f['lmk_priors'] += lmk_priors
-        f['rel_priors'] += rel_priors
-        f['lmk_posts'] += lmk_posts
-        f['rel_posts'] += rel_posts
-        f['golden_log_probs'] += golden_log_probs
-        f['golden_entropies'] += golden_entropies
-        f['golden_ranks'] += golden_ranks
-        f['min_dists'] += min_dists
-        f['rel_types'] += rel_types
-
-        f['total_mass'] += total_mass
+        f['lmk_priors']         += lmk_priors
+        f['rel_priors']         += rel_priors
+        f['lmk_posts']          += lmk_posts
+        f['rel_posts']          += rel_posts
+        f['golden_log_probs']   += golden_log_probs
+        f['golden_entropies']   += golden_entropies
+        f['golden_ranks']       += golden_ranks
+        f['min_dists']          += min_dists
+        f['rel_types']          += rel_types
+        f['student_probs']      += student_probs
+        f['student_entropies']  += student_entropies
+        f['student_ranks']      += student_ranks
+        f['student_rel_types']  += student_rel_types
+        f['total_mass']         += total_mass
         f.close()
         
     if extra:
@@ -399,40 +436,25 @@ def autocorrect(scene, speaker, num_iterations=1, scale=1000, num_processors=7, 
 	        for j in range(num_processors):
 	            result.append( lists[j][i] )
         lmk_priors, rel_priors, lmk_posts, rel_posts, \
-            golden_log_probs,golden_entropies,golden_ranks,min_dists,rel_types,total_mass = zip(*result)
+            golden_log_probs, golden_entropies, golden_ranks, \
+            min_dists, rel_types, student_probs, student_entropies, \
+            student_ranks, student_rel_types, total_mass = zip(*result)
         f = shelve.open(filename)
-        f['lmk_priors'] += lmk_priors
-        f['rel_priors'] += rel_priors
-        f['lmk_posts'] += lmk_posts
-        f['rel_posts'] += rel_posts
-        f['golden_log_probs'] += golden_log_probs
-        f['golden_entropies'] += golden_entropies
-        f['golden_ranks'] += golden_ranks
-        f['min_dists'] += min_dists
-        f['rel_types'] += rel_types
-
-        f['total_mass'] += total_mass
+        f['lmk_priors']         += lmk_priors
+        f['rel_priors']         += rel_priors
+        f['lmk_posts']          += lmk_posts
+        f['rel_posts']          += rel_posts
+        f['golden_log_probs']   += golden_log_probs
+        f['golden_entropies']   += golden_entropies
+        f['golden_ranks']       += golden_ranks
+        f['min_dists']          += min_dists
+        f['rel_types']          += rel_types
+        f['student_probs']      += student_probs
+        f['student_entropies']  += student_entropies
+        f['student_ranks']      += student_ranks
+        f['student_rel_types']  += student_rel_types
+        f['total_mass']         += total_mass
         f.close()
-
-    # f = shelve.obone]*window + [np.mean(arr[i-window:i]) for i in range(window, len(arr))]
-
-    # avg_lmk_priors = running_avg(lmk_priors)
-    # avg_rel_priors = running_avg(rel_priors)
-    # avg_lmk_posts = running_avg(lmk_posts)
-    # avg_rel_posts = running_avg(rel_posts)
-    # avg_golden_log_probs = running_avg(golden_log_probs)
-    # avg_golden_entropies = running_avg(golden_entropies)
-    # avg_golden_ranks = running_avg(golden_ranks)
-    # avg_min = running_avg(min_dists)
-    # f['avg_lmk_priors'] = avg_lmk_priors
-    # f['avg_rel_priors'] = avg_rel_priors
-    # f['avg_lmk_posts'] = avg_lmk_posts
-    # f['avg_rel_posts'] = avg_rel_posts
-    # f['avg_golden_log_probs'] = avg_golden_log_probs
-    # f['avg_golden_entropies'] = avg_golden_entropies
-    # f['avg_golden_ranks'] = avg_golden_ranks
-    # f['avg_min'] = avg_min
-    # f.close()
 
     exit()
 
@@ -443,11 +465,14 @@ if __name__ == '__main__':
     parser.add_argument('-n', '--num_iterations', type=int, default=1)
     parser.add_argument('-u', '--update_scale', type=int, default=1000)
     parser.add_argument('-p', '--num_processors', type=int, default=7)
-    # parser.add_argument('-w', '--window_size', type=int, default=20)
     parser.add_argument('-l', '--location', type=Point)
+
+    parser.add_argument('-i', '--initial_training', action='store_true')
+    parser.add_argument('-b', '--best_samples', action='store_true')
     parser.add_argument('-c','--cheating', action='store_true')
     parser.add_argument('-e','--explicit', action='store_true')
     parser.add_argument('-a','--ambiguous', action='store_true')
+
     parser.add_argument('-m','--multiply', action='store_true')
     parser.add_argument('--consistent', action='store_true')
     args = parser.parse_args()
@@ -456,7 +481,8 @@ if __name__ == '__main__':
 
     autocorrect(scene, speaker, args.num_iterations, # window=args.window_size, 
         scale=args.update_scale, num_processors=args.num_processors, consistent=args.consistent, 
-        cheating=args.cheating, explicit_pointing=args.explicit, ambiguous_pointing=args.ambiguous,
+        best_samples=args.best_samples, initial_training=args.initial_training, cheating=args.cheating, 
+        explicit_pointing=args.explicit, ambiguous_pointing=args.ambiguous,
         multiply=args.multiply)
 
 
