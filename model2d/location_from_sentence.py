@@ -46,10 +46,11 @@ def get_tree_probs(tree, lmk=None, rel=None, default_prob=0.001, default_ent=100
     if isinstance(tree[0], ParentedTree): rhs = ' '.join(n.node for n in tree)
     else: rhs = ' '.join(n for n in tree)
 
-    if hasattr( tree.parent, 'node' ):
-        parent = tree.parent.node if tree.parent else None
-    else:
+    # check if this version of nltk uses a function for parent
+    if hasattr( tree.parent, '__call__' ):
         parent = tree.parent().node if tree.parent() else None
+    else:
+        parent = tree.parent.node if tree.parent else None
 
     if lhs == 'RELATION':
         # everything under a RELATION node should ignore the landmark

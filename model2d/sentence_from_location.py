@@ -333,11 +333,12 @@ def train_rec( tree, parent=None, lmk=None, rel=None, prev_word='<no prev word>'
 
     if isinstance(tree[0], ParentedTree): rhs = ' '.join(n.node for n in tree)
     else: rhs = ' '.join(n for n in tree)
-
-    if hasattr( tree.parent, 'node' ):
-        parent = tree.parent.node if tree.parent else None
-    else:
+    
+    # check if this version of nltk uses a function for parent
+    if hasattr( tree.parent, '__call__' ):
         parent = tree.parent().node if tree.parent() else None
+    else:
+        parent = tree.parent.node if tree.parent else None
 
     if lhs == 'RELATION':
         # everything under a RELATION node should ignore the landmark
