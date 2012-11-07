@@ -358,19 +358,12 @@ def get_most_likely_object(scene, speaker, sentences):
     step = 0.04
 
     loi = [lmk for lmk in scene.landmarks.values() if lmk.name != 'table']
-    all_heatmaps_dicts, xs, ys = speaker.generate_all_heatmaps(scene, step=step, loi=loi)
+    all_heatmaps_tupless, xs, ys = speaker.generate_all_heatmaps(scene, step=step, loi=loi)
 
     loi_infos = []
     all_meanings = set()
-    for obj_lmk,all_heatmaps_dict in zip(loi, all_heatmaps_dicts):
-        all_heatmaps_tuples = []
-
-        for lmk, d in all_heatmaps_dict.items():
-            for rel, heatmaps in d.items():
-                all_heatmaps_tuples.append( (lmk,rel,heatmaps) )
-
-        # all_heatmaps_tuples = all_heatmaps_tuples[:10]
-
+    for obj_lmk,all_heatmaps_tuples in zip(loi, all_heatmaps_tupless):
+        
         lmks, rels, heatmapss = zip(*all_heatmaps_tuples)
         meanings = zip(lmks,rels)
         # print meanings
