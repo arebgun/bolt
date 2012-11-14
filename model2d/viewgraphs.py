@@ -16,20 +16,25 @@ if __name__ == '__main__':
 
     f = shelve.open(args.filename)
 
-    lmk_priors        = f['lmk_priors']
-    rel_priors        = f['rel_priors']
-    lmk_posts         = f['lmk_posts']
-    rel_posts         = f['rel_posts']
-    golden_probs      = f['golden_log_probs']
-    golden_entropies  = f['golden_entropies']
-    golden_ranks      = f['golden_ranks']
-    rel_types         = f['rel_types']
-    student_probs     = f['student_probs']    
-    student_entropies = f['student_entropies']
-    student_ranks     = f['student_ranks']    
-    student_rel_types = f['student_rel_types']
-    total_mass        = f['total_mass']
-    min_dists         = f['min_dists']
+    lmk_priors           = f['lmk_priors']
+    rel_priors           = f['rel_priors']
+    lmk_posts            = f['lmk_posts']
+    rel_posts            = f['rel_posts']
+    golden_probs         = f['golden_log_probs']
+    golden_entropies     = f['golden_entropies']
+    golden_ranks         = f['golden_ranks']
+    rel_types            = f['rel_types']
+    
+    total_mass           = f['total_mass']
+    
+    student_probs        = f['student_probs']    
+    student_entropies    = f['student_entropies']
+    student_ranks        = f['student_ranks']    
+    student_rel_types    = f['student_rel_types']
+    min_dists            = f['min_dists']
+    
+    object_answers       = f['object_answers']
+    object_distributions = f['object_distributions']
 
     if args.post:
         golden_probs = np.array(lmk_posts)*np.array(rel_posts)
@@ -48,7 +53,8 @@ if __name__ == '__main__':
     window = args.window_size
     def running_avg(arr):
         return  [None] + [np.mean(arr[:i]) for i in range(1,window)] + [np.mean(arr[i-window:i]) for i in range(window,len(arr))]
-
+        # return  [None] + [np.median(arr[:i]) for i in range(1,window)] + [np.median(arr[i-window:i]) for i in range(window,len(arr))]
+    
     avg_lmk_priors        = running_avg(lmk_priors)
     avg_rel_priors        = running_avg(rel_priors)
     avg_lmk_posts         = running_avg(lmk_posts)
@@ -65,11 +71,22 @@ if __name__ == '__main__':
     avg_nextto            = running_avg(golden_probs_nextto)
     avg_lrfb              = running_avg(golden_probs_lrfb)
     avg_on                = running_avg(golden_probs_on)
+    
+    correct               = [(answer == distribution[0][1]) for answer, distribution in zip(object_answers,object_distributions)]
+    avg_correct           = running_avg(correct)
+
+    distances = []
+    for answer, distribution in zip(object_answers,object_distributions):
+        lmkprob, lmknum = zip(*distribution)
+        lmkprob = np.array(lmkprob)/sum(lmkprob)
+        distances.append( lmkprob[0] - lmkprob[lmknum.index(answer)] )
+        print answer, zip(lmknum,lmkprob)
+    avg_distances         = running_avg(distances)
 
     # initial_training = f['initial_training']
-    cheating = f['cheating']
-    explicit_pointing = f['explicit_pointing']
-    ambiguous_pointing = f['ambiguous_pointing']
+    # cheating = f['cheating']
+    # explicit_pointing = f['explicit_pointing']
+    # ambiguous_pointing = f['ambiguous_pointing']
 
     f.close()
 
@@ -77,19 +94,19 @@ if __name__ == '__main__':
     title = ''
     # if initial_training:
     #     title = 'Initial Training'
-    if cheating:
-        title = 'Cheating (Telepathy)'
-    if explicit_pointing:
-        title = 'Explicit Pointing\n(Telepath Landmark only)'
-    if ambiguous_pointing:
-        title = 'Ambiguous Pointing'
+    # if cheating:
+    #     title = 'Cheating (Telepathy)'
+    # if explicit_pointing:
+    #     title = 'Explicit Pointing\n(Telepath Landmark only)'
+    # if ambiguous_pointing:
+    #     title = 'Ambiguous Pointing'
     plt.ion()
 
-    plt.plot(total_mass, 'o-', color='RoyalBlue')
-    plt.ylabel('Total counts in db')
-    plt.title(title)
-    plt.show()
-    plt.draw()
+    # plt.plot(total_mass, 'o-', color='RoyalBlue')
+    # plt.ylabel('Total counts in db')
+    # plt.title(title)
+    # plt.show()
+    # plt.draw()
 
     plt.figure()
     plt.suptitle(title)
@@ -140,6 +157,18 @@ if __name__ == '__main__':
     plt.ylim([0,1])
     leg = plt.legend()
     leg.draggable(state=True)
+    n=len(correct)
+    plt.figure()
+    plt.title(title)
+    plt.subplot(211)
+    plt.plot(correct[:n], 'o-', color='RoyalBlue')
+    plt.plot(avg_correct[:n], 'x-', color='Orange')
+    plt.ylabel('Correct')
+    plt.ylim([0,1])
+    plt.subplot(212)
+    plt.plot(distances[:n], 'o-', color='RoyalBlue')
+    plt.plot(avg_distances[:n], 'x-', color='Orange')
+    plt.ylabel('Distance')
 
     plt.ioff()
     plt.show()

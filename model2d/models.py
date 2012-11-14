@@ -637,19 +637,19 @@ class CProduction(Base):
 
                 num_results = cp_db.count()
                 if num_results <= 0:
-                    assert(update > 0)
-                    # logger( 'Updating by %f, %f' % (update, update), 'warning')
-                    count = update
-                    CProduction(lhs=lhs,
-                                rhs=rhs,
-                                parent=parent,
-                                landmark_class=lmk_class,
-                                landmark_orientation_relations=lmk_ori_rels,
-                                landmark_color=lmk_color,
-                                relation=rel,
-                                relation_distance_class=dist_class,
-                                relation_degree_class=deg_class,
-                                count=count)
+                    if update > 0:
+                        # logger( 'Updating by %f, %f' % (update, update), 'warning')
+                        count = update
+                        CProduction(lhs=lhs,
+                                    rhs=rhs,
+                                    parent=parent,
+                                    landmark_class=lmk_class,
+                                    landmark_orientation_relations=lmk_ori_rels,
+                                    landmark_color=lmk_color,
+                                    relation=rel,
+                                    relation_distance_class=dist_class,
+                                    relation_degree_class=deg_class,
+                                    count=count)
 
                 # elif num_results == 1:
 
@@ -694,8 +694,8 @@ class CProduction(Base):
                             else: cprod.count += ups[cprod.rhs]
 
 
-                    session.commit()
-                    committed = True
+                session.commit()
+                committed = True
             except Exception as e:
                 logger( 'Could not commit', 'warning' )
                 logger( e )

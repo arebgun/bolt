@@ -295,33 +295,33 @@ def heatmaps_for_sentence(sentence, all_meanings, loi_infos, xs, ys, scene, spea
                 big_heatmap1 += p*h1
                 # big_heatmap2 += p*h2
 
-        # plt.figure()
-        # plt.suptitle(sentence)
-        # # plt.subplot(121)
+        plt.figure()
+        plt.suptitle(sentence)
+        # plt.subplot(121)
 
-        # probabilities1 = big_heatmap1.reshape( (len(xs),len(ys)) ).T
-        # plt.pcolor(x, y, probabilities1, cmap='jet', edgecolors='none', alpha=0.7)
-        # plt.colorbar()
+        probabilities1 = big_heatmap1.reshape( (len(xs),len(ys)) ).T
+        plt.pcolor(x, y, probabilities1, cmap='jet', edgecolors='none', alpha=0.7)
+        plt.colorbar()
 
-        # for lmk in scene.landmarks.values():
-        #     if isinstance(lmk.representation, GroupLineRepresentation):
-        #         xx = [lmk.representation.line.start.x, lmk.representation.line.end.x]
-        #         yy = [lmk.representation.line.start.y, lmk.representation.line.end.y]
-        #         plt.fill(xx,yy,facecolor='none',linewidth=2)
-        #     elif isinstance(lmk.representation, RectangleRepresentation):
-        #         rect = lmk.representation.rect
-        #         xx = [rect.min_point.x,rect.min_point.x,rect.max_point.x,rect.max_point.x]
-        #         yy = [rect.min_point.y,rect.max_point.y,rect.max_point.y,rect.min_point.y]
-        #         plt.fill(xx,yy,facecolor='none',linewidth=2)
-        #         plt.text(rect.min_point.x+0.01,rect.max_point.y+0.02,lmk.name)
+        for lmk in scene.landmarks.values():
+            if isinstance(lmk.representation, GroupLineRepresentation):
+                xx = [lmk.representation.line.start.x, lmk.representation.line.end.x]
+                yy = [lmk.representation.line.start.y, lmk.representation.line.end.y]
+                plt.fill(xx,yy,facecolor='none',linewidth=2)
+            elif isinstance(lmk.representation, RectangleRepresentation):
+                rect = lmk.representation.rect
+                xx = [rect.min_point.x,rect.min_point.x,rect.max_point.x,rect.max_point.x]
+                yy = [rect.min_point.y,rect.max_point.y,rect.max_point.y,rect.min_point.y]
+                plt.fill(xx,yy,facecolor='none',linewidth=2)
+                plt.text(rect.min_point.x+0.01,rect.max_point.y+0.02,lmk.name)
 
-        # plt.plot(speaker.location.x,
-        #          speaker.location.y,
-        #          'bx',markeredgewidth=2)
+        plt.plot(speaker.location.x,
+                 speaker.location.y,
+                 'bx',markeredgewidth=2)
 
-        # plt.axis('scaled')
-        # plt.axis([scene_bb.min_point.x, scene_bb.max_point.x, scene_bb.min_point.y, scene_bb.max_point.y])
-        # plt.title('Likelihood of sentence given location(s)')
+        plt.axis('scaled')
+        plt.axis([scene_bb.min_point.x, scene_bb.max_point.x, scene_bb.min_point.y, scene_bb.max_point.y])
+        plt.title('Likelihood of sentence given location(s)')
 
         # plt.subplot(122)
 
@@ -348,7 +348,7 @@ def heatmaps_for_sentence(sentence, all_meanings, loi_infos, xs, ys, scene, spea
         # plt.axis('scaled')
         # plt.axis([scene_bb.min_point.x, scene_bb.max_point.x, scene_bb.min_point.y, scene_bb.max_point.y])
         # plt.title('Likelihood of location(s) given sentence')
-        # plt.show()
+        plt.show()
 
         combined_heatmaps.append(big_heatmap1)
 
@@ -380,10 +380,42 @@ def get_most_likely_object(scene, speaker, sentences):
             for combined_heatmap,obj_lmk in zip(combined_heatmaps, loi):
                 ps = [p for (x,y),p in zip(list(product(xs,ys)),combined_heatmap) if obj_lmk.representation.contains_point( Vec2(x,y) )]
                 # print ps, xs.shape, ys.shape, combined_heatmap.shape
-                lmk_probs.append( (sum(ps)/len(ps), obj_lmk) )
+                lmk_probs.append( (sum(ps)/len(ps), obj_lmk, combined_heatmap) )
                 
-            top_p, top_lmk = sorted(lmk_probs, reverse=True)[0]
-            lprobs, lmkss = zip(*lmk_probs)
+            top_p, top_lmk, top_heatmap = sorted(lmk_probs, reverse=True)[0]
+            lprobs, lmkss, heatmaps = zip(*lmk_probs)
+
+            plt.figure()
+            plt.suptitle(sentence)
+
+            probabilities1 = top_heatmap.reshape( (len(xs),len(ys)) ).T
+            scene_bb = scene.get_bounding_box()
+            scene_bb = scene_bb.inflate( Vec2(scene_bb.width*0.5,scene_bb.height*0.5) )
+            x = np.array( [list(xs-step*0.5)]*len(ys) )
+            y = np.array( [list(ys-step*0.5)]*len(xs) ).T
+            plt.pcolor(x, y, probabilities1, cmap='jet', edgecolors='none', alpha=0.7)
+            plt.colorbar()
+
+            for lmk in scene.landmarks.values():
+                if isinstance(lmk.representation, GroupLineRepresentation):
+                    xx = [lmk.representation.line.start.x, lmk.representation.line.end.x]
+                    yy = [lmk.representation.line.start.y, lmk.representation.line.end.y]
+                    plt.fill(xx,yy,facecolor='none',linewidth=2)
+                elif isinstance(lmk.representation, RectangleRepresentation):
+                    rect = lmk.representation.rect
+                    xx = [rect.min_point.x,rect.min_point.x,rect.max_point.x,rect.max_point.x]
+                    yy = [rect.min_point.y,rect.max_point.y,rect.max_point.y,rect.min_point.y]
+                    plt.fill(xx,yy,facecolor='none',linewidth=2)
+                    plt.text(rect.min_point.x+0.01,rect.max_point.y+0.02,lmk.name)
+
+            plt.plot(speaker.location.x,
+                     speaker.location.y,
+                     'bx',markeredgewidth=2)
+
+            plt.axis('scaled')
+            plt.axis([scene_bb.min_point.x, scene_bb.max_point.x, scene_bb.min_point.y, scene_bb.max_point.y])
+            plt.title('Likelihood of sentence given location(s)')
+            plt.show()
             
             print
             print sorted(zip(np.array(lprobs)/sum(lprobs), [(l.name, l.color, l.object_class) for l in lmkss]), reverse=True)

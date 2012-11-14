@@ -416,8 +416,9 @@ def autocorrect(scene, speaker, num_iterations=1, scale=1000, num_processors=7, 
     extra = num_each % chunk_size
     logger( "num_each: %i, chunk_size: %i, n: %i, extra: %i" % (num_each, chunk_size, n, extra) )
 
-    for i in range(n):    
-        lists = parmap(loop,[chunk_size]*num_processors)
+    for i in range(n):
+        # lists = parmap(loop,[chunk_size]*num_processors)
+        lists = map(loop,[chunk_size]*num_processors)
 
         result = []
         for i in range(chunk_size):
@@ -447,7 +448,8 @@ def autocorrect(scene, speaker, num_iterations=1, scale=1000, num_processors=7, 
         f.close()
         
     if extra:
-        lists = parmap(loop,[extra]*num_processors)
+        # lists = parmap(loop,[extra]*num_processors)
+        lists = map(loop,[extra]*num_processors)
         result = []
         for i in range(extra):
 	        for j in range(num_processors):
