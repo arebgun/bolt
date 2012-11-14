@@ -251,10 +251,14 @@ class Meaning(object):
         self.args = args
 
 
-def generate_sentence(loc, consistent, scene=None, speaker=None, usebest=False, golden=False, printing=True):
+def generate_sentence(loc, consistent, scene=None, speaker=None, usebest=False, golden=False, meaning=None, printing=True):
     utils.scene = utils.ModelScene(scene, speaker)
 
-    (lmk, lmk_prob, lmk_ent), (rel, rel_prob, rel_ent) = get_meaning(loc=loc, usebest=usebest)
+    if meaning is None:
+        (lmk, lmk_prob, lmk_ent), (rel, rel_prob, rel_ent) = get_meaning(loc=loc, usebest=usebest)
+    else:
+        lmk, rel = meaning
+        lmk_prob = lmk_ent = rel_prob = rel_ent = None
     meaning1 = m2s(lmk, rel)
     logger( meaning1 )
 
@@ -473,6 +477,29 @@ def accept_correction( meaning, correction, update_func='geometric', update_scal
     except ParseError as pe:
         logger( pe )
         logger( 'No update performed' )
+
+def accept_object_correction( meaning, sentence, update, eval_lmk=True, printing=True ):
+
+    lmk,rel = meaning
+    _,_, lrpc, tps = get_sentence_meaning_likelihood( sentence, lmk, rel, printing=printing)
+
+    # reward new words with old meaning
+    for lhs,rhs,parent,lmk,rel in lrpc:
+        # print 'Incrementing production - lhs: %s, rhs: %s, parent: %s' % (lhs,rhs,parent)
+        update_expansion_counts( update, lhs, rhs, parent, rel=rel,
+                                                           lmk_class=(lmk.object_class if lmk else None),
+                                                           lmk_ori_rels=get_lmk_ori_rels_str(lmk),
+                                                           lmk_color=(lmk.color if lmk else None) )
+
+    for i in xrange(len(tps)):
+        lhs,rhs,lmk,rel = tps[i]
+        prev_word = tps[i-1][1] if i > 0 else None
+        # print 'Incrementing word - pos: %s, word: %s, lmk_class: %s' % (lhs, rhs, (lmk.object_class if lmk else None) )
+        update_word_counts( update, lhs, rhs, prev_word, lmk_class=(lmk.object_class if lmk else None),
+                                                         rel=rel,
+                                                         lmk_ori_rels=get_lmk_ori_rels_str(lmk),
+                                                         lmk_color=(lmk.color if lmk else None) )
+
 
 def accept_new_words( location, sentence, update_func='geometric', update_scale=10, num_meanings=10, printing=True ):
     for _ in range(num_meanings):
