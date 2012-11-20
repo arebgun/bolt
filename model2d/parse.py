@@ -100,7 +100,7 @@ def get_modparse(sentence):
         SentenceParse.add_sentence_parse(sentence, parsetree, modparsetree)
 
     if count_lmk_phrases(ParentedTree.parse(modparsetree)) < 1:
-        raise ParseError(printcolors.WARNING + 'ParseError: Parse contained no Landmark phrase')
+        raise ParseError(printcolors.WARNING + ('ParseError: Parse contained no Landmark phrase.\nSentence: %s\nParse: %s\nModparse: %s' % (sentence,parsetree,modparsetree)))
 
     return parsetree, modparsetree
 
