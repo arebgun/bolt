@@ -58,95 +58,98 @@ def parmap(f,X):
     [p.join() for p in proc]
     return ret
 
-def autocorrect(scene, speaker, num_iterations=1, scale=1000, num_processors=7, num_samples=5, 
+def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5, 
                 golden_metric=True, mass_metric=True, student_metric=True, choosing_metric=True):
     plt.ion()
 
     printing=False
 
-    scene_bb = scene.get_bounding_box()
-    scene_bb = scene_bb.inflate( Vec2(scene_bb.width*0.5,scene_bb.height*0.5) )
-    table = scene.landmarks['table'].representation.get_geometry()
+    def loop(num_iterations):
 
-    step = 0.04
-    loi = [lmk for lmk in scene.landmarks.values() if lmk.name != 'table']
-    all_heatmaps_tupless, xs, ys = speaker.generate_all_heatmaps(scene, step=step, loi=loi)
+        scene, speaker = construct_training_scene(True)
 
-    loi_infos = []
-    all_meanings = set()
-    for obj_lmk,all_heatmaps_tuples in zip(loi, all_heatmaps_tupless):
-        
-        lmks, rels, heatmapss = zip(*all_heatmaps_tuples)
-        meanings = zip(lmks,rels)
-        # print meanings
-        all_meanings.update(meanings)
-        loi_infos.append( (obj_lmk, meanings, heatmapss) )
-
-    all_heatmaps_tupless, xs, ys = speaker.generate_all_heatmaps(scene, step=step)
-    all_heatmaps_tuples = all_heatmaps_tupless[0]
-    x = np.array( [list(xs-step*0.5)]*len(ys) )
-    y = np.array( [list(ys-step*0.5)]*len(xs) ).T
-    lmks, rels, heatmapss = zip(*all_heatmaps_tuples)
-    graphmax1 = graphmax2 = 0
-    meanings = zip(lmks,rels)
-    landmarks = list(set(lmks))
-    relations = list(set(rels))
-
-    epsilon = 0.0001
-    def heatmaps_for_sentence(sentence, all_meanings, loi_infos, xs, ys, scene, speaker, step=0.02):
-        printing=False
         scene_bb = scene.get_bounding_box()
         scene_bb = scene_bb.inflate( Vec2(scene_bb.width*0.5,scene_bb.height*0.5) )
+        table = scene.landmarks['table'].representation.get_geometry()
+
+        step = 0.04
+        loi = [lmk for lmk in scene.landmarks.values() if lmk.name != 'table']
+        all_heatmaps_tupless, xs, ys = speaker.generate_all_heatmaps(scene, step=step, loi=loi)
+
+        loi_infos = []
+        all_meanings = set()
+        for obj_lmk,all_heatmaps_tuples in zip(loi, all_heatmaps_tupless):
+            
+            lmks, rels, heatmapss = zip(*all_heatmaps_tuples)
+            meanings = zip(lmks,rels)
+            # print meanings
+            all_meanings.update(meanings)
+            loi_infos.append( (obj_lmk, meanings, heatmapss) )
+
+        all_heatmaps_tupless, xs, ys = speaker.generate_all_heatmaps(scene, step=step)
+        all_heatmaps_tuples = all_heatmaps_tupless[0]
         x = np.array( [list(xs-step*0.5)]*len(ys) )
         y = np.array( [list(ys-step*0.5)]*len(xs) ).T
+        lmks, rels, heatmapss = zip(*all_heatmaps_tuples)
+        graphmax1 = graphmax2 = 0
+        meanings = zip(lmks,rels)
+        landmarks = list(set(lmks))
+        relations = list(set(rels))
 
-        posteriors = get_all_sentence_posteriors(sentence, all_meanings, printing=printing)
+        epsilon = 0.0001
+        def heatmaps_for_sentence(sentence, all_meanings, loi_infos, xs, ys, scene, speaker, step=0.02):
+            printing=False
+            scene_bb = scene.get_bounding_box()
+            scene_bb = scene_bb.inflate( Vec2(scene_bb.width*0.5,scene_bb.height*0.5) )
+            x = np.array( [list(xs-step*0.5)]*len(ys) )
+            y = np.array( [list(ys-step*0.5)]*len(xs) ).T
 
-        combined_heatmaps = []
+            posteriors = get_all_sentence_posteriors(sentence, all_meanings, printing=printing)
+
+            combined_heatmaps = []
+            for obj_lmk, ms, heatmapss in loi_infos:
+
+                big_heatmap1 = None
+                for m,(h1,h2) in zip(ms, heatmapss):
+                    lmk,rel = m
+                    p = posteriors[rel]*posteriors[lmk]
+                    if big_heatmap1 is None:
+                        big_heatmap1 = p*h1
+                    else:
+                        big_heatmap1 += p*h1
+
+                combined_heatmaps.append(big_heatmap1)
+
+            return combined_heatmaps
+
+        object_meaning_applicabilities = {}
         for obj_lmk, ms, heatmapss in loi_infos:
+            for m,(h1,_) in zip(ms, heatmapss):
+                ps = [p for (x,y),p in zip(list(product(xs,ys)),h1) if obj_lmk.representation.contains_point( Vec2(x,y) )]
+                if m not in object_meaning_applicabilities:
+                    object_meaning_applicabilities[m] = {}
+                object_meaning_applicabilities[m][obj_lmk] = sum(ps)/len(ps)
 
-            big_heatmap1 = None
-            for m,(h1,h2) in zip(ms, heatmapss):
-                lmk,rel = m
-                p = posteriors[rel]*posteriors[lmk]
-                if big_heatmap1 is None:
-                    big_heatmap1 = p*h1
-                else:
-                    big_heatmap1 += p*h1
+        k = len(loi)
+        for meaning_dict in object_meaning_applicabilities.values():
+            total = sum( meaning_dict.values() )
+            if total != 0:
+                for obj_lmk in meaning_dict.keys():
+                    meaning_dict[obj_lmk] = meaning_dict[obj_lmk]/total - 1.0/k
+                total = sum( [value for value in meaning_dict.values() if value > 0] )
+                for obj_lmk in meaning_dict.keys():
+                    meaning_dict[obj_lmk] = (2 if meaning_dict[obj_lmk] > 0 else 1)*meaning_dict[obj_lmk] - total
 
-            combined_heatmaps.append(big_heatmap1)
+        sorted_meaning_lists = {}
 
-        return combined_heatmaps
+        for m in object_meaning_applicabilities.keys():
+            for obj_lmk in object_meaning_applicabilities[m].keys():
+                if obj_lmk not in sorted_meaning_lists:
+                    sorted_meaning_lists[obj_lmk] = []
+                sorted_meaning_lists[obj_lmk].append( (object_meaning_applicabilities[m][obj_lmk], m) )
+        for obj_lmk in sorted_meaning_lists.keys():
+            sorted_meaning_lists[obj_lmk].sort(reverse=True)
 
-    object_meaning_applicabilities = {}
-    for obj_lmk, ms, heatmapss in loi_infos:
-        for m,(h1,_) in zip(ms, heatmapss):
-            ps = [p for (x,y),p in zip(list(product(xs,ys)),h1) if obj_lmk.representation.contains_point( Vec2(x,y) )]
-            if m not in object_meaning_applicabilities:
-                object_meaning_applicabilities[m] = {}
-            object_meaning_applicabilities[m][obj_lmk] = sum(ps)/len(ps)
-
-    k = len(loi)
-    for meaning_dict in object_meaning_applicabilities.values():
-        total = sum( meaning_dict.values() )
-        if total != 0:
-            for obj_lmk in meaning_dict.keys():
-                meaning_dict[obj_lmk] = meaning_dict[obj_lmk]/total - 1.0/k
-            total = sum( [value for value in meaning_dict.values() if value > 0] )
-            for obj_lmk in meaning_dict.keys():
-                meaning_dict[obj_lmk] = (2 if meaning_dict[obj_lmk] > 0 else 1)*meaning_dict[obj_lmk] - total
-
-    sorted_meaning_lists = {}
-
-    for m in object_meaning_applicabilities.keys():
-        for obj_lmk in object_meaning_applicabilities[m].keys():
-            if obj_lmk not in sorted_meaning_lists:
-                sorted_meaning_lists[obj_lmk] = []
-            sorted_meaning_lists[obj_lmk].append( (object_meaning_applicabilities[m][obj_lmk], m) )
-    for obj_lmk in sorted_meaning_lists.keys():
-        sorted_meaning_lists[obj_lmk].sort(reverse=True)
-
-    def loop(num_iterations):
         min_dists = []
         lmk_priors = []
         rel_priors = []
@@ -169,7 +172,7 @@ def autocorrect(scene, speaker, num_iterations=1, scale=1000, num_processors=7, 
 
         epsilon = 1e-15
         for iteration in range(num_iterations):
-            logger(('Iteration %d' % iteration),'okblue')
+            logger(('Iteration %d comprehension' % iteration),'okblue')
 
             # Teacher describe 
             trajector = choice(loi)
@@ -218,7 +221,79 @@ def autocorrect(scene, speaker, num_iterations=1, scale=1000, num_processors=7, 
                 for update, meaning in sorted_meaning_lists[trajector][-howmany:]:
                     accept_object_correction( meaning, sentence, update*scale, printing=printing)
 
- 
+            for _ in range(3):
+	            logger(('Iteration %d production' % iteration),'okblue')
+	            rand_p = Vec2(random()*table.width+table.min_point.x, random()*table.height+table.min_point.y)
+	            trajector = Landmark( 'point', PointRepresentation(rand_p), None, Landmark.POINT )
+
+	            meaning, sentence = generate_sentence(rand_p, False, scene, speaker, usebest=True, printing=printing)
+	            logger( 'Generated sentence: %s' % sentence)
+
+	            landmark = meaning.args[0]
+	            # if ambiguous_pointing:
+	                # pointing_point = landmark.representation.middle + Vec2(random()*0.1-0.05,random()*0.1-0.05)
+	            #_, bestsentence = generate_sentence(rand_p, False, scene, speaker, usebest=True, printing=printing)
+
+	            try:
+	                golden_posteriors = get_all_sentence_posteriors(sentence, meanings, golden=True, printing=printing)
+	            except ParseError as e:
+	                logger( e )
+	                prob = 0
+	                rank = len(meanings)-1
+	                entropy = 0
+	                ed = len(sentence)
+	                golden_log_probs.append( prob )
+	                golden_entropies.append( entropy )
+	                golden_ranks.append( rank )
+	                min_dists.append( ed )
+	                continue
+	            epsilon = 1e-15
+	            ps = [[golden_posteriors[lmk]*golden_posteriors[rel],(lmk,rel)] for lmk, rel in meanings if (lmk == landmark)]
+
+	            all_lmk_probs = speaker.all_landmark_probs(landmarks, Landmark(None, PointRepresentation(rand_p), None))
+	            all_lmk_probs = dict(zip(landmarks, all_lmk_probs))
+	            temp = None
+	            for i,(p,(lmk,rel)) in enumerate(ps):
+	                # lmk,rel = meanings[i]
+	                # logger( '%f, %s' % (p, m2s(lmk,rel)))
+	                head_on = speaker.get_head_on_viewpoint(lmk)
+	                ps[i][0] *= speaker.get_probabilities_points( np.array([rand_p]), rel, head_on, lmk)[0]
+	                if lmk == meaning.args[0] and rel == meaning.args[3]:
+	                    temp = i
+
+	            ps,_meanings = zip(*ps)
+	            print ps
+	            ps = np.array(ps)
+	            ps += epsilon
+	            ps = ps/ps.sum()
+	            temp = ps[temp]
+
+	            ps = sorted(zip(ps,_meanings),reverse=True)
+
+	            logger( 'Attempted to say: %s' %  m2s(meaning.args[0],meaning.args[3]) )
+	            logger( 'Interpreted as: %s' % m2s(ps[0][1][0],ps[0][1][1]) )
+	            logger( 'Attempted: %f vs Interpreted: %f' % (temp, ps[0][0]))
+
+	            # logger( 'Golden entropy: %f, Max entropy %f' % (golden_entropy, max_entropy))
+
+	            landmark, relation = ps[0][1]
+	            head_on = speaker.get_head_on_viewpoint(landmark)
+	            all_descs = speaker.get_all_meaning_descriptions(trajector, scene, landmark, relation, head_on, 1)
+
+	            distances = []
+	            for desc in all_descs:
+	                distances.append([edit_distance( sentence, desc ), desc])
+
+	            distances.sort()
+	            print distances
+
+	            correction = distances[0][1]
+	            # if correction == sentence: 
+	            #     correction = None
+	            #     logger( 'No correction!!!!!!!!!!!!!!!!!!', 'okgreen' )
+	            accept_correction( meaning, correction, update_scale=scale, eval_lmk=False, multiply=False, printing=printing )
+
+
             def probs_metric(inverse=False):
                 rand_p = Vec2(random()*table.width+table.min_point.x, random()*table.height+table.min_point.y)
                 bestmeaning, bestsentence = generate_sentence(rand_p, False, scene, speaker, usebest=True, golden=inverse, printing=printing)
@@ -255,9 +330,14 @@ def autocorrect(scene, speaker, num_iterations=1, scale=1000, num_processors=7, 
                     entropy = entropy_of_probs(ps)
                 except ParseError as e:
                     logger( e )
+                    lmk_prior = 0
+                    rel_prior = 0
+                    lmk_post = 0
+                    rel_post = 0
                     prob = 0
                     rank = len(meanings)-1
                     entropy = 0
+                    distances = [[None]]
 
                 head_on = speaker.get_head_on_viewpoint(sampled_landmark)
                 all_descs = speaker.get_all_meaning_descriptions(trajector, scene, sampled_landmark, sampled_relation, head_on, 1)
@@ -303,8 +383,7 @@ def autocorrect(scene, speaker, num_iterations=1, scale=1000, num_processors=7, 
             if golden_metric:
                 lmk_prior,rel_prior,lmk_post,rel_post,prob,entropy,rank,ed,rel_type = probs_metric()
             else:
-                lmk_prior,rel_prior,lmk_post,rel_post,prob,entropy,rank,ed,rel_type = \
-                None, None, None, None, None, None, None, None, None
+                lmk_prior,rel_prior,lmk_post,rel_post,prob,entropy,rank,ed,rel_type = [None]*9
 
             lmk_priors.append( lmk_prior )
             rel_priors.append( rel_prior )
@@ -371,7 +450,7 @@ def autocorrect(scene, speaker, num_iterations=1, scale=1000, num_processors=7, 
     # f['ambiguous_pointing']   = ambiguous_pointing
     f.close()
 
-    chunk_size = 10
+    chunk_size = 25
     num_each = int(num_iterations/num_processors)
     n = int(num_each / chunk_size)
     extra = num_each % chunk_size
@@ -450,9 +529,9 @@ if __name__ == '__main__':
     parser.add_argument('-s', '--num_samples', action='store_true')
     args = parser.parse_args()
 
-    scene, speaker = construct_training_scene()
+    # scene, speaker = construct_training_scene()
 
-    autocorrect(scene, speaker, args.num_iterations, # window=args.window_size, 
+    autocorrect(args.num_iterations, # window=args.window_size, 
         scale=args.update_scale, num_processors=args.num_processors, num_samples=args.num_samples,)
 
 

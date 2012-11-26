@@ -445,11 +445,11 @@ def accept_correction( meaning, correction, update_func='geometric', update_scal
             prev_word = data[i-1][1] if i > 0 else rel_words[-1]
             a = lmk_a[i]
             # print 'Decrementing word - pos: %s, word: %s, lmk_class: %s' % (term, word, lmk.object_class)
-            update_word_counts((1-a)*dec_update, term, word, lmk_class=lmk.object_class,
+            update_word_counts((1-a)*dec_update, term, word, lmk_class=(lmk.object_class if lmk else None),
                                                              lmk_ori_rels=get_lmk_ori_rels_str(lmk),
                                                              lmk_color=(lmk.color if lmk else None),
                                                              multiply=multiply )
-            update_word_counts( a*dec_update, term, word, prev_word, lmk_class=lmk.object_class,
+            update_word_counts( a*dec_update, term, word, prev_word, lmk_class=(lmk.object_class if lmk else None),
                                                                      lmk_ori_rels=get_lmk_ori_rels_str(lmk),
                                                                      lmk_color=(lmk.color if lmk else None),
                                                                      multiply=multiply )
