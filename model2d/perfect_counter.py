@@ -86,8 +86,13 @@ if __name__ == '__main__':
         if (i % 50) == 0:
             scene, speaker = construct_training_scene(True)
             utils.scene.set_scene(scene,speaker)
+            table = scene.landmarks['table'].representation.rect
+        t_min = table.min_point
+        t_max = table.max_point
+        t_w = table.width
+        t_h = table.height
 
-        xloc,yloc = random()*0.8-0.4,random()*0.6+0.4
+        xloc,yloc = random()*t_w+t_min.x, random()*t_h+t_min.y
         trajector = Landmark( 'point', PointRepresentation(Vec2(xloc,yloc)), None, Landmark.POINT)
         sentence, rel, lmk = speaker.describe(trajector, scene, False, 1)
         parsestring, modparsestring = get_modparse(sentence)
