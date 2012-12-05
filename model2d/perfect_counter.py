@@ -3,10 +3,13 @@
 
 from __future__ import division
 
+import sys
+sys.path.append("..")
 import csv
 
 from models import (Location, Word, Production, Bigram, Trigram,
                     CWord, CProduction, SentenceParse, session)
+import utils
 from utils import parent_landmark, count_lmk_phrases, get_meaning, rel_type, lmk_id, get_lmk_ori_rels_str, scene
 from parse import get_modparse
 from semantics.landmark import Landmark
@@ -18,6 +21,8 @@ random = random.random
 
 from sqlalchemy import func
 from sqlalchemy.orm import aliased
+
+from semantics.run import construct_training_scene
 
 
 
@@ -73,10 +78,14 @@ if __name__ == '__main__':
 
     unique_sentences = {}
 
-    scene, speaker = scene.scene, scene.speaker
+    # scene, speaker = scene.scene, scene.speaker
 
     for i in range(args.iterations):
         print 'sentence', i
+
+        if (i % 50) == 0:
+            scene, speaker = construct_training_scene(True)
+            utils.scene.set_scene(scene,speaker)
 
         xloc,yloc = random()*0.8-0.4,random()*0.6+0.4
         trajector = Landmark( 'point', PointRepresentation(Vec2(xloc,yloc)), None, Landmark.POINT)
@@ -117,7 +126,7 @@ if __name__ == '__main__':
 
         if i % 200 == 0: session.commit()
 
-    if SentenceParse.query.count() == 0:
+    if SentenceParse.query().count() == 0:
         for sentence,(parse,modparse) in unique_sentences.items():
             SentenceParse.add_sentence_parse_blind(sentence, parse, modparse)
     else:

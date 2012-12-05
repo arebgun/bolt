@@ -1,0 +1,4 @@
+LOCATION-PHRASE [ <1 PP=rel & <2 NP=lmk ]
+
+relabel rel RELATION
+relabel lmk LANDMARK-PHRASE

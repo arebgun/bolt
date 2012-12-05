@@ -42,7 +42,7 @@ if __name__ == '__main__':
     golden_probs_tofrom = np.ma.masked_array(golden_probs, 
         mask=np.invert(np.equal(rel_types, relation.ToRelation) + np.equal(rel_types,relation.FromRelation)))
 
-    golden_probs_nextto = np.ma.masked_array(golden_probs, mask=np.invert(np.equal(rel_types,relation.NextToRelation)))
+    # golden_probs_nextto = np.ma.masked_array(golden_probs, mask=np.invert(np.equal(rel_types,relation.NextToRelation)))
 
     golden_probs_lrfb = np.ma.masked_array(golden_probs, 
         mask=np.invert(np.equal(rel_types, relation.LeftRelation) + np.equal(rel_types,relation.RightRelation) +
@@ -68,7 +68,7 @@ if __name__ == '__main__':
     avg_min               = running_avg(min_dists)
     
     avg_tofrom            = running_avg(golden_probs_tofrom)
-    avg_nextto            = running_avg(golden_probs_nextto)
+    # avg_nextto            = running_avg(golden_probs_nextto)
     avg_lrfb              = running_avg(golden_probs_lrfb)
     avg_on                = running_avg(golden_probs_on)
     
@@ -113,7 +113,7 @@ if __name__ == '__main__':
     plt.subplot(211)
     # plt.plot(golden_probs, 'o-', color='RoyalBlue')
     plt.plot(avg_tofrom, 'x-', color='Blue', label='To/From')
-    plt.plot(avg_nextto, 'x-', color='Red', label='NextTo')
+    # plt.plot(avg_nextto, 'x-', color='Red', label='NextTo')
     plt.plot(avg_lrfb, 'x-', color='Green', label='L/R/F/B')
     plt.plot(avg_on, 'x-', color='Salmon', label='On')
     plt.plot(avg_golden_probs, 'x-', color='Black', label='All')

@@ -82,7 +82,11 @@ class ModelScene(object):
 
             self.scene.add_landmark(table)
             self.table = table
+        self.set_scene(scene,speaker)
 
+    def set_scene(self,scene,speaker):
+        self.scene = scene
+        self.speaker = speaker
         self.table = self.scene.landmarks['table']
 
         # there is a person standing at this location

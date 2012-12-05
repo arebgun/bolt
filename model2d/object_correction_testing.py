@@ -38,6 +38,7 @@ from itertools import izip, product
 from models import CProduction, CWord
 
 from utils import categorical_sample
+import utils
 
 from semantics.language_generator import describe
 # import IPython
@@ -58,7 +59,7 @@ def parmap(f,X):
     [p.join() for p in proc]
     return ret
 
-def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5, 
+def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
                 golden_metric=True, mass_metric=True, student_metric=True, choosing_metric=True):
     plt.ion()
 
@@ -67,6 +68,7 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
     def loop(num_iterations):
 
         scene, speaker = construct_training_scene(True)
+        utils.scene.set_scene(scene,speaker)
 
         scene_bb = scene.get_bounding_box()
         scene_bb = scene_bb.inflate( Vec2(scene_bb.width*0.5,scene_bb.height*0.5) )
@@ -79,7 +81,7 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
         loi_infos = []
         all_meanings = set()
         for obj_lmk,all_heatmaps_tuples in zip(loi, all_heatmaps_tupless):
-            
+
             lmks, rels, heatmapss = zip(*all_heatmaps_tuples)
             meanings = zip(lmks,rels)
             # print meanings
@@ -174,7 +176,7 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
         for iteration in range(num_iterations):
             logger(('Iteration %d comprehension' % iteration),'okblue')
 
-            # Teacher describe 
+            # Teacher describe
             trajector = choice(loi)
             # sentence, sampled_relation, sampled_landmark = speaker.describe(trajector, scene, max_level=1)
             logger( 'Teacher chooses: %s' % trajector )
@@ -192,16 +194,16 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
             lmk_probs = []
             try:
                 combined_heatmaps = heatmaps_for_sentence(sentence, all_meanings, loi_infos, xs, ys, scene, speaker, step=step)
-                
+
                 for combined_heatmap,obj_lmk in zip(combined_heatmaps, loi):
                     ps = [p for (x,y),p in zip(list(product(xs,ys)),combined_heatmap) if obj_lmk.representation.contains_point( Vec2(x,y) )]
                     # print ps, xs.shape, ys.shape, combined_heatmap.shape
                     lmk_probs.append( (sum(ps)/len(ps), obj_lmk) )
-                  
+
                 lmk_probs = sorted(lmk_probs, reverse=True)
                 top_p, top_lmk = lmk_probs[0]
                 lprobs, lmkss = zip(*lmk_probs)
-                
+
                 logger( sorted(zip(np.array(lprobs)/sum(lprobs), [(l.name, l.color, l.object_class) for l in lmkss]), reverse=True) )
                 logger( 'I bet %f you are talking about a %s %s %s' % (top_p/sum(lprobs), top_lmk.name, top_lmk.color, top_lmk.object_class) )
                 # objects.append(top_lmk)
@@ -288,7 +290,7 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
 	            print distances
 
 	            correction = distances[0][1]
-	            # if correction == sentence: 
+	            # if correction == sentence:
 	            #     correction = None
 	            #     logger( 'No correction!!!!!!!!!!!!!!!!!!', 'okgreen' )
 	            accept_correction( meaning, correction, update_scale=scale, eval_lmk=False, multiply=False, printing=printing )
@@ -361,16 +363,16 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
                 lmk_probs = []
                 try:
                     combined_heatmaps = heatmaps_for_sentence(sentence, all_meanings, loi_infos, xs, ys, scene, speaker, step=step)
-                    
+
                     for combined_heatmap,obj_lmk in zip(combined_heatmaps, loi):
                         ps = [p for (x,y),p in zip(list(product(xs,ys)),combined_heatmap) if obj_lmk.representation.contains_point( Vec2(x,y) )]
                         # print ps, xs.shape, ys.shape, combined_heatmap.shape
                         lmk_probs.append( (sum(ps)/len(ps), obj_lmk) )
-                      
+
                     lmk_probs = sorted(lmk_probs, reverse=True)
                     top_p, top_lmk = lmk_probs[0]
                     lprobs, lmkss = zip(*lmk_probs)
-                    
+
                     logger( sorted(zip(np.array(lprobs)/sum(lprobs), [(l.name, l.color, l.object_class) for l in lmkss]), reverse=True) )
                     logger( 'I bet %f you are talking about a %s %s %s' % (top_p/sum(lprobs), top_lmk.name, top_lmk.color, top_lmk.object_class) )
                     # objects.append(top_lmk)
@@ -419,8 +421,8 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
             object_distributions.append( distribution )
 
         return zip(lmk_priors, rel_priors, lmk_posts, rel_posts,
-                   golden_log_probs, golden_entropies, golden_ranks, 
-                   min_dists, rel_types, total_mass, student_probs, 
+                   golden_log_probs, golden_entropies, golden_ranks,
+                   min_dists, rel_types, total_mass, student_probs,
                    student_entropies, student_ranks, student_rel_types,
                    object_answers, object_distributions)
 
@@ -486,7 +488,7 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
         f['object_answers']       += object_answers
         f['object_distributions'] += object_distributions
         f.close()
-        
+
     if extra:
         lists = parmap(loop,[extra]*num_processors)
         # lists = map(loop,[extra]*num_processors)
@@ -531,7 +533,7 @@ if __name__ == '__main__':
 
     # scene, speaker = construct_training_scene()
 
-    autocorrect(args.num_iterations, # window=args.window_size, 
+    autocorrect(args.num_iterations, # window=args.window_size,
         scale=args.update_scale, num_processors=args.num_processors, num_samples=args.num_samples,)
 
 

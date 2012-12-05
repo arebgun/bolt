@@ -233,7 +233,7 @@ def autocorrect(scene, speaker, num_iterations=1, scale=1000, num_processors=7, 
 
                     logger( 'Attempted to say: %s' %  m2s(meaning.args[0],meaning.args[3]) )
                     logger( 'Interpreted as: %s' % m2s(ps[0][1][0],ps[0][1][1]) )
-                    logger( 'Attempted: %f vs Interpreted: %f' % (temp, ps[0][0]))
+                    logger( 'Attempted: %s vs Interpreted: %s' % (str(temp), str(ps[0][0])))
 
                     # logger( 'Golden entropy: %f, Max entropy %f' % (golden_entropy, max_entropy))
 
@@ -289,9 +289,14 @@ def autocorrect(scene, speaker, num_iterations=1, scale=1000, num_processors=7, 
                     entropy = entropy_of_probs(ps)
                 except ParseError as e:
                     logger( e )
+                    lmk_prior = 0
+                    rel_prior = 0
+                    lmk_post = 0
+                    rel_post = 0
                     prob = 0
                     rank = len(meanings)-1
                     entropy = 0
+                    distances = [[None]]
 
                 head_on = speaker.get_head_on_viewpoint(sampled_landmark)
                 all_descs = speaker.get_all_meaning_descriptions(trajector, scene, sampled_landmark, sampled_relation, head_on, 1)
@@ -332,7 +337,7 @@ def autocorrect(scene, speaker, num_iterations=1, scale=1000, num_processors=7, 
                     logger( 'Unable to get object from sentence. %s' % e, 'fail' )
                     print traceback.format_exc()
                     exit()
-                return trajector, lmk_probs
+                return loi.index(trajector), [ (lprob, loi.index(lmk)) for lprob,lmk in lmk_probs ]
 
             if golden_metric:
                 lmk_prior,rel_prior,lmk_post,rel_post,prob,entropy,rank,ed,rel_type = probs_metric()
@@ -417,8 +422,8 @@ def autocorrect(scene, speaker, num_iterations=1, scale=1000, num_processors=7, 
     logger( "num_each: %i, chunk_size: %i, n: %i, extra: %i" % (num_each, chunk_size, n, extra) )
 
     for i in range(n):
-        # lists = parmap(loop,[chunk_size]*num_processors)
-        lists = map(loop,[chunk_size]*num_processors)
+        lists = parmap(loop,[chunk_size]*num_processors)
+        # lists = map(loop,[chunk_size]*num_processors)
 
         result = []
         for i in range(chunk_size):
@@ -448,8 +453,8 @@ def autocorrect(scene, speaker, num_iterations=1, scale=1000, num_processors=7, 
         f.close()
         
     if extra:
-        # lists = parmap(loop,[extra]*num_processors)
-        lists = map(loop,[extra]*num_processors)
+        lists = parmap(loop,[extra]*num_processors)
+        # lists = map(loop,[extra]*num_processors)
         result = []
         for i in range(extra):
 	        for j in range(num_processors):
