@@ -21,6 +21,12 @@ sys.path.append("..")
 
 from semantics import run
 
+from parse import parse_sentences, get_modparse
+from models import SentenceParse
+
+import tempfile
+import subprocess
+
 ### configuration ###
 
 db_url = 'sqlite:///mtbolt.db'
@@ -139,8 +145,11 @@ if __name__ == '__main__':
     create_all()
 
     # run.read_scenes(sys.argv[1])
-    all_scenes = []
-
+    all_scenes   = []
+    entity_names = []
+    lmks         = []
+    lmk_descs    = []
+    loc_descs    = []
     for s in scenes_scene.query().all():
         #print s.id, s.name
         for scene, speaker in run.read_scenes(os.path.join(sys.argv[1],s.name)):
@@ -150,8 +159,54 @@ if __name__ == '__main__':
                 lmk = scene.landmarks['object_%s' % entity_name]
                 lmk_desc = t.object_description
                 loc_desc = t.location_description
-                print lmk, entity_name, lmk_desc, loc_desc
+                # print lmk, entity_name, lmk_desc, loc_desc
+                if loc_desc:
+                    entity_names.append(entity_name)
+                    lmks.append(lmk)
+                    lmk_descs.append(lmk_desc)
+                    loc_descs.append(loc_desc)
 
             all_scenes.append( (scene,speaker) )
 
+
     print 'loaded', len(all_scenes), 'scenes'
+
+    i = len(loc_descs)
+
+    sp_db = SentenceParse.get_sentence_parse(loc_descs[0])
+    try:
+        res = sp_db.all()[0]
+
+        parses = []
+        modparses = []
+        for sentence in loc_descs[:i]:
+            try:
+                parse, modparse = get_modparse(sentence)
+            except:
+                parse, modparse = '',''
+            parses.append(parse)
+            modparses.append(modparse)
+
+    except IndexError:
+
+        parses = parse_sentences(loc_descs[:i])
+
+        temp = tempfile.NamedTemporaryFile()
+        for p in parses:
+            temp.write(p)
+        temp.flush()
+        proc = subprocess.Popen(['java -mx100m -cp stanford-tregex/stanford-tregex.jar \
+                                  edu.stanford.nlp.trees.tregex.tsurgeon.Tsurgeon \
+                                  -s -treeFile %s surgery/*' % temp.name],
+                                shell=True,
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE)
+        modparses = proc.communicate()[0].splitlines()
+        temp.close()
+
+        for s,p,m in zip(loc_descs[:i],parses,modparses):
+            SentenceParse.add_sentence_parse(s,p,m)
+
+    for s,p,m in zip(loc_descs[:i],parses,modparses):
+        print s + '; ' + p + '; ' + m
+        print
