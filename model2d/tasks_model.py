@@ -24,6 +24,8 @@ from semantics import run
 from parse import parse_sentences, get_modparse
 from models import SentenceParse
 
+import object_correction_testing
+
 import tempfile
 import subprocess
 
@@ -141,18 +143,29 @@ class tasks_descriptionquestion(Base):
 
 
 if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-n', '--num-iterations', type=int, default=1)
+    parser.add_argument('-u', '--update-scale', type=int, default=1000)
+    parser.add_argument('-p', '--num-processors', type=int, default=7)
+    parser.add_argument('-s', '--num-samples', action='store_true')
+    parser.add_argument('-d', '--scene-directory', type=str)
+
+    args = parser.parse_args()
+
     engine.echo = False
     create_all()
 
     # run.read_scenes(sys.argv[1])
     all_scenes   = []
-    entity_names = []
-    lmks         = []
-    lmk_descs    = []
-    loc_descs    = []
+    all_descs = []
     for s in scenes_scene.query().all():
+        entity_names = []
+        lmks         = []
+        lmk_descs    = []
+        loc_descs    = []
         #print s.id, s.name
-        for scene, speaker in run.read_scenes(os.path.join(sys.argv[1],s.name)):
+        for scene, speaker in run.read_scenes(os.path.join(args.scene_directory,s.name)):
             for t in tasks_descriptionquestion.query().filter(tasks_descriptionquestion.scene_id==s.id).all():
                 #print t.id, t.scene_id, t.entity_id, t.answer, t.object_description, t.location_description
                 entity_name = scenes_entity.query().filter(scenes_entity.id==t.entity_id).one().name
@@ -165,31 +178,19 @@ if __name__ == '__main__':
                     lmks.append(lmk)
                     lmk_descs.append(lmk_desc)
                     loc_descs.append(loc_desc)
+                    all_descs.append(loc_desc)
 
-            all_scenes.append( (scene,speaker) )
+            all_scenes.append( [scene,speaker,lmks,loc_descs] )
 
 
     print 'loaded', len(all_scenes), 'scenes'
 
-    i = len(loc_descs)
-
     sp_db = SentenceParse.get_sentence_parse(loc_descs[0])
     try:
         res = sp_db.all()[0]
-
-        parses = []
-        modparses = []
-        for sentence in loc_descs[:i]:
-            try:
-                parse, modparse = get_modparse(sentence)
-            except:
-                parse, modparse = '',''
-            parses.append(parse)
-            modparses.append(modparse)
-
     except IndexError:
 
-        parses = parse_sentences(loc_descs[:i])
+        parses = parse_sentences(all_descs)
 
         temp = tempfile.NamedTemporaryFile()
         for p in parses:
@@ -204,9 +205,22 @@ if __name__ == '__main__':
         modparses = proc.communicate()[0].splitlines()
         temp.close()
 
-        for s,p,m in zip(loc_descs[:i],parses,modparses):
+        for s,p,m in zip(all_descs,parses,modparses):
             SentenceParse.add_sentence_parse(s,p,m)
 
-    for s,p,m in zip(loc_descs[:i],parses,modparses):
-        print s + '; ' + p + '; ' + m
-        print
+    for s in all_scenes:
+        parses = []
+        modparses = []
+        for lmk,sentence in zip(s[2], s[3]):
+            try:
+                parse, modparse = get_modparse(sentence)
+            except:
+                s[2].remove(lmk)
+                s[3].remove(sentence)
+
+        print len(s[2])
+
+    # scene, speaker = construct_training_scene()
+
+    # object_correction_testing.autocorrect(args.num_iterations, # window=args.window_size,
+    #     scale=args.update_scale, num_processors=args.num_processors, num_samples=args.num_samples, scene_descs=all_scenes)

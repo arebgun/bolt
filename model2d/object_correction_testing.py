@@ -60,14 +60,21 @@ def parmap(f,X):
     return ret
 
 def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
-                golden_metric=True, mass_metric=True, student_metric=True, choosing_metric=True):
+                golden_metric=True, mass_metric=True, student_metric=True, choosing_metric=True,
+                scene_descs=[]):
     plt.ion()
 
     printing=False
 
-    def loop(num_iterations):
+    def loop(data):
+        if 'num_iterations' in data:
+            scene, speaker = construct_training_scene(True)
+            num_iterations = data['num_iterations']
+        else:
+            scene = data['scene']
+            speaker = data['speaker']
+            num_iterations = len(data['loc_descs'])
 
-        scene, speaker = construct_training_scene(True)
         utils.scene.set_scene(scene,speaker)
 
         scene_bb = scene.get_bounding_box()
@@ -93,18 +100,18 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
         x = np.array( [list(xs-step*0.5)]*len(ys) )
         y = np.array( [list(ys-step*0.5)]*len(xs) ).T
         lmks, rels, heatmapss = zip(*all_heatmaps_tuples)
-        graphmax1 = graphmax2 = 0
+        # graphmax1 = graphmax2 = 0
         meanings = zip(lmks,rels)
         landmarks = list(set(lmks))
-        relations = list(set(rels))
+        # relations = list(set(rels))
 
         epsilon = 0.0001
         def heatmaps_for_sentence(sentence, all_meanings, loi_infos, xs, ys, scene, speaker, step=0.02):
             printing=False
             scene_bb = scene.get_bounding_box()
             scene_bb = scene_bb.inflate( Vec2(scene_bb.width*0.5,scene_bb.height*0.5) )
-            x = np.array( [list(xs-step*0.5)]*len(ys) )
-            y = np.array( [list(ys-step*0.5)]*len(xs) ).T
+            # x = np.array( [list(xs-step*0.5)]*len(ys) )
+            # y = np.array( [list(ys-step*0.5)]*len(xs) ).T
 
             posteriors = get_all_sentence_posteriors(sentence, all_meanings, printing=printing)
 
@@ -173,22 +180,28 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
         object_distributions = []
 
         epsilon = 1e-15
+
         for iteration in range(num_iterations):
             logger(('Iteration %d comprehension' % iteration),'okblue')
 
-            # Teacher describe
-            trajector = choice(loi)
-            # sentence, sampled_relation, sampled_landmark = speaker.describe(trajector, scene, max_level=1)
-            logger( 'Teacher chooses: %s' % trajector )
-            # Choose from meanings
-            probs, sorted_meanings = zip(*sorted_meaning_lists[trajector])
-            (sampled_landmark, sampled_relation) = categorical_sample( sorted_meanings, probs )[0]
-            logger( 'Teacher tries to say: %s, %s' % (sampled_landmark,sampled_relation) )
+            if 'loc_descs' in data:
+                trajector = data['lmks'][iteration]
+                sentence = data['loc_descs'][iteration]
+            else:
+                # Teacher describe
+                trajector = choice(loi)
+                # sentence, sampled_relation, sampled_landmark = speaker.describe(trajector, scene, max_level=1)
+                logger( 'Teacher chooses: %s' % trajector )
+                # Choose from meanings
+                probs, sorted_meanings = zip(*sorted_meaning_lists[trajector])
+                (sampled_landmark, sampled_relation) = categorical_sample( sorted_meanings, probs )[0]
+                logger( 'Teacher tries to say: %s, %s' % (sampled_landmark,sampled_relation) )
 
-            # Generate sentence
-            # _, sentence = generate_sentence(None, False, scene, speaker, meaning=(sampled_landmark, sampled_relation), golden=True, printing=printing)
+                # Generate sentence
+                # _, sentence = generate_sentence(None, False, scene, speaker, meaning=(sampled_landmark, sampled_relation), golden=True, printing=printing)
 
-            sentence = describe( speaker.get_head_on_viewpoint(sampled_landmark), trajector, sampled_landmark, sampled_relation )
+                sentence = describe( speaker.get_head_on_viewpoint(sampled_landmark), trajector, sampled_landmark, sampled_relation )
+
             logger( 'Teacher says: %s' % sentence)
 
             lmk_probs = []
@@ -459,7 +472,7 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
     logger( "num_each: %i, chunk_size: %i, n: %i, extra: %i" % (num_each, chunk_size, n, extra) )
 
     for i in range(n):
-        lists = parmap(loop,[chunk_size]*num_processors)
+        lists = parmap(loop,[{'num_iterations': chunk_size}]*num_processors)
         # lists = map(loop,[chunk_size]*num_processors)
 
         result = []
@@ -490,7 +503,7 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
         f.close()
 
     if extra:
-        lists = parmap(loop,[extra]*num_processors)
+        lists = parmap(loop,[{'num_iterations': extra}]*num_processors)
         # lists = map(loop,[extra]*num_processors)
         result = []
         for i in range(extra):
