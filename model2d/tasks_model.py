@@ -164,14 +164,16 @@ if __name__ == '__main__':
         lmks         = []
         lmk_descs    = []
         loc_descs    = []
+        ids = []
         #print s.id, s.name
-        for scene, speaker in run.read_scenes(os.path.join(args.scene_directory,s.name)):
+        for scene, speaker in run.read_scenes(os.path.join(args.scene_directory,s.name), normalize=True):
             for t in tasks_descriptionquestion.query().filter(tasks_descriptionquestion.scene_id==s.id).all():
                 #print t.id, t.scene_id, t.entity_id, t.answer, t.object_description, t.location_description
                 entity_name = scenes_entity.query().filter(scenes_entity.id==t.entity_id).one().name
                 lmk = scene.landmarks['object_%s' % entity_name]
                 lmk_desc = t.object_description
                 loc_desc = t.location_description
+                eyedee = t.id
                 # print lmk, entity_name, lmk_desc, loc_desc
                 if loc_desc:
                     entity_names.append(entity_name)
@@ -179,8 +181,9 @@ if __name__ == '__main__':
                     lmk_descs.append(lmk_desc)
                     loc_descs.append(loc_desc)
                     all_descs.append(loc_desc)
+                    ids.append( eyedee )
 
-            all_scenes.append( [scene,speaker,lmks,loc_descs] )
+            all_scenes.append( {'scene':scene,'speaker':speaker,'lmks':lmks,'loc_descs':loc_descs, 'ids':ids} )
 
 
     print 'loaded', len(all_scenes), 'scenes'
@@ -207,20 +210,24 @@ if __name__ == '__main__':
 
         for s,p,m in zip(all_descs,parses,modparses):
             SentenceParse.add_sentence_parse(s,p,m)
+        exit("Parsed everything")
 
     for s in all_scenes:
         parses = []
         modparses = []
-        for lmk,sentence in zip(s[2], s[3]):
+        for lmk,sentence, eyedee in zip(s['lmks'], s['loc_descs'], s['ids']):
             try:
                 parse, modparse = get_modparse(sentence)
             except:
-                s[2].remove(lmk)
-                s[3].remove(sentence)
+                s['lmks'].remove(lmk)
+                s['loc_descs'].remove(sentence)
 
-        print len(s[2])
 
     # scene, speaker = construct_training_scene()
 
-    # object_correction_testing.autocorrect(args.num_iterations, # window=args.window_size,
-    #     scale=args.update_scale, num_processors=args.num_processors, num_samples=args.num_samples, scene_descs=all_scenes)
+    object_correction_testing.autocorrect(1,
+        scale=args.update_scale, 
+        num_processors=args.num_processors, 
+        num_samples=args.num_samples, 
+        scene_descs=all_scenes,
+        step=0.02)

@@ -23,6 +23,7 @@ from nltk.tree import ParentedTree
 
 from semantics.run import construct_training_scene
 from semantics.landmark import Landmark
+from semantics.relation import DistanceRelation
 from semantics.representation import PointRepresentation, LineRepresentation, RectangleRepresentation, GroupLineRepresentation
 from nltk.metrics.distance import edit_distance
 from planar import Vec2
@@ -36,6 +37,7 @@ from location_from_sentence import get_all_sentence_posteriors
 from multiprocessing import Process, Pipe
 from itertools import izip, product
 from models import CProduction, CWord
+from math import ceil
 
 from utils import categorical_sample
 import utils
@@ -61,8 +63,8 @@ def parmap(f,X):
 
 def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
                 golden_metric=True, mass_metric=True, student_metric=True, choosing_metric=True,
-                scene_descs=[]):
-    plt.ion()
+                scene_descs=[], step=0.04):
+    # plt.ion()
 
     printing=False
 
@@ -81,7 +83,7 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
         scene_bb = scene_bb.inflate( Vec2(scene_bb.width*0.5,scene_bb.height*0.5) )
         table = scene.landmarks['table'].representation.get_geometry()
 
-        step = 0.04
+        # step = 0.04
         loi = [lmk for lmk in scene.landmarks.values() if lmk.name != 'table']
         all_heatmaps_tupless, xs, ys = speaker.generate_all_heatmaps(scene, step=step, loi=loi)
 
@@ -97,6 +99,30 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
 
         all_heatmaps_tupless, xs, ys = speaker.generate_all_heatmaps(scene, step=step)
         all_heatmaps_tuples = all_heatmaps_tupless[0]
+        # x = np.array( [list(xs-step*0.5)]*len(ys) )
+        # y = np.array( [list(ys-step*0.5)]*len(xs) ).T
+        # for lamk, rel, (heatmap1,heatmap2) in all_heatmaps_tuples:
+        #     logger( m2s(lamk,rel))
+        #     if isinstance(rel, DistanceRelation):
+        #         probabilities = heatmap2.reshape( (len(xs),len(ys)) ).T
+        #         plt.pcolor(x, y, probabilities, cmap = 'jet', edgecolors='none', alpha=0.7)
+        #         plt.colorbar()
+        #         for lmk in scene.landmarks.values():
+        #             if isinstance(lmk.representation, GroupLineRepresentation):
+        #                 xxs = [lmk.representation.line.start.x, lmk.representation.line.end.x]
+        #                 yys = [lmk.representation.line.start.y, lmk.representation.line.end.y]
+        #                 plt.fill(xxs,yys,facecolor='none',linewidth=2)
+        #             elif isinstance(lmk.representation, RectangleRepresentation):
+        #                 rect = lmk.representation.rect
+        #                 xxs = [rect.min_point.x,rect.min_point.x,rect.max_point.x,rect.max_point.x]
+        #                 yys = [rect.min_point.y,rect.max_point.y,rect.max_point.y,rect.min_point.y]
+        #                 plt.fill(xxs,yys,facecolor='none',linewidth=2)
+        #                 plt.text(rect.min_point.x+0.01,rect.max_point.y+0.02,lmk.name)
+        #         plt.title(m2s(lamk,rel))
+        #         logger("Showing")
+        #         plt.show()
+        #     logger("End")
+
         x = np.array( [list(xs-step*0.5)]*len(ys) )
         y = np.array( [list(ys-step*0.5)]*len(xs) ).T
         lmks, rels, heatmapss = zip(*all_heatmaps_tuples)
@@ -225,6 +251,10 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
                 print traceback.format_exc()
                 exit()
 
+            answer, distribution = loi.index(trajector), [ (lprob, loi.index(lmk)) for lprob,lmk in lmk_probs ]
+            object_answers.append( answer )
+            object_distributions.append( distribution )
+
             # Present top_lmk to teacher
             if top_lmk == trajector:
                 # Give morphine
@@ -236,7 +266,7 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
                 for update, meaning in sorted_meaning_lists[trajector][-howmany:]:
                     accept_object_correction( meaning, sentence, update*scale, printing=printing)
 
-            for _ in range(3):
+            for _ in range(0):
 	            logger(('Iteration %d production' % iteration),'okblue')
 	            rand_p = Vec2(random()*table.width+table.min_point.x, random()*table.height+table.min_point.y)
 	            trajector = Landmark( 'point', PointRepresentation(rand_p), None, Landmark.POINT )
@@ -426,12 +456,12 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
             student_ranks.append( student_rank )
             student_rel_types.append( student_rel_type )
 
-            if choosing_metric:
-                answer, distribution = choosing_object_metric()
-            else:
-                answer, distribution = None, None
-            object_answers.append( answer )
-            object_distributions.append( distribution )
+            # if choosing_metric:
+            #     answer, distribution = choosing_object_metric()
+            # else:
+            #     answer, distribution = None, None
+            # object_answers.append( answer )
+            # object_distributions.append( distribution )
 
         return zip(lmk_priors, rel_priors, lmk_posts, rel_posts,
                    golden_log_probs, golden_entropies, golden_ranks,
@@ -465,25 +495,40 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
     # f['ambiguous_pointing']   = ambiguous_pointing
     f.close()
 
-    chunk_size = 25
-    num_each = int(num_iterations/num_processors)
-    n = int(num_each / chunk_size)
-    extra = num_each % chunk_size
-    logger( "num_each: %i, chunk_size: %i, n: %i, extra: %i" % (num_each, chunk_size, n, extra) )
+    if scene_descs:
+        logger("In scene_descs")
 
-    for i in range(n):
-        lists = parmap(loop,[{'num_iterations': chunk_size}]*num_processors)
-        # lists = map(loop,[chunk_size]*num_processors)
+        num_scenes = len(scene_descs)
+        processors_per_scene = num_processors/num_scenes
+        new_scene_descs = []
 
-        result = []
-        for i in range(chunk_size):
-	        for j in range(num_processors):
-	            result.append( lists[j][i] )
+        def chunks(l, n):
+            return [l[i:i+n] for i in range(0, len(l), n)]
+
+        for scene_desc in scene_descs:
+            together = zip(scene_desc['lmks'],scene_desc['loc_descs'],scene_desc['ids'])
+            n = int(ceil(len(together)/float(processors_per_scene)))
+            for chunk in chunks(together,n):
+                lmks, loc_descs, ids = zip(*chunk)
+                new_scene_descs.append( {'scene':scene_desc['scene'],
+                                         'speaker':scene_desc['speaker'],
+                                         'lmks':lmks,
+                                         'loc_descs':loc_descs,
+                                         'ids':ids})
+
+        lists = parmap(loop,new_scene_descs)
+        # lists = map(loop,scene_descs)
+        logger("Finished iterating")
+        result = [val for tup in zip(*lists) for val in tup]
+        logger("Combined results")
+
         lmk_priors, rel_priors, lmk_posts, rel_posts, \
             golden_log_probs, golden_entropies, golden_ranks, \
             min_dists, rel_types, total_mass, student_probs, student_entropies, \
             student_ranks, student_rel_types, object_answers, object_distributions = zip(*result)
+        logger("Exploded results")
         f = shelve.open(filename)
+        logger("Opened shelf")
         f['lmk_priors']           += lmk_priors
         f['rel_priors']           += rel_priors
         f['lmk_posts']            += lmk_posts
@@ -500,38 +545,79 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
         f['student_rel_types']    += student_rel_types
         f['object_answers']       += object_answers
         f['object_distributions'] += object_distributions
+        logger("Updated shelf variables")
         f.close()
+        logger("Closed shelf")
 
-    if extra:
-        lists = parmap(loop,[{'num_iterations': extra}]*num_processors)
-        # lists = map(loop,[extra]*num_processors)
-        result = []
-        for i in range(extra):
-	        for j in range(num_processors):
-	            result.append( lists[j][i] )
-        lmk_priors, rel_priors, lmk_posts, rel_posts, \
-            golden_log_probs, golden_entropies, golden_ranks, \
-            min_dists, rel_types, total_mass, student_probs, student_entropies, \
-            student_ranks, student_rel_types, object_answers, object_distributions = zip(*result)
-        f = shelve.open(filename)
-        f['lmk_priors']           += lmk_priors
-        f['rel_priors']           += rel_priors
-        f['lmk_posts']            += lmk_posts
-        f['rel_posts']            += rel_posts
-        f['golden_log_probs']     += golden_log_probs
-        f['golden_entropies']     += golden_entropies
-        f['golden_ranks']         += golden_ranks
-        f['min_dists']            += min_dists
-        f['rel_types']            += rel_types
-        f['total_mass']           += total_mass
-        f['student_probs']        += student_probs
-        f['student_entropies']    += student_entropies
-        f['student_ranks']        += student_ranks
-        f['student_rel_types']    += student_rel_types
-        f['object_answers']       += object_answers
-        f['object_distributions'] += object_distributions
-        f.close()
+    else:
 
+        chunk_size = 25
+        num_each = int(num_iterations/num_processors)
+        n = int(num_each / chunk_size)
+        extra = num_each % chunk_size
+        logger( "num_each: %i, chunk_size: %i, n: %i, extra: %i" % (num_each, chunk_size, n, extra) )
+
+        for i in range(n):
+            lists = parmap(loop,[{'num_iterations': chunk_size}]*num_processors)
+            # lists = map(loop,[chunk_size]*num_processors)
+
+            result = []
+            for i in range(chunk_size):
+    	        for j in range(num_processors):
+    	            result.append( lists[j][i] )
+            lmk_priors, rel_priors, lmk_posts, rel_posts, \
+                golden_log_probs, golden_entropies, golden_ranks, \
+                min_dists, rel_types, total_mass, student_probs, student_entropies, \
+                student_ranks, student_rel_types, object_answers, object_distributions = zip(*result)
+            f = shelve.open(filename)
+            f['lmk_priors']           += lmk_priors
+            f['rel_priors']           += rel_priors
+            f['lmk_posts']            += lmk_posts
+            f['rel_posts']            += rel_posts
+            f['golden_log_probs']     += golden_log_probs
+            f['golden_entropies']     += golden_entropies
+            f['golden_ranks']         += golden_ranks
+            f['min_dists']            += min_dists
+            f['rel_types']            += rel_types
+            f['total_mass']           += total_mass
+            f['student_probs']        += student_probs
+            f['student_entropies']    += student_entropies
+            f['student_ranks']        += student_ranks
+            f['student_rel_types']    += student_rel_types
+            f['object_answers']       += object_answers
+            f['object_distributions'] += object_distributions
+            f.close()
+
+        if extra:
+            lists = parmap(loop,[{'num_iterations': extra}]*num_processors)
+            # lists = map(loop,[extra]*num_processors)
+            result = []
+            for i in range(extra):
+    	        for j in range(num_processors):
+    	            result.append( lists[j][i] )
+            lmk_priors, rel_priors, lmk_posts, rel_posts, \
+                golden_log_probs, golden_entropies, golden_ranks, \
+                min_dists, rel_types, total_mass, student_probs, student_entropies, \
+                student_ranks, student_rel_types, object_answers, object_distributions = zip(*result)
+            f = shelve.open(filename)
+            f['lmk_priors']           += lmk_priors
+            f['rel_priors']           += rel_priors
+            f['lmk_posts']            += lmk_posts
+            f['rel_posts']            += rel_posts
+            f['golden_log_probs']     += golden_log_probs
+            f['golden_entropies']     += golden_entropies
+            f['golden_ranks']         += golden_ranks
+            f['min_dists']            += min_dists
+            f['rel_types']            += rel_types
+            f['total_mass']           += total_mass
+            f['student_probs']        += student_probs
+            f['student_entropies']    += student_entropies
+            f['student_ranks']        += student_ranks
+            f['student_rel_types']    += student_rel_types
+            f['object_answers']       += object_answers
+            f['object_distributions'] += object_distributions
+            f.close()
+    logger("Exiting")
     exit()
 
 

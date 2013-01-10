@@ -33,6 +33,7 @@ if __name__ == '__main__':
     
     object_answers       = []
     object_distributions = []
+    object_rel_types     = []
 
     for filename in args.filenames:
         f = shelve.open(filename)
@@ -59,15 +60,17 @@ if __name__ == '__main__':
             object_answers       += f['object_answers']
             object_distributions += f['object_distributions']
 
+            if f.has_key('object_rel_types'):
+                object_rel_types     += f['object_rel_types']
+            else:
+                object_rel_types     += [None]*len(f['object_answers'])
+
     if args.post:
         golden_probs = np.array(lmk_posts)*np.array(rel_posts)
 
     to_from_mask = np.equal(rel_types, relation.ToRelation) + np.equal(rel_types,relation.FromRelation)
     golden_probs_tofrom = np.ma.masked_array(golden_probs, 
         mask=np.invert(to_from_mask))
-
-    # nextto_mask = np.equal(rel_types,relation.NextToRelation)
-    # golden_probs_nextto = np.ma.masked_array(golden_probs, mask=np.invert(nextto_mask))
 
     lrfb_mask = np.equal(rel_types, relation.LeftRelation) + np.equal(rel_types,relation.RightRelation) +\
               np.equal(rel_types, relation.InFrontRelation) + np.equal(rel_types,relation.BehindRelation)
@@ -76,11 +79,24 @@ if __name__ == '__main__':
 
     on_mask = np.equal(rel_types,relation.OnRelation)
     golden_probs_on = np.ma.masked_array(golden_probs, mask=np.invert(on_mask))
-    # np.set_printoptions(threshold='nan')
-    # print np.equal(rel_types,relation.OnRelation)
 
-    # print sum(np.equal(rel_types,relation.OnRelation))
-    # exit()
+    object_to_from_mask = np.equal(object_rel_types, relation.ToRelation) + np.equal(object_rel_types,relation.FromRelation)
+    # object_golden_probs_tofrom = np.ma.masked_array(golden_probs, 
+    #     mask=np.invert(to_from_mask))
+
+    object_lrfb_mask = np.equal(object_rel_types, relation.LeftRelation) + np.equal(object_rel_types,relation.RightRelation) +\
+              np.equal(object_rel_types, relation.InFrontRelation) + np.equal(object_rel_types,relation.BehindRelation)
+    # golden_probs_lrfb = np.ma.masked_array(golden_probs, 
+    #     mask=np.invert(lrfb_mask) )
+
+    object_on_mask = np.equal(object_rel_types,relation.OnRelation)
+    # golden_probs_on = np.ma.masked_array(golden_probs, mask=np.invert(on_mask))
+
+    object_num_tofrom = np.cumsum(object_to_from_mask)
+    object_num_lrfb   = np.cumsum(object_lrfb_mask)
+    object_num_on     = np.cumsum(object_on_mask)
+
+
     window = args.window_size
     def running_avg(arr):
         return  [None] + [np.mean(arr[:i]) for i in range(1,window)] + [np.mean(arr[i-window:i]) for i in range(window,len(arr))]
@@ -98,6 +114,8 @@ if __name__ == '__main__':
     # num_nextto = [sum(nextto_mask[:i]) for i in range(len(nextto_mask))]
     num_lrfb   = np.cumsum(lrfb_mask)
     num_on     = np.cumsum(on_mask)
+
+
 
     if f.has_key('student_probs'):
         avg_student_probs     = running_avg(student_probs)
@@ -209,9 +227,16 @@ if __name__ == '__main__':
         plt.plot(distances[:n], 'o-', color='RoyalBlue')
         plt.plot(avg_distances[:n], 'x-', color='Orange')
         plt.ylabel('Distance')
+        plt.figure()
+        plt.title('Number of relations (object task)')
+        plt.plot(object_num_tofrom, 'x-', color='Blue', label='To/From')
+        plt.plot(object_num_lrfb, 'x-', color='Green', label='L/R/F/B')
+        plt.plot(object_num_on, 'x-', color='Salmon', label='On')
+        leg = plt.legend()
+        leg.draggable(state=True)
 
     plt.figure()
-    plt.title('Number of relation')
+    plt.title('Number of relations')
     plt.plot(num_tofrom, 'x-', color='Blue', label='To/From')
     # plt.plot(num_nextto, 'x-', color='Red', label='NextTo')
     plt.plot(num_lrfb, 'x-', color='Green', label='L/R/F/B')

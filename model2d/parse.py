@@ -9,6 +9,7 @@ import glob
 import tempfile
 import fileinput
 import subprocess
+import traceback
 from models import SentenceParse
 from sqlalchemy.orm.exc import NoResultFound
 from utils import count_lmk_phrases, printcolors
@@ -95,7 +96,11 @@ def get_modparse(sentence):
         parsetree = res.original_parse
         modparsetree = res.modified_parse
     except IndexError:
-        parsetree = parse_sentences([sentence])[0]
+        print "parse.py: 98: " + sentence
+        parses = parse_sentences([sentence])
+        if len(parses) == 0:
+            raise ParseError(printcolors.WARNING + ('ParseError: Sentence was empty'))
+        parsetree = parses[0]
         modparsetree = modify_parses([parsetree])[0]
         SentenceParse.add_sentence_parse(sentence, parsetree, modparsetree)
 

@@ -501,6 +501,7 @@ if __name__ == '__main__':
 
     parser.add_argument('-m','--multiply', action='store_true')
     parser.add_argument('--consistent', action='store_true')
+    parser.add_argument('--no-metrics', action='store_true')
     args = parser.parse_args()
 
     scene, speaker = construct_training_scene()
@@ -509,6 +510,7 @@ if __name__ == '__main__':
         scale=args.update_scale, num_processors=args.num_processors, consistent=args.consistent, 
         best_samples=args.best_samples, initial_training=args.initial_training, cheating=args.cheating, 
         explicit_pointing=args.explicit, ambiguous_pointing=args.ambiguous,
-        multiply=args.multiply)
+        multiply=args.multiply, golden_metric=(not args.no_metrics), mass_metric=(not args.no_metrics), 
+        student_metric=(not args.no_metrics), choosing_metric=(not args.no_metrics))
 
 
