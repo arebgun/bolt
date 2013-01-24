@@ -95,14 +95,17 @@ def get_modparse(sentence):
         res = sp_db.all()[0]
         parsetree = res.original_parse
         modparsetree = res.modified_parse
-    except IndexError:
+    except:
         print "parse.py: 98: " + sentence
         parses = parse_sentences([sentence])
         if len(parses) == 0:
             raise ParseError(printcolors.WARNING + ('ParseError: Sentence was empty'))
         parsetree = parses[0]
         modparsetree = modify_parses([parsetree])[0]
-        SentenceParse.add_sentence_parse(sentence, parsetree, modparsetree)
+        try:
+            SentenceParse.add_sentence_parse(sentence, parsetree, modparsetree)
+        except Exception as e:
+            print e
 
     if count_lmk_phrases(ParentedTree.parse(modparsetree)) < 1:
         raise ParseError(printcolors.WARNING + ('ParseError: Parse contained no Landmark phrase.\nSentence: %s\nParse: %s\nModparse: %s' % (sentence,parsetree,modparsetree)))

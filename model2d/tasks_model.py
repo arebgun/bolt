@@ -21,13 +21,14 @@ sys.path.append("..")
 
 from semantics import run
 
-from parse import parse_sentences, get_modparse
+from parse import parse_sentences, get_modparse, ParseError
 from models import SentenceParse
 
 import object_correction_testing
 
 import tempfile
 import subprocess
+import re
 
 ### configuration ###
 
@@ -176,11 +177,29 @@ if __name__ == '__main__':
                 eyedee = t.id
                 # print lmk, entity_name, lmk_desc, loc_desc
                 if loc_desc:
+
+                    all_descs.append(loc_desc)
+
+                    chunks = []
+                    # print loc_desc
+                    for part in re.split('\.|;',loc_desc.lower().strip()):
+                        if part != u'':
+                            for partt in part.strip().split(' and '):
+                                partt = re.sub('^.*? is ','',partt)
+                                if partt.strip() != u'':
+                                    for parttt in partt.strip().split(','):
+                                        if parttt.strip() != u'':
+                                            all_descs.append(parttt.strip())
+                                            chunks.append(parttt.strip())
+                                            # print '  ',parttt
+                    # raw_input()
+
                     entity_names.append(entity_name)
                     lmks.append(lmk)
                     lmk_descs.append(lmk_desc)
-                    loc_descs.append(loc_desc)
-                    all_descs.append(loc_desc)
+                    # loc_descs.append(loc_desc)
+                    # loc_descs.append(parttt.strip())
+                    loc_descs.append(chunks)
                     ids.append( eyedee )
 
             all_scenes.append( {'scene':scene,'speaker':speaker,'lmks':lmks,'loc_descs':loc_descs, 'ids':ids} )
@@ -188,7 +207,7 @@ if __name__ == '__main__':
 
     print 'loaded', len(all_scenes), 'scenes'
 
-    sp_db = SentenceParse.get_sentence_parse(loc_descs[0])
+    sp_db = SentenceParse.get_sentence_parse(all_descs[0])
     try:
         res = sp_db.all()[0]
     except IndexError:
@@ -212,15 +231,76 @@ if __name__ == '__main__':
             SentenceParse.add_sentence_parse(s,p,m)
         exit("Parsed everything")
 
+    good = 0
+    bad = 0
     for s in all_scenes:
-        parses = []
-        modparses = []
-        for lmk,sentence, eyedee in zip(s['lmks'], s['loc_descs'], s['ids']):
-            try:
-                parse, modparse = get_modparse(sentence)
-            except:
+        for lmk,sentence_chunks, eyedee in zip(s['lmks'], s['loc_descs'], s['ids']):
+
+            for chunk in list(sentence_chunks):
+                try:
+                    parsetree, modparsetree = get_modparse(chunk)
+                    # print modparsetree
+                    # raw_input()
+                    if ('(NP' in modparsetree or '(PP' in modparsetree):
+                        sentence_chunks.remove(chunk)
+                        pass
+                    else:
+                        if 'objects' in chunk:
+                            bad += 1
+                            # print ' '.join(sentence_chunks),'\n',chunk,'\n ', parsetree,'\n  ', modparsetree,'\n'
+                            # raw_input()
+                            sentence_chunks.remove(chunk)
+                        elif (' side' in chunk or 
+                           'corner' in chunk or 
+                           'middle' in chunk or 
+                           'center' in chunk or
+                           'centre' in chunk):
+                            if not ('table' in chunk):
+                                sentence_chunks.remove(chunk)
+                            else:
+                                good += 1
+                except ParseError:
+                    sentence_chunks.remove(chunk)
+                    continue
+
+            if len(sentence_chunks) == 0:
                 s['lmks'].remove(lmk)
-                s['loc_descs'].remove(sentence)
+                s['loc_descs'].remove(sentence_chunks)
+                # s['ids'].remove(eyedee)
+
+    # # print 'good', good
+    # print 'bad', bad
+
+    # something = [3411,2701,1764,264,1142,852,2028,2774,3341,161,779,536,3853,357,249,2569,4175,2971,1368,3305,2586,591,3710,1909,
+    # 4085,443,582,3895,3291,3535,2487,3204,476,3042,596,3524,1206,1284,4293,1168,410,3417,1332,892,623,2406,778,3472,2864,4174,1462,
+    # 3416,453,4397,2036,1017,1033,3491,1207,4163,1092,2897,1445,2990,473,1155,510,1671,3957,561,1043,182,1854,238,2900,444,987,3041,
+    # 612,1167,3594,2739,677,2585,2170,636,3940,2680,848,2938,2328,2829,3331,2871,2122,2169,3093,884,3557,525,3684,2277,4399,1135,1703,
+    # 3268,3679,686,2448,992,3655,3711,1748,3881,3473,1756,3518,2376,3223,265,3026,3516,3749,1893,1496,4065,1280,378,3025,3348,820,1585,
+    # 2257,3146,3147,3094,3198,3064,4189,693,1707,3831,3606,2758,988,4126,4352,2218,883,3288,2620,2227,2745,2775,4405,1061,2907,2753,3027,
+    # 370,3904,2401,3555,978,1958,1930,3038,2439,962,491,4317,2314,2334,2638,3312,3724,3455,3435,543,2444,3997,4049,3935,3842,1527,735,4053,
+    # 4135,3539,730,2482,3188,825,3037,4395,3657,428,3205,1490,3805]
+
+
+    # thing = set()
+    for s in all_scenes:
+    #     for loc_desc in s['loc_descs']:
+    #         for l in loc_desc:
+    #             thing.add(l)
+
+        s['loc_descs'] = [None]*len(s['loc_descs'])
+        # for eyedee in s['ids']:
+        #     if eyedee in something:
+        #         print eyedee
+        # for loc_desc in s['loc_descs']:           
+    #         print '--'.join(loc_desc)
+        # print len(s['loc_descs']), len(s['lmks'])
+        # s['loc_descs'] = s['loc_descs'][:10]
+    # exit()
+    # how_many = 100
+    # for s in all_scenes:
+    #     s['lmks'] = s['lmks'][:how_many]
+    #     s['loc_descs'] = s['loc_descs'][:how_many]
+    #     s['ids'] = s['ids'][:how_many]
 
 
     # scene, speaker = construct_training_scene()
@@ -230,4 +310,8 @@ if __name__ == '__main__':
         num_processors=args.num_processors, 
         num_samples=args.num_samples, 
         scene_descs=all_scenes,
+        golden_metric=False, 
+        mass_metric=False, 
+        student_metric=False,
+        choosing_metric=False, 
         step=0.02)

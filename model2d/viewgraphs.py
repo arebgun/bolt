@@ -38,63 +38,79 @@ if __name__ == '__main__':
     for filename in args.filenames:
         f = shelve.open(filename)
 
-        lmk_priors           += f['lmk_priors']
-        rel_priors           += f['rel_priors']
-        lmk_posts            += f['lmk_posts']
-        rel_posts            += f['rel_posts']
-        golden_probs         += f['golden_log_probs']
-        golden_entropies     += f['golden_entropies']
-        golden_ranks         += f['golden_ranks']
-        rel_types            += f['rel_types']
+        if f['lmk_priors'][0]:
+            lmk_priors           += f['lmk_priors']
+            rel_priors           += f['rel_priors']
+            lmk_posts            += f['lmk_posts']
+            rel_posts            += f['rel_posts']
+            golden_probs         += f['golden_log_probs']
+            golden_entropies     += f['golden_entropies']
+            golden_ranks         += f['golden_ranks']
+            rel_types            += f['rel_types']
+            min_dists            += f['min_dists']
         
-        total_mass           += f['total_mass']
+        if f['total_mass'][0]:
+            total_mass           += f['total_mass']
         
         if f.has_key('student_probs'):
             student_probs        += f['student_probs']    
             student_entropies    += f['student_entropies']
             student_ranks        += f['student_ranks']    
             student_rel_types    += f['student_rel_types']
-        min_dists            += f['min_dists']
         
         if f.has_key('object_answers'):
             object_answers       += f['object_answers']
             object_distributions += f['object_distributions']
+
+            # temp_answers = []
+            # temp_distributions = []
+            # num_processes = 5
+            # for i in range(num_processes):
+            #     temp_answers.extend( object_answers[i::num_processes] )
+            #     temp_distributions.extend( object_distributions[i::num_processes] )
+            # object_answers = temp_answers
+            # object_distributions = temp_distributions
 
             if f.has_key('object_rel_types'):
                 object_rel_types     += f['object_rel_types']
             else:
                 object_rel_types     += [None]*len(f['object_answers'])
 
+            if f.has_key('object_sentences'):
+                object_sentences = f['object_sentences']
+                print len(set(object_sentences)), 'unique object descriptions'
+
     if args.post:
         golden_probs = np.array(lmk_posts)*np.array(rel_posts)
 
-    to_from_mask = np.equal(rel_types, relation.ToRelation) + np.equal(rel_types,relation.FromRelation)
-    golden_probs_tofrom = np.ma.masked_array(golden_probs, 
-        mask=np.invert(to_from_mask))
+    if f['lmk_priors'][0]:
+        to_from_mask = np.equal(rel_types, relation.ToRelation) + np.equal(rel_types,relation.FromRelation)
+        golden_probs_tofrom = np.ma.masked_array(golden_probs, 
+            mask=np.invert(to_from_mask))
 
-    lrfb_mask = np.equal(rel_types, relation.LeftRelation) + np.equal(rel_types,relation.RightRelation) +\
-              np.equal(rel_types, relation.InFrontRelation) + np.equal(rel_types,relation.BehindRelation)
-    golden_probs_lrfb = np.ma.masked_array(golden_probs, 
-        mask=np.invert(lrfb_mask) )
+        lrfb_mask = np.equal(rel_types, relation.LeftRelation) + np.equal(rel_types,relation.RightRelation) +\
+                  np.equal(rel_types, relation.InFrontRelation) + np.equal(rel_types,relation.BehindRelation)
+        golden_probs_lrfb = np.ma.masked_array(golden_probs, 
+            mask=np.invert(lrfb_mask) )
 
-    on_mask = np.equal(rel_types,relation.OnRelation)
-    golden_probs_on = np.ma.masked_array(golden_probs, mask=np.invert(on_mask))
+        on_mask = np.equal(rel_types,relation.OnRelation)
+        golden_probs_on = np.ma.masked_array(golden_probs, mask=np.invert(on_mask))
 
-    object_to_from_mask = np.equal(object_rel_types, relation.ToRelation) + np.equal(object_rel_types,relation.FromRelation)
-    # object_golden_probs_tofrom = np.ma.masked_array(golden_probs, 
-    #     mask=np.invert(to_from_mask))
+        object_to_from_mask = np.equal(object_rel_types, relation.ToRelation) + np.equal(object_rel_types,relation.FromRelation)
+        # object_golden_probs_tofrom = np.ma.masked_array(golden_probs, 
+        #     mask=np.invert(to_from_mask))
 
-    object_lrfb_mask = np.equal(object_rel_types, relation.LeftRelation) + np.equal(object_rel_types,relation.RightRelation) +\
-              np.equal(object_rel_types, relation.InFrontRelation) + np.equal(object_rel_types,relation.BehindRelation)
-    # golden_probs_lrfb = np.ma.masked_array(golden_probs, 
-    #     mask=np.invert(lrfb_mask) )
+        object_lrfb_mask = np.equal(object_rel_types, relation.LeftRelation) + np.equal(object_rel_types,relation.RightRelation) +\
+                  np.equal(object_rel_types, relation.InFrontRelation) + np.equal(object_rel_types,relation.BehindRelation)
+        # golden_probs_lrfb = np.ma.masked_array(golden_probs, 
+        #     mask=np.invert(lrfb_mask) )
 
-    object_on_mask = np.equal(object_rel_types,relation.OnRelation)
-    # golden_probs_on = np.ma.masked_array(golden_probs, mask=np.invert(on_mask))
+        object_on_mask = np.equal(object_rel_types,relation.OnRelation)
+        # golden_probs_on = np.ma.masked_array(golden_probs, mask=np.invert(on_mask))
 
-    object_num_tofrom = np.cumsum(object_to_from_mask)
-    object_num_lrfb   = np.cumsum(object_lrfb_mask)
-    object_num_on     = np.cumsum(object_on_mask)
+        object_num_tofrom = np.cumsum(object_to_from_mask)
+        object_num_lrfb   = np.cumsum(object_lrfb_mask)
+        object_num_on     = np.cumsum(object_on_mask)
 
 
     window = args.window_size
@@ -102,44 +118,47 @@ if __name__ == '__main__':
         return  [None] + [np.mean(arr[:i]) for i in range(1,window)] + [np.mean(arr[i-window:i]) for i in range(window,len(arr))]
         # return  [None] + [np.median(arr[:i]) for i in range(1,window)] + [np.median(arr[i-window:i]) for i in range(window,len(arr))]
     
-    avg_lmk_priors        = running_avg(lmk_priors)
-    avg_rel_priors        = running_avg(rel_priors)
-    avg_lmk_posts         = running_avg(lmk_posts)
-    avg_rel_posts         = running_avg(rel_posts)
-    avg_golden_probs      = running_avg(golden_probs)
-    avg_golden_entropies  = running_avg(golden_entropies)
-    avg_golden_ranks      = running_avg(golden_ranks)
+    if f['lmk_priors'][0]:
+        avg_lmk_priors        = running_avg(lmk_priors)
+        avg_rel_priors        = running_avg(rel_priors)
+        avg_lmk_posts         = running_avg(lmk_posts)
+        avg_rel_posts         = running_avg(rel_posts)
+        avg_golden_probs      = running_avg(golden_probs)
+        avg_golden_entropies  = running_avg(golden_entropies)
+        avg_golden_ranks      = running_avg(golden_ranks)
 
-    num_tofrom = np.cumsum(to_from_mask)
-    # num_nextto = [sum(nextto_mask[:i]) for i in range(len(nextto_mask))]
-    num_lrfb   = np.cumsum(lrfb_mask)
-    num_on     = np.cumsum(on_mask)
+        num_tofrom = np.cumsum(to_from_mask)
+        # num_nextto = [sum(nextto_mask[:i]) for i in range(len(nextto_mask))]
+        num_lrfb   = np.cumsum(lrfb_mask)
+        num_on     = np.cumsum(on_mask)
 
 
 
-    if f.has_key('student_probs'):
+    if f.has_key('student_probs') and f['student_probs'][0]:
         avg_student_probs     = running_avg(student_probs)
         avg_student_entropies = running_avg(student_entropies)
         avg_student_ranks     = running_avg(student_ranks)
 
-    avg_min               = running_avg(min_dists)
-    
-    avg_tofrom            = running_avg(golden_probs_tofrom)
-    # avg_nextto            = running_avg(golden_probs_nextto)
-    avg_lrfb              = running_avg(golden_probs_lrfb)
-    avg_on                = running_avg(golden_probs_on)
+    if f['lmk_priors'][0]:
+        avg_min               = running_avg(min_dists)
+        
+        avg_tofrom            = running_avg(golden_probs_tofrom)
+        # avg_nextto            = running_avg(golden_probs_nextto)
+        avg_lrfb              = running_avg(golden_probs_lrfb)
+        avg_on                = running_avg(golden_probs_on)
     
     if f.has_key('object_answers'):
         correct               = [(answer == distribution[0][1]) for answer, distribution in zip(object_answers,object_distributions)]
         avg_correct           = running_avg(correct)
 
         distances = []
-        for answer, distribution in zip(object_answers,object_distributions):
-            lmkprob, lmknum = zip(*distribution)
-            lmkprob = np.array(lmkprob)/sum(lmkprob)
-            distances.append( lmkprob[0] - lmkprob[lmknum.index(answer)] )
-            # print answer, zip(lmknum,lmkprob)
-        avg_distances         = running_avg(distances)
+        # for answer, distribution in zip(object_answers,object_distributions):
+        #     lmkprob, lmknum = zip(*distribution)
+        #     lmkprob = np.array(lmkprob)/sum(lmkprob)
+        #     distances.append( lmkprob[0] - lmkprob[lmknum.index(answer)] )
+        #     # print answer, zip(lmknum,lmkprob)
+        # avg_distances         = running_avg(distances)
+        avg_distances = []
 
     # initial_training = f['initial_training']
     # cheating = f['cheating']
@@ -157,33 +176,35 @@ if __name__ == '__main__':
     #     title = 'Ambiguous Pointing'
     plt.ion()
 
-    plt.plot(total_mass, 'o-', color='RoyalBlue')
-    plt.ylabel('Total counts in db')
-    plt.title(title)
-    # plt.show()
-    # plt.draw()
+    if f['total_mass'][0]:
+        plt.plot(total_mass, 'o-', color='RoyalBlue')
+        plt.ylabel('Total counts in db')
+        plt.title(title)
+        # plt.show()
+        # plt.draw()
 
-    plt.figure()
-    plt.suptitle(title)
-    plt.subplot(211)
-    # plt.plot(golden_probs, 'o-', color='RoyalBlue')
-    plt.plot(avg_tofrom, 'x-', color='Blue', label='To/From')
-    # plt.plot(avg_nextto, 'x-', color='Red', label='NextTo')
-    plt.plot(avg_lrfb, 'x-', color='Green', label='L/R/F/B')
-    plt.plot(avg_on, 'x-', color='Salmon', label='On')
-    plt.plot(avg_golden_probs, 'x-', color='Black', label='All')
-    plt.ylim((0,1))
-    plt.ylabel('Golden Probability')
-    leg = plt.legend()
-    leg.draggable(state=True)
+    if f['lmk_priors'][0]:
+        plt.figure()
+        plt.suptitle(title)
+        plt.subplot(211)
+        # plt.plot(golden_probs, 'o-', color='RoyalBlue')
+        plt.plot(avg_tofrom, 'x-', color='Blue', label='To/From')
+        # plt.plot(avg_nextto, 'x-', color='Red', label='NextTo')
+        plt.plot(avg_lrfb, 'x-', color='Green', label='L/R/F/B')
+        plt.plot(avg_on, 'x-', color='Salmon', label='On')
+        plt.plot(avg_golden_probs, 'x-', color='Black', label='All')
+        plt.ylim((0,1))
+        plt.ylabel('Golden Probability')
+        leg = plt.legend()
+        leg.draggable(state=True)
 
-    plt.subplot(212)
-    plt.plot(golden_ranks, 'o-', color='RoyalBlue')
-    plt.plot(avg_golden_ranks, 'x-', color='Orange')
-    plt.ylim([0,max(avg_golden_ranks)+10])
-    plt.ylabel('Golden Rank')
+        plt.subplot(212)
+        plt.plot(golden_ranks, 'o-', color='RoyalBlue')
+        plt.plot(avg_golden_ranks, 'x-', color='Orange')
+        plt.ylim([0,max(avg_golden_ranks)+10])
+        plt.ylabel('Golden Rank')
 
-    if f.has_key('student_probs'):
+    if f.has_key('student_probs') and f['student_probs'][0]:
         plt.figure()
         plt.suptitle(title)
         plt.subplot(211)
@@ -198,21 +219,22 @@ if __name__ == '__main__':
         plt.ylim([0,max(avg_student_ranks)+10])
         plt.ylabel('Student Rank')
 
-    plt.figure()
-    plt.title(title)
-    
-    # plt.plot(lmk_priors, 'o-', color='RoyalBlue', label='lmk_priors')
-    # plt.plot(rel_priors, 'o-', color='Orange', label='rel_priors')
-    # plt.plot(lmk_posts, 'o-', color='MediumSpringGreen', label='lmk_posts')
-    # plt.plot(rel_posts, 'o-', color='Salmon', label='rel_posts')
+    if f['lmk_priors'][0]:
+        plt.figure()
+        plt.title(title)
+        
+        # plt.plot(lmk_priors, 'o-', color='RoyalBlue', label='lmk_priors')
+        # plt.plot(rel_priors, 'o-', color='Orange', label='rel_priors')
+        # plt.plot(lmk_posts, 'o-', color='MediumSpringGreen', label='lmk_posts')
+        # plt.plot(rel_posts, 'o-', color='Salmon', label='rel_posts')
 
-    plt.plot(avg_lmk_priors, '-', linewidth=3, color='DarkBlue', label='avg_lmk_priors')
-    plt.plot(avg_rel_priors, '-', linewidth=3, color='DarkOrange', label='avg_rel_priors')
-    plt.plot(avg_lmk_posts, '-', linewidth=3, color='MediumSeaGreen', label='avg_lmk_posts')
-    plt.plot(avg_rel_posts, '-', linewidth=3, color='DarkRed', label='avg_rel_posts')
-    plt.ylim([0,1])
-    leg = plt.legend()
-    leg.draggable(state=True)
+        plt.plot(avg_lmk_priors, '-', linewidth=3, color='DarkBlue', label='avg_lmk_priors')
+        plt.plot(avg_rel_priors, '-', linewidth=3, color='DarkOrange', label='avg_rel_priors')
+        plt.plot(avg_lmk_posts, '-', linewidth=3, color='MediumSeaGreen', label='avg_lmk_posts')
+        plt.plot(avg_rel_posts, '-', linewidth=3, color='DarkRed', label='avg_rel_posts')
+        plt.ylim([0,1])
+        leg = plt.legend()
+        leg.draggable(state=True)
 
     if f.has_key('object_answers'):
         n=len(correct)
@@ -227,22 +249,23 @@ if __name__ == '__main__':
         plt.plot(distances[:n], 'o-', color='RoyalBlue')
         plt.plot(avg_distances[:n], 'x-', color='Orange')
         plt.ylabel('Distance')
+        # plt.figure()
+        # plt.title('Number of relations (object task)')
+        # plt.plot(object_num_tofrom, 'x-', color='Blue', label='To/From')
+        # plt.plot(object_num_lrfb, 'x-', color='Green', label='L/R/F/B')
+        # plt.plot(object_num_on, 'x-', color='Salmon', label='On')
+        # leg = plt.legend()
+        # leg.draggable(state=True)
+
+    if f['lmk_priors'][0]:
         plt.figure()
-        plt.title('Number of relations (object task)')
-        plt.plot(object_num_tofrom, 'x-', color='Blue', label='To/From')
-        plt.plot(object_num_lrfb, 'x-', color='Green', label='L/R/F/B')
-        plt.plot(object_num_on, 'x-', color='Salmon', label='On')
+        plt.title('Number of relations')
+        plt.plot(num_tofrom, 'x-', color='Blue', label='To/From')
+        # plt.plot(num_nextto, 'x-', color='Red', label='NextTo')
+        plt.plot(num_lrfb, 'x-', color='Green', label='L/R/F/B')
+        plt.plot(num_on, 'x-', color='Salmon', label='On')
         leg = plt.legend()
         leg.draggable(state=True)
-
-    plt.figure()
-    plt.title('Number of relations')
-    plt.plot(num_tofrom, 'x-', color='Blue', label='To/From')
-    # plt.plot(num_nextto, 'x-', color='Red', label='NextTo')
-    plt.plot(num_lrfb, 'x-', color='Green', label='L/R/F/B')
-    plt.plot(num_on, 'x-', color='Salmon', label='On')
-    leg = plt.legend()
-    leg.draggable(state=True)
 
     plt.ioff()
     plt.show()

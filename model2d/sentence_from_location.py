@@ -39,12 +39,15 @@ from planar import Vec2
 
 # np.seterr(all='raise')
 
-def get_expansion(lhs, parent=None, lmk=None, rel=None, usebest=False, golden=False, printing=True):
+def get_expansion(lhs, parent=None, lmk=None, rel=None, usebest=False, golden=False, depth=0, printing=True):
     lhs_rhs_parent_chain = []
     prob_chain = []
     entropy_chain = []
     terminals = []
     landmarks = []
+
+    if depth > 3:
+        return lhs_rhs_parent_chain, prob_chain, entropy_chain, terminals, landmarks
 
     for n in lhs.split():
         if n in NONTERMINALS:
@@ -68,7 +71,7 @@ def get_expansion(lhs, parent=None, lmk=None, rel=None, usebest=False, golden=Fa
                                                       dist_class=dist_class,
                                                       deg_class=deg_class,
                                                       golden=golden)
-
+            
             if cp_db.count() <= 0:
                 if printing: logger('Could not expand %s (parent: %s, lmk_class: %s, lmk_ori_rels: %s, lmk_color: %s, rel: %s, dist_class: %s, deg_class: %s)' % (n, parent, lmk_class, lmk_ori_rels, lmk_color, rel_class, dist_class, deg_class))
                 terminals.append( n )
@@ -101,7 +104,7 @@ def get_expansion(lhs, parent=None, lmk=None, rel=None, usebest=False, golden=Fa
             prob_chain.append( cprod_prob )
             entropy_chain.append( cprod_entropy )
 
-            lrpc, pc, ec, t, ls = get_expansion( lhs=cprod, parent=n, lmk=lmk, rel=rel, golden=golden, printing=printing )
+            lrpc, pc, ec, t, ls = get_expansion( lhs=cprod, parent=n, lmk=lmk, rel=rel, golden=golden, printing=printing, depth=depth+1 )
             lhs_rhs_parent_chain.extend( lrpc )
             prob_chain.extend( pc )
             entropy_chain.extend( ec )

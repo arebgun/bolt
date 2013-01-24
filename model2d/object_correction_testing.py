@@ -41,6 +41,7 @@ from math import ceil
 
 from utils import categorical_sample
 import utils
+import time
 
 from semantics.language_generator import describe
 # import IPython
@@ -69,6 +70,9 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
     printing=False
 
     def loop(data):
+
+        time.sleep(random())
+
         if 'num_iterations' in data:
             scene, speaker = construct_training_scene(True)
             num_iterations = data['num_iterations']
@@ -132,34 +136,70 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
         # relations = list(set(rels))
 
         epsilon = 0.0001
-        def heatmaps_for_sentence(sentence, all_meanings, loi_infos, xs, ys, scene, speaker, step=0.02):
+        def heatmaps_for_sentences(sentences, all_meanings, loi_infos, xs, ys, scene, speaker, step=0.02):
             printing=False
+            x = np.array( [list(xs-step*0.5)]*len(ys) )
+            y = np.array( [list(ys-step*0.5)]*len(xs) ).T
             scene_bb = scene.get_bounding_box()
             scene_bb = scene_bb.inflate( Vec2(scene_bb.width*0.5,scene_bb.height*0.5) )
             # x = np.array( [list(xs-step*0.5)]*len(ys) )
             # y = np.array( [list(ys-step*0.5)]*len(xs) ).T
 
-            posteriors = get_all_sentence_posteriors(sentence, all_meanings, printing=printing)
-
             combined_heatmaps = []
             for obj_lmk, ms, heatmapss in loi_infos:
 
-                big_heatmap1 = None
-                for m,(h1,h2) in zip(ms, heatmapss):
-                    lmk,rel = m
-                    p = posteriors[rel]*posteriors[lmk]
-                    if big_heatmap1 is None:
-                        big_heatmap1 = p*h1
-                    else:
-                        big_heatmap1 += p*h1
+                # for m,(h1,h2) in zip(ms, heatmapss):
 
-                combined_heatmaps.append(big_heatmap1)
+                #     logger( h1.shape )
+                #     logger( x.shape )
+                #     logger( y.shape )
+                #     logger( xs.shape )
+                #     logger( ys.shape )
+                #     plt.pcolor(x, y, h1.reshape((len(xs),len(ys))).T, cmap = 'jet', edgecolors='none', alpha=0.7)
+                #     plt.colorbar()
+
+                #     for lmk in scene.landmarks.values():
+                #         if isinstance(lmk.representation, GroupLineRepresentation):
+                #             xxs = [lmk.representation.line.start.x, lmk.representation.line.end.x]
+                #             yys = [lmk.representation.line.start.y, lmk.representation.line.end.y]
+                #             plt.fill(xxs,yys,facecolor='none',linewidth=2)
+                #         elif isinstance(lmk.representation, RectangleRepresentation):
+                #             rect = lmk.representation.rect
+                #             xxs = [rect.min_point.x,rect.min_point.x,rect.max_point.x,rect.max_point.x]
+                #             yys = [rect.min_point.y,rect.max_point.y,rect.max_point.y,rect.min_point.y]
+                #             plt.fill(xxs,yys,facecolor='none',linewidth=2)
+                #             plt.text(rect.min_point.x+0.01,rect.max_point.y+0.02,lmk.name)
+                #     plt.title(m2s(*m))
+                #     logger( m2s(*m))
+                #     plt.axis('scaled')
+                #     plt.show()
+
+                combined_heatmap = None
+                for sentence in sentences:
+                    posteriors = get_all_sentence_posteriors(sentence, all_meanings, printing=printing)
+
+                    big_heatmap1 = None
+                    for m,(h1,h2) in zip(ms, heatmapss):
+
+                        lmk,rel = m
+                        p = posteriors[rel]*posteriors[lmk]
+                        if big_heatmap1 is None:
+                            big_heatmap1 = p*h1
+                        else:
+                            big_heatmap1 += p*h1
+
+                    if combined_heatmap is None:
+                        combined_heatmap = big_heatmap1
+                    else:
+                        combined_heatmap *= big_heatmap1
+
+                combined_heatmaps.append(combined_heatmap)
 
             return combined_heatmaps
 
         object_meaning_applicabilities = {}
         for obj_lmk, ms, heatmapss in loi_infos:
-            for m,(h1,_) in zip(ms, heatmapss):
+            for m,(h2,h1) in zip(ms, heatmapss):
                 ps = [p for (x,y),p in zip(list(product(xs,ys)),h1) if obj_lmk.representation.contains_point( Vec2(x,y) )]
                 if m not in object_meaning_applicabilities:
                     object_meaning_applicabilities[m] = {}
@@ -204,6 +244,7 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
 
         object_answers = []
         object_distributions = []
+        object_sentences =[]
 
         epsilon = 1e-15
 
@@ -212,7 +253,17 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
 
             if 'loc_descs' in data:
                 trajector = data['lmks'][iteration]
-                sentence = data['loc_descs'][iteration]
+                logger( 'Teacher chooses: %s' % trajector )
+                sentences = data['loc_descs'][iteration]
+                probs, sorted_meanings = zip(*sorted_meaning_lists[trajector])
+                probs = np.array(probs) - min(probs)
+                probs /= probs.sum()
+                if sentences is None:
+                    (sampled_landmark, sampled_relation) = categorical_sample( sorted_meanings, probs )[0]
+                    logger( 'Teacher tries to say: %s' % m2s(sampled_landmark,sampled_relation) )
+                    head_on = speaker.get_head_on_viewpoint(sampled_landmark)
+
+                    sentences = [describe( head_on, trajector, sampled_landmark, sampled_relation )]
             else:
                 # Teacher describe
                 trajector = choice(loi)
@@ -220,21 +271,56 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
                 logger( 'Teacher chooses: %s' % trajector )
                 # Choose from meanings
                 probs, sorted_meanings = zip(*sorted_meaning_lists[trajector])
+                probs = np.array(probs) - min(probs)
+                probs /= probs.sum()
                 (sampled_landmark, sampled_relation) = categorical_sample( sorted_meanings, probs )[0]
-                logger( 'Teacher tries to say: %s, %s' % (sampled_landmark,sampled_relation) )
+                logger( 'Teacher tries to say: %s' % m2s(sampled_landmark,sampled_relation) )
 
                 # Generate sentence
                 # _, sentence = generate_sentence(None, False, scene, speaker, meaning=(sampled_landmark, sampled_relation), golden=True, printing=printing)
 
-                sentence = describe( speaker.get_head_on_viewpoint(sampled_landmark), trajector, sampled_landmark, sampled_relation )
+                sentences = [describe( speaker.get_head_on_viewpoint(sampled_landmark), trajector, sampled_landmark, sampled_relation )]
 
-            logger( 'Teacher says: %s' % sentence)
+            object_sentences.append( ' '.join(sentences) )
+            logger( 'Teacher says: %s' % ' '.join(sentences))
+            for i,(p,sm) in enumerate(zip(probs[:15],sorted_meanings[:15])):
+                lm,re = sm
+                logger( '%i: %f %s' % (i,p,m2s(*sm)) )
+                # head_on = speaker.get_head_on_viewpoint(lm)
+                # speaker.visualize( scene, trajector, head_on, lm, re)
 
             lmk_probs = []
+
             try:
-                combined_heatmaps = heatmaps_for_sentence(sentence, all_meanings, loi_infos, xs, ys, scene, speaker, step=step)
+                combined_heatmaps = heatmaps_for_sentences(sentences, all_meanings, loi_infos, xs, ys, scene, speaker, step=step)
 
                 for combined_heatmap,obj_lmk in zip(combined_heatmaps, loi):
+
+                    # x = np.array( [list(xs-step*0.5)]*len(ys) )
+                    # y = np.array( [list(ys-step*0.5)]*len(xs) ).T
+                    # logger( combined_heatmap.shape )
+                    # logger( x.shape )
+                    # logger( y.shape )
+                    # logger( xs.shape )
+                    # logger( ys.shape )
+                    # plt.pcolor(x, y, combined_heatmap.reshape((len(xs),len(ys))).T, cmap = 'jet', edgecolors='none', alpha=0.7)
+                    # plt.colorbar()
+
+                    # for lmk in scene.landmarks.values():
+                    #     if isinstance(lmk.representation, GroupLineRepresentation):
+                    #         xxs = [lmk.representation.line.start.x, lmk.representation.line.end.x]
+                    #         yys = [lmk.representation.line.start.y, lmk.representation.line.end.y]
+                    #         plt.fill(xxs,yys,facecolor='none',linewidth=2)
+                    #     elif isinstance(lmk.representation, RectangleRepresentation):
+                    #         rect = lmk.representation.rect
+                    #         xxs = [rect.min_point.x,rect.min_point.x,rect.max_point.x,rect.max_point.x]
+                    #         yys = [rect.min_point.y,rect.max_point.y,rect.max_point.y,rect.min_point.y]
+                    #         plt.fill(xxs,yys,facecolor='none',linewidth=2)
+                    #         plt.text(rect.min_point.x+0.01,rect.max_point.y+0.02,lmk.name)
+                    # plt.axis('scaled')
+                    # plt.axis([scene_bb.min_point.x, scene_bb.max_point.x, scene_bb.min_point.y, scene_bb.max_point.y])
+                    # plt.show()
+
                     ps = [p for (x,y),p in zip(list(product(xs,ys)),combined_heatmap) if obj_lmk.representation.contains_point( Vec2(x,y) )]
                     # print ps, xs.shape, ys.shape, combined_heatmap.shape
                     lmk_probs.append( (sum(ps)/len(ps), obj_lmk) )
@@ -243,15 +329,16 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
                 top_p, top_lmk = lmk_probs[0]
                 lprobs, lmkss = zip(*lmk_probs)
 
+                answer, distribution = loi.index(trajector), [ (lprob, loi.index(lmk)) for lprob,lmk in lmk_probs ]
                 logger( sorted(zip(np.array(lprobs)/sum(lprobs), [(l.name, l.color, l.object_class) for l in lmkss]), reverse=True) )
                 logger( 'I bet %f you are talking about a %s %s %s' % (top_p/sum(lprobs), top_lmk.name, top_lmk.color, top_lmk.object_class) )
                 # objects.append(top_lmk)
             except Exception as e:
                 logger( 'Unable to get object from sentence. %s' % e, 'fail' )
-                print traceback.format_exc()
-                exit()
+                answer = None
+                top_lmk = None
+                distribution = [(0,False)]
 
-            answer, distribution = loi.index(trajector), [ (lprob, loi.index(lmk)) for lprob,lmk in lmk_probs ]
             object_answers.append( answer )
             object_distributions.append( distribution )
 
@@ -260,11 +347,12 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
                 # Give morphine
                 pass
             else:
-                howmany=5
-                for update, meaning in sorted_meaning_lists[trajector][:howmany]:
-                    accept_object_correction( meaning, sentence, update*scale, printing=printing)
-                for update, meaning in sorted_meaning_lists[trajector][-howmany:]:
-                    accept_object_correction( meaning, sentence, update*scale, printing=printing)
+                howmany=2
+                for sentence in sentences:
+                    for update, meaning in sorted_meaning_lists[trajector][:howmany]:
+                        accept_object_correction( meaning, sentence, update*scale, printing=printing)
+                    for update, meaning in sorted_meaning_lists[trajector][-howmany:]:
+                        accept_object_correction( meaning, sentence, update*scale, printing=printing)
 
             for _ in range(0):
 	            logger(('Iteration %d production' % iteration),'okblue')
@@ -341,9 +429,9 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
 
             def probs_metric(inverse=False):
                 rand_p = Vec2(random()*table.width+table.min_point.x, random()*table.height+table.min_point.y)
-                bestmeaning, bestsentence = generate_sentence(rand_p, False, scene, speaker, usebest=True, golden=inverse, printing=printing)
-                sampled_landmark, sampled_relation = bestmeaning.args[0], bestmeaning.args[3]
                 try:
+                    bestmeaning, bestsentence = generate_sentence(rand_p, False, scene, speaker, usebest=True, golden=inverse, printing=printing)
+                    sampled_landmark, sampled_relation = bestmeaning.args[0], bestmeaning.args[3]
                     golden_posteriors = get_all_sentence_posteriors(bestsentence, meanings, golden=(not inverse), printing=printing)
 
                     # lmk_prior = speaker.get_landmark_probability(sampled_landmark, landmarks, PointRepresentation(rand_p))[0]
@@ -373,7 +461,7 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
                     prob = ps[idx]
                     rank = sorted(ps, reverse=True).index(prob)
                     entropy = entropy_of_probs(ps)
-                except ParseError as e:
+                except (ParseError,RuntimeError) as e:
                     logger( e )
                     lmk_prior = 0
                     rel_prior = 0
@@ -467,7 +555,7 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
                    golden_log_probs, golden_entropies, golden_ranks,
                    min_dists, rel_types, total_mass, student_probs,
                    student_entropies, student_ranks, student_rel_types,
-                   object_answers, object_distributions)
+                   object_answers, object_distributions, object_sentences)
 
     filename = 'objcorr'
     filename += ('_p%i_n%i_u%i.shelf' % (num_processors,num_iterations,scale))
@@ -489,6 +577,7 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
     f['student_rel_types']    = []
     f['object_answers']       = []
     f['object_distributions'] = []
+    f['object_sentences']     = []
     # f['initial_training']     = initial_training
     # f['cheating']             = cheating
     # f['explicit_pointing']    = explicit_pointing
@@ -500,7 +589,8 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
 
         num_scenes = len(scene_descs)
         processors_per_scene = num_processors/num_scenes
-        new_scene_descs = []
+        new_scene_descs = scene_descs
+        # new_scene_descs = []
 
         def chunks(l, n):
             return [l[i:i+n] for i in range(0, len(l), n)]
@@ -517,7 +607,7 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
                                          'ids':ids})
 
         lists = parmap(loop,new_scene_descs)
-        # lists = map(loop,scene_descs)
+        # lists = map(loop,new_scene_descs)
         logger("Finished iterating")
         result = [val for tup in zip(*lists) for val in tup]
         logger("Combined results")
@@ -525,7 +615,8 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
         lmk_priors, rel_priors, lmk_posts, rel_posts, \
             golden_log_probs, golden_entropies, golden_ranks, \
             min_dists, rel_types, total_mass, student_probs, student_entropies, \
-            student_ranks, student_rel_types, object_answers, object_distributions = zip(*result)
+            student_ranks, student_rel_types, object_answers, object_distributions, \
+            object_sentences = zip(*result)
         logger("Exploded results")
         f = shelve.open(filename)
         logger("Opened shelf")
@@ -545,6 +636,7 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
         f['student_rel_types']    += student_rel_types
         f['object_answers']       += object_answers
         f['object_distributions'] += object_distributions
+        f['object_sentences']     += object_sentences
         logger("Updated shelf variables")
         f.close()
         logger("Closed shelf")
@@ -568,7 +660,8 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
             lmk_priors, rel_priors, lmk_posts, rel_posts, \
                 golden_log_probs, golden_entropies, golden_ranks, \
                 min_dists, rel_types, total_mass, student_probs, student_entropies, \
-                student_ranks, student_rel_types, object_answers, object_distributions = zip(*result)
+                student_ranks, student_rel_types, object_answers, object_distributions, \
+                object_sentences = zip(*result)
             f = shelve.open(filename)
             f['lmk_priors']           += lmk_priors
             f['rel_priors']           += rel_priors
@@ -586,6 +679,7 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
             f['student_rel_types']    += student_rel_types
             f['object_answers']       += object_answers
             f['object_distributions'] += object_distributions
+            f['object_sentences']     += object_sentences
             f.close()
 
         if extra:
@@ -598,7 +692,8 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
             lmk_priors, rel_priors, lmk_posts, rel_posts, \
                 golden_log_probs, golden_entropies, golden_ranks, \
                 min_dists, rel_types, total_mass, student_probs, student_entropies, \
-                student_ranks, student_rel_types, object_answers, object_distributions = zip(*result)
+                student_ranks, student_rel_types, object_answers, object_distributions, \
+                object_sentences = zip(*result)
             f = shelve.open(filename)
             f['lmk_priors']           += lmk_priors
             f['rel_priors']           += rel_priors
@@ -616,6 +711,7 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
             f['student_rel_types']    += student_rel_types
             f['object_answers']       += object_answers
             f['object_distributions'] += object_distributions
+            f['object_sentences']     += object_sentences
             f.close()
     logger("Exiting")
     exit()

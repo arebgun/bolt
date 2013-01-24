@@ -5,7 +5,7 @@ from __future__ import division
 
 from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, Float, String, ForeignKey
-from sqlalchemy.orm import relationship, backref, sessionmaker
+from sqlalchemy.orm import relationship, backref, sessionmaker, scoped_session
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
 from sqlalchemy.ext.declarative import _declarative_constructor
 from sqlalchemy import func
@@ -20,7 +20,8 @@ from collections import defaultdict
 
 db_url = 'sqlite:///table2d.db'
 golden_db_url = 'sqlite:///golden-table2d.db'
-#db_url = 'postgresql+pg8000://postgres:postgres@localhost:5432/table2d'
+# db_url = 'postgresql+psycopg2://postgres:password@localhost:5432/table2d'
+# golden_db_url = 'postgresql+psycopg2://postgres:password@localhost:5432/golden-table2d'
 echo = False
 
 
@@ -44,14 +45,16 @@ def create_all():
 ### setting up sqlalchemy stuff ###
 
 engine = create_engine(db_url, echo=echo)
-Session = sessionmaker()
-Session.configure(bind=engine)
-session = Session()
+# Session = sessionmaker()
+session = scoped_session(sessionmaker())
+session.configure(bind=engine)
+# session = Session()
 
 golden_engine = create_engine(golden_db_url, echo=echo)
-golden_Session = sessionmaker()
-golden_Session.configure(bind=golden_engine)
-golden_session = golden_Session()
+# golden_Session = sessionmaker()
+golden_session = scoped_session(sessionmaker())
+golden_session.configure(bind=golden_engine)
+# golden_session = golden_Session()
 
 class Base(object):
     # if you have a __unicode__ method
@@ -73,9 +76,9 @@ class Base(object):
     @classmethod
     def query(cls, *args, **kwargs):
         if 'golden' in kwargs and kwargs['golden']:
-            return golden_session.query(cls, *args)
+            return golden_session().query(cls, *args)
         else:
-            return session.query(cls, *args)
+            return session().query(cls, *args)
 
     # like in elixir
     @classmethod
@@ -94,7 +97,7 @@ class Base(object):
     def _constructor(self, **kwargs):
         _declarative_constructor(self, **kwargs)
         # add self to session
-        session.add(self)
+        session().add(self)
 
 Base = declarative_base(cls=Base, constructor=Base._constructor)
 
@@ -238,9 +241,9 @@ class CWord(Base):
                         prev_word='<no prev word>',
                         golden=False):
         if golden:
-            q = golden_session.query(func.sum(CWord.count))
+            q = golden_session().query(func.sum(CWord.count))
         else:
-            q = session.query(func.sum(CWord.count))
+            q = session().query(func.sum(CWord.count))
 
         if word != None:
             q = q.filter(CWord.word==word)
@@ -383,12 +386,12 @@ class CWord(Base):
                             if cword.count <= -ups[cword.word]: cword.count = 1
                             else: cword.count += ups[cword.word]
 
-                session.commit()
+                session().commit()
                 committed = True
             except Exception as e:
                 logger( 'Could not commit', 'warning' )
                 logger( e )
-                session.rollback()
+                session().rollback()
                 continue
 
     def __unicode__(self):
@@ -556,9 +559,9 @@ class CProduction(Base):
                           deg_class=None,
                           golden=False):
         if golden:
-            q = golden_session.query(func.sum(CProduction.count))
+            q = golden_session().query(func.sum(CProduction.count))
         else:
-            q = session.query(func.sum(CProduction.count))
+            q = session().query(func.sum(CProduction.count))
         q = q.filter(CProduction.lhs!='LOCATION-PHRASE')
 
         if lhs != None:
@@ -694,12 +697,12 @@ class CProduction(Base):
                             else: cprod.count += ups[cprod.rhs]
 
 
-                session.commit()
+                session().commit()
                 committed = True
             except Exception as e:
                 logger( 'Could not commit', 'warning' )
                 logger( e )
-                session.rollback()
+                session().rollback()
                 continue
 
 class WordCPT(Base):
@@ -750,7 +753,7 @@ class WordCPT(Base):
             wp = cls.get_prob(word=word, **given)
         except:
             wp = cls.calc_prob(word=word, **given)
-            session.commit()
+            session().commit()
         return wp.count / wp.all_count
 
     @classmethod
@@ -761,7 +764,7 @@ class WordCPT(Base):
             wp = cls.calc_prob(word=word, **given)
         wp.all_count = wp.all_count + update_by
         wp.count = wp.count + update_by
-        session.commit()
+        session().commit()
         return
 
 class ExpansionCPT(Base):
@@ -813,7 +816,7 @@ class ExpansionCPT(Base):
             ep = cls.get_prob(rhs=rhs, **given)
         except:
             ep = cls.calc_prob(rhs=rhs, **given)
-            session.commit()
+            session().commit()
         return ep.count / ep.all_count
 
     @classmethod
@@ -824,7 +827,7 @@ class ExpansionCPT(Base):
             ep = cls.calc_prob(rhs=rhs, **given)
         ep.all_count = ep.all_count + update_by
         ep.count = ep.count + update_by
-        session.commit()
+        session().commit()
         return
 
 
@@ -852,7 +855,7 @@ class SentenceParse(Base):
             SentenceParse(sentence=sentence,
                           original_parse=orig_parse,
                           modified_parse=mod_parse)
-            session.commit()
+            session().commit()
 
     @classmethod
     def add_sentence_parse_blind(cls, sentence, orig_parse, mod_parse):

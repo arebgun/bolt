@@ -110,7 +110,8 @@ def get_tree_probs(tree, lmk=None, rel=None, default_prob=0.001, default_ent=100
             # logger('ccounts: %s' % str(ccounts))
             # logger('rhs: %s, cprod_prob: %s, cprod_entropy: %s' % (rhs, cprod_prob, cprod_entropy))
 
-            prob_chain.append( cprod_prob )
+            # prob_chain.append( cprod_prob )
+            prob_chain.append( cprod_prob )#**0.125 )
             entropy_chain.append( cprod_entropy )
 
         lhs_rhs_parent_chain.append( ( lhs, rhs, parent, lmk, rel ) )
