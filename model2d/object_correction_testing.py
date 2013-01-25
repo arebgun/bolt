@@ -199,21 +199,21 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
 
         object_meaning_applicabilities = {}
         for obj_lmk, ms, heatmapss in loi_infos:
-            for m,(h2,h1) in zip(ms, heatmapss):
+            for m,(h1,h2) in zip(ms, heatmapss):
                 ps = [p for (x,y),p in zip(list(product(xs,ys)),h1) if obj_lmk.representation.contains_point( Vec2(x,y) )]
                 if m not in object_meaning_applicabilities:
                     object_meaning_applicabilities[m] = {}
                 object_meaning_applicabilities[m][obj_lmk] = sum(ps)/len(ps)
 
-        k = len(loi)
-        for meaning_dict in object_meaning_applicabilities.values():
-            total = sum( meaning_dict.values() )
-            if total != 0:
-                for obj_lmk in meaning_dict.keys():
-                    meaning_dict[obj_lmk] = meaning_dict[obj_lmk]/total - 1.0/k
-                total = sum( [value for value in meaning_dict.values() if value > 0] )
-                for obj_lmk in meaning_dict.keys():
-                    meaning_dict[obj_lmk] = (2 if meaning_dict[obj_lmk] > 0 else 1)*meaning_dict[obj_lmk] - total
+        # k = len(loi)
+        # for meaning_dict in object_meaning_applicabilities.values():
+        #     total = sum( meaning_dict.values() )
+        #     if total != 0:
+        #         for obj_lmk in meaning_dict.keys():
+        #             meaning_dict[obj_lmk] = meaning_dict[obj_lmk]/total - 1.0/k
+        #         total = sum( [value for value in meaning_dict.values() if value > 0] )
+        #         for obj_lmk in meaning_dict.keys():
+        #             meaning_dict[obj_lmk] = (2 if meaning_dict[obj_lmk] > 0 else 1)*meaning_dict[obj_lmk] - total
 
         sorted_meaning_lists = {}
 
@@ -353,9 +353,15 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
                     for _ in range(howmany):
                         meaning = categorical_sample( sorted_meanings, probs )[0]
                         update = updates[ sorted_meanings.index(meaning) ]
-                        accept_object_correction( meaning, sentence, update*scale, printing=printing)
+                        try:
+                            accept_object_correction( meaning, sentence, update*scale, printing=printing)
+                        except:
+                            pass
                     for update, meaning in sorted_meaning_lists[trajector][-howmany:]:
-                        accept_object_correction( meaning, sentence, update*scale, printing=printing)
+                        try:
+                            accept_object_correction( meaning, sentence, update*scale, printing=printing)
+                        except:
+                            pass
 
             for _ in range(0):
 	            logger(('Iteration %d production' % iteration),'okblue')
