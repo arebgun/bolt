@@ -590,7 +590,7 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
         num_scenes = len(scene_descs)
         processors_per_scene = num_processors/num_scenes
         new_scene_descs = scene_descs
-        # new_scene_descs = []
+        new_sceen_descs = []
 
         def chunks(l, n):
             return [l[i:i+n] for i in range(0, len(l), n)]

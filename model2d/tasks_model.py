@@ -21,7 +21,7 @@ sys.path.append("..")
 
 from semantics import run
 
-from parse import parse_sentences, get_modparse, ParseError
+from parse import parse_sentences, modify_parses, get_modparse, ParseError
 from models import SentenceParse
 
 import object_correction_testing
@@ -212,22 +212,35 @@ if __name__ == '__main__':
         res = sp_db.all()[0]
     except IndexError:
 
-        parses = parse_sentences(all_descs)
+        parses = parse_sentences(all_descs,n=5,threads=8)
 
-        temp = tempfile.NamedTemporaryFile()
-        for p in parses:
-            temp.write(p)
-        temp.flush()
-        proc = subprocess.Popen(['java -mx100m -cp stanford-tregex/stanford-tregex.jar \
-                                  edu.stanford.nlp.trees.tregex.tsurgeon.Tsurgeon \
-                                  -s -treeFile %s surgery/*' % temp.name],
-                                shell=True,
-                                stdout=subprocess.PIPE,
-                                stderr=subprocess.PIPE)
-        modparses = proc.communicate()[0].splitlines()
-        temp.close()
+        # temp = tempfile.NamedTemporaryFile()
+        # for p in parses:
+        #     temp.write(p)
+        # temp.flush()
+        # proc = subprocess.Popen(['java -mx100m -cp stanford-tregex/stanford-tregex.jar \
+        #                           edu.stanford.nlp.trees.tregex.tsurgeon.Tsurgeon \
+        #                           -s -treeFile %s surgery/*' % temp.name],
+        #                         shell=True,
+        #                         stdout=subprocess.PIPE,
+        #                         stderr=subprocess.PIPE)
+        # modparses = proc.communicate()[0].splitlines()
+        # temp.close()
+        modparses = modify_parses(parses)
+
+        for i,chunk in enumerate(modparses[:]):
+            for j,modparse in enumerate(chunk):
+                if 'LANDMARK-PHRASE' in modparse:
+                    modparses[i] = modparse
+                    parses[i] = parses[i][j]
+                    break
+            if isinstance(modparses[i],list):
+                modparses[i] = modparses[i][0]
+                parses[i] = parses[i][0]
+
 
         for s,p,m in zip(all_descs,parses,modparses):
+            print s,'\n',p,'\n',m,'\n\n'
             SentenceParse.add_sentence_parse(s,p,m)
         exit("Parsed everything")
 
@@ -287,14 +300,14 @@ if __name__ == '__main__':
     #         for l in loc_desc:
     #             thing.add(l)
 
-        s['loc_descs'] = [None]*len(s['loc_descs'])
+        # s['loc_descs'] = [None]*10#len(s['loc_descs'])
         # for eyedee in s['ids']:
         #     if eyedee in something:
         #         print eyedee
         # for loc_desc in s['loc_descs']:           
     #         print '--'.join(loc_desc)
-        # print len(s['loc_descs']), len(s['lmks'])
-        # s['loc_descs'] = s['loc_descs'][:10]
+        print len(s['loc_descs']), len(s['lmks'])
+        s['loc_descs'] = s['loc_descs'][:10]
     # exit()
     # how_many = 100
     # for s in all_scenes:

@@ -15,9 +15,10 @@ from sqlalchemy.orm.exc import NoResultFound
 from utils import count_lmk_phrases, printcolors
 from nltk.tree import ParentedTree
 
+def chunks(l, n):
+    return [l[i:i+n] for i in range(0, len(l), n)]
 
-
-def parse_sentences(ss, parser_path='../bllip-parser'):
+def parse_sentences(ss, parser_path='../bllip-parser', n=1, threads=2):
     """parse sentences with the charniak parser"""
     # create a temporary file and write the sentences in it
     temp = tempfile.NamedTemporaryFile()
@@ -29,7 +30,7 @@ def parse_sentences(ss, parser_path='../bllip-parser'):
     # get into the charniak parser directory
     # os.chdir(parser_path)
     # call the parser
-    proc = subprocess.Popen(['./parse.sh', temp.name],
+    proc = subprocess.Popen(['./parse.sh', '-N%i' % n, temp.name],
                             stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE)
     # capture output
@@ -39,7 +40,8 @@ def parse_sentences(ss, parser_path='../bllip-parser'):
     # get rid of temporary file
     temp.close()
     # return the parse trees
-    return output.splitlines()
+    return chunks([l for l in output.splitlines() if l[:3] == '(S1'],n)
+
 
 
 
@@ -47,9 +49,11 @@ def modify_parses(trees, tregex_path='stanford-tregex',
                          surgery_path='surgery'):
     """modify parse trees using tsurgeon"""
     # write trees to temp file
+    n = len(trees[0])
     temp = tempfile.NamedTemporaryFile()
     for t in trees:
-        temp.write(t + '\n')
+        for tt in t:
+            temp.write(tt + '\n')
     temp.flush()
 
     # tregex jar location
@@ -66,7 +70,7 @@ def modify_parses(trees, tregex_path='stanford-tregex',
     # delete temp file
     temp.close()
     # return modified parse trees
-    return output.splitlines()
+    return chunks(output.splitlines(),n)
 
 
 
@@ -99,9 +103,21 @@ def get_modparse(sentence):
         print "parse.py: 98: " + sentence
         parses = parse_sentences([sentence])
         if len(parses) == 0:
-            raise ParseError(printcolors.WARNING + ('ParseError: Sentence was empty'))
+            raise ParseError(printcolors.WARNING + ('ParseError: a sentence was empty'))
+
+        modparses = modify_parses(parses)
+        for i,chunk in enumerate(modparses[:]):
+            for j,modparse in enumerate(chunk):
+                if 'LANDMARK-PHRASE' in modparse:
+                    modparses[i] = modparse
+                    parses[i] = parses[i][j]
+                    break
+            if isinstance(modparses[i],list):
+                modparses[i] = modparses[i][0]
+                parses[i] = parses[i][0]
+
         parsetree = parses[0]
-        modparsetree = modify_parses([parsetree])[0]
+        modparsetree = modparses[0]
         try:
             SentenceParse.add_sentence_parse(sentence, parsetree, modparsetree)
         except Exception as e:
