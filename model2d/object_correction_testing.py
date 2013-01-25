@@ -255,7 +255,7 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
                 trajector = data['lmks'][iteration]
                 logger( 'Teacher chooses: %s' % trajector )
                 sentences = data['loc_descs'][iteration]
-                probs, sorted_meanings = zip(*sorted_meaning_lists[trajector])
+                probs, sorted_meanings = zip(*sorted_meaning_lists[trajector][:30])
                 probs = np.array(probs) - min(probs)
                 probs /= probs.sum()
                 if sentences is None:
@@ -270,7 +270,7 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
                 # sentence, sampled_relation, sampled_landmark = speaker.describe(trajector, scene, max_level=1)
                 logger( 'Teacher chooses: %s' % trajector )
                 # Choose from meanings
-                probs, sorted_meanings = zip(*sorted_meaning_lists[trajector])
+                probs, sorted_meanings = zip(*sorted_meaning_lists[trajector][:30])
                 probs = np.array(probs) - min(probs)
                 probs /= probs.sum()
                 (sampled_landmark, sampled_relation) = categorical_sample( sorted_meanings, probs )[0]
@@ -347,9 +347,12 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
                 # Give morphine
                 pass
             else:
-                howmany=2
+                updates, _ = zip(*sorted_meaning_lists[trajector][:30])
+                howmany=5
                 for sentence in sentences:
-                    for update, meaning in sorted_meaning_lists[trajector][:howmany]:
+                    for _ in range(howmany):
+                        meaning = categorical_sample( sorted_meanings, probs )[0]
+                        update = updates[ sorted_meanings.index(meaning) ]
                         accept_object_correction( meaning, sentence, update*scale, printing=printing)
                     for update, meaning in sorted_meaning_lists[trajector][-howmany:]:
                         accept_object_correction( meaning, sentence, update*scale, printing=printing)
@@ -588,9 +591,9 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
         logger("In scene_descs")
 
         num_scenes = len(scene_descs)
-        processors_per_scene = num_processors/num_scenes
-        new_scene_descs = scene_descs
-        new_sceen_descs = []
+        processors_per_scene = int(num_processors/num_scenes)
+        # new_scene_descs = scene_descs
+        new_scene_descs = []
 
         def chunks(l, n):
             return [l[i:i+n] for i in range(0, len(l), n)]

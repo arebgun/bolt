@@ -279,7 +279,7 @@ if __name__ == '__main__':
             if len(sentence_chunks) == 0:
                 s['lmks'].remove(lmk)
                 s['loc_descs'].remove(sentence_chunks)
-                # s['ids'].remove(eyedee)
+                s['ids'].remove(eyedee)
 
     # # print 'good', good
     # print 'bad', bad
@@ -307,7 +307,9 @@ if __name__ == '__main__':
         # for loc_desc in s['loc_descs']:           
     #         print '--'.join(loc_desc)
         print len(s['loc_descs']), len(s['lmks'])
-        s['loc_descs'] = s['loc_descs'][:10]
+        # s['loc_descs'] = s['loc_descs'][:10]
+        # s['lmks'] = s['lmks'][:10]
+        # s['ids'] = s['ids'][:10]
     # exit()
     # how_many = 100
     # for s in all_scenes:

@@ -18,7 +18,7 @@ from nltk.tree import ParentedTree
 def chunks(l, n):
     return [l[i:i+n] for i in range(0, len(l), n)]
 
-def parse_sentences(ss, parser_path='../bllip-parser', n=1, threads=2):
+def parse_sentences(ss, parser_path='../bllip-parser', n=5, threads=2):
     """parse sentences with the charniak parser"""
     # create a temporary file and write the sentences in it
     temp = tempfile.NamedTemporaryFile()
