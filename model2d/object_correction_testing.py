@@ -256,7 +256,7 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
                 logger( 'Teacher chooses: %s' % trajector )
                 sentences = data['loc_descs'][iteration]
                 probs, sorted_meanings = zip(*sorted_meaning_lists[trajector][:30])
-                # probs = np.array(probs) - min(probs)
+                probs = np.array(probs)# - min(probs)
                 probs /= probs.sum()
                 if sentences is None:
                     (sampled_landmark, sampled_relation) = categorical_sample( sorted_meanings, probs )[0]
@@ -271,7 +271,7 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
                 logger( 'Teacher chooses: %s' % trajector )
                 # Choose from meanings
                 probs, sorted_meanings = zip(*sorted_meaning_lists[trajector][:30])
-                # probs = np.array(probs) - min(probs)
+                probs = np.array(probs)# - min(probs)
                 probs /= probs.sum()
                 (sampled_landmark, sampled_relation) = categorical_sample( sorted_meanings, probs )[0]
                 logger( 'Teacher tries to say: %s' % m2s(sampled_landmark,sampled_relation) )
