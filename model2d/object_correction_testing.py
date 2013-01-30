@@ -205,15 +205,15 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
                     object_meaning_applicabilities[m] = {}
                 object_meaning_applicabilities[m][obj_lmk] = sum(ps)/len(ps)
 
-        # k = len(loi)
-        # for meaning_dict in object_meaning_applicabilities.values():
-        #     total = sum( meaning_dict.values() )
-        #     if total != 0:
-        #         for obj_lmk in meaning_dict.keys():
-        #             meaning_dict[obj_lmk] = meaning_dict[obj_lmk]/total - 1.0/k
-        #         total = sum( [value for value in meaning_dict.values() if value > 0] )
-        #         for obj_lmk in meaning_dict.keys():
-        #             meaning_dict[obj_lmk] = (2 if meaning_dict[obj_lmk] > 0 else 1)*meaning_dict[obj_lmk] - total
+        k = len(loi)
+        for meaning_dict in object_meaning_applicabilities.values():
+            total = sum( meaning_dict.values() )
+            if total != 0:
+                for obj_lmk in meaning_dict.keys():
+                    meaning_dict[obj_lmk] = meaning_dict[obj_lmk]/total - 1.0/k
+                total = sum( [value for value in meaning_dict.values() if value > 0] )
+                for obj_lmk in meaning_dict.keys():
+                    meaning_dict[obj_lmk] = (2 if meaning_dict[obj_lmk] > 0 else 1)*meaning_dict[obj_lmk] - total
 
         sorted_meaning_lists = {}
 

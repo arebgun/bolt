@@ -26,9 +26,15 @@ from models import SentenceParse
 
 import object_correction_testing
 
+from location_from_sentence import get_all_sentence_posteriors
+
 import tempfile
 import subprocess
 import re
+import utils
+from planar import Vec2
+from utils import m2s
+from itertools import izip, product
 
 ### configuration ###
 
@@ -247,8 +253,12 @@ if __name__ == '__main__':
     good = 0
     bad = 0
     for s in all_scenes:
-        for lmk,sentence_chunks, eyedee in zip(s['lmks'], s['loc_descs'], s['ids']):
-
+        toremove = []
+        for i,(lmk,sentence_chunks, eyedee) in enumerate(zip(s['lmks'], s['loc_descs'], s['ids'])):
+            # print i, lmk,
+            # for l in sentence_chunks:
+            #     print l,'--',
+            # print
             for chunk in list(sentence_chunks):
                 try:
                     parsetree, modparsetree = get_modparse(chunk)
@@ -263,7 +273,9 @@ if __name__ == '__main__':
                             # print ' '.join(sentence_chunks),'\n',chunk,'\n ', parsetree,'\n  ', modparsetree,'\n'
                             # raw_input()
                             sentence_chunks.remove(chunk)
-                        elif (' side' in chunk or 
+                        elif (' side' in chunk or
+                           # 'end' in chunk or
+                           # 'edge' in chunk or
                            'corner' in chunk or 
                            'middle' in chunk or 
                            'center' in chunk or
@@ -277,9 +289,146 @@ if __name__ == '__main__':
                     continue
 
             if len(sentence_chunks) == 0:
-                s['lmks'].remove(lmk)
-                s['loc_descs'].remove(sentence_chunks)
-                s['ids'].remove(eyedee)
+                toremove.append(i)
+                # s['lmks'].remove(lmk)
+                # s['loc_descs'].remove(sentence_chunks)
+                # s['ids'].remove(eyedee)
+
+        for i in reversed(toremove):
+            del s['lmks'][i]
+            del s['loc_descs'][i]
+            del s['ids'][i]
+
+    # all_meanings = speaker1.get_all_meanings(scene1)
+
+    # s = all_scenes[0]
+    # for lmk, loc_desc in zip(s['lmks'],s['loc_descs']):
+    #     print lmk,
+    #     for l in loc_desc:
+    #         print l,'--',
+    #     print
+
+    # exit()
+
+    # f = open('meaning_annotations.txt')
+    # lines = f.readlines()
+    # f.close()
+
+    # scene0descs = []
+    # for line in lines:
+    #     line = line.strip()
+    #     if line == '-'*48:
+    #         # scenes.append(scene)
+    #         # scene = []
+    #         break
+    #     else:
+    #         user, annotation = line.split(' ---- ')
+    #         user = [[x] for x in user.split(' -- ')]
+    #         annotation = [[None if y.lower() == 'none' else y for y in x.split('; ')] for x in annotation.split(' -- ')]
+    #         # print user,'----',annotation
+    #         scene0descs.append((user,annotation))
+
+    # data = all_scenes[0]
+
+    # # if 'num_iterations' in data:
+    # #     scene, speaker = construct_training_scene(True)
+    # #     num_iterations = data['num_iterations']
+    # # else:
+    # scene = data['scene']
+    # speaker = data['speaker']
+    # num_iterations = len(data['loc_descs'])
+
+    # # users,annotations = zip(*scene0descs)
+    # # for obj, l, sentences, annotations in zip(data['lmks'], data['loc_descs'],users, annotations):
+    # #     print obj, l, sentences, annotations
+    # # exit()
+
+    # step = 0.02
+    # utils.scene.set_scene(scene,speaker)
+
+    # scene_bb = scene.get_bounding_box()
+    # scene_bb = scene_bb.inflate( Vec2(scene_bb.width*0.5,scene_bb.height*0.5) )
+    # table = scene.landmarks['table'].representation.get_geometry()
+
+    # # step = 0.04
+    # loi = [lmk for lmk in scene.landmarks.values() if lmk.name != 'table']
+    # all_heatmaps_tupless, xs, ys = speaker.generate_all_heatmaps(scene, step=step, loi=loi)
+
+    # loi_infos = []
+    # all_meanings = set()
+    # for obj_lmk,all_heatmaps_tuples in zip(loi, all_heatmaps_tupless):
+
+    #     lmks, rels, heatmapss = zip(*all_heatmaps_tuples)
+    #     meanings = zip(lmks,rels)
+    #     # print meanings
+    #     all_meanings.update(meanings)
+    #     loi_infos.append( (obj_lmk, meanings, heatmapss) )
+
+    # all_heatmaps_tupless, xs, ys = speaker.generate_all_heatmaps(scene, step=step)
+    # all_heatmaps_tuples = all_heatmaps_tupless[0]
+
+    # object_meaning_applicabilities = {}
+    # for obj_lmk, ms, heatmapss in loi_infos:
+    #     for m,(h1,h2) in zip(ms, heatmapss):
+    #         ps = [p for (x,y),p in zip(list(product(xs,ys)),h1) if obj_lmk.representation.contains_point( Vec2(x,y) )]
+    #         if m not in object_meaning_applicabilities:
+    #             object_meaning_applicabilities[m] = {}
+    #         object_meaning_applicabilities[m][obj_lmk] = sum(ps)/len(ps)
+
+    # # k = len(loi)
+    # # for meaning_dict in object_meaning_applicabilities.values():
+    # #     total = sum( meaning_dict.values() )
+    # #     if total != 0:
+    # #         for obj_lmk in meaning_dict.keys():
+    # #             meaning_dict[obj_lmk] = meaning_dict[obj_lmk]/total - 1.0/k
+    # #         total = sum( [value for value in meaning_dict.values() if value > 0] )
+    # #         for obj_lmk in meaning_dict.keys():
+    # #             meaning_dict[obj_lmk] = (2 if meaning_dict[obj_lmk] > 0 else 1)*meaning_dict[obj_lmk] - total
+
+    # sorted_meaning_lists = {}
+
+    # for m in object_meaning_applicabilities.keys():
+    #     for obj_lmk in object_meaning_applicabilities[m].keys():
+    #         if obj_lmk not in sorted_meaning_lists:
+    #             sorted_meaning_lists[obj_lmk] = []
+    #         sorted_meaning_lists[obj_lmk].append( (object_meaning_applicabilities[m][obj_lmk], m) )
+    # for obj_lmk in sorted_meaning_lists.keys():
+    #     sorted_meaning_lists[obj_lmk].sort(reverse=True)
+
+    # users,annotations = zip(*scene0descs)
+    # for trajector, sentences, annotations in zip(s['lmks'],users,annotations):
+    #     probs, sorted_meanings = zip(*sorted_meaning_lists[trajector][:30])
+    #     probs = np.array(probs)# - min(probs)
+    #     probs /= probs.sum()
+
+    #     for sentence,annotation in zip(sentences,annotations):
+    #         print sentence, annotation
+    #         for chunk in annotation:
+    #             if chunk is not None:
+    #                 try:
+    #                     golden_posteriors = get_all_sentence_posteriors(chunk, all_meanings, golden=True, printing=False)
+    #                 except ParseError as e:
+    #                     logger( e )
+    #                     prob = 0
+    #                     rank = len(meanings)-1
+    #                     entropy = 0
+    #                     ed = len(sentence)
+    #                     golden_log_probs.append( prob )
+    #                     golden_entropies.append( entropy )
+    #                     golden_ranks.append( rank )
+    #                     min_dists.append( ed )
+    #                     continue
+    #                 epsilon = 1e-15
+    #                 ps = [[golden_posteriors[lmk]*golden_posteriors[rel],(lmk,rel)] for lmk, rel in all_meanings]
+    #                 ps = sorted(ps,reverse=True)
+    #                 print chunk
+    #                 for p,m in ps[:10]:
+    #                     print p, m2s(*m)
+    #                 raw_input()
+
+        # for i,(p,sm) in enumerate(zip(probs[:15],sorted_meanings[:15])):
+        #     lm,re = sm
+        #     logger( '%i: %f %s' % (i,p,m2s(*sm)) )
 
     # # print 'good', good
     # print 'bad', bad
@@ -296,8 +445,12 @@ if __name__ == '__main__':
 
     # thing = set()
     for s in all_scenes:
-    #     for loc_desc in s['loc_descs']:
+    #     for lmk, loc_desc in zip(s['lmks'],s['loc_descs']):
+    #         print lmk,
     #         for l in loc_desc:
+    #             print l,'--',
+    #         print
+    #     print '----------------------------------------------'
     #             thing.add(l)
 
         # s['loc_descs'] = [None]*10#len(s['loc_descs'])
