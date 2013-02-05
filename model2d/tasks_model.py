@@ -157,11 +157,45 @@ if __name__ == '__main__':
     parser.add_argument('-p', '--num-processors', type=int, default=7)
     parser.add_argument('-s', '--num-samples', action='store_true')
     parser.add_argument('-d', '--scene-directory', type=str)
+    parser.add_argument('-t', '--tag', type=str)
 
     args = parser.parse_args()
 
     engine.echo = False
     create_all()
+
+    test_indices = [3411,2701,1764,264,1142,852,2028,2774,3341,161,779,536,3853,357,249,2569,4175,2971,1368,3305,2586,591,3710,1909,
+    4085,443,582,3895,3291,3535,2487,3204,476,3042,596,3524,1206,1284,4293,1168,410,3417,1332,892,623,2406,778,3472,2864,4174,1462,
+    3416,453,4397,2036,1017,1033,3491,1207,4163,1092,2897,1445,2990,473,1155,510,1671,3957,561,1043,182,1854,238,2900,444,987,3041,
+    612,1167,3594,2739,677,2585,2170,636,3940,2680,848,2938,2328,2829,3331,2871,2122,2169,3093,884,3557,525,3684,2277,4399,1135,1703,
+    3268,3679,686,2448,992,3655,3711,1748,3881,3473,1756,3518,2376,3223,265,3026,3516,3749,1893,1496,4065,1280,378,3025,3348,820,1585,
+    2257,3146,3147,3094,3198,3064,4189,693,1707,3831,3606,2758,988,4126,4352,2218,883,3288,2620,2227,2745,2775,4405,1061,2907,2753,3027,
+    370,3904,2401,3555,978,1958,1930,3038,2439,962,491,4317,2314,2334,2638,3312,3724,3455,3435,543,2444,3997,4049,3935,3842,1527,735,4053,
+    4135,3539,730,2482,3188,825,3037,4395,3657,428,3205,1490,3805]
+
+    words = {'between':0,
+             'among':0,
+             'amongst':0,
+             'objects':0,
+             'furthest':0,
+             'farthest':0,
+             'highest':0,
+             'closest':0,
+             'lowest':0,
+             'first':0,
+             'second':0,
+             'third':0,
+             'fourth':0,
+             'fifth':0,
+             'last':0,
+             'viewer':0,
+             'me':0}
+    no_bad_words = 0
+
+    typos = []
+
+    from enchant.checker import SpellChecker
+    chkr = SpellChecker("en_US")
 
     # run.read_scenes(sys.argv[1])
     all_scenes   = []
@@ -183,9 +217,25 @@ if __name__ == '__main__':
                 eyedee = t.id
                 # print lmk, entity_name, lmk_desc, loc_desc
                 if loc_desc:
-
                     all_descs.append(loc_desc)
 
+                if not eyedee in test_indices:
+                    good = True
+                    for word in words.keys():
+                        if word in loc_desc:
+                            words[word]+=1
+                            good = False
+
+                    chkr.set_text(loc_desc)
+                    for err in chkr:
+                        print "ERROR:", err.word
+                        typos.append(err.word)
+                        good = False
+
+                    if good:
+                        no_bad_words+=1
+
+            # chunks = [loc_desc]
                     chunks = []
                     # print loc_desc
                     for part in re.split('\.|;',loc_desc.lower().strip()):
@@ -197,7 +247,7 @@ if __name__ == '__main__':
                                         if parttt.strip() != u'':
                                             all_descs.append(parttt.strip())
                                             chunks.append(parttt.strip())
-                                            # print '  ',parttt
+                    #                         # print '  ',parttt
                     # raw_input()
 
                     entity_names.append(entity_name)
@@ -212,6 +262,15 @@ if __name__ == '__main__':
 
 
     print 'loaded', len(all_scenes), 'scenes'
+
+    print words
+    print sum(words.values())
+    print typos
+    print len(typos)
+
+    import IPython
+    IPython.embed()
+    exit()
 
     sp_db = SentenceParse.get_sentence_parse(all_descs[0])
     try:
@@ -250,11 +309,17 @@ if __name__ == '__main__':
             SentenceParse.add_sentence_parse(s,p,m)
         exit("Parsed everything")
 
-    good = 0
-    bad = 0
+    test_scenes = []
+
     for s in all_scenes:
         toremove = []
+        test_scene = {'scene':s['scene'],
+                      'speaker':s['speaker'],
+                      'lmks':[],
+                      'loc_descs':[],
+                      'ids':[]}
         for i,(lmk,sentence_chunks, eyedee) in enumerate(zip(s['lmks'], s['loc_descs'], s['ids'])):
+            original = list(sentence_chunks)
             # print i, lmk,
             # for l in sentence_chunks:
             #     print l,'--',
@@ -264,35 +329,35 @@ if __name__ == '__main__':
                     parsetree, modparsetree = get_modparse(chunk)
                     # print modparsetree
                     # raw_input()
-                    if ('(NP' in modparsetree or '(PP' in modparsetree):
-                        sentence_chunks.remove(chunk)
-                        pass
-                    else:
-                        if 'objects' in chunk:
-                            bad += 1
-                            # print ' '.join(sentence_chunks),'\n',chunk,'\n ', parsetree,'\n  ', modparsetree,'\n'
-                            # raw_input()
-                            sentence_chunks.remove(chunk)
-                        elif (' side' in chunk or
-                           # 'end' in chunk or
-                           # 'edge' in chunk or
-                           'corner' in chunk or 
-                           'middle' in chunk or 
-                           'center' in chunk or
-                           'centre' in chunk):
-                            if not ('table' in chunk):
-                                sentence_chunks.remove(chunk)
-                            else:
-                                good += 1
+#                    if ('(NP' in modparsetree or '(PP' in modparsetree):
+#                        sentence_chunks.remove(chunk)
+#                    elif 'objects' in chunk:
+#                        sentence_chunks.remove(chunk)
+#                    elif (' side' in chunk or
+#                          'end' in chunk or
+#                          'edge' in chunk or
+#                          'corner' in chunk or 
+#                          'middle' in chunk or 
+#                          'center' in chunk or
+#                          'centre' in chunk) and not ('table' in chunk):
+#                        sentence_chunks.remove(chunk)
+#                    elif 'viewer' in chunk or 'between' in chunk:
+#                        sentence_chunks.remove(chunk)
+    
                 except ParseError:
                     sentence_chunks.remove(chunk)
                     continue
 
-            if len(sentence_chunks) == 0:
+            if i in test_indices:
                 toremove.append(i)
-                # s['lmks'].remove(lmk)
-                # s['loc_descs'].remove(sentence_chunks)
-                # s['ids'].remove(eyedee)
+                test_scene['lmks'].append(lmk)
+                test_scene['loc_descs'].append(original)
+                test_scene['ids'].append(eyedee)
+            elif len(sentence_chunks) == 0:
+                toremove.append(i)
+            
+        test_scenes.append(test_scene)
+
 
         for i in reversed(toremove):
             del s['lmks'][i]
@@ -433,43 +498,30 @@ if __name__ == '__main__':
     # # print 'good', good
     # print 'bad', bad
 
-    # something = [3411,2701,1764,264,1142,852,2028,2774,3341,161,779,536,3853,357,249,2569,4175,2971,1368,3305,2586,591,3710,1909,
-    # 4085,443,582,3895,3291,3535,2487,3204,476,3042,596,3524,1206,1284,4293,1168,410,3417,1332,892,623,2406,778,3472,2864,4174,1462,
-    # 3416,453,4397,2036,1017,1033,3491,1207,4163,1092,2897,1445,2990,473,1155,510,1671,3957,561,1043,182,1854,238,2900,444,987,3041,
-    # 612,1167,3594,2739,677,2585,2170,636,3940,2680,848,2938,2328,2829,3331,2871,2122,2169,3093,884,3557,525,3684,2277,4399,1135,1703,
-    # 3268,3679,686,2448,992,3655,3711,1748,3881,3473,1756,3518,2376,3223,265,3026,3516,3749,1893,1496,4065,1280,378,3025,3348,820,1585,
-    # 2257,3146,3147,3094,3198,3064,4189,693,1707,3831,3606,2758,988,4126,4352,2218,883,3288,2620,2227,2745,2775,4405,1061,2907,2753,3027,
-    # 370,3904,2401,3555,978,1958,1930,3038,2439,962,491,4317,2314,2334,2638,3312,3724,3455,3435,543,2444,3997,4049,3935,3842,1527,735,4053,
-    # 4135,3539,730,2482,3188,825,3037,4395,3657,428,3205,1490,3805]
-
-
-    # thing = set()
+    total = 0
+    print 'Train set:'
     for s in all_scenes:
-    #     for lmk, loc_desc in zip(s['lmks'],s['loc_descs']):
-    #         print lmk,
-    #         for l in loc_desc:
-    #             print l,'--',
-    #         print
-    #     print '----------------------------------------------'
-    #             thing.add(l)
+#        for lmk, loc_desc in zip(s['lmks'],s['loc_descs']):
+#            print lmk,
+#            for l in loc_desc:
+#                print l,'--',
+#            print
+#        print '----------------------------------------------'
 
-        # s['loc_descs'] = [None]*10#len(s['loc_descs'])
-        # for eyedee in s['ids']:
-        #     if eyedee in something:
-        #         print eyedee
-        # for loc_desc in s['loc_descs']:           
-    #         print '--'.join(loc_desc)
-        print len(s['loc_descs']), len(s['lmks'])
-        # s['loc_descs'] = s['loc_descs'][:10]
-        # s['lmks'] = s['lmks'][:10]
-        # s['ids'] = s['ids'][:10]
-    # exit()
-    # how_many = 100
-    # for s in all_scenes:
-    #     s['lmks'] = s['lmks'][:how_many]
-    #     s['loc_descs'] = s['loc_descs'][:how_many]
-    #     s['ids'] = s['ids'][:how_many]
+        # s['loc_descs'] = [None]*len(s['loc_descs'])
 
+#        for eyedee in s['ids']:
+#            if eyedee in something:
+#                print eyedee
+        print '  ',len(s['loc_descs']), len(s['lmks'])
+        total+=len(s['lmks'])
+    print '   total:',total
+    total = 0
+    print 'Test set:'
+    for s in test_scenes:
+        print '  ',len(s['loc_descs']), len(s['lmks'])
+        total+=len(s['lmks'])
+    print '   total:',total
 
     # scene, speaker = construct_training_scene()
 
@@ -478,8 +530,28 @@ if __name__ == '__main__':
         num_processors=args.num_processors, 
         num_samples=args.num_samples, 
         scene_descs=all_scenes,
+        learn_objects=True,
+        tag = args.tag,
         golden_metric=False, 
         mass_metric=False, 
         student_metric=False,
         choosing_metric=False, 
         step=0.02)
+
+    object_correction_testing.autocorrect(1,
+        scale=args.update_scale, 
+        num_processors=args.num_processors, 
+        num_samples=args.num_samples, 
+        scene_descs=test_scenes,
+        learn_objects=False,
+        tag = args.tag,
+        golden_metric=False, 
+        mass_metric=False, 
+        student_metric=False,
+        choosing_metric=False, 
+        step=0.02)
+
+#    print 'trained on:',len(all_scenes[0]['lmks'])+len(all_scenes[1]['lmks'])+len(all_scenes[2]['lmks'])+len(all_scenes[3]['lmks'])
+#    print 'tested on:',len(all_scenes[4]['lmks'])
+    print 'Trained on:',len(all_scenes[0]['lmks'])+len(all_scenes[1]['lmks'])+len(all_scenes[2]['lmks'])+len(all_scenes[3]['lmks'])+len(all_scenes[4]['lmks'])
+    print 'Tested on:',len(test_scenes[0]['lmks'])+len(test_scenes[1]['lmks'])+len(test_scenes[2]['lmks'])+len(test_scenes[3]['lmks'])+len(test_scenes[4]['lmks'])
