@@ -175,7 +175,6 @@ if __name__ == '__main__':
 
     words = {'between':0,
              'among':0,
-             'amongst':0,
              'objects':0,
              'furthest':0,
              'farthest':0,
@@ -196,6 +195,7 @@ if __name__ == '__main__':
 
     from enchant.checker import SpellChecker
     chkr = SpellChecker("en_US")
+    total = 0
 
     # run.read_scenes(sys.argv[1])
     all_scenes   = []
@@ -219,21 +219,23 @@ if __name__ == '__main__':
                 if loc_desc:
                     all_descs.append(loc_desc)
 
-                if not eyedee in test_indices:
-                    good = True
-                    for word in words.keys():
-                        if word in loc_desc:
-                            words[word]+=1
-                            good = False
+                    if not eyedee in test_indices:
+                        total += 1
+                        good = True
+                        for word in words.keys():
+                            if word in loc_desc:
+                                words[word]+=1
+                                good = False
 
-                    chkr.set_text(loc_desc)
-                    for err in chkr:
-                        print "ERROR:", err.word
-                        typos.append(err.word)
-                        good = False
+                        chkr.set_text(loc_desc.lower())
+                        for err in chkr:
+                            # print "ERROR:", err.word
+                            if not ('colour' in err.word or 'centre' in err.word):
+                                typos.append(err.word)
+                                good = False
 
-                    if good:
-                        no_bad_words+=1
+                        if good:
+                            no_bad_words+=1
 
             # chunks = [loc_desc]
                     chunks = []
@@ -263,14 +265,16 @@ if __name__ == '__main__':
 
     print 'loaded', len(all_scenes), 'scenes'
 
-    print words
-    print sum(words.values())
-    print typos
-    print len(typos)
+    # print words
+    # print sum(words.values())
+    # print typos
+    # print len(typos)
+    # print total
+    # print no_bad_words
 
-    import IPython
-    IPython.embed()
-    exit()
+    # import IPython
+    # IPython.embed()
+    # exit()
 
     sp_db = SentenceParse.get_sentence_parse(all_descs[0])
     try:
@@ -348,7 +352,7 @@ if __name__ == '__main__':
                     sentence_chunks.remove(chunk)
                     continue
 
-            if i in test_indices:
+            if eyedee in test_indices:
                 toremove.append(i)
                 test_scene['lmks'].append(lmk)
                 test_scene['loc_descs'].append(original)
@@ -522,7 +526,7 @@ if __name__ == '__main__':
         print '  ',len(s['loc_descs']), len(s['lmks'])
         total+=len(s['lmks'])
     print '   total:',total
-
+    exit()
     # scene, speaker = construct_training_scene()
 
     object_correction_testing.autocorrect(1,
