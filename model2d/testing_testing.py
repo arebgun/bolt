@@ -118,6 +118,7 @@ def autocorrect(scene_descs, test_scene_descs, tag='', chunksize=5, scale=1000, 
         object_answers = []
         object_distributions = []
         object_sentences =[]
+        object_ids = []
 
         epsilon = 1e-15
 
@@ -138,6 +139,7 @@ def autocorrect(scene_descs, test_scene_descs, tag='', chunksize=5, scale=1000, 
                 sentences = [describe( head_on, trajector, sampled_landmark, sampled_relation )]
 
             object_sentences.append( ' '.join(sentences) )
+            object_ids.append( data['ids'][iteration] )
             logger( 'Teacher says: %s' % ' '.join(sentences))
             for i,(p,sm) in enumerate(zip(probs[:15],sorted_meanings[:15])):
                 lm,re = sm
@@ -192,7 +194,7 @@ def autocorrect(scene_descs, test_scene_descs, tag='', chunksize=5, scale=1000, 
                         except:
                             pass
 
-        return zip(object_answers, object_distributions, object_sentences)
+        return zip(object_answers, object_distributions, object_sentences, object_ids)
 
     filename = 'testing'
     filename += ('_u%i_%s_%s.shelf' % (scale,tag,time.asctime(time.localtime()).replace(' ','_').replace(':','')))
@@ -200,10 +202,12 @@ def autocorrect(scene_descs, test_scene_descs, tag='', chunksize=5, scale=1000, 
     f['object_answers']       = []
     f['object_distributions'] = []
     f['object_sentences']     = []
+    f['object_ids']           = []
 
     f['test_object_answers']       = []
     f['test_object_distributions'] = []
     f['test_object_sentences']     = []
+    f['test_object_ids']           = []
     f.close()
 
     def interleave(*args):
@@ -323,20 +327,22 @@ def autocorrect(scene_descs, test_scene_descs, tag='', chunksize=5, scale=1000, 
         lists = parmap(loop,batch)
         # lists = map(loop,new_scene_descs)
         result = list(interleave(*lists))
-        object_answers, object_distributions, object_sentences = zip(*result)
+        object_answers, object_distributions, object_sentences, object_ids = zip(*result)
 
         test_lists = parmap(loop,test_scene_descs)
         test_result = list(interleave(*lists))
-        test_object_answers, test_object_distributions, test_object_sentences = zip(*test_result)
+        test_object_answers, test_object_distributions, test_object_sentences, test_object_ids = zip(*test_result)
 
         f = shelve.open(filename)
         f['object_answers']       += object_answers
         f['object_distributions'] += object_distributions
         f['object_sentences']     += object_sentences
+        f['object_ids']           += object_ids
 
         f['test_object_answers']       .append(test_object_answers)
         f['test_object_distributions'] .append(test_object_distributions)
         f['test_object_sentences']     .append(test_object_sentences)
+        f['test_object_ids']           .append(test_object_ids)
 
         f.close()
 
