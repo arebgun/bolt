@@ -25,6 +25,7 @@ from parse import parse_sentences, modify_parses, get_modparse, ParseError
 from models import SentenceParse
 
 import object_correction_testing
+import testing_testing
 
 from location_from_sentence import get_all_sentence_posteriors
 
@@ -362,7 +363,6 @@ if __name__ == '__main__':
             
         test_scenes.append(test_scene)
 
-
         for i in reversed(toremove):
             del s['lmks'][i]
             del s['loc_descs'][i]
@@ -526,34 +526,41 @@ if __name__ == '__main__':
         print '  ',len(s['loc_descs']), len(s['lmks'])
         total+=len(s['lmks'])
     print '   total:',total
-    exit()
-    # scene, speaker = construct_training_scene()
 
-    object_correction_testing.autocorrect(1,
+    testing_testing.autocorrect(
+        all_scenes,
+        test_scenes,
         scale=args.update_scale, 
         num_processors=args.num_processors, 
-        num_samples=args.num_samples, 
-        scene_descs=all_scenes,
-        learn_objects=True,
-        tag = args.tag,
-        golden_metric=False, 
-        mass_metric=False, 
-        student_metric=False,
-        choosing_metric=False, 
+        num_samples=args.num_samples,
+        tag=args.tag,
         step=0.02)
 
-    object_correction_testing.autocorrect(1,
-        scale=args.update_scale, 
-        num_processors=args.num_processors, 
-        num_samples=args.num_samples, 
-        scene_descs=test_scenes,
-        learn_objects=False,
-        tag = args.tag,
-        golden_metric=False, 
-        mass_metric=False, 
-        student_metric=False,
-        choosing_metric=False, 
-        step=0.02)
+    # object_correction_testing.autocorrect(1,
+    #     scale=args.update_scale, 
+    #     num_processors=args.num_processors, 
+    #     num_samples=args.num_samples, 
+    #     scene_descs=all_scenes,
+    #     learn_objects=True,
+    #     tag = args.tag,
+    #     golden_metric=False, 
+    #     mass_metric=False, 
+    #     student_metric=False,
+    #     choosing_metric=False, 
+    #     step=0.02)
+
+    # object_correction_testing.autocorrect(1,
+    #     scale=args.update_scale, 
+    #     num_processors=args.num_processors, 
+    #     num_samples=args.num_samples, 
+    #     scene_descs=test_scenes,
+    #     learn_objects=False,
+    #     tag = args.tag,
+    #     golden_metric=False, 
+    #     mass_metric=False, 
+    #     student_metric=False,
+    #     choosing_metric=False, 
+    #     step=0.02)
 
 #    print 'trained on:',len(all_scenes[0]['lmks'])+len(all_scenes[1]['lmks'])+len(all_scenes[2]['lmks'])+len(all_scenes[3]['lmks'])
 #    print 'tested on:',len(all_scenes[4]['lmks'])
