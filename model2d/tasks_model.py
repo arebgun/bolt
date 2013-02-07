@@ -194,8 +194,8 @@ if __name__ == '__main__':
 
     typos = []
 
-    from enchant.checker import SpellChecker
-    chkr = SpellChecker("en_US")
+#     from enchant.checker import SpellChecker
+#     chkr = SpellChecker("en_US")
     total = 0
 
     # run.read_scenes(sys.argv[1])
@@ -228,12 +228,12 @@ if __name__ == '__main__':
                                 words[word]+=1
                                 good = False
 
-                        chkr.set_text(loc_desc.lower())
-                        for err in chkr:
-                            # print "ERROR:", err.word
-                            if not ('colour' in err.word or 'centre' in err.word):
-                                typos.append(err.word)
-                                good = False
+#                         chkr.set_text(loc_desc.lower())
+#                         for err in chkr:
+#                             # print "ERROR:", err.word
+#                             if not ('colour' in err.word or 'centre' in err.word):
+#                                 typos.append(err.word)
+#                                 good = False
 
                         if good:
                             no_bad_words+=1

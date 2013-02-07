@@ -70,6 +70,7 @@ def autocorrect(scene_descs, test_scene_descs, tag='', chunksize=5, scale=1000, 
 
     def loop(data):
 
+        time.sleep(data['delay'])
 
         scene = data['scene']
         speaker = data['speaker']
@@ -77,6 +78,7 @@ def autocorrect(scene_descs, test_scene_descs, tag='', chunksize=5, scale=1000, 
         num_iterations = len(data['loc_descs'])
 
         all_meanings = data['all_meanings']
+        loi = data['loi']
         loi_infos = data['loi_infos']
         landmarks = data['landmarks']
         sorted_meaning_lists = data['sorted_meaning_lists']
@@ -199,6 +201,7 @@ def autocorrect(scene_descs, test_scene_descs, tag='', chunksize=5, scale=1000, 
     filename = 'testing'
     filename += ('_u%i_%s_%s.shelf' % (scale,tag,time.asctime(time.localtime()).replace(' ','_').replace(':','')))
     f = shelve.open(filename)
+    f['chunks']                      = []
     f['object_answers']       = []
     f['object_distributions'] = []
     f['object_sentences']     = []
@@ -225,11 +228,20 @@ def autocorrect(scene_descs, test_scene_descs, tag='', chunksize=5, scale=1000, 
     processors_per_scene = int(num_processors/num_scenes)
     # new_scene_descs = scene_descs
     new_scene_descs = []
+    new_test_scene_descs = []
 
-    for scene_desc in scene_descs:
+    cache = shelve.open('cache.shelf')
+
+    # if 'new_scene_descs' in cache:
+    #     new_scene_descs = cache['new_scene_descs']
+    #     new_test_scene_descs = cache['new_test_scene_descs']
+    # else:
+    for i,(scene_desc, test_scene_desc) in enumerate(zip(scene_descs,test_scene_descs)):
 
         scene = scene_desc['scene']
         speaker = scene_desc['speaker']
+        assert(scene == test_scene_desc['scene'])
+        assert(speaker == test_scene_desc['speaker'])
 
         utils.scene.set_scene(scene,speaker)
         scene_bb = scene.get_bounding_box()
@@ -281,18 +293,47 @@ def autocorrect(scene_descs, test_scene_descs, tag='', chunksize=5, scale=1000, 
 
         together = zip(scene_desc['lmks'],scene_desc['loc_descs'],scene_desc['ids'])
         n = int(ceil(len(together)/float(processors_per_scene)))
-        for chunk in chunks(together,n):
+        for j,chunk in enumerate(chunks(together,n)):
             lmks, loc_descs, ids = zip(*chunk)
-            new_scene_descs.append( {'scene':scene_desc['scene'],
-                                     'speaker':scene_desc['speaker'],
+            new_scene_descs.append( {'scene':scene,
+                                     'speaker':speaker,
                                      'lmks':lmks,
                                      'loc_descs':loc_descs,
                                      'ids':ids,
                                      'all_meanings':all_meanings,
+                                     'loi':loi,
                                      'loi_infos':loi_infos,
                                      'landmarks':landmarks,
                                      'sorted_meaning_lists':sorted_meaning_lists,
-                                     'learn_objects':True})
+                                     'learn_objects':True,
+                                     'delay':(j*num_scenes+i)/10.0})
+
+#        test_scene_desc['all_meanings'] = all_meanings
+#        test_scene_desc['loi'] = loi
+#        test_scene_desc['loi_infos'] = loi_infos
+#        test_scene_desc['landmarks'] = landmarks
+#        test_scene_desc['sorted_meaning_lists'] = sorted_meaning_lists
+#        test_scene_desc['learn_objects'] = False
+
+        together = zip(test_scene_desc['lmks'],test_scene_desc['loc_descs'],test_scene_desc['ids'])
+        n = int(ceil(len(together)/float(processors_per_scene)))
+        for j,chunk in enumerate(chunks(together,n)):
+            lmks, loc_descs, ids = zip(*chunk)
+            new_test_scene_descs.append( {'scene':scene,
+                                     'speaker':speaker,
+                                     'lmks':lmks,
+                                     'loc_descs':loc_descs,
+                                     'ids':ids,
+                                     'all_meanings':all_meanings,
+                                     'loi':loi,
+                                     'loi_infos':loi_infos,
+                                     'landmarks':landmarks,
+                                     'sorted_meaning_lists':sorted_meaning_lists,
+                                     'learn_objects':False,
+                                     'delay':(j*num_scenes+i)/10.0})
+
+        # cache['new_scene_descs'] = new_scene_descs
+        # cache['new_test_scene_descs'] = new_test_scene_descs
 
     # chunksize = 5
     proc_batches = []
@@ -301,36 +342,35 @@ def autocorrect(scene_descs, test_scene_descs, tag='', chunksize=5, scale=1000, 
         for chunk in chunks(zip(scene['lmks'],scene['loc_descs'],scene['ids']),chunksize):
             lmks, loc_descs, ids = zip(*chunk)
             proc_batch.append({
-                 'scene':scene_desc['scene'],
-                 'speaker':scene_desc['speaker'],
+                 'scene':scene['scene'],
+                 'speaker':scene['speaker'],
                  'all_meanings':scene['all_meanings'],
+                 'loi':scene['loi'],
                  'loi_infos':scene['loi_infos'],
                  'landmarks':scene['landmarks'],
                  'sorted_meaning_lists':scene['sorted_meaning_lists'],
                  'learn_objects':scene['learn_objects'],
                  'lmks':lmks,
                  'loc_descs':loc_descs,
-                 'ids':ids})
+                 'ids':ids,
+                 'delay':scene['delay']})
         proc_batches.append(proc_batch)
     batches = map(None,*proc_batches)
     batches = map(lambda x: filter(None,x), batches)
-
-
-    for scene in test_scene_descs:
-        scene['learn_objects']=False
 
     print len(batches)
     for batch in batches:
         print ' ',len(batch)
 
     for batch in batches:
-        lists = parmap(loop,batch)
-        # lists = map(loop,new_scene_descs)
+        # lists = parmap(loop,batch)
+        lists = map(loop,batch)
         result = list(interleave(*lists))
         object_answers, object_distributions, object_sentences, object_ids = zip(*result)
 
-        test_lists = parmap(loop,test_scene_descs)
-        test_result = list(interleave(*lists))
+        # test_lists = parmap(loop,new_test_scene_descs)
+        test_lists = map(loop,new_test_scene_descs)
+        test_result = list(interleave(*test_lists))
         test_object_answers, test_object_distributions, test_object_sentences, test_object_ids = zip(*test_result)
 
         f = shelve.open(filename)
@@ -339,10 +379,12 @@ def autocorrect(scene_descs, test_scene_descs, tag='', chunksize=5, scale=1000, 
         f['object_sentences']     += object_sentences
         f['object_ids']           += object_ids
 
-        f['test_object_answers']       .append(test_object_answers)
-        f['test_object_distributions'] .append(test_object_distributions)
-        f['test_object_sentences']     .append(test_object_sentences)
-        f['test_object_ids']           .append(test_object_ids)
+        f['chunks'] += [len(result)]
+
+        f['test_object_answers']       += [test_object_answers]
+        f['test_object_distributions'] += [test_object_distributions]
+        f['test_object_sentences']     += [test_object_sentences]
+        f['test_object_ids']           += [test_object_ids]
 
         f.close()
 
