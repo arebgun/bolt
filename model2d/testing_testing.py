@@ -45,6 +45,7 @@ import time
 import shelve
 
 from semantics.language_generator import describe
+from parse import ParseError
 # import IPython
 # IPython.embed()
 
@@ -63,7 +64,7 @@ def parmap(f,X):
     [p.join() for p in proc]
     return ret
 
-def autocorrect(scene_descs, test_scene_descs, tag='', chunksize=5, scale=1000, num_processors=7, num_samples=5, step=0.04):
+def autocorrect(scene_descs, test_scene_descs, turk_answers, tag='', chunksize=5, scale=1000, num_processors=7, num_samples=5, step=0.04):
     # plt.ion()
 
     printing=False
@@ -96,7 +97,18 @@ def autocorrect(scene_descs, test_scene_descs, tag='', chunksize=5, scale=1000, 
 
                 combined_heatmap = None
                 for sentence in sentences:
-                    posteriors = get_all_sentence_posteriors(sentence, all_meanings, printing=printing)
+                    posteriors = None
+                    while not posteriors:
+                        try:
+                            posteriors = get_all_sentence_posteriors(sentence, all_meanings, printing=printing)
+                        except ParseError as pe:
+                            raise pe
+                        except Exception as e:
+                            print e
+                            sleeptime = random()*0.5
+                            logger('Sleeping for %f and retrying "%s"' % (sleeptime,sentence))
+                            time.sleep(sleeptime)
+                            continue
 
                     big_heatmap1 = None
                     for m,(h1,h2) in zip(ms, heatmapss):
@@ -151,7 +163,12 @@ def autocorrect(scene_descs, test_scene_descs, tag='', chunksize=5, scale=1000, 
 
             try:
                 combined_heatmaps = heatmaps_for_sentences(sentences, all_meanings, loi_infos, xs, ys, scene, speaker, step=step)
-
+            except ParseError as e:
+                logger( 'Unable to get object from sentence. %s' % e, 'fail' )
+                answer = None
+                top_lmk = None
+                distribution = [(0,False)]
+            else:
                 for combined_heatmap,obj_lmk in zip(combined_heatmaps, loi):
 
                     ps = [p for (x,y),p in zip(list(product(xs,ys)),combined_heatmap) if obj_lmk.representation.contains_point( Vec2(x,y) )]
@@ -162,15 +179,10 @@ def autocorrect(scene_descs, test_scene_descs, tag='', chunksize=5, scale=1000, 
                 top_p, top_lmk = lmk_probs[0]
                 lprobs, lmkss = zip(*lmk_probs)
 
-                answer, distribution = loi.index(trajector), [ (lprob, loi.index(lmk)) for lprob,lmk in lmk_probs ]
+                answer, distribution = trajector.name, [ (lprob, lmk.name) for lprob,lmk in lmk_probs ]
                 logger( sorted(zip(np.array(lprobs)/sum(lprobs), [(l.name, l.color, l.object_class) for l in lmkss]), reverse=True) )
                 logger( 'I bet %f you are talking about a %s %s %s' % (top_p/sum(lprobs), top_lmk.name, top_lmk.color, top_lmk.object_class) )
                 # objects.append(top_lmk)
-            except Exception as e:
-                logger( 'Unable to get object from sentence. %s' % e, 'fail' )
-                answer = None
-                top_lmk = None
-                distribution = [(0,False)]
 
             object_answers.append( answer )
             object_distributions.append( distribution )
@@ -201,11 +213,14 @@ def autocorrect(scene_descs, test_scene_descs, tag='', chunksize=5, scale=1000, 
     filename = 'testing'
     filename += ('_u%i_%s_%s.shelf' % (scale,tag,time.asctime(time.localtime()).replace(' ','_').replace(':','')))
     f = shelve.open(filename)
-    f['chunks']                      = []
-    f['object_answers']       = []
-    f['object_distributions'] = []
-    f['object_sentences']     = []
-    f['object_ids']           = []
+
+    f['turk_answers']              = turk_answers
+
+    f['chunks']                    = []
+    f['object_answers']            = []
+    f['object_distributions']      = []
+    f['object_sentences']          = []
+    f['object_ids']                = []
 
     f['test_object_answers']       = []
     f['test_object_distributions'] = []
@@ -230,7 +245,7 @@ def autocorrect(scene_descs, test_scene_descs, tag='', chunksize=5, scale=1000, 
     new_scene_descs = []
     new_test_scene_descs = []
 
-    cache = shelve.open('cache.shelf')
+    # cache = shelve.open('cache.shelf')
 
     # if 'new_scene_descs' in cache:
     #     new_scene_descs = cache['new_scene_descs']
@@ -363,13 +378,13 @@ def autocorrect(scene_descs, test_scene_descs, tag='', chunksize=5, scale=1000, 
         print ' ',len(batch)
 
     for batch in batches:
-        # lists = parmap(loop,batch)
-        lists = map(loop,batch)
+        lists = parmap(loop,batch)
+        # lists = map(loop,batch)
         result = list(interleave(*lists))
         object_answers, object_distributions, object_sentences, object_ids = zip(*result)
 
-        # test_lists = parmap(loop,new_test_scene_descs)
-        test_lists = map(loop,new_test_scene_descs)
+        test_lists = parmap(loop,new_test_scene_descs)
+        # test_lists = map(loop,new_test_scene_descs)
         test_result = list(interleave(*test_lists))
         test_object_answers, test_object_distributions, test_object_sentences, test_object_ids = zip(*test_result)
 
@@ -385,7 +400,6 @@ def autocorrect(scene_descs, test_scene_descs, tag='', chunksize=5, scale=1000, 
         f['test_object_distributions'] += [test_object_distributions]
         f['test_object_sentences']     += [test_object_sentences]
         f['test_object_ids']           += [test_object_ids]
-
         f.close()
 
 

@@ -146,8 +146,19 @@ class tasks_descriptionquestion(Base):
     location_description = Column(String)
     # use_in_object_tasks = Column(Boolean)
 
-    def __unicode__(self):
-        return u'(%s,%s)' % (self.x, self.y)
+class object_tasks_entitybinding(Base):
+    @declared_attr
+    def __tablename__(cls):
+        return cls.__name__.lower()
+
+    id = Column(Integer, primary_key=True)
+
+    created = Column(DateTime, nullable=False)
+    modified = Column(DateTime, nullable=False)
+
+    task_id = Column(Integer)
+    description_id = Column(Integer)
+    binding = Column(Integer)
 
 
 if __name__ == '__main__':
@@ -173,6 +184,10 @@ if __name__ == '__main__':
     2257,3146,3147,3094,3198,3064,4189,693,1707,3831,3606,2758,988,4126,4352,2218,883,3288,2620,2227,2745,2775,4405,1061,2907,2753,3027,
     370,3904,2401,3555,978,1958,1930,3038,2439,962,491,4317,2314,2334,2638,3312,3724,3455,3435,543,2444,3997,4049,3935,3842,1527,735,4053,
     4135,3539,730,2482,3188,825,3037,4395,3657,428,3205,1490,3805]
+
+    test_set = defaultdict(list)
+    for o in object_tasks_entitybinding.query().all():
+        test_set[o.description_id].append( o.binding )
 
     words = {'between':0,
              'among':0,
@@ -216,6 +231,17 @@ if __name__ == '__main__':
                 lmk_desc = t.object_description
                 loc_desc = t.location_description
                 eyedee = t.id
+
+                if eyedee in test_set:
+                    bindings = []
+                    if len(test_set[eyedee]) < 5:
+                        del test_set[eyedee]
+                    else:
+                        for entity_id in test_set[eyedee]:
+                            entity_name = scenes_entity.query().filter(scenes_entity.id==entity_id).one().name
+                            bindings.append( 'object_%s' % entity_name )
+                        test_set[eyedee] = bindings
+
                 # print lmk, entity_name, lmk_desc, loc_desc
                 if loc_desc:
                     all_descs.append(loc_desc)
@@ -265,6 +291,10 @@ if __name__ == '__main__':
 
 
     print 'loaded', len(all_scenes), 'scenes'
+
+    # for value in test_set.values():
+    #     print value
+    # exit()
 
     # print words
     # print sum(words.values())
@@ -353,7 +383,7 @@ if __name__ == '__main__':
                     sentence_chunks.remove(chunk)
                     continue
 
-            if eyedee in test_indices:
+            if eyedee in test_set:
                 toremove.append(i)
                 test_scene['lmks'].append(lmk)
                 test_scene['loc_descs'].append(original)
@@ -530,6 +560,7 @@ if __name__ == '__main__':
     testing_testing.autocorrect(
         all_scenes,
         test_scenes,
+        test_set,
         scale=args.update_scale, 
         num_processors=args.num_processors, 
         num_samples=args.num_samples,
