@@ -154,7 +154,9 @@ def autocorrect(scene_descs, test_scene_descs, turk_answers, tag='', chunksize=5
 
             object_sentences.append( ' '.join(sentences) )
             object_ids.append( data['ids'][iteration] )
+
             logger( 'Teacher says: %s' % ' '.join(sentences))
+
             for i,(p,sm) in enumerate(zip(probs[:15],sorted_meanings[:15])):
                 lm,re = sm
                 logger( '%i: %f %s' % (i,p,m2s(*sm)) )
@@ -165,9 +167,8 @@ def autocorrect(scene_descs, test_scene_descs, turk_answers, tag='', chunksize=5
                 combined_heatmaps = heatmaps_for_sentences(sentences, all_meanings, loi_infos, xs, ys, scene, speaker, step=step)
             except ParseError as e:
                 logger( 'Unable to get object from sentence. %s' % e, 'fail' )
-                answer = None
                 top_lmk = None
-                distribution = [(0,False)]
+                distribution = [(0, False, False)]
             else:
                 for combined_heatmap,obj_lmk in zip(combined_heatmaps, loi):
 
@@ -179,11 +180,12 @@ def autocorrect(scene_descs, test_scene_descs, turk_answers, tag='', chunksize=5
                 top_p, top_lmk = lmk_probs[0]
                 lprobs, lmkss = zip(*lmk_probs)
 
-                answer, distribution = trajector.name, [ (lprob, lmk.name) for lprob,lmk in lmk_probs ]
+                distribution = [ (lprob, lmk.name, loi.index(lmk)) for lprob,lmk in lmk_probs ]
                 logger( sorted(zip(np.array(lprobs)/sum(lprobs), [(l.name, l.color, l.object_class) for l in lmkss]), reverse=True) )
                 logger( 'I bet %f you are talking about a %s %s %s' % (top_p/sum(lprobs), top_lmk.name, top_lmk.color, top_lmk.object_class) )
                 # objects.append(top_lmk)
 
+            answer = (trajector.name,loi.index(trajector))
             object_answers.append( answer )
             object_distributions.append( distribution )
 

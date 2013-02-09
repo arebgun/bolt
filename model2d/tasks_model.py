@@ -216,6 +216,7 @@ if __name__ == '__main__':
     # run.read_scenes(sys.argv[1])
     all_scenes   = []
     all_descs = []
+    turkers_correct = []
     for s in scenes_scene.query().all():
         entity_names = []
         lmks         = []
@@ -230,23 +231,23 @@ if __name__ == '__main__':
                 lmk = scene.landmarks['object_%s' % entity_name]
                 lmk_desc = t.object_description
                 loc_desc = t.location_description
-                eyedee = t.id
+                description_id = t.id
 
-                if eyedee in test_set:
+                if description_id in test_set:
                     bindings = []
-                    if len(test_set[eyedee]) < 5:
-                        del test_set[eyedee]
+                    if len(test_set[description_id]) < 5:
+                        del test_set[description_id]
                     else:
-                        for entity_id in test_set[eyedee]:
-                            entity_name = scenes_entity.query().filter(scenes_entity.id==entity_id).one().name
-                            bindings.append( 'object_%s' % entity_name )
-                        test_set[eyedee] = bindings
+                        for binding in test_set[description_id]:
+                            turkers_correct.append( binding == int(entity_name) )
+                            bindings.append( 'object_%s' % binding )
+                        test_set[description_id] = bindings
 
                 # print lmk, entity_name, lmk_desc, loc_desc
                 if loc_desc:
                     all_descs.append(loc_desc)
 
-                    if not eyedee in test_indices:
+                    if not description_id in test_indices:
                         total += 1
                         good = True
                         for word in words.keys():
@@ -285,12 +286,19 @@ if __name__ == '__main__':
                     # loc_descs.append(loc_desc)
                     # loc_descs.append(parttt.strip())
                     loc_descs.append(chunks)
-                    ids.append( eyedee )
+                    ids.append( description_id )
 
             all_scenes.append( {'scene':scene,'speaker':speaker,'lmks':lmks,'loc_descs':loc_descs, 'ids':ids} )
 
 
     print 'loaded', len(all_scenes), 'scenes'
+    print 'Turkers_correct: Total: %i, Out of: %i, Fraction: %f' % (sum(turkers_correct),len(turkers_correct),float(sum(turkers_correct))/len(turkers_correct))
+
+    # import shelve
+    # f = shelve.open('testing_u1000_not_memory_Fri_Feb__8_145640_2013.shelf')
+    # f['turk_answers'] = test_set
+    # f.close()
+    # exit()
 
     # for value in test_set.values():
     #     print value
@@ -386,7 +394,10 @@ if __name__ == '__main__':
             if eyedee in test_set:
                 toremove.append(i)
                 test_scene['lmks'].append(lmk)
-                test_scene['loc_descs'].append(original)
+                if len(sentence_chunks) == 0:
+                    test_scene['loc_descs'].append(original)
+                else:
+                    test_scene['loc_descs'].append(sentence_chunks)
                 test_scene['ids'].append(eyedee)
             elif len(sentence_chunks) == 0:
                 toremove.append(i)
@@ -565,7 +576,8 @@ if __name__ == '__main__':
         num_processors=args.num_processors, 
         num_samples=args.num_samples,
         tag=args.tag,
-        step=0.02)
+        step=0.02,
+        chunksize=25)
 
     # object_correction_testing.autocorrect(1,
     #     scale=args.update_scale, 
