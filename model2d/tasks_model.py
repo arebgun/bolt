@@ -176,14 +176,14 @@ if __name__ == '__main__':
     engine.echo = False
     create_all()
 
-    test_indices = [3411,2701,1764,264,1142,852,2028,2774,3341,161,779,536,3853,357,249,2569,4175,2971,1368,3305,2586,591,3710,1909,
-    4085,443,582,3895,3291,3535,2487,3204,476,3042,596,3524,1206,1284,4293,1168,410,3417,1332,892,623,2406,778,3472,2864,4174,1462,
-    3416,453,4397,2036,1017,1033,3491,1207,4163,1092,2897,1445,2990,473,1155,510,1671,3957,561,1043,182,1854,238,2900,444,987,3041,
-    612,1167,3594,2739,677,2585,2170,636,3940,2680,848,2938,2328,2829,3331,2871,2122,2169,3093,884,3557,525,3684,2277,4399,1135,1703,
-    3268,3679,686,2448,992,3655,3711,1748,3881,3473,1756,3518,2376,3223,265,3026,3516,3749,1893,1496,4065,1280,378,3025,3348,820,1585,
-    2257,3146,3147,3094,3198,3064,4189,693,1707,3831,3606,2758,988,4126,4352,2218,883,3288,2620,2227,2745,2775,4405,1061,2907,2753,3027,
-    370,3904,2401,3555,978,1958,1930,3038,2439,962,491,4317,2314,2334,2638,3312,3724,3455,3435,543,2444,3997,4049,3935,3842,1527,735,4053,
-    4135,3539,730,2482,3188,825,3037,4395,3657,428,3205,1490,3805]
+    # test_indices = [3411,2701,1764,264,1142,852,2028,2774,3341,161,779,536,3853,357,249,2569,4175,2971,1368,3305,2586,591,3710,1909,
+    # 4085,443,582,3895,3291,3535,2487,3204,476,3042,596,3524,1206,1284,4293,1168,410,3417,1332,892,623,2406,778,3472,2864,4174,1462,
+    # 3416,453,4397,2036,1017,1033,3491,1207,4163,1092,2897,1445,2990,473,1155,510,1671,3957,561,1043,182,1854,238,2900,444,987,3041,
+    # 612,1167,3594,2739,677,2585,2170,636,3940,2680,848,2938,2328,2829,3331,2871,2122,2169,3093,884,3557,525,3684,2277,4399,1135,1703,
+    # 3268,3679,686,2448,992,3655,3711,1748,3881,3473,1756,3518,2376,3223,265,3026,3516,3749,1893,1496,4065,1280,378,3025,3348,820,1585,
+    # 2257,3146,3147,3094,3198,3064,4189,693,1707,3831,3606,2758,988,4126,4352,2218,883,3288,2620,2227,2745,2775,4405,1061,2907,2753,3027,
+    # 370,3904,2401,3555,978,1958,1930,3038,2439,962,491,4317,2314,2334,2638,3312,3724,3455,3435,543,2444,3997,4049,3935,3842,1527,735,4053,
+    # 4135,3539,730,2482,3188,825,3037,4395,3657,428,3205,1490,3805]
 
     test_set = defaultdict(list)
     for o in object_tasks_entitybinding.query().all():
@@ -205,12 +205,12 @@ if __name__ == '__main__':
              'last':0,
              'viewer':0,
              'me':0}
-    no_bad_words = 0
-
+    no_bad_words = [
+]
     typos = []
 
-#     from enchant.checker import SpellChecker
-#     chkr = SpellChecker("en_US")
+    from enchant.checker import SpellChecker
+    chkr = SpellChecker("en_US")
     total = 0
 
     # run.read_scenes(sys.argv[1])
@@ -247,23 +247,24 @@ if __name__ == '__main__':
                 if loc_desc:
                     all_descs.append(loc_desc)
 
-                    if not description_id in test_indices:
-                        total += 1
+                    if not description_id in test_set:
+                        if not ('objects' in loc_desc or 'between' in loc_desc):
+                            total += 1
                         good = True
                         for word in words.keys():
                             if word in loc_desc:
                                 words[word]+=1
                                 good = False
 
-#                         chkr.set_text(loc_desc.lower())
-#                         for err in chkr:
-#                             # print "ERROR:", err.word
-#                             if not ('colour' in err.word or 'centre' in err.word):
-#                                 typos.append(err.word)
-#                                 good = False
+                        chkr.set_text(loc_desc.lower())
+                        for err in chkr:
+                            # print "ERROR:", err.word
+                            if not ('colour' in err.word or 'centre' in err.word):
+                                typos.append(err.word)
+                                good = False
 
                         if good:
-                            no_bad_words+=1
+                            no_bad_words.append(description_id)
 
             # chunks = [loc_desc]
                     chunks = []
@@ -280,13 +281,14 @@ if __name__ == '__main__':
                     #                         # print '  ',parttt
                     # raw_input()
 
-                    entity_names.append(entity_name)
-                    lmks.append(lmk)
-                    lmk_descs.append(lmk_desc)
-                    # loc_descs.append(loc_desc)
-                    # loc_descs.append(parttt.strip())
-                    loc_descs.append(chunks)
-                    ids.append( description_id )
+                    if ('objects' not in loc_desc and 'between' not in loc_desc) or description_id in test_set:
+                        entity_names.append(entity_name)
+                        lmks.append(lmk)
+                        lmk_descs.append(lmk_desc)
+                        # loc_descs.append(loc_desc)
+                        # loc_descs.append(parttt.strip())
+                        loc_descs.append(chunks)
+                        ids.append( description_id )
 
             all_scenes.append( {'scene':scene,'speaker':speaker,'lmks':lmks,'loc_descs':loc_descs, 'ids':ids} )
 
@@ -304,12 +306,12 @@ if __name__ == '__main__':
     #     print value
     # exit()
 
-    # print words
-    # print sum(words.values())
+    print words
+    print 'Sum:',sum(words.values())
     # print typos
-    # print len(typos)
-    # print total
-    # print no_bad_words
+    print 'Typos:',len(typos)
+    print 'Total:',total
+    print 'Good:',len(no_bad_words)
 
     # import IPython
     # IPython.embed()
@@ -374,8 +376,8 @@ if __name__ == '__main__':
                     # raw_input()
 #                    if ('(NP' in modparsetree or '(PP' in modparsetree):
 #                        sentence_chunks.remove(chunk)
-#                    elif 'objects' in chunk:
-#                        sentence_chunks.remove(chunk)
+                   # if 'objects' in chunk:
+                   #     sentence_chunks.remove(chunk)
 #                    elif (' side' in chunk or
 #                          'end' in chunk or
 #                          'edge' in chunk or
@@ -405,6 +407,10 @@ if __name__ == '__main__':
         test_scenes.append(test_scene)
 
         for i in reversed(toremove):
+            try:
+                no_bad_words.remove(s['ids'][i])
+            except:
+                pass
             del s['lmks'][i]
             del s['loc_descs'][i]
             del s['ids'][i]
@@ -567,6 +573,7 @@ if __name__ == '__main__':
         print '  ',len(s['loc_descs']), len(s['lmks'])
         total+=len(s['lmks'])
     print '   total:',total
+    print len(no_bad_words)
 
     testing_testing.autocorrect(
         all_scenes,
