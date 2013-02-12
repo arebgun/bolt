@@ -140,11 +140,15 @@ def autocorrect(scene_descs, test_scene_descs, turk_answers, tag='', chunksize=5
             logger(('Iteration %d comprehension' % iteration),'okblue')
 
             trajector = data['lmks'][iteration]
+            if trajector is None:
+                trajector = choice(loi)
             logger( 'Teacher chooses: %s' % trajector )
-            sentences = data['loc_descs'][iteration]
+
             probs, sorted_meanings = zip(*sorted_meaning_lists[trajector][:30])
             probs = np.array(probs)# - min(probs)
             probs /= probs.sum()
+
+            sentences = data['loc_descs'][iteration]
             if sentences is None:
                 (sampled_landmark, sampled_relation) = categorical_sample( sorted_meanings, probs )[0]
                 logger( 'Teacher tries to say: %s' % m2s(sampled_landmark,sampled_relation) )
@@ -190,10 +194,13 @@ def autocorrect(scene_descs, test_scene_descs, turk_answers, tag='', chunksize=5
             object_distributions.append( distribution )
 
             # Present top_lmk to teacher
+            logger("top_lmk == trajector: %r, learn_objects: %r" % (top_lmk == trajector,learn_objects), 'okgreen')
             if top_lmk == trajector or not learn_objects:
                 # Give morphine
+                logger("Ahhhhh, morphine...", 'okgreen')
                 pass
             else:
+                logger("LEARNING!!!!!!!!!!!", 'okgreen')
                 updates, _ = zip(*sorted_meaning_lists[trajector][:30])
                 howmany=5
                 for sentence in sentences:
@@ -379,12 +386,14 @@ def autocorrect(scene_descs, test_scene_descs, turk_answers, tag='', chunksize=5
     for batch in batches:
         print ' ',len(batch)
 
-    for batch in batches:
+    for i,batch in enumerate(batches):
+        logger('Training on batch %i' % i)
         lists = parmap(loop,batch)
         # lists = map(loop,batch)
         result = list(interleave(*lists))
         object_answers, object_distributions, object_sentences, object_ids = zip(*result)
 
+        logger('Testing after batch %i' % i)
         test_lists = parmap(loop,new_test_scene_descs)
         # test_lists = map(loop,new_test_scene_descs)
         test_result = list(interleave(*test_lists))

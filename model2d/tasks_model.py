@@ -566,18 +566,10 @@ if __name__ == '__main__':
     total = 0
     print 'Train set:'
     for s in all_scenes:
-#        for lmk, loc_desc in zip(s['lmks'],s['loc_descs']):
-#            print lmk,
-#            for l in loc_desc:
-#                print l,'--',
-#            print
-#        print '----------------------------------------------'
-
-        # s['loc_descs'] = [None]*len(s['loc_descs'])
-
-#        for eyedee in s['ids']:
-#            if eyedee in something:
-#                print eyedee
+        together = zip(s['loc_descs'],s['lmks'],s['ids'])
+        together += [(None,None,None)]*200
+        shuffle(together)
+        s['loc_descs'],s['lmks'],s['ids'] = zip(*together)
         print '  ',len(s['loc_descs']), len(s['lmks'])
         total+=len(s['lmks'])
     print '   total:',total
@@ -598,7 +590,7 @@ if __name__ == '__main__':
         num_samples=args.num_samples,
         tag=args.tag,
         step=0.02,
-        chunksize=25)
+        chunksize=1)
 
     # object_correction_testing.autocorrect(1,
     #     scale=args.update_scale, 
