@@ -217,6 +217,7 @@ if __name__ == '__main__':
     all_scenes   = []
     all_descs = []
     turkers_correct = []
+    all_ids = []
     for s in scenes_scene.query().all():
         entity_names = []
         lmks         = []
@@ -281,20 +282,26 @@ if __name__ == '__main__':
                     #                         # print '  ',parttt
                     # raw_input()
 
-                    if ('objects' not in loc_desc and 'between' not in loc_desc) or description_id in test_set:
-                        entity_names.append(entity_name)
-                        lmks.append(lmk)
-                        lmk_descs.append(lmk_desc)
-                        # loc_descs.append(loc_desc)
-                        # loc_descs.append(parttt.strip())
-                        loc_descs.append(chunks)
-                        ids.append( description_id )
+                    entity_names.append(entity_name)
+                    lmks.append(lmk)
+                    lmk_descs.append(lmk_desc)
+                    # loc_descs.append(loc_desc)
+                    # loc_descs.append(parttt.strip())
+                    loc_descs.append(chunks)
+                    ids.append( description_id )
+            all_ids.extend(ids)
 
             all_scenes.append( {'scene':scene,'speaker':speaker,'lmks':lmks,'loc_descs':loc_descs, 'ids':ids} )
 
 
     print 'loaded', len(all_scenes), 'scenes'
     print 'Turkers_correct: Total: %i, Out of: %i, Fraction: %f' % (sum(turkers_correct),len(turkers_correct),float(sum(turkers_correct))/len(turkers_correct))
+
+
+    #choose new test set
+    from random import shuffle
+    shuffle(all_ids)
+    test_set = all_ids[:350]
 
     # import shelve
     # f = shelve.open('testing_u1000_not_memory_Fri_Feb__8_145640_2013.shelf')
@@ -306,16 +313,17 @@ if __name__ == '__main__':
     #     print value
     # exit()
 
-    print words
-    print 'Sum:',sum(words.values())
-    # print typos
-    print 'Typos:',len(typos)
-    print 'Total:',total
-    print 'Good:',len(no_bad_words)
+    # print words
+    # print 'Sum:',sum(words.values())
+    # # print typos
+    # print 'Typos:',len(typos)
+    # print 'Total:',total
+    # print 'Good:',len(no_bad_words)
 
     # import IPython
     # IPython.embed()
     # exit()
+
 
     sp_db = SentenceParse.get_sentence_parse(all_descs[0])
     try:
