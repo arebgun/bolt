@@ -341,14 +341,14 @@ if __name__ == '__main__':
 #                    elif (' side' in chunk or
 #                          'end' in chunk or
 #                          'edge' in chunk or
-#                          'corner' in chunk or 
-#                          'middle' in chunk or 
+#                          'corner' in chunk or
+#                          'middle' in chunk or
 #                          'center' in chunk or
 #                          'centre' in chunk) and not ('table' in chunk):
 #                        sentence_chunks.remove(chunk)
 #                    elif 'viewer' in chunk or 'between' in chunk:
 #                        sentence_chunks.remove(chunk)
-    
+
                 except ParseError:
                     sentence_chunks.remove(chunk)
                     continue
@@ -360,7 +360,7 @@ if __name__ == '__main__':
                 test_scene['ids'].append(eyedee)
             elif len(sentence_chunks) == 0:
                 toremove.append(i)
-            
+
         test_scenes.append(test_scene)
 
         for i in reversed(toremove):
@@ -530,36 +530,36 @@ if __name__ == '__main__':
     testing_testing.autocorrect(
         all_scenes,
         test_scenes,
-        scale=args.update_scale, 
-        num_processors=args.num_processors, 
+        scale=args.update_scale,
+        num_processors=args.num_processors,
         num_samples=args.num_samples,
         tag=args.tag,
         step=0.02)
 
     # object_correction_testing.autocorrect(1,
-    #     scale=args.update_scale, 
-    #     num_processors=args.num_processors, 
-    #     num_samples=args.num_samples, 
+    #     scale=args.update_scale,
+    #     num_processors=args.num_processors,
+    #     num_samples=args.num_samples,
     #     scene_descs=all_scenes,
     #     learn_objects=True,
     #     tag = args.tag,
-    #     golden_metric=False, 
-    #     mass_metric=False, 
+    #     golden_metric=False,
+    #     mass_metric=False,
     #     student_metric=False,
-    #     choosing_metric=False, 
+    #     choosing_metric=False,
     #     step=0.02)
 
     # object_correction_testing.autocorrect(1,
-    #     scale=args.update_scale, 
-    #     num_processors=args.num_processors, 
-    #     num_samples=args.num_samples, 
+    #     scale=args.update_scale,
+    #     num_processors=args.num_processors,
+    #     num_samples=args.num_samples,
     #     scene_descs=test_scenes,
     #     learn_objects=False,
     #     tag = args.tag,
-    #     golden_metric=False, 
-    #     mass_metric=False, 
+    #     golden_metric=False,
+    #     mass_metric=False,
     #     student_metric=False,
-    #     choosing_metric=False, 
+    #     choosing_metric=False,
     #     step=0.02)
 
 #    print 'trained on:',len(all_scenes[0]['lmks'])+len(all_scenes[1]['lmks'])+len(all_scenes[2]['lmks'])+len(all_scenes[3]['lmks'])

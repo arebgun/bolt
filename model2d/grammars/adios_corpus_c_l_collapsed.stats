@@ -1,0 +1,28 @@
+productions
+284	s productions
+30	e productions
+14	p productions
+------
+328	total productions
+
+coverage
+s_terminals [('table', 142), ('corner', 88), ('somewhat', 45), ('pretty', 43), ('fairly', 42)]
+e_terminals [('back', 2), ('far', 2), ('farther', 2), ('left', 2), ('near', 2)]
+p_terminals [('the', 4), ('far', 2), ('from', 2), ('of', 2), ('to', 2)]
+s_terminals number of types: 37
+s_terminals total token count: 777
+e_terminals number of types: 23
+e_terminals total token count: 29
+p_terminals number of types: 7
+p_terminals total token count: 14
+
+average s production length: 4.33
+average terminals per s: 2.74
+average non-terminals per s: 1.59
+
+term sets
+|S| = 37
+|P| = 7
+|E| = 23
+|P \cup E| = 28
+|S - (P \cup E)| = 22

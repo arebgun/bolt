@@ -1,36 +1,30 @@
 #!/usr/bin/env python
 from __future__ import division
 
-# from random import random
 import sys
 sys.path.append("..")
-from myrandom import random
-random = random.random
 
-from sentence_from_location import (
-    generate_sentence,
-    train,
-    accept_correction,
-    Point
-)
+from itertools import izip
 
-from location_from_sentence import get_tree_probs, get_all_sentence_posteriors
-from parse import get_modparse, ParseError
-from nltk.tree import ParentedTree
-
-from semantics.run import construct_training_scene
-from semantics.landmark import Landmark
-from semantics.representation import PointRepresentation, LineRepresentation, RectangleRepresentation, GroupLineRepresentation
-from nltk.metrics.distance import edit_distance
-from planar import Vec2
-from utils import logger, m2s, entropy_of_probs
+import argparse
 import numpy as np
 from matplotlib import pyplot as plt
-from copy import copy
-from datetime import datetime
-
 from multiprocessing import Process, Pipe
-from itertools import izip
+from myrandom import random
+random = random.random
+from nltk.metrics.distance import edit_distance
+from planar import Vec2
+from semantics.landmark import Landmark
+from semantics.representation import PointRepresentation
+from semantics.run import construct_training_scene
+
+from location_from_sentence import get_all_sentence_posteriors
+from sentence_from_location import generate_sentence, train
+from utils import logger, entropy_of_probs
+import utils
+
+import shelve
+from time import time
 
 def spawn(f):
     def fun(ppipe, cpipe,x):
@@ -47,56 +41,41 @@ def parmap(f,X):
     [p.join() for p in proc]
     return ret
 
-def initial_train(scene, speaker, num_iterations=1, window=20, scale=1000, num_processors=7, consistent=False,
-                num_samples=10):
+def initial_train(num_iterations=1, window=20, scale=1000, num_processors=7, consistent=False,
+                  num_samples=10, num_per_scene=50):
     plt.ion()
-
     printing=False
 
-    scene_bb = scene.get_bounding_box()
-    scene_bb = scene_bb.inflate( Vec2(scene_bb.width*0.5,scene_bb.height*0.5) )
-    table = scene.landmarks['table'].representation.get_geometry()
-
-    # min_dists = []
-    # max_dists = []
-    # avg_min = []
-    # max_mins = []
-    # golden_log_probs = []
-    # avg_golden_log_probs = []
-    # golden_entropies = []
-    # avg_golden_entropies = []
-
-    step = 0.1
-    all_heatmaps_tupless, xs, ys = speaker.generate_all_heatmaps(scene, step=step)
-    all_heatmaps_tuples = all_heatmaps_tupless[0]
-    x = np.array( [list(xs-step*0.5)]*len(ys) )
-    y = np.array( [list(ys-step*0.5)]*len(xs) ).T
-
-    # all_heatmaps_tuples = []
-    # for lmk, d in all_heatmaps_dict.items():
-    #     for rel, heatmaps in d.items():
-    #         all_heatmaps_tuples.append( (lmk,rel,heatmaps) )
-    # all_heatmaps_tuples = all_heatmaps_tuples[:100]
-    lmks, rels, heatmapss = zip(*all_heatmaps_tuples)
-    graphmax1 = graphmax2 = 0
-    meanings = zip(lmks,rels)
-    landmarks = list(set(lmks))
-    relations = list(set(rels))
-
- 
     def loop(num_iterations):
         min_dists = []
         golden_log_probs = []
         golden_entropies = []
         golden_ranks = []
         golden_ranks = []
-        for iteration in range(num_iterations):
 
+        for iteration in range(num_iterations):
             logger(('Iteration %d' % iteration),'okblue')
 
+            if (iteration % num_per_scene) == 0:
+                if iteration != 0: sys.stdout.write('\bDone.\n')
+                sys.stdout.write('Generating sentences for scene %d:  ' % (int(iteration/num_per_scene) + 1))
+                scene, speaker = construct_training_scene(random=True)
+                utils.scene.set_scene(scene, speaker)
+                table = scene.landmarks['table'].representation.rect
+
+                scene_bb = scene.get_bounding_box()
+                scene_bb = scene_bb.inflate( Vec2(scene_bb.width*0.5,scene_bb.height*0.5) )
+
+                step = 0.1
+                all_heatmaps_tupless, xs, ys = speaker.generate_all_heatmaps(scene, step=step)
+                all_heatmaps_tuples = all_heatmaps_tupless[0]
+                lmks, rels, heatmapss = zip(*all_heatmaps_tuples)
+
+                meanings = zip(lmks,rels)
+                landmarks = list(set(lmks))
+
             rand_p = Vec2(random()*table.width+table.min_point.x, random()*table.height+table.min_point.y)
-            location = Landmark( 'point', PointRepresentation(rand_p), None, Landmark.POINT)
-            trajector = location#obj2
+            trajector = Landmark( 'point', PointRepresentation(rand_p), None, Landmark.POINT)
             training_sentence, sampled_relation, sampled_landmark = speaker.describe(trajector, scene, False, 1)
 
             if num_samples:
@@ -107,27 +86,35 @@ def initial_train(scene, speaker, num_iterations=1, window=20, scale=1000, num_p
                 for (landmark,relation),prob in speaker.all_meaning_probs( trajector, scene, 1 ):
                     train((landmark,relation), training_sentence, update=prob, printing=printing)
 
-
             def probs_metric():
-                meaning, sentence = generate_sentence(rand_p, consistent, scene, speaker, usebest=True, printing=printing)
-                sampled_landmark,sampled_relation = meaning.args[0],meaning.args[3]
-                print meaning.args[0],meaning.args[3], len(sentence)
+                meaning, sentence = generate_sentence(loc=rand_p,
+                                                      consistent=consistent,
+                                                      scene=scene,
+                                                      speaker=speaker,
+                                                      usebest=True,
+                                                      printing=printing)
+
+                sampled_landmark, sampled_relation = meaning.args[0], meaning.args[3]
+                print meaning.args[0], meaning.args[3], len(sentence)
+
                 if sentence == "":
                     prob = 0
                     entropy = 0
+                    rank = len(meanings)-1
                 else:
                     logger( 'Generated sentence: %s' % sentence)
+
                     try:
                         golden_posteriors = get_all_sentence_posteriors(sentence, meanings, golden=True, printing=printing)
                         epsilon = 1e-15
-                        ps = np.array([golden_posteriors[lmk]*golden_posteriors[rel] for lmk, rel in meanings])
+                        ps = np.array([golden_posteriors[(lmk,rel)] for lmk, rel in meanings])
                         temp = None
                         for i,p in enumerate(ps):
                             lmk,rel = meanings[i]
                             # logger( '%f, %s' % (p, m2s(lmk,rel)))
                             head_on = speaker.get_head_on_viewpoint(lmk)
                             ps[i] *= speaker.get_landmark_probability(lmk, landmarks, PointRepresentation(rand_p))[0]
-                            ps[i] *= speaker.get_probabilities_points( np.array([rand_p]), rel, head_on, lmk)
+                            ps[i] *= speaker.get_probabilities_points(np.array([rand_p]), rel, head_on, lmk)
                             if lmk == meaning.args[0] and rel == meaning.args[3]:
                                 temp = i
 
@@ -136,8 +123,10 @@ def initial_train(scene, speaker, num_iterations=1, window=20, scale=1000, num_p
                         prob = ps[temp]
                         rank = sorted(ps, reverse=True).index(prob)
                         entropy = entropy_of_probs(ps)
-                    except ParseError as e:
-                        logger( e )
+                    except Exception as pe:
+                        logger('Failed to parse sentence "%s"' % sentence, 'warning')
+                        logger(str(pe), 'warning')
+
                         prob = 0
                         rank = len(meanings)-1
                         entropy = 0
@@ -145,13 +134,16 @@ def initial_train(scene, speaker, num_iterations=1, window=20, scale=1000, num_p
                 head_on = speaker.get_head_on_viewpoint(sampled_landmark)
                 all_descs = speaker.get_all_meaning_descriptions(trajector, scene, sampled_landmark, sampled_relation, head_on, 1)
                 distances = []
+
                 for desc in all_descs:
                     distances.append([edit_distance( sentence, desc ), desc])
+
                 distances.sort()
+
                 return prob,entropy,rank,distances[0][0]
 
 
-            prob,entropy,rank,ed = probs_metric()
+            prob, entropy, rank, ed = probs_metric()
 
             golden_log_probs.append( prob )
             golden_entropies.append( entropy )
@@ -176,12 +168,26 @@ def initial_train(scene, speaker, num_iterations=1, window=20, scale=1000, num_p
             result.append( lists[j][i] )
 
     golden_log_probs,golden_entropies,golden_ranks,min_dists = zip(*result)
+
     def running_avg(arr):
         return [np.mean(arr[i:i+window]) for i in range(len(arr)-window)]
+
     avg_golden_log_probs = running_avg(golden_log_probs)
     avg_golden_entropies = running_avg(golden_entropies)
     avg_golden_ranks = running_avg(golden_ranks)
     avg_min = running_avg(min_dists)
+
+    filename = 'initial_training_%d_samples_%d_iters_%d_per_scene_%f.shelf' % (num_samples, num_iterations, num_per_scene, time())
+    f = shelve.open(filename)
+    f['golden_log_probs'] = golden_log_probs
+    f['golden_entropies'] = golden_entropies
+    f['golden_ranks'] = golden_ranks
+    f['min_dists'] = min_dists
+    f['avg_golden_log_probs'] = avg_golden_log_probs
+    f['avg_golden_entropies'] = avg_golden_entropies
+    f['avg_golden_ranks'] = avg_golden_ranks
+    f['avg_min'] = avg_min
+    f.close()
 
     plt.plot(avg_min, 'o-', color='RoyalBlue')
     plt.ylabel('Edit Distance')
@@ -205,21 +211,19 @@ def initial_train(scene, speaker, num_iterations=1, window=20, scale=1000, num_p
     plt.draw()
 
 if __name__ == '__main__':
-    import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('-n', '--num_iterations', type=int, default=1)
-    parser.add_argument('-u', '--update_scale', type=int, default=1000)
-    parser.add_argument('-p', '--num_processors', type=int, default=7)
-    parser.add_argument('-w', '--window_size', type=int, default=20)
-    parser.add_argument('-s', '--num_samples', type=int, default=10)
+    parser.add_argument('-n', '--num-iterations', type=int, default=1)
+    parser.add_argument('-i', '--num-per-scene', type=int, default=50)
+    parser.add_argument('-u', '--update-scale', type=int, default=1000)
+    parser.add_argument('-p', '--num-processors', type=int, default=7)
+    parser.add_argument('-w', '--window-size', type=int, default=20)
+    parser.add_argument('-s', '--num-samples', type=int, default=10)
     parser.add_argument('--consistent', action='store_true')
     args = parser.parse_args()
 
-    scene, speaker = construct_training_scene()
-
-    initial_train(scene, speaker, args.num_iterations, window=args.window_size, 
-        scale=args.update_scale, num_processors=args.num_processors, consistent=args.consistent, 
-        num_samples=args.num_samples)
+    initial_train(args.num_iterations, window=args.window_size,
+        scale=args.update_scale, num_processors=args.num_processors, consistent=args.consistent,
+        num_samples=args.num_samples, num_per_scene=args.num_per_scene)
 
 
 

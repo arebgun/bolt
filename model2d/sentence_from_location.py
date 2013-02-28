@@ -3,22 +3,22 @@
 
 from __future__ import division
 
-from operator import itemgetter
-
 import utils
 from utils import (get_meaning,
                    categorical_sample,
                    pick_best,
-                   parent_landmark,
                    lmk_id,
                    rel_type,
                    m2s,
                    get_lmk_ori_rels_str,
+                   get_landmark_parent_chain,
                    logger,
+                   is_nonterminal,
                    NONTERMINALS)
+
 from models import Word, Production, CProduction, CWord
 
-from location_from_sentence import get_sentence_posteriors, get_sentence_meaning_likelihood, get_all_sentence_posteriors
+from location_from_sentence import get_sentence_meaning_likelihood, get_all_sentence_posteriors
 from semantics.run import construct_training_scene
 
 import numpy as np
@@ -31,7 +31,7 @@ from semantics.representation import (
 )
 
 
-from parse import get_modparse, ParseError
+import parse_adios
 from nltk.tree import ParentedTree
 from myrandom import random
 random = random.random
@@ -46,18 +46,14 @@ def get_expansion(lhs, parent=None, lmk=None, rel=None, usebest=False, golden=Fa
     terminals = []
     landmarks = []
 
-    if depth > 3:
-        return lhs_rhs_parent_chain, prob_chain, entropy_chain, terminals, landmarks
-
     for n in lhs.split():
-        if n in NONTERMINALS:
-            if n == parent == 'LANDMARK-PHRASE':
-                # we need to move to the parent landmark
-                lmk = parent_landmark(lmk)
+        logger('Expanding %s' % n)
 
-            lmk_class = (lmk.object_class if lmk else None)
+        if is_nonterminal(n):
+            logger('\t%s is a nonterminal' % n)
+            lmk_class = lmk.object_class
             lmk_ori_rels = get_lmk_ori_rels_str(lmk)
-            lmk_color = (lmk.color if lmk else None)
+            lmk_color = lmk.color
             rel_class = rel_type(rel)
             dist_class = (rel.measurement.best_distance_class if hasattr(rel, 'measurement') else None)
             deg_class = (rel.measurement.best_degree_class if hasattr(rel, 'measurement') else None)
@@ -71,7 +67,7 @@ def get_expansion(lhs, parent=None, lmk=None, rel=None, usebest=False, golden=Fa
                                                       dist_class=dist_class,
                                                       deg_class=deg_class,
                                                       golden=golden)
-            
+
             if cp_db.count() <= 0:
                 if printing: logger('Could not expand %s (parent: %s, lmk_class: %s, lmk_ori_rels: %s, lmk_color: %s, rel: %s, dist_class: %s, deg_class: %s)' % (n, parent, lmk_class, lmk_ori_rels, lmk_color, rel_class, dist_class, deg_class))
                 terminals.append( n )
@@ -88,8 +84,8 @@ def get_expansion(lhs, parent=None, lmk=None, rel=None, usebest=False, golden=Fa
 
             ckeys, ccounts = zip(*ccounter.items())
 
-            # print 'ckeys', ckeys
-            # print 'ccounts', ccounts
+            print 'ckeys', ckeys
+            print 'ccounts', ccounts
 
             ccounts = np.array(ccounts, dtype=float)
             ccounts /= ccounts.sum()
@@ -98,9 +94,9 @@ def get_expansion(lhs, parent=None, lmk=None, rel=None, usebest=False, golden=Fa
                 cprod, cprod_prob, cprod_entropy = pick_best(ckeys, ccounts)
             else:
                 cprod, cprod_prob, cprod_entropy = categorical_sample(ckeys, ccounts)
-            # print cprod, cprod_prob, cprod_entropy
+            print cprod, cprod_prob, cprod_entropy
 
-            lhs_rhs_parent_chain.append( ( n,cprod,parent,lmk ) )
+            lhs_rhs_parent_chain.append( ( n, cprod, parent, lmk ) )
             prob_chain.append( cprod_prob )
             entropy_chain.append( cprod_entropy )
 
@@ -262,52 +258,21 @@ def generate_sentence(loc, consistent, scene=None, speaker=None, usebest=False, 
     else:
         lmk, rel = meaning
         lmk_prob = lmk_ent = rel_prob = rel_ent = None
+
     meaning1 = m2s(lmk, rel)
-    logger( meaning1 )
+    logger(get_landmark_parent_chain(lmk))
+    logger(meaning1)
 
-    while True:
-        rel_exp_chain, rele_prob_chain, rele_ent_chain, rel_terminals, rel_landmarks = get_expansion('RELATION', rel=rel, usebest=usebest, golden=golden, printing=printing)
-        lmk_exp_chain, lmke_prob_chain, lmke_ent_chain, lmk_terminals, lmk_landmarks = get_expansion('LANDMARK-PHRASE', lmk=lmk, usebest=usebest, golden=golden, printing=printing)
-        rel_words, relw_prob, relw_ent, rel_a = get_words(rel_terminals, landmarks=rel_landmarks, rel=rel, usebest=usebest, golden=golden, printing=printing)
-        lmk_words, lmkw_prob, lmkw_ent, lmk_a = get_words(lmk_terminals, landmarks=lmk_landmarks, prevword=(rel_words[-1] if rel_words else None), usebest=usebest, golden=golden, printing=printing)
-        sentence = ' '.join(rel_words + lmk_words)
+    rel_exp_chain, rele_prob_chain, rele_ent_chain, rel_terminals, rel_landmarks = get_expansion('S', rel=rel, lmk=lmk, usebest=usebest, golden=golden, printing=printing)
+    sentence = ' '.join(rel_terminals)
 
-        if printing: logger( 'rel_exp_chain: %s' % rel_exp_chain )
-        if printing: logger( 'lmk_exp_chain: %s' % lmk_exp_chain )
+    if printing: logger( 'rel_exp_chain: %s' % rel_exp_chain )
 
-        meaning = Meaning((lmk, lmk_prob, lmk_ent,
-                           rel, rel_prob, rel_ent,
-                           rel_exp_chain, rele_prob_chain, rele_ent_chain, rel_terminals, rel_landmarks,
-                           lmk_exp_chain, lmke_prob_chain, lmke_ent_chain, lmk_terminals, lmk_landmarks,
-                           rel_words, relw_prob, relw_ent,
-                           lmk_words, lmkw_prob, lmkw_ent))
-        meaning.rel_a = rel_a
-        meaning.lmk_a = lmk_a
+    meaning = Meaning((lmk, lmk_prob, lmk_ent,
+                       rel, rel_prob, rel_ent,
+                       rel_exp_chain, rele_prob_chain, rele_ent_chain, rel_terminals, rel_landmarks))
 
-        if consistent:
-             # get the most likely meaning for the generated sentence
-            try:
-                posteriors = get_sentence_posteriors(sentence, iterations=10, extra_meaning=(lmk,rel))
-            except:
-                print 'try again ...'
-                continue
-
-            meaning2 = max(posteriors, key=itemgetter(1))[0]
-
-            # is the original meaning the best one?
-            if meaning1 != meaning2:
-                print
-                print 'sentence:', sentence
-                print 'original:', meaning1
-                print 'interpreted:', meaning2
-                print 'try again ...'
-                print
-                continue
-
-            for m,p in sorted(posteriors, key=itemgetter(1)):
-                print m, p
-
-        return meaning, sentence
+    return meaning, sentence
 
 
 def compute_update_sigmoid_confidence(p_gen, p_corr, H_gen, H_corr):
@@ -327,66 +292,45 @@ update_funcs = {
     'geometric': compute_update_geometric,
 }
 
-def train( meaning, sentence, update=1, printing=False):
-    lmk,rel = meaning
-    _, modparse = get_modparse(sentence)
-    t = ParentedTree.parse(modparse)
+def train(meaning, sentence, update=1, printing=False):
+    lmk, rel = meaning
 
-    train_rec( tree=t, lmk=lmk, rel=rel, update=update, printing=printing)
+    try:
+        modparse = parse_adios.parse(sentence)
+    except Exception as pe:
+        logger('Failed to parse sentence "%s"' % sentence, 'warning')
+        logger(str(pe), 'warning')
+        return
 
-def train_rec( tree, parent=None, lmk=None, rel=None, prev_word='<no prev word>', update=1, printing=False):
+    train_rec(tree=ParentedTree.parse(modparse),
+              lmks=get_landmark_parent_chain(lmk),
+              rel=rel,
+              update=update,
+              printing=printing)
 
-    lhs = tree.node
+def train_rec(tree, parent=None, lmks=None, rel=None, update=1, printing=False):
+    if isinstance(tree, ParentedTree):
+        for lmk in lmks:
+            lhs = tree.node
+            rhs = ' '.join(n.node if isinstance(n, ParentedTree) else n for n in tree)
 
-    if isinstance(tree[0], ParentedTree): rhs = ' '.join(n.node for n in tree)
-    else: rhs = ' '.join(n for n in tree)
-    
-    # check if this version of nltk uses a function for parent
-    if hasattr( tree.parent, '__call__' ):
-        parent = tree.parent().node if tree.parent() else None
-    else:
-        parent = tree.parent.node if tree.parent else None
+            # check if this version of nltk uses a function for parent
+            if hasattr( tree.parent, '__call__' ):
+                parent = tree.parent().node if tree.parent() else None
+            else:
+                parent = tree.parent.node if tree.parent else None
 
-    if lhs == 'RELATION':
-        # everything under a RELATION node should ignore the landmark
-        lmk = None
+            update_expansion_counts(update=update,
+                                    lhs=lhs,
+                                    rhs=rhs,
+                                    parent=parent,
+                                    lmk_class=lmk.object_class,
+                                    lmk_ori_rels=get_lmk_ori_rels_str(lmk),
+                                    lmk_color=lmk.color,
+                                    rel=rel)
 
-    if lhs == 'LANDMARK-PHRASE':
-        # everything under a LANDMARK-PHRASE node should ignore the relation
-        rel = None
-
-    if lhs == parent == 'LANDMARK-PHRASE':
-        # we need to move to the parent landmark
-        lmk = parent_landmark(lmk)
-
-    lmk_class = (lmk.object_class if lmk and lhs != 'LOCATION-PHRASE' else None)
-    lmk_ori_rels = get_lmk_ori_rels_str(lmk) if lhs != 'LOCATION-PHRASE' else None
-    lmk_color = (lmk.color if lmk and lhs != 'LOCATION-PHRASE' else None)
-
-    if lhs in NONTERMINALS:
-
-        update_expansion_counts(update=update, 
-                                lhs=lhs, 
-                                rhs=rhs, 
-                                parent=parent, 
-                                lmk_class=lmk_class, 
-                                lmk_ori_rels=lmk_ori_rels, 
-                                lmk_color=lmk_color, 
-                                rel=rel)
-
-        for subtree in tree:
-            prev_word = train_rec(tree=subtree, parent=parent, lmk=lmk, rel=rel, prev_word=prev_word, printing=printing)
-
-    else:
-        update_word_counts(update=update,
-                           pos=lhs,
-                           word=rhs,
-                           prev_word=prev_word,
-                           lmk_class=lmk_class,
-                           lmk_ori_rels=lmk_ori_rels,
-                           lmk_color=lmk_color,
-                           rel=rel)
-        return rhs
+            for subtree in tree:
+                train_rec(tree=subtree, parent=parent, lmks=lmks, rel=rel, printing=printing)
 
 
 def accept_correction( meaning, correction, update_func='geometric', update_scale=10, eval_lmk=True, multiply=False, printing=True ):
@@ -465,7 +409,7 @@ def accept_correction( meaning, correction, update_func='geometric', update_scal
                 update_expansion_counts( update, lhs, rhs, parent, rel=rel,
                                                                    lmk_class=(lmk.object_class if lmk else None),
                                                                    lmk_ori_rels=get_lmk_ori_rels_str(lmk),
-                                                                   lmk_color=(lmk.color if lmk else None), 
+                                                                   lmk_color=(lmk.color if lmk else None),
                                                                    multiply=multiply )
 
             for i in xrange(len(tps)):
@@ -477,7 +421,7 @@ def accept_correction( meaning, correction, update_func='geometric', update_scal
                                                                  lmk_ori_rels=get_lmk_ori_rels_str(lmk),
                                                                  lmk_color=(lmk.color if lmk else None),
                                                                  multiply=multiply )
-    except ParseError as pe:
+    except parse_adios.ParseError as pe:
         logger( pe )
         logger( 'No update performed' )
 
@@ -571,14 +515,18 @@ if __name__ == '__main__':
     parser.add_argument('--new-word-training', action='store_true')
     parser.add_argument('--new-word-training2', action='store_true')
     parser.add_argument('-b', '--best', action='store_true')
+    parser.add_argument('-n', '--num-sentences', type=int, default=1)
+    parser.add_argument('-c', '--no-corrections', action='store_true')
     args = parser.parse_args()
 
     if not args.location:
         args.location = Point(str(random()*0.8-0.4)+','+str(random()*0.6+0.4))
 
+    print 'Location: %s' % args.location
+
     scene, speaker = construct_training_scene()
 
-    printing = False
+    printing = True
     if args.new_word_training:
         new_sentence = raw_input('Sentence with new word: ')
         accept_new_words( args.location.xy, new_sentence, update_scale=100, num_meanings=15, printing=printing)
@@ -611,7 +559,7 @@ if __name__ == '__main__':
             meanings = []
             for m,(h1,h2) in zip(good_meanings, good_heatmapss):
                 lmk,rel = m
-                p = posteriors[rel]*posteriors[lmk]
+                p = posteriors[(lmk,rel)]
                 meanings.append((p,m))
                 if big_heatmap1 is None:
                     big_heatmap1 = p*h1
@@ -723,9 +671,12 @@ if __name__ == '__main__':
 
 
     else:
-        meaning, sentence = generate_sentence(args.location.xy, args.consistent, scene, speaker, usebest=args.best, printing=printing)
-        logger('Generated sentence: %s' % sentence)
+        for _ in range(args.num_sentences):
+            meaning, sentence = generate_sentence(args.location.xy, args.consistent, scene, speaker, usebest=args.best, printing=printing)
+            logger('Generated sentence: %s' % sentence)
 
-        correction = raw_input('Correction? ')
-        accept_correction( meaning, correction, printing=printing )
-    
+            if not args.no_corrections:
+                correction = raw_input('Correction? ')
+                accept_correction( meaning, correction, printing=printing )
+
+            print '\n\n'

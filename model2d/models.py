@@ -13,7 +13,7 @@ from sqlalchemy import func
 from utils import force_unicode, bigrams, trigrams, lmk_id, logger
 
 import numpy as np
-from collections import defaultdict
+import math
 
 
 ### configuration ###
@@ -295,7 +295,7 @@ class CWord(Base):
         #                                 lmk_color=lmk_color,
         #                                 rel=rel,
         #                                 rel_dist_class=rel_dist_class,
-        #                                 rel_deg_class=rel_deg_class, 
+        #                                 rel_deg_class=rel_deg_class,
         #                                 prev_word=prev_word,
         #                                 golden=golden)
         #     if cp_db.count() <= 0:
@@ -312,7 +312,7 @@ class CWord(Base):
         #         total = ccounts.sum()
         #         update *= total
 
-        cp_db = cls.get_word_counts(pos=pos, 
+        cp_db = cls.get_word_counts(pos=pos,
                                     word=word,
                                     lmk=lmk,
                                     lmk_class=lmk_class,
@@ -320,7 +320,7 @@ class CWord(Base):
                                     lmk_color=lmk_color,
                                     rel=rel,
                                     rel_dist_class=rel_dist_class,
-                                    rel_deg_class=rel_deg_class, 
+                                    rel_deg_class=rel_deg_class,
                                     prev_word=prev_word,
                                     golden=golden)
 
@@ -508,7 +508,7 @@ class CProduction(Base):
     relation_degree_class = Column(String)
 
     count = Column(Float, nullable=False, default=0)
-    
+
     def __unicode__(self):
         return u'%s -> %s (%s)' % (self.lhs, self.rhs, self.count)
 
@@ -546,7 +546,7 @@ class CProduction(Base):
 
         return q
 
-    @classmethod 
+    @classmethod
     def get_production_sum(cls,
                           lhs,
                           rhs=None,
@@ -584,6 +584,81 @@ class CProduction(Base):
             q = q.filter(CProduction.relation_degree_class==deg_class)
 
         return q.scalar()
+
+    @classmethod
+    def get_entropy_ratio(cls, lhs, rhs, column, golden=False, verbose=False):
+        if verbose: print 'Calculating entropy ratio for %s column' % column
+
+        # column entropy unconditinal
+        z = cls.query(CProduction.lhs,
+                      CProduction.rhs,
+                      column,
+                      func.sum(CProduction.count).label('count'),
+                      golden=golden) \
+                .filter(column!=None) \
+                .filter(column!=',,,') \
+                .group_by(column) \
+                .all()
+
+        max_entropy = 0
+        max_sum = sum([prod.count for prod in z])
+        if verbose: print 'total count (unconditional):', max_sum
+
+        for prod in z:
+            p = prod.count / max_sum
+            max_entropy -= p * math.log(p)
+            if verbose: print prod
+
+        if verbose:
+            print 'column entropy (unconditional):', max_entropy
+            print '*'*70
+
+        # column entropy conditioned on lhs and rhs
+        q = cls.query(CProduction.lhs,
+                      CProduction.rhs,
+                      column,
+                      func.sum(CProduction.count).label('count'),
+                      golden=golden) \
+                .filter(CProduction.lhs==lhs) \
+                .filter(column!=None) \
+                .filter(column!=',,,') \
+                .group_by(column)
+
+        if rhs is not None: q.filter(CProduction.rhs==rhs)
+        q.all()
+
+        cond_entropy = 0
+        cond_sum = sum([res.count for res in q])
+        if verbose: print 'total count (conditioned on lhs and rhs):', cond_sum
+
+        for prod in q:
+            p = prod.count / cond_sum
+            cond_entropy -= p * math.log(p)
+            if verbose: print prod
+
+        ratio = cond_entropy / max_entropy
+        if cond_sum == 0: ratio = max_entropy
+
+        if verbose:
+            print 'column entropy (conditioned on lhs and rhs):', cond_entropy
+            print 'RATIO:', ratio
+
+        return ratio
+
+    @classmethod
+    def get_unique_productions(cls, group_by_rhs=False, group_by_parent=False, golden=False):
+        groupby = [CProduction.lhs]
+        if group_by_rhs: groupby.append(CProduction.rhs)
+        if group_by_parent: groupby.append(CProduction.parent)
+
+        q = cls.query(CProduction.lhs,
+                      CProduction.rhs,
+                      CProduction.parent,
+                      golden=golden) \
+                .group_by(*groupby)
+
+        return q.all()
+
 
     @classmethod
     def update_production_counts(cls,

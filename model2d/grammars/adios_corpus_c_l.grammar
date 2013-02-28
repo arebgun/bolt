@@ -1,0 +1,3274 @@
+S -> P70 P63 "triangle" [0.000309598] {1} 
+S -> "very" P62 "back" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "pretty" P57 "block" [0.000309598] {1} 
+S -> "rather" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "to" P64 P68 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P60 "box" [0.000309598] {1} 
+S -> "quite" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "cup" [0.000309598] {1} 
+S -> "pretty" P57 "rectangle" [0.000309598] {1} 
+S -> P70 P63 "sphere" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "quite" P57 "tube" [0.000309598] {1} 
+S -> "pretty" P60 "tube" [0.000309598] {1} 
+S -> "rather" P57 "block" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "pretty" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P62 "side" P59 "table" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> "rather" P57 "ball" [0.000309598] {1} 
+S -> "very" P57 "box" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "rather" P57 "prism" [0.000309598] {1} 
+S -> "rather" P57 "rectangle" [0.000309598] {1} 
+S -> "somewhat" P57 "tube" [0.000309598] {1} 
+S -> "fairly" P57 "cup" [0.000309598] {1} 
+S -> "fairly" P57 "ball" [0.000309598] {1} 
+S -> "behind" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P60 "rectangle" [0.000309598] {1} 
+S -> P62 "side" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "rectangle" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "fairly" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "cylinder" [0.000309598] {1} 
+S -> "somewhat" P57 "triangle" [0.000309598] {1} 
+S -> "fairly" P57 "sphere" [0.000309598] {1} 
+S -> "quite" P57 "block" [0.000309598] {1} 
+S -> "very" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P60 "box" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> P66 "sphere" [0.000309598] {1} 
+S -> "fairly" P62 "side" P59 "table" [0.000309598] {1} 
+S -> P66 "bottle" [0.000309598] {1} 
+S -> P66 "rectangle" [0.000309598] {1} 
+S -> "very" P57 "prism" [0.000309598] {1} 
+S -> P66 "sphere" [0.000309598] {1} 
+S -> "pretty" P57 "triangle" [0.000309598] {1} 
+S -> "very" P57 "rectangle" [0.000309598] {1} 
+S -> "somewhat" P57 "box" [0.000309598] {1} 
+S -> "fairly" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P65 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "fairly" P57 "bottle" [0.000309598] {1} 
+S -> "somewhat" P65 "back" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "triangle" [0.000309598] {1} 
+S -> P62 "farther" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P60 "cup" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P60 "cup" [0.000309598] {1} 
+S -> "very" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "cylinder" [0.000309598] {1} 
+S -> "somewhat" P60 "block" [0.000309598] {1} 
+S -> "below" P64 "side" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "triangle" [0.000309598] {1} 
+S -> "fairly" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "cylinder" [0.000309598] {1} 
+S -> "somewhat" P57 "box" [0.000309598] {1} 
+S -> "somewhat" P57 "triangle" [0.000309598] {1} 
+S -> "quite" P57 "bottle" [0.000309598] {1} 
+S -> "pretty" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> P62 "near" "corner" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "cup" [0.000309598] {1} 
+S -> "quite" P57 "triangle" [0.000309598] {1} 
+S -> "somewhat" P60 "tube" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "rather" P57 "bottle" [0.000309598] {1} 
+S -> "somewhat" "far" P57 "triangle" [0.000309598] {1} 
+S -> "pretty" P57 "rectangle" [0.000309598] {1} 
+S -> "somewhat" P62 "far" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P60 "bottle" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> P66 "bottle" [0.000309598] {1} 
+S -> P66 "triangle" [0.000309598] {1} 
+S -> "very" P57 "triangle" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "fairly" P57 "prism" [0.000309598] {1} 
+S -> "fairly" P57 "ball" [0.000309598] {1} 
+S -> "somewhat" P57 "tube" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> "very" P57 "prism" [0.000309598] {1} 
+S -> "very" P57 "ball" [0.000309598] {1} 
+S -> "fairly" P57 "block" [0.000309598] {1} 
+S -> P70 P63 "cup" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> P70 P63 "sphere" [0.000309598] {1} 
+S -> "very" P57 "rectangle" [0.000309598] {1} 
+S -> "fairly" P57 "rectangle" [0.000309598] {1} 
+S -> "on" P64 "edge" P59 "table" [0.000309598] {1} 
+S -> "above" P64 "side" P59 "table" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "somewhat" P57 "ball" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "somewhat" P57 "triangle" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "pretty" P57 "box" [0.000309598] {1} 
+S -> "rather" P57 "block" [0.000309598] {1} 
+S -> "rather" P58 "middle" P59 "table" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "fairly" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "prism" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "pretty" P57 "triangle" [0.000309598] {1} 
+S -> "rather" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "pretty" P60 "rectangle" [0.000309598] {1} 
+S -> "very" P57 "prism" [0.000309598] {1} 
+S -> "quite" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "pretty" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P60 "bottle" [0.000309598] {1} 
+S -> "fairly" P57 "block" [0.000309598] {1} 
+S -> "quite" P57 "tube" [0.000309598] {1} 
+S -> "rather" P57 "block" [0.000309598] {1} 
+S -> P66 "triangle" [0.000309598] {1} 
+S -> "somewhat" "far" "behind" "the" "middle" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "sphere" [0.000309598] {1} 
+S -> "on" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "box" [0.000309598] {1} 
+S -> "somewhat" P60 "triangle" [0.000309598] {1} 
+S -> "fairly" P62 "side" P59 "table" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "pretty" P57 "rectangle" [0.000309598] {1} 
+S -> "very" P57 "cylinder" [0.000309598] {1} 
+S -> "somewhat" P60 "block" [0.000309598] {1} 
+S -> "somewhat" P57 "prism" [0.000309598] {1} 
+S -> "somewhat" P60 "tube" [0.000309598] {1} 
+S -> "somewhat" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "fairly" P60 "tube" [0.000309598] {1} 
+S -> "rather" P57 "ball" [0.000309598] {1} 
+S -> "above" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "bottle" [0.000309598] {1} 
+S -> "fairly" P57 "tube" [0.000309598] {1} 
+S -> "pretty" P57 "tube" [0.000309598] {1} 
+S -> "fairly" P65 "side" P59 "table" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> P66 "prism" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> "very" P57 "ball" [0.000309598] {1} 
+S -> "quite" P57 "rectangle" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "pretty" P57 "triangle" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "quite" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "prism" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "fairly" P62 "far" "corner" P59 "table" [0.000309598] {1} 
+S -> P66 "cup" [0.000309598] {1} 
+S -> "fairly" P57 "sphere" [0.000309598] {1} 
+S -> "fairly" P57 "prism" [0.000309598] {1} 
+S -> "behind" P64 "edge" P59 "table" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "pretty" P60 "block" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> "very" P57 "triangle" [0.000309598] {1} 
+S -> "fairly" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> "pretty" P58 "middle" P59 "table" [0.000309598] {1} 
+S -> "fairly" P60 "tube" [0.000309598] {1} 
+S -> "rather" P62 "side" P59 "table" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "quite" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "rather" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "cup" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "rather" P57 "cylinder" [0.000309598] {1} 
+S -> "somewhat" P60 "sphere" [0.000309598] {1} 
+S -> "pretty" P57 "box" [0.000309598] {1} 
+S -> "behind" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "somewhat" P60 "cylinder" [0.000309598] {1} 
+S -> "rather" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "box" [0.000309598] {1} 
+S -> "somewhat" P57 "rectangle" [0.000309598] {1} 
+S -> "somewhat" P62 "side" P59 "table" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "somewhat" P57 "block" [0.000309598] {1} 
+S -> "quite" P57 "box" [0.000309598] {1} 
+S -> "somewhat" P57 "sphere" [0.000309598] {1} 
+S -> "pretty" P57 "rectangle" [0.000309598] {1} 
+S -> P66 "tube" [0.000309598] {1} 
+S -> "fairly" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "box" [0.000309598] {1} 
+S -> "fairly" P57 "triangle" [0.000309598] {1} 
+S -> "somewhat" P57 "cylinder" [0.000309598] {1} 
+S -> "somewhat" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> P70 P68 "side" P59 "table" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "quite" P57 "cylinder" [0.000309598] {1} 
+S -> P70 P63 "box" [0.000309598] {1} 
+S -> "pretty" P60 "sphere" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "quite" P57 "sphere" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> "somewhat" P57 "rectangle" [0.000309598] {1} 
+S -> "rather" P57 "box" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "very" P57 "cup" [0.000309598] {1} 
+S -> "pretty" P57 "block" [0.000309598] {1} 
+S -> P66 "cup" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "very" P57 "sphere" [0.000309598] {1} 
+S -> "very" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> P70 P63 "prism" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "pretty" P57 "box" [0.000309598] {1} 
+S -> "above" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "rather" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "quite" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P70 P63 "prism" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "somewhat" P60 "rectangle" [0.000309598] {1} 
+S -> "fairly" P57 "cup" [0.000309598] {1} 
+S -> "somewhat" P57 "block" [0.000309598] {1} 
+S -> "rather" P62 "farther" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "triangle" [0.000309598] {1} 
+S -> "pretty" P57 "sphere" [0.000309598] {1} 
+S -> "very" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "pretty" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> P66 "bottle" [0.000309598] {1} 
+S -> P66 "sphere" [0.000309598] {1} 
+S -> "rather" P57 "bottle" [0.000309598] {1} 
+S -> "fairly" P60 "cylinder" [0.000309598] {1} 
+S -> "rather" P57 "cup" [0.000309598] {1} 
+S -> "rather" P57 "tube" [0.000309598] {1} 
+S -> "rather" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "pretty" P60 "bottle" [0.000309598] {1} 
+S -> "quite" P57 "tube" [0.000309598] {1} 
+S -> "somewhat" P60 "bottle" [0.000309598] {1} 
+S -> "somewhat" P57 "cup" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> "fairly" P60 "prism" [0.000309598] {1} 
+S -> "somewhat" P57 "box" [0.000309598] {1} 
+S -> P62 "side" P59 "table" [0.000309598] {1} 
+S -> "pretty" P62 "farther" "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "tube" [0.000309598] {1} 
+S -> "rather" P57 "bottle" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "very" P57 "rectangle" [0.000309598] {1} 
+S -> "rather" P57 "prism" [0.000309598] {1} 
+S -> "rather" P57 "bottle" [0.000309598] {1} 
+S -> "below" "the" "middle" P59 "table" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> "pretty" P60 "triangle" [0.000309598] {1} 
+S -> P70 P68 "farther" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "sphere" [0.000309598] {1} 
+S -> "fairly" P62 "nearer" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P62 "far" "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P62 "near" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "pretty" P60 "sphere" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> "pretty" P57 "triangle" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> P70 P63 "cup" [0.000309598] {1} 
+S -> "to" P64 P68 "front" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "somewhat" P57 "cup" [0.000309598] {1} 
+S -> "somewhat" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "triangle" [0.000309598] {1} 
+S -> "quite" P57 "bottle" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "pretty" P60 "cylinder" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "very" P57 "block" [0.000309598] {1} 
+S -> "fairly" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "tube" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> P70 P63 "cup" [0.000309598] {1} 
+S -> "somewhat" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "pretty" P60 "triangle" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> "rather" P57 "box" [0.000309598] {1} 
+S -> "quite" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "cylinder" [0.000309598] {1} 
+S -> "very" P57 "rectangle" [0.000309598] {1} 
+S -> "somewhat" P62 "far" "corner" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "sphere" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "very" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> P66 "tube" [0.000309598] {1} 
+S -> "very" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P66 "triangle" [0.000309598] {1} 
+S -> "somewhat" P60 "cup" [0.000309598] {1} 
+S -> "somewhat" P60 "bottle" [0.000309598] {1} 
+S -> "fairly" P57 "box" [0.000309598] {1} 
+S -> "fairly" P60 "cup" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "pretty" P57 "block" [0.000309598] {1} 
+S -> P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "block" [0.000309598] {1} 
+S -> "pretty" P60 "bottle" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> P66 "cup" [0.000309598] {1} 
+S -> "quite" P57 "bottle" [0.000309598] {1} 
+S -> P62 "back" "corner" P59 "table" [0.000309598] {1} 
+S -> P70 P63 "tube" [0.000309598] {1} 
+S -> P70 P63 "rectangle" [0.000309598] {1} 
+S -> "pretty" P57 "cylinder" [0.000309598] {1} 
+S -> "fairly" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P62 "back" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "tube" [0.000309598] {1} 
+S -> "above" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "prism" [0.000309598] {1} 
+S -> "very" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "ball" [0.000309598] {1} 
+S -> "fairly" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> P70 P63 "cup" [0.000309598] {1} 
+S -> "quite" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "triangle" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "fairly" P60 "triangle" [0.000309598] {1} 
+S -> "very" P57 "block" [0.000309598] {1} 
+S -> "quite" P57 "box" [0.000309598] {1} 
+S -> "quite" P57 "block" [0.000309598] {1} 
+S -> "fairly" P60 "tube" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "very" P57 "block" [0.000309598] {1} 
+S -> "quite" P62 "side" P59 "table" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "rather" P57 "cup" [0.000309598] {1} 
+S -> "very" P57 "rectangle" [0.000309598] {1} 
+S -> "pretty" P57 "sphere" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> P66 "block" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "quite" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> P70 P63 "cylinder" [0.000309598] {1} 
+S -> "quite" P57 "block" [0.000309598] {1} 
+S -> "pretty" P57 "cylinder" [0.000309598] {1} 
+S -> "quite" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "block" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "above" P64 "edge" P59 "table" [0.000309598] {1} 
+S -> "fairly" "far" P57 "cup" [0.000309598] {1} 
+S -> "pretty" P57 "cup" [0.000309598] {1} 
+S -> "pretty" P60 "cup" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> "somewhat" P57 "ball" [0.000309598] {1} 
+S -> P66 "ball" [0.000309598] {1} 
+S -> "somewhat" P57 "block" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "fairly" P62 "far" "corner" P59 "table" [0.000309598] {1} 
+S -> P60 "cylinder" [0.000309598] {1} 
+S -> "pretty" P57 "block" [0.000309598] {1} 
+S -> "somewhat" P62 "nearer" "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "tube" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "somewhat" P57 "prism" [0.000309598] {1} 
+S -> "fairly" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "bottle" [0.000309598] {1} 
+S -> "pretty" P57 "cup" [0.000309598] {1} 
+S -> "fairly" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "bottle" [0.000309598] {1} 
+S -> P66 "cylinder" [0.000309598] {1} 
+S -> "quite" P57 "tube" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> "rather" P57 "triangle" [0.000309598] {1} 
+S -> P66 "sphere" [0.000309598] {1} 
+S -> "rather" P57 "sphere" [0.000309598] {1} 
+S -> "fairly" P57 "bottle" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "very" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "block" [0.000309598] {1} 
+S -> P70 P63 "box" [0.000309598] {1} 
+S -> "fairly" P57 "sphere" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> "very" P57 "box" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "pretty" P57 "triangle" [0.000309598] {1} 
+S -> "pretty" P62 "back" "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "bottle" [0.000309598] {1} 
+S -> "fairly" P60 "bottle" [0.000309598] {1} 
+S -> "on" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> P66 "cup" [0.000309598] {1} 
+S -> "rather" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P66 "sphere" [0.000309598] {1} 
+S -> "fairly" P57 "prism" [0.000309598] {1} 
+S -> "somewhat" P57 "prism" [0.000309598] {1} 
+S -> "rather" P57 "cup" [0.000309598] {1} 
+S -> "rather" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P66 "prism" [0.000309598] {1} 
+S -> "very" P57 "ball" [0.000309598] {1} 
+S -> "quite" P57 "bottle" [0.000309598] {1} 
+S -> "very" P57 "prism" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> "fairly" P57 "rectangle" [0.000309598] {1} 
+S -> "somewhat" P57 "tube" [0.000309598] {1} 
+S -> P70 P63 "ball" [0.000309598] {1} 
+S -> "rather" P57 "prism" [0.000309598] {1} 
+S -> P62 "side" P59 "table" [0.000309598] {1} 
+S -> "pretty" P62 "far" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "somewhat" P57 "box" [0.000309598] {1} 
+S -> "very" P57 "cup" [0.000309598] {1} 
+S -> "rather" P57 "sphere" [0.000309598] {1} 
+S -> P66 "tube" [0.000309598] {1} 
+S -> "pretty" P57 "rectangle" [0.000309598] {1} 
+S -> "quite" P57 "rectangle" [0.000309598] {1} 
+S -> P66 "triangle" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "very" P57 "cup" [0.000309598] {1} 
+S -> "pretty" P60 "tube" [0.000309598] {1} 
+S -> P70 P68 "far" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> P66 "cylinder" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "on" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> P70 P63 "prism" [0.000309598] {1} 
+S -> "rather" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "cylinder" [0.000309598] {1} 
+S -> P66 "prism" [0.000309598] {1} 
+S -> "fairly" P60 "prism" [0.000309598] {1} 
+S -> "somewhat" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "rectangle" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "quite" P57 "cup" [0.000309598] {1} 
+S -> "somewhat" P57 "cup" [0.000309598] {1} 
+S -> P70 P63 "triangle" [0.000309598] {1} 
+S -> "quite" P57 "rectangle" [0.000309598] {1} 
+S -> "rather" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> P66 "tube" [0.000309598] {1} 
+S -> "fairly" P57 "sphere" [0.000309598] {1} 
+S -> "somewhat" P60 "tube" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "pretty" P57 "triangle" [0.000309598] {1} 
+S -> "fairly" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P60 "triangle" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "rather" P57 "block" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "somewhat" P57 "tube" [0.000309598] {1} 
+S -> "below" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P60 "sphere" [0.000309598] {1} 
+S -> "somewhat" P57 "bottle" [0.000309598] {1} 
+S -> "quite" P57 "cup" [0.000309598] {1} 
+S -> "on" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> P66 "triangle" [0.000309598] {1} 
+S -> P70 P63 "tube" [0.000309598] {1} 
+S -> "rather" P57 "prism" [0.000309598] {1} 
+S -> "pretty" P60 "cup" [0.000309598] {1} 
+S -> "pretty" P57 "tube" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "pretty" P60 "block" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "behind" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> P70 P63 "sphere" [0.000309598] {1} 
+S -> "quite" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "sphere" [0.000309598] {1} 
+S -> "quite" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "pretty" P62 "side" P59 "table" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "pretty" P60 "box" [0.000309598] {1} 
+S -> "fairly" P57 "box" [0.000309598] {1} 
+S -> "fairly" P60 "bottle" [0.000309598] {1} 
+S -> "to" P64 P68 "back" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P60 "ball" [0.000309598] {1} 
+S -> "fairly" P57 "sphere" [0.000309598] {1} 
+S -> "very" P57 "box" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> "to" P64 P68 "far" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "tube" [0.000309598] {1} 
+S -> "quite" P57 "rectangle" [0.000309598] {1} 
+S -> P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "cup" [0.000309598] {1} 
+S -> "quite" P57 "sphere" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "very" P57 "box" [0.000309598] {1} 
+S -> P66 "cylinder" [0.000309598] {1} 
+S -> "very" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "block" [0.000309598] {1} 
+S -> "pretty" P57 "ball" [0.000309598] {1} 
+S -> "somewhat" P60 "cylinder" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "quite" P57 "ball" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "quite" P57 "sphere" [0.000309598] {1} 
+S -> "fairly" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "pretty" P60 "block" [0.000309598] {1} 
+S -> "somewhat" P57 "cylinder" [0.000309598] {1} 
+S -> "quite" P57 "tube" [0.000309598] {1} 
+S -> "very" P57 "triangle" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> "fairly" P57 "block" [0.000309598] {1} 
+S -> "somewhat" P57 "triangle" [0.000309598] {1} 
+S -> P62 "back" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> P66 "bottle" [0.000309598] {1} 
+S -> "pretty" P57 "ball" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "pretty" P57 "ball" [0.000309598] {1} 
+S -> "quite" P57 "tube" [0.000309598] {1} 
+S -> "rather" P62 "back" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "box" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "rather" P57 "cup" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "to" P64 P68 "back" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> P62 "far" "corner" P59 "table" [0.000309598] {1} 
+S -> P70 P63 "bottle" [0.000309598] {1} 
+S -> "somewhat" P57 "sphere" [0.000309598] {1} 
+S -> "rather" P62 "back" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "pretty" P57 "ball" [0.000309598] {1} 
+S -> "below" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> P66 "tube" [0.000309598] {1} 
+S -> "pretty" P57 "triangle" [0.000309598] {1} 
+S -> "fairly" P57 "tube" [0.000309598] {1} 
+S -> "very" P57 "prism" [0.000309598] {1} 
+S -> "pretty" P60 "block" [0.000309598] {1} 
+S -> "pretty" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "to" P64 P59 "front" "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "above" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "box" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "bottle" [0.000309598] {1} 
+S -> "fairly" P57 "tube" [0.000309598] {1} 
+S -> "very" P57 "tube" [0.000309598] {1} 
+S -> "pretty" P60 "prism" [0.000309598] {1} 
+S -> "fairly" P57 "box" [0.000309598] {1} 
+S -> "pretty" P57 "block" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "cup" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "somewhat" P57 "ball" [0.000309598] {1} 
+S -> "pretty" P57 "ball" [0.000309598] {1} 
+S -> "fairly" P57 "prism" [0.000309598] {1} 
+S -> "somewhat" P57 "rectangle" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "rather" P57 "cylinder" [0.000309598] {1} 
+S -> "fairly" P57 "box" [0.000309598] {1} 
+S -> "pretty" P57 "ball" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "pretty" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P66 "triangle" [0.000309598] {1} 
+S -> "fairly" P57 "cylinder" [0.000309598] {1} 
+S -> "pretty" P60 "block" [0.000309598] {1} 
+S -> "somewhat" P57 "rectangle" [0.000309598] {1} 
+S -> "somewhat" P57 "box" [0.000309598] {1} 
+S -> "somewhat" P57 "prism" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> "rather" P57 "prism" [0.000309598] {1} 
+S -> "quite" P57 "cylinder" [0.000309598] {1} 
+S -> "pretty" P57 "cup" [0.000309598] {1} 
+S -> P66 "rectangle" [0.000309598] {1} 
+S -> P66 "sphere" [0.000309598] {1} 
+S -> "somewhat" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "triangle" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> "somewhat" P62 "side" P59 "table" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> "very" P57 "tube" [0.000309598] {1} 
+S -> "fairly" P57 "sphere" [0.000309598] {1} 
+S -> "quite" P57 "prism" [0.000309598] {1} 
+S -> "rather" P57 "sphere" [0.000309598] {1} 
+S -> "rather" P57 "triangle" [0.000309598] {1} 
+S -> "rather" P57 "triangle" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "rather" P57 "cup" [0.000309598] {1} 
+S -> "very" P57 "cup" [0.000309598] {1} 
+S -> "pretty" P57 "sphere" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "pretty" "far" "above" P64 "side" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "box" [0.000309598] {1} 
+S -> "fairly" P60 "rectangle" [0.000309598] {1} 
+S -> "quite" P57 "triangle" [0.000309598] {1} 
+S -> P66 "triangle" [0.000309598] {1} 
+S -> "pretty" P57 "rectangle" [0.000309598] {1} 
+S -> "somewhat" "far" "above" P64 "side" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "block" [0.000309598] {1} 
+S -> "very" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "bottle" [0.000309598] {1} 
+S -> "pretty" P57 "prism" [0.000309598] {1} 
+S -> "quite" P57 "cup" [0.000309598] {1} 
+S -> "very" P57 "triangle" [0.000309598] {1} 
+S -> "quite" P57 "triangle" [0.000309598] {1} 
+S -> "pretty" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "box" [0.000309598] {1} 
+S -> "pretty" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "rectangle" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "very" P62 "farther" "corner" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "block" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "very" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "ball" [0.000309598] {1} 
+S -> "fairly" P62 "nearer" "corner" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "tube" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "fairly" P60 "prism" [0.000309598] {1} 
+S -> P66 "triangle" [0.000309598] {1} 
+S -> "pretty" P65 "farther" "corner" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "triangle" [0.000309598] {1} 
+S -> "very" P57 "tube" [0.000309598] {1} 
+S -> "fairly" P62 "side" P59 "table" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "pretty" P57 "prism" [0.000309598] {1} 
+S -> "pretty" P57 "tube" [0.000309598] {1} 
+S -> "pretty" P60 "cup" [0.000309598] {1} 
+S -> "fairly" P60 "prism" [0.000309598] {1} 
+S -> "fairly" P57 "tube" [0.000309598] {1} 
+S -> "quite" P57 "sphere" [0.000309598] {1} 
+S -> "pretty" P57 "ball" [0.000309598] {1} 
+S -> P66 "cup" [0.000309598] {1} 
+S -> P66 "block" [0.000309598] {1} 
+S -> "somewhat" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> P70 P68 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P60 "block" [0.000309598] {1} 
+S -> "pretty" P57 "box" [0.000309598] {1} 
+S -> "pretty" P57 "cup" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "fairly" P60 "cup" [0.000309598] {1} 
+S -> "very" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> "pretty" P57 "block" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "very" P57 "prism" [0.000309598] {1} 
+S -> "very" P57 "cup" [0.000309598] {1} 
+S -> "rather" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "very" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> "somewhat" P62 "farther" "corner" P59 "table" [0.000309598] {1} 
+S -> "rather" P62 "side" P59 "table" [0.000309598] {1} 
+S -> P66 "cylinder" [0.000309598] {1} 
+S -> "somewhat" P60 "ball" [0.000309598] {1} 
+S -> "fairly" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "block" [0.000309598] {1} 
+S -> "somewhat" P60 "sphere" [0.000309598] {1} 
+S -> "somewhat" P57 "ball" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "on" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P60 "sphere" [0.000309598] {1} 
+S -> "quite" P57 "triangle" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "fairly" P57 "cylinder" [0.000309598] {1} 
+S -> "somewhat" P57 "triangle" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> "pretty" P57 "box" [0.000309598] {1} 
+S -> P66 "cup" [0.000309598] {1} 
+S -> "quite" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "bottle" [0.000309598] {1} 
+S -> "quite" P57 "rectangle" [0.000309598] {1} 
+S -> "pretty" P57 "tube" [0.000309598] {1} 
+S -> "very" P57 "sphere" [0.000309598] {1} 
+S -> "pretty" P57 "sphere" [0.000309598] {1} 
+S -> "very" P57 "block" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> "somewhat" P57 "block" [0.000309598] {1} 
+S -> "rather" P57 "tube" [0.000309598] {1} 
+S -> P70 P63 "block" [0.000309598] {1} 
+S -> "fairly" P57 "block" [0.000309598] {1} 
+S -> "rather" P57 "sphere" [0.000309598] {1} 
+S -> "rather" P57 "sphere" [0.000309598] {1} 
+S -> "rather" P57 "cylinder" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "pretty" P57 "bottle" [0.000309598] {1} 
+S -> P66 "cylinder" [0.000309598] {1} 
+S -> "pretty" P57 "cylinder" [0.000309598] {1} 
+S -> P70 P63 "rectangle" [0.000309598] {1} 
+S -> "rather" P57 "rectangle" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> P60 "triangle" [0.000309598] {1} 
+S -> "fairly" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "cup" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "pretty" P62 "side" P59 "table" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "somewhat" P57 "sphere" [0.000309598] {1} 
+S -> "quite" P62 "side" P59 "table" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "fairly" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "prism" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "pretty" P57 "block" [0.000309598] {1} 
+S -> "fairly" P57 "bottle" [0.000309598] {1} 
+S -> "very" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "pretty" P62 "side" P59 "table" [0.000309598] {1} 
+S -> P66 "prism" [0.000309598] {1} 
+S -> P70 P68 "farther" "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "cup" [0.000309598] {1} 
+S -> "fairly" P58 "middle" P59 "table" [0.000309598] {1} 
+S -> "fairly" P60 "block" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "somewhat" P57 "sphere" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "fairly" P62 "farther" "corner" P59 "table" [0.000309598] {1} 
+S -> P66 "rectangle" [0.000309598] {1} 
+S -> "very" P57 "cylinder" [0.000309598] {1} 
+S -> "somewhat" P57 "ball" [0.000309598] {1} 
+S -> "quite" P62 "far" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "tube" [0.000309598] {1} 
+S -> "very" P57 "box" [0.000309598] {1} 
+S -> "quite" P57 "sphere" [0.000309598] {1} 
+S -> "fairly" P60 "prism" [0.000309598] {1} 
+S -> "somewhat" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "ball" [0.000309598] {1} 
+S -> "fairly" P60 "bottle" [0.000309598] {1} 
+S -> "rather" P57 "block" [0.000309598] {1} 
+S -> P70 P68 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> "somewhat" P60 "prism" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> "pretty" P57 "prism" [0.000309598] {1} 
+S -> P66 "cylinder" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "pretty" P57 "rectangle" [0.000309598] {1} 
+S -> "fairly" P60 "bottle" [0.000309598] {1} 
+S -> "rather" P62 "far" "corner" P59 "table" [0.000309598] {1} 
+S -> "below" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> P60 "triangle" [0.000309598] {1} 
+S -> "very" P57 "tube" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> P66 "cylinder" [0.000309598] {1} 
+S -> "rather" P57 "bottle" [0.000309598] {1} 
+S -> "somewhat" P57 "ball" [0.000309598] {1} 
+S -> "somewhat" P57 "cylinder" [0.000309598] {1} 
+S -> "rather" P57 "rectangle" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> P66 "box" [0.000309598] {1} 
+S -> "very" P57 "ball" [0.000309598] {1} 
+S -> "quite" P57 "triangle" [0.000309598] {1} 
+S -> "rather" P57 "tube" [0.000309598] {1} 
+S -> P66 "box" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "somewhat" P57 "sphere" [0.000309598] {1} 
+S -> "fairly" P57 "tube" [0.000309598] {1} 
+S -> "somewhat" P62 "far" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> "below" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "bottle" [0.000309598] {1} 
+S -> "fairly" P60 "cup" [0.000309598] {1} 
+S -> "somewhat" P60 "triangle" [0.000309598] {1} 
+S -> "very" P57 "bottle" [0.000309598] {1} 
+S -> "behind" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "box" [0.000309598] {1} 
+S -> "quite" P57 "prism" [0.000309598] {1} 
+S -> "rather" P57 "triangle" [0.000309598] {1} 
+S -> "very" P57 "ball" [0.000309598] {1} 
+S -> "somewhat" P62 "farther" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "somewhat" P60 "ball" [0.000309598] {1} 
+S -> "somewhat" P57 "block" [0.000309598] {1} 
+S -> P66 "ball" [0.000309598] {1} 
+S -> "quite" P57 "bottle" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "to" P64 P68 "front" "corner" P59 "table" [0.000309598] {1} 
+S -> "below" P64 "edge" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "box" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "sphere" [0.000309598] {1} 
+S -> P70 P68 "back" "corner" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "bottle" [0.000309598] {1} 
+S -> "fairly" P62 "back" "corner" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "ball" [0.000309598] {1} 
+S -> "pretty" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "quite" P62 "back" "corner" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "bottle" [0.000309598] {1} 
+S -> "rather" P57 "rectangle" [0.000309598] {1} 
+S -> P66 "cylinder" [0.000309598] {1} 
+S -> "rather" P57 "triangle" [0.000309598] {1} 
+S -> "to" P64 P59 "near" "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "box" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "pretty" P57 "box" [0.000309598] {1} 
+S -> "quite" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "very" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "above" P64 "side" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P62 "farther" "corner" P59 "table" [0.000309598] {1} 
+S -> P66 "prism" [0.000309598] {1} 
+S -> "quite" P57 "triangle" [0.000309598] {1} 
+S -> "fairly" "far" P66 "tube" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> "rather" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "tube" [0.000309598] {1} 
+S -> "pretty" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "triangle" [0.000309598] {1} 
+S -> "to" P64 P59 "near" "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "ball" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> P66 "rectangle" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "pretty" P60 "sphere" [0.000309598] {1} 
+S -> "behind" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P60 "triangle" [0.000309598] {1} 
+S -> "fairly" P57 "bottle" [0.000309598] {1} 
+S -> "somewhat" P57 "tube" [0.000309598] {1} 
+S -> P66 "box" [0.000309598] {1} 
+S -> "fairly" P57 "ball" [0.000309598] {1} 
+S -> "fairly" P57 "cup" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "fairly" P57 "cylinder" [0.000309598] {1} 
+S -> "very" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "sphere" [0.000309598] {1} 
+S -> "pretty" P57 "triangle" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> "fairly" P60 "rectangle" [0.000309598] {1} 
+S -> "fairly" P57 "box" [0.000309598] {1} 
+S -> "quite" P57 "block" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "very" P57 "tube" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> P66 "cylinder" [0.000309598] {1} 
+S -> "somewhat" P57 "sphere" [0.000309598] {1} 
+S -> P66 "triangle" [0.000309598] {1} 
+S -> "very" P57 "prism" [0.000309598] {1} 
+S -> "very" P57 "cylinder" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> P66 "ball" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "somewhat" P57 "tube" [0.000309598] {1} 
+S -> "quite" P57 "block" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "quite" P57 "prism" [0.000309598] {1} 
+S -> "fairly" P57 "block" [0.000309598] {1} 
+S -> "quite" P57 "sphere" [0.000309598] {1} 
+S -> "very" P57 "prism" [0.000309598] {1} 
+S -> "fairly" P57 "cup" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> P66 "tube" [0.000309598] {1} 
+S -> "somewhat" P57 "prism" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "quite" P62 "far" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P60 "triangle" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> "quite" P57 "ball" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "on" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "rather" P57 "cylinder" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> "quite" P57 "rectangle" [0.000309598] {1} 
+S -> "rather" P57 "rectangle" [0.000309598] {1} 
+S -> "quite" P57 "ball" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "fairly" P57 "block" [0.000309598] {1} 
+S -> "fairly" P57 "prism" [0.000309598] {1} 
+S -> P70 P63 "cup" [0.000309598] {1} 
+S -> "somewhat" P62 "side" P59 "table" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "very" P57 "rectangle" [0.000309598] {1} 
+S -> "rather" P57 "prism" [0.000309598] {1} 
+S -> "behind" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "somewhat" P57 "triangle" [0.000309598] {1} 
+S -> "pretty" P57 "rectangle" [0.000309598] {1} 
+S -> "pretty" P57 "prism" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "somewhat" P57 "ball" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "fairly" P57 "ball" [0.000309598] {1} 
+S -> "pretty" P62 "back" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P65 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "bottle" [0.000309598] {1} 
+S -> "pretty" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "cylinder" [0.000309598] {1} 
+S -> P70 P63 "box" [0.000309598] {1} 
+S -> "rather" P57 "box" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "quite" P57 "ball" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> "rather" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "sphere" [0.000309598] {1} 
+S -> "fairly" P57 "bottle" [0.000309598] {1} 
+S -> "somewhat" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "very" P62 "far" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "pretty" P60 "triangle" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> P70 P63 "triangle" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "quite" P57 "prism" [0.000309598] {1} 
+S -> "pretty" P57 "cup" [0.000309598] {1} 
+S -> "very" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "prism" [0.000309598] {1} 
+S -> P62 "front" "corner" P59 "table" [0.000309598] {1} 
+S -> "to" P64 P68 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> P66 "ball" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "somewhat" P57 "box" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> P66 "tube" [0.000309598] {1} 
+S -> "quite" P57 "triangle" [0.000309598] {1} 
+S -> "somewhat" P57 "bottle" [0.000309598] {1} 
+S -> "fairly" P57 "block" [0.000309598] {1} 
+S -> P66 "ball" [0.000309598] {1} 
+S -> "rather" P62 "back" "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P60 "triangle" [0.000309598] {1} 
+S -> "very" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> "pretty" "far" P57 "bottle" [0.000309598] {1} 
+S -> "on" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "box" [0.000309598] {1} 
+S -> "somewhat" P57 "triangle" [0.000309598] {1} 
+S -> "pretty" P57 "cylinder" [0.000309598] {1} 
+S -> "pretty" P57 "bottle" [0.000309598] {1} 
+S -> P70 P63 "prism" [0.000309598] {1} 
+S -> "pretty" P57 "ball" [0.000309598] {1} 
+S -> "pretty" P57 "prism" [0.000309598] {1} 
+S -> "very" P57 "triangle" [0.000309598] {1} 
+S -> "quite" P57 "tube" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "very" P57 "tube" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "somewhat" P57 "cup" [0.000309598] {1} 
+S -> "fairly" P57 "sphere" [0.000309598] {1} 
+S -> "rather" P57 "ball" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "somewhat" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "pretty" P60 "triangle" [0.000309598] {1} 
+S -> "rather" P57 "sphere" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "pretty" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> P66 "bottle" [0.000309598] {1} 
+S -> "fairly" P57 "cup" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "very" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "block" [0.000309598] {1} 
+S -> "very" P57 "triangle" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "pretty" P60 "rectangle" [0.000309598] {1} 
+S -> "very" P57 "sphere" [0.000309598] {1} 
+S -> "very" P62 "back" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "fairly" P57 "triangle" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> P70 P63 "triangle" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> P70 P63 "bottle" [0.000309598] {1} 
+S -> "fairly" P57 "triangle" [0.000309598] {1} 
+S -> "somewhat" P57 "prism" [0.000309598] {1} 
+S -> "quite" P62 "side" P59 "table" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "quite" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "bottle" [0.000309598] {1} 
+S -> "quite" P57 "cylinder" [0.000309598] {1} 
+S -> "pretty" P57 "triangle" [0.000309598] {1} 
+S -> "pretty" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> "pretty" P60 "bottle" [0.000309598] {1} 
+S -> "pretty" P57 "rectangle" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> "very" P57 "prism" [0.000309598] {1} 
+S -> "fairly" P57 "cylinder" [0.000309598] {1} 
+S -> "rather" P57 "rectangle" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "quite" P57 "cup" [0.000309598] {1} 
+S -> "pretty" P62 "farther" "corner" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "bottle" [0.000309598] {1} 
+S -> "pretty" P60 "sphere" [0.000309598] {1} 
+S -> "rather" P57 "block" [0.000309598] {1} 
+S -> "rather" P57 "ball" [0.000309598] {1} 
+S -> "rather" P57 "prism" [0.000309598] {1} 
+S -> "pretty" P57 "block" [0.000309598] {1} 
+S -> "fairly" P57 "box" [0.000309598] {1} 
+S -> "somewhat" P57 "bottle" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> P70 P63 "ball" [0.000309598] {1} 
+S -> "above" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "somewhat" P57 "box" [0.000309598] {1} 
+S -> "rather" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "to" P64 P68 "side" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "bottle" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> P70 P63 "cylinder" [0.000309598] {1} 
+S -> "pretty" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "cup" [0.000309598] {1} 
+S -> "fairly" P62 "nearer" "corner" P59 "table" [0.000309598] {1} 
+S -> "below" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "fairly" P57 "ball" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "tube" [0.000309598] {1} 
+S -> "fairly" P57 "prism" [0.000309598] {1} 
+S -> P66 "bottle" [0.000309598] {1} 
+S -> "pretty" P60 "tube" [0.000309598] {1} 
+S -> "fairly" P57 "triangle" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "fairly" P60 "cylinder" [0.000309598] {1} 
+S -> P66 "box" [0.000309598] {1} 
+S -> "somewhat" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "pretty" P60 "ball" [0.000309598] {1} 
+S -> P66 "cylinder" [0.000309598] {1} 
+S -> "pretty" P57 "cup" [0.000309598] {1} 
+S -> "somewhat" P62 "side" P59 "table" [0.000309598] {1} 
+S -> P62 "side" P59 "table" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> "pretty" P57 "bottle" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> "rather" P57 "cup" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "very" P57 "triangle" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "fairly" P57 "tube" [0.000309598] {1} 
+S -> "very" P57 "cylinder" [0.000309598] {1} 
+S -> "quite" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P60 "rectangle" [0.000309598] {1} 
+S -> "pretty" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "bottle" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "fairly" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "rather" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "block" [0.000309598] {1} 
+S -> "fairly" P60 "triangle" [0.000309598] {1} 
+S -> "quite" P57 "block" [0.000309598] {1} 
+S -> "pretty" P60 "prism" [0.000309598] {1} 
+S -> "to" P64 P68 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "very" P58 "middle" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "block" [0.000309598] {1} 
+S -> P70 P63 "cylinder" [0.000309598] {1} 
+S -> "pretty" P57 "box" [0.000309598] {1} 
+S -> "pretty" P57 "prism" [0.000309598] {1} 
+S -> "pretty" P57 "sphere" [0.000309598] {1} 
+S -> "quite" P57 "sphere" [0.000309598] {1} 
+S -> "fairly" P57 "sphere" [0.000309598] {1} 
+S -> P62 "back" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "ball" [0.000309598] {1} 
+S -> "rather" P62 "side" P59 "table" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "fairly" P57 "ball" [0.000309598] {1} 
+S -> "to" P64 P68 "near" "corner" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "box" [0.000309598] {1} 
+S -> P70 P68 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "rather" P62 "far" "corner" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "ball" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> "rather" P57 "triangle" [0.000309598] {1} 
+S -> P66 "box" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> "somewhat" P57 "cup" [0.000309598] {1} 
+S -> "very" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "on" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "to" P64 P59 "middle" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "cylinder" [0.000309598] {1} 
+S -> "fairly" P57 "cup" [0.000309598] {1} 
+S -> P66 "ball" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> "rather" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "below" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "behind" P64 "edge" P59 "table" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "very" P57 "rectangle" [0.000309598] {1} 
+S -> P66 "rectangle" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "very" P57 "bottle" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "quite" P57 "box" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> "rather" P57 "cylinder" [0.000309598] {1} 
+S -> "rather" P57 "bottle" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> "quite" P57 "cylinder" [0.000309598] {1} 
+S -> "fairly" P57 "bottle" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "fairly" P57 "cylinder" [0.000309598] {1} 
+S -> "quite" P57 "cup" [0.000309598] {1} 
+S -> "pretty" P57 "triangle" [0.000309598] {1} 
+S -> "above" P64 "side" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "ball" [0.000309598] {1} 
+S -> "on" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "rather" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P60 "block" [0.000309598] {1} 
+S -> "very" P57 "block" [0.000309598] {1} 
+S -> P62 "side" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "sphere" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "somewhat" P60 "prism" [0.000309598] {1} 
+S -> "somewhat" P60 "triangle" [0.000309598] {1} 
+S -> P66 "sphere" [0.000309598] {1} 
+S -> "quite" P57 "cup" [0.000309598] {1} 
+S -> "rather" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "prism" [0.000309598] {1} 
+S -> "very" P57 "rectangle" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> "fairly" P62 "front" "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P62 "front" "corner" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "cylinder" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> P66 "cup" [0.000309598] {1} 
+S -> "quite" P57 "sphere" [0.000309598] {1} 
+S -> P66 "cylinder" [0.000309598] {1} 
+S -> "rather" P57 "sphere" [0.000309598] {1} 
+S -> "fairly" P60 "box" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "very" P57 "box" [0.000309598] {1} 
+S -> "pretty" P60 "bottle" [0.000309598] {1} 
+S -> "quite" P57 "cylinder" [0.000309598] {1} 
+S -> P66 "box" [0.000309598] {1} 
+S -> "very" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "box" [0.000309598] {1} 
+S -> "rather" P57 "triangle" [0.000309598] {1} 
+S -> P70 P63 "bottle" [0.000309598] {1} 
+S -> "rather" P57 "box" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> "somewhat" P57 "bottle" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "fairly" P57 "cup" [0.000309598] {1} 
+S -> "pretty" P57 "bottle" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "rather" P57 "tube" [0.000309598] {1} 
+S -> "above" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "cup" [0.000309598] {1} 
+S -> "rather" P57 "cylinder" [0.000309598] {1} 
+S -> "fairly" P57 "ball" [0.000309598] {1} 
+S -> "quite" P57 "bottle" [0.000309598] {1} 
+S -> "pretty" P60 "tube" [0.000309598] {1} 
+S -> "fairly" P57 "cylinder" [0.000309598] {1} 
+S -> P66 "block" [0.000309598] {1} 
+S -> "somewhat" P57 "cylinder" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "quite" P57 "cylinder" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "quite" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "above" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P60 "sphere" [0.000309598] {1} 
+S -> "fairly" P57 "block" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "somewhat" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P60 "triangle" [0.000309598] {1} 
+S -> "somewhat" P60 "tube" [0.000309598] {1} 
+S -> P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> P70 P63 "ball" [0.000309598] {1} 
+S -> "fairly" P60 "sphere" [0.000309598] {1} 
+S -> "quite" P57 "sphere" [0.000309598] {1} 
+S -> "rather" P57 "box" [0.000309598] {1} 
+S -> "somewhat" P57 "tube" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> "very" P57 "prism" [0.000309598] {1} 
+S -> P66 "cup" [0.000309598] {1} 
+S -> "pretty" P57 "tube" [0.000309598] {1} 
+S -> "pretty" P57 "cylinder" [0.000309598] {1} 
+S -> "rather" P57 "rectangle" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "fairly" "far" "from" "the" "middle" P59 "table" [0.000309598] {1} 
+S -> "to" P64 P59 "nearer" "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "sphere" [0.000309598] {1} 
+S -> "pretty" P57 "ball" [0.000309598] {1} 
+S -> "very" P57 "tube" [0.000309598] {1} 
+S -> "somewhat" P57 "prism" [0.000309598] {1} 
+S -> "fairly" P57 "tube" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "rather" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "quite" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P60 "bottle" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "quite" P57 "block" [0.000309598] {1} 
+S -> "fairly" P60 "cup" [0.000309598] {1} 
+S -> "somewhat" P57 "tube" [0.000309598] {1} 
+S -> "somewhat" P57 "triangle" [0.000309598] {1} 
+S -> "quite" P57 "sphere" [0.000309598] {1} 
+S -> "somewhat" P57 "block" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> "quite" P57 "sphere" [0.000309598] {1} 
+S -> "pretty" P57 "sphere" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "somewhat" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "fairly" P57 "block" [0.000309598] {1} 
+S -> "rather" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P66 "block" [0.000309598] {1} 
+S -> "fairly" P57 "box" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> P70 P63 "block" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> "somewhat" P65 "edge" P59 "table" [0.000309598] {1} 
+S -> P70 P68 "edge" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "rectangle" [0.000309598] {1} 
+S -> "somewhat" P60 "prism" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "very" P57 "triangle" [0.000309598] {1} 
+S -> "quite" P57 "rectangle" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> "somewhat" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "ball" [0.000309598] {1} 
+S -> "somewhat" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> P66 "block" [0.000309598] {1} 
+S -> "fairly" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "rather" P62 "farther" "corner" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "block" [0.000309598] {1} 
+S -> "fairly" P57 "ball" [0.000309598] {1} 
+S -> "very" P57 "block" [0.000309598] {1} 
+S -> P66 "block" [0.000309598] {1} 
+S -> "pretty" P57 "tube" [0.000309598] {1} 
+S -> "very" P57 "sphere" [0.000309598] {1} 
+S -> P70 P63 "block" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "to" P64 P68 "nearer" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "triangle" [0.000309598] {1} 
+S -> "pretty" P57 "prism" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "fairly" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "cylinder" [0.000309598] {1} 
+S -> "quite" P62 "near" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "pretty" P57 "sphere" [0.000309598] {1} 
+S -> "fairly" P57 "tube" [0.000309598] {1} 
+S -> "fairly" P57 "prism" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "rather" P57 "bottle" [0.000309598] {1} 
+S -> "to" P64 P68 "edge" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "rectangle" [0.000309598] {1} 
+S -> "very" P57 "bottle" [0.000309598] {1} 
+S -> "rather" P57 "sphere" [0.000309598] {1} 
+S -> "very" P57 "ball" [0.000309598] {1} 
+S -> "fairly" P57 "rectangle" [0.000309598] {1} 
+S -> P66 "triangle" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> P66 "bottle" [0.000309598] {1} 
+S -> "pretty" P57 "sphere" [0.000309598] {1} 
+S -> P70 P68 "side" P59 "table" [0.000309598] {1} 
+S -> "pretty" P60 "cylinder" [0.000309598] {1} 
+S -> "quite" P57 "bottle" [0.000309598] {1} 
+S -> "fairly" P57 "cylinder" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "somewhat" P57 "box" [0.000309598] {1} 
+S -> "very" P57 "box" [0.000309598] {1} 
+S -> "quite" P57 "ball" [0.000309598] {1} 
+S -> "behind" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> P70 P63 "prism" [0.000309598] {1} 
+S -> "fairly" P60 "cup" [0.000309598] {1} 
+S -> "somewhat" P57 "cylinder" [0.000309598] {1} 
+S -> P70 P63 "box" [0.000309598] {1} 
+S -> "very" P57 "box" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "rather" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> P70 P63 "rectangle" [0.000309598] {1} 
+S -> "fairly" P57 "sphere" [0.000309598] {1} 
+S -> "rather" P57 "prism" [0.000309598] {1} 
+S -> P66 "sphere" [0.000309598] {1} 
+S -> "rather" P57 "triangle" [0.000309598] {1} 
+S -> "fairly" P57 "tube" [0.000309598] {1} 
+S -> P66 "box" [0.000309598] {1} 
+S -> "fairly" P57 "rectangle" [0.000309598] {1} 
+S -> "fairly" P60 "cup" [0.000309598] {1} 
+S -> "very" P57 "cup" [0.000309598] {1} 
+S -> "rather" P62 "back" "corner" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "ball" [0.000309598] {1} 
+S -> "fairly" P57 "sphere" [0.000309598] {1} 
+S -> "somewhat" P60 "block" [0.000309598] {1} 
+S -> "very" P57 "rectangle" [0.000309598] {1} 
+S -> "very" P57 "block" [0.000309598] {1} 
+S -> "on" P64 "edge" P59 "table" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "pretty" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "somewhat" P57 "bottle" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> "quite" P57 "triangle" [0.000309598] {1} 
+S -> "somewhat" P57 "cup" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> "somewhat" P57 "box" [0.000309598] {1} 
+S -> "fairly" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "box" [0.000309598] {1} 
+S -> "quite" P57 "rectangle" [0.000309598] {1} 
+S -> "very" P57 "bottle" [0.000309598] {1} 
+S -> "very" P57 "tube" [0.000309598] {1} 
+S -> P70 P63 "triangle" [0.000309598] {1} 
+S -> "quite" P57 "bottle" [0.000309598] {1} 
+S -> "somewhat" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "box" [0.000309598] {1} 
+S -> "somewhat" P57 "ball" [0.000309598] {1} 
+S -> "rather" P57 "bottle" [0.000309598] {1} 
+S -> "somewhat" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P62 "farther" "corner" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "box" [0.000309598] {1} 
+S -> P66 "cup" [0.000309598] {1} 
+S -> "rather" P57 "block" [0.000309598] {1} 
+S -> "rather" P57 "triangle" [0.000309598] {1} 
+S -> P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> P66 "triangle" [0.000309598] {1} 
+S -> "very" P62 "side" P59 "table" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> "pretty" P60 "sphere" [0.000309598] {1} 
+S -> "fairly" P57 "ball" [0.000309598] {1} 
+S -> "pretty" P60 "tube" [0.000309598] {1} 
+S -> "very" P57 "tube" [0.000309598] {1} 
+S -> P70 P63 "triangle" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "pretty" P65 "side" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "tube" [0.000309598] {1} 
+S -> "above" "the" "middle" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "cup" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> "rather" P57 "cylinder" [0.000309598] {1} 
+S -> P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> P66 "ball" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> P70 P68 "edge" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "tube" [0.000309598] {1} 
+S -> "rather" P57 "block" [0.000309598] {1} 
+S -> "rather" P57 "triangle" [0.000309598] {1} 
+S -> "somewhat" P57 "block" [0.000309598] {1} 
+S -> "very" P57 "sphere" [0.000309598] {1} 
+S -> "rather" P57 "cylinder" [0.000309598] {1} 
+S -> "somewhat" P57 "block" [0.000309598] {1} 
+S -> P70 P68 "back" "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P60 "tube" [0.000309598] {1} 
+S -> "pretty" P57 "triangle" [0.000309598] {1} 
+S -> "fairly" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P66 "rectangle" [0.000309598] {1} 
+S -> "somewhat" P57 "rectangle" [0.000309598] {1} 
+S -> "somewhat" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> P70 P63 "bottle" [0.000309598] {1} 
+S -> P70 P63 "cylinder" [0.000309598] {1} 
+S -> "very" P57 "triangle" [0.000309598] {1} 
+S -> "quite" P57 "cup" [0.000309598] {1} 
+S -> "somewhat" P58 "middle" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "cylinder" [0.000309598] {1} 
+S -> P66 "cylinder" [0.000309598] {1} 
+S -> "rather" P57 "prism" [0.000309598] {1} 
+S -> "rather" P57 "block" [0.000309598] {1} 
+S -> P66 "bottle" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> P66 "bottle" [0.000309598] {1} 
+S -> "somewhat" P60 "bottle" [0.000309598] {1} 
+S -> "somewhat" P57 "sphere" [0.000309598] {1} 
+S -> P66 "triangle" [0.000309598] {1} 
+S -> P66 "cup" [0.000309598] {1} 
+S -> "pretty" P60 "triangle" [0.000309598] {1} 
+S -> "somewhat" P57 "cylinder" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "quite" P57 "cup" [0.000309598] {1} 
+S -> "rather" P57 "cylinder" [0.000309598] {1} 
+S -> "somewhat" P60 "bottle" [0.000309598] {1} 
+S -> P70 P63 "ball" [0.000309598] {1} 
+S -> "rather" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "fairly" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "cup" [0.000309598] {1} 
+S -> "behind" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "sphere" [0.000309598] {1} 
+S -> P70 P63 "bottle" [0.000309598] {1} 
+S -> "pretty" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "bottle" [0.000309598] {1} 
+S -> "somewhat" P60 "prism" [0.000309598] {1} 
+S -> "very" P57 "rectangle" [0.000309598] {1} 
+S -> P70 P68 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> P66 "box" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "quite" P57 "triangle" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> P62 "front" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> "above" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "very" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> P62 "farther" "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "ball" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "fairly" P57 "cylinder" [0.000309598] {1} 
+S -> "fairly" P57 "cylinder" [0.000309598] {1} 
+S -> "somewhat" P57 "ball" [0.000309598] {1} 
+S -> "somewhat" P57 "bottle" [0.000309598] {1} 
+S -> P66 "cup" [0.000309598] {1} 
+S -> "on" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "ball" [0.000309598] {1} 
+S -> "somewhat" P57 "cylinder" [0.000309598] {1} 
+S -> "rather" P57 "tube" [0.000309598] {1} 
+S -> "very" P57 "tube" [0.000309598] {1} 
+S -> P66 "rectangle" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "very" P57 "tube" [0.000309598] {1} 
+S -> "fairly" P57 "tube" [0.000309598] {1} 
+S -> P70 P63 "sphere" [0.000309598] {1} 
+S -> "quite" P57 "prism" [0.000309598] {1} 
+S -> "somewhat" P57 "ball" [0.000309598] {1} 
+S -> "very" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "fairly" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> P70 P63 "cylinder" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "rectangle" [0.000309598] {1} 
+S -> "fairly" P60 "box" [0.000309598] {1} 
+S -> "quite" P62 "nearer" "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "block" [0.000309598] {1} 
+S -> "pretty" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "tube" [0.000309598] {1} 
+S -> P70 P63 "triangle" [0.000309598] {1} 
+S -> "fairly" P57 "rectangle" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> P66 "box" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> P66 "block" [0.000309598] {1} 
+S -> "rather" P57 "box" [0.000309598] {1} 
+S -> "somewhat" P57 "triangle" [0.000309598] {1} 
+S -> P66 "box" [0.000309598] {1} 
+S -> "very" P57 "bottle" [0.000309598] {1} 
+S -> "rather" P57 "bottle" [0.000309598] {1} 
+S -> "somewhat" P57 "prism" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "pretty" P57 "triangle" [0.000309598] {1} 
+S -> "somewhat" P57 "box" [0.000309598] {1} 
+S -> "somewhat" P57 "rectangle" [0.000309598] {1} 
+S -> "somewhat" P60 "rectangle" [0.000309598] {1} 
+S -> "fairly" P57 "block" [0.000309598] {1} 
+S -> "fairly" P57 "triangle" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "very" P57 "sphere" [0.000309598] {1} 
+S -> "somewhat" P65 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P62 "back" "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "cylinder" [0.000309598] {1} 
+S -> "pretty" P57 "sphere" [0.000309598] {1} 
+S -> "somewhat" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "fairly" P57 "rectangle" [0.000309598] {1} 
+S -> "somewhat" P57 "bottle" [0.000309598] {1} 
+S -> "very" P62 "far" "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "prism" [0.000309598] {1} 
+S -> "rather" P57 "box" [0.000309598] {1} 
+S -> "somewhat" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "very" P62 "near" "corner" P59 "table" [0.000309598] {1} 
+S -> P70 P68 "side" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "cylinder" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> P66 "rectangle" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "fairly" P60 "box" [0.000309598] {1} 
+S -> "fairly" P60 "cylinder" [0.000309598] {1} 
+S -> "quite" P57 "triangle" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "cylinder" [0.000309598] {1} 
+S -> P66 "cylinder" [0.000309598] {1} 
+S -> "somewhat" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> P70 P63 "box" [0.000309598] {1} 
+S -> "very" P57 "cup" [0.000309598] {1} 
+S -> "pretty" P57 "sphere" [0.000309598] {1} 
+S -> "somewhat" P60 "sphere" [0.000309598] {1} 
+S -> "fairly" P57 "rectangle" [0.000309598] {1} 
+S -> "very" P57 "triangle" [0.000309598] {1} 
+S -> "very" P57 "cylinder" [0.000309598] {1} 
+S -> "pretty" P57 "prism" [0.000309598] {1} 
+S -> "somewhat" P57 "triangle" [0.000309598] {1} 
+S -> P62 "side" P59 "table" [0.000309598] {1} 
+S -> P66 "sphere" [0.000309598] {1} 
+S -> "fairly" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P60 "sphere" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> P70 P63 "box" [0.000309598] {1} 
+S -> "very" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "fairly" P57 "cup" [0.000309598] {1} 
+S -> "very" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "cylinder" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "fairly" P57 "triangle" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> P66 "box" [0.000309598] {1} 
+S -> "rather" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "bottle" [0.000309598] {1} 
+S -> "quite" P57 "tube" [0.000309598] {1} 
+S -> "somewhat" P57 "bottle" [0.000309598] {1} 
+S -> P66 "rectangle" [0.000309598] {1} 
+S -> "rather" P57 "rectangle" [0.000309598] {1} 
+S -> "rather" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "block" [0.000309598] {1} 
+S -> "quite" P57 "prism" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "somewhat" P60 "cup" [0.000309598] {1} 
+S -> "rather" P57 "sphere" [0.000309598] {1} 
+S -> "rather" P57 "prism" [0.000309598] {1} 
+S -> "pretty" P57 "prism" [0.000309598] {1} 
+S -> "quite" P57 "cylinder" [0.000309598] {1} 
+S -> "pretty" "far" "above" "the" "middle" P59 "table" [0.000309598] {1} 
+S -> P66 "rectangle" [0.000309598] {1} 
+S -> "very" P57 "cup" [0.000309598] {1} 
+S -> P66 "prism" [0.000309598] {1} 
+S -> P66 "block" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> "somewhat" P60 "triangle" [0.000309598] {1} 
+S -> "rather" P57 "sphere" [0.000309598] {1} 
+S -> "very" P57 "bottle" [0.000309598] {1} 
+S -> "somewhat" P57 "cup" [0.000309598] {1} 
+S -> "fairly" P60 "cylinder" [0.000309598] {1} 
+S -> "rather" P57 "box" [0.000309598] {1} 
+S -> P66 "block" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "very" P57 "ball" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "somewhat" P57 "box" [0.000309598] {1} 
+S -> "rather" P57 "ball" [0.000309598] {1} 
+S -> "very" P57 "sphere" [0.000309598] {1} 
+S -> "on" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "ball" [0.000309598] {1} 
+S -> "quite" P57 "prism" [0.000309598] {1} 
+S -> "pretty" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "cylinder" [0.000309598] {1} 
+S -> "rather" P57 "ball" [0.000309598] {1} 
+S -> P62 "side" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P62 "side" P59 "table" [0.000309598] {1} 
+S -> P66 "tube" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> P60 "rectangle" [0.000309598] {1} 
+S -> "fairly" P57 "rectangle" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "fairly" P57 "tube" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "behind" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "cup" [0.000309598] {1} 
+S -> "quite" P57 "cup" [0.000309598] {1} 
+S -> P66 "cup" [0.000309598] {1} 
+S -> "quite" P57 "sphere" [0.000309598] {1} 
+S -> "very" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "pretty" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "bottle" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "somewhat" P57 "tube" [0.000309598] {1} 
+S -> "pretty" P57 "bottle" [0.000309598] {1} 
+S -> "pretty" P62 "front" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P60 "tube" [0.000309598] {1} 
+S -> P66 "ball" [0.000309598] {1} 
+S -> P66 "rectangle" [0.000309598] {1} 
+S -> "below" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "prism" [0.000309598] {1} 
+S -> "rather" P62 "farther" "corner" P59 "table" [0.000309598] {1} 
+S -> P66 "rectangle" [0.000309598] {1} 
+S -> "fairly" P60 "ball" [0.000309598] {1} 
+S -> "rather" P57 "cylinder" [0.000309598] {1} 
+S -> "somewhat" P65 "far" "corner" P59 "table" [0.000309598] {1} 
+S -> P66 "cup" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "very" P57 "ball" [0.000309598] {1} 
+S -> "somewhat" P57 "box" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> "very" P57 "ball" [0.000309598] {1} 
+S -> "rather" P57 "sphere" [0.000309598] {1} 
+S -> "on" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P60 "rectangle" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "rather" P57 "ball" [0.000309598] {1} 
+S -> "fairly" P57 "triangle" [0.000309598] {1} 
+S -> "somewhat" P57 "cylinder" [0.000309598] {1} 
+S -> "rather" P57 "rectangle" [0.000309598] {1} 
+S -> "fairly" P57 "rectangle" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "rather" P57 "triangle" [0.000309598] {1} 
+S -> "very" P57 "ball" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "quite" P62 "back" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P60 "cylinder" [0.000309598] {1} 
+S -> "quite" P62 "side" P59 "table" [0.000309598] {1} 
+S -> P70 P63 "cup" [0.000309598] {1} 
+S -> P66 "prism" [0.000309598] {1} 
+S -> "fairly" P57 "cup" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> "very" P57 "sphere" [0.000309598] {1} 
+S -> "rather" P57 "bottle" [0.000309598] {1} 
+S -> "pretty" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "box" [0.000309598] {1} 
+S -> P66 "bottle" [0.000309598] {1} 
+S -> "quite" P57 "bottle" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> P70 P63 "block" [0.000309598] {1} 
+S -> P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "cylinder" [0.000309598] {1} 
+S -> "fairly" P58 "middle" P59 "table" [0.000309598] {1} 
+S -> P70 P68 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "cup" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> P70 P63 "box" [0.000309598] {1} 
+S -> "fairly" P62 "near" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "rectangle" [0.000309598] {1} 
+S -> "rather" P57 "block" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "somewhat" P57 "ball" [0.000309598] {1} 
+S -> "very" P57 "sphere" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> P70 P63 "ball" [0.000309598] {1} 
+S -> "fairly" P57 "triangle" [0.000309598] {1} 
+S -> "somewhat" P57 "tube" [0.000309598] {1} 
+S -> "rather" P57 "cup" [0.000309598] {1} 
+S -> "fairly" P60 "bottle" [0.000309598] {1} 
+S -> "fairly" P57 "triangle" [0.000309598] {1} 
+S -> "somewhat" P57 "sphere" [0.000309598] {1} 
+S -> "fairly" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> P66 "prism" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "fairly" P57 "ball" [0.000309598] {1} 
+S -> "somewhat" P60 "sphere" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> "very" P57 "cylinder" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "pretty" P62 "front" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "sphere" [0.000309598] {1} 
+S -> "fairly" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> P66 "rectangle" [0.000309598] {1} 
+S -> "quite" P57 "box" [0.000309598] {1} 
+S -> "very" P62 "farther" "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P60 "bottle" [0.000309598] {1} 
+S -> "somewhat" P57 "prism" [0.000309598] {1} 
+S -> "fairly" P60 "prism" [0.000309598] {1} 
+S -> "quite" P62 "back" "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "sphere" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "rather" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "box" [0.000309598] {1} 
+S -> "pretty" P60 "cylinder" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "pretty" "far" "from" "the" "middle" P59 "table" [0.000309598] {1} 
+S -> P66 "bottle" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "quite" P57 "cylinder" [0.000309598] {1} 
+S -> "quite" P62 "side" P59 "table" [0.000309598] {1} 
+S -> P62 "nearer" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P60 "box" [0.000309598] {1} 
+S -> "fairly" P57 "triangle" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> P66 "bottle" [0.000309598] {1} 
+S -> P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "tube" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "somewhat" P60 "prism" [0.000309598] {1} 
+S -> "pretty" P60 "ball" [0.000309598] {1} 
+S -> "quite" P57 "triangle" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "somewhat" P57 "prism" [0.000309598] {1} 
+S -> "quite" P57 "box" [0.000309598] {1} 
+S -> "quite" P62 "near" "corner" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "ball" [0.000309598] {1} 
+S -> "quite" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "tube" [0.000309598] {1} 
+S -> "pretty" P57 "cup" [0.000309598] {1} 
+S -> "very" P57 "box" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "somewhat" P62 "back" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "tube" [0.000309598] {1} 
+S -> "quite" P57 "ball" [0.000309598] {1} 
+S -> P66 "rectangle" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> P70 P63 "triangle" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> "somewhat" P57 "rectangle" [0.000309598] {1} 
+S -> "very" P57 "cup" [0.000309598] {1} 
+S -> P70 P63 "ball" [0.000309598] {1} 
+S -> "pretty" P57 "bottle" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> P62 "front" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "quite" P57 "rectangle" [0.000309598] {1} 
+S -> "on" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "bottle" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "fairly" P57 "bottle" [0.000309598] {1} 
+S -> "on" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "cylinder" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "fairly" P62 "side" P59 "table" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "rather" P57 "block" [0.000309598] {1} 
+S -> "somewhat" P57 "rectangle" [0.000309598] {1} 
+S -> "rather" P57 "triangle" [0.000309598] {1} 
+S -> "pretty" P60 "rectangle" [0.000309598] {1} 
+S -> "very" P57 "triangle" [0.000309598] {1} 
+S -> "very" P57 "bottle" [0.000309598] {1} 
+S -> "pretty" P57 "prism" [0.000309598] {1} 
+S -> "very" P57 "box" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "very" P57 "sphere" [0.000309598] {1} 
+S -> "somewhat" P57 "sphere" [0.000309598] {1} 
+S -> "rather" P57 "cylinder" [0.000309598] {1} 
+S -> "fairly" P57 "cup" [0.000309598] {1} 
+S -> "somewhat" P65 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "quite" P57 "prism" [0.000309598] {1} 
+S -> "very" P57 "bottle" [0.000309598] {1} 
+S -> "very" P57 "sphere" [0.000309598] {1} 
+S -> "quite" P57 "tube" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> "pretty" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "rather" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "prism" [0.000309598] {1} 
+S -> "fairly" P57 "sphere" [0.000309598] {1} 
+S -> "pretty" P57 "box" [0.000309598] {1} 
+S -> P62 "front" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "bottle" [0.000309598] {1} 
+S -> "rather" P57 "tube" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> P66 "block" [0.000309598] {1} 
+S -> P66 "box" [0.000309598] {1} 
+S -> "pretty" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "behind" P64 "side" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "rectangle" [0.000309598] {1} 
+S -> "quite" P62 "back" "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P62 "nearer" "corner" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "box" [0.000309598] {1} 
+S -> "fairly" P60 "cup" [0.000309598] {1} 
+S -> "quite" P57 "bottle" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "very" P57 "cylinder" [0.000309598] {1} 
+S -> P66 "cylinder" [0.000309598] {1} 
+S -> "quite" P57 "tube" [0.000309598] {1} 
+S -> "somewhat" P60 "cylinder" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "quite" P57 "ball" [0.000309598] {1} 
+S -> "pretty" P57 "cylinder" [0.000309598] {1} 
+S -> "on" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "on" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "tube" [0.000309598] {1} 
+S -> "quite" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P60 "ball" [0.000309598] {1} 
+S -> "fairly" P65 "edge" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "bottle" [0.000309598] {1} 
+S -> P70 P63 "sphere" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> "somewhat" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "bottle" [0.000309598] {1} 
+S -> "pretty" P57 "block" [0.000309598] {1} 
+S -> "fairly" P60 "triangle" [0.000309598] {1} 
+S -> P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P60 "prism" [0.000309598] {1} 
+S -> P66 "prism" [0.000309598] {1} 
+S -> P70 P63 "ball" [0.000309598] {1} 
+S -> "quite" P57 "rectangle" [0.000309598] {1} 
+S -> "somewhat" P57 "ball" [0.000309598] {1} 
+S -> "very" P57 "sphere" [0.000309598] {1} 
+S -> "pretty" P57 "sphere" [0.000309598] {1} 
+S -> "to" P64 P59 "front" "right" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "very" P57 "sphere" [0.000309598] {1} 
+S -> "quite" P57 "bottle" [0.000309598] {1} 
+S -> P62 "side" P59 "table" [0.000309598] {1} 
+S -> "quite" P62 "side" P59 "table" [0.000309598] {1} 
+S -> P66 "block" [0.000309598] {1} 
+S -> "fairly" P57 "box" [0.000309598] {1} 
+S -> "somewhat" P57 "block" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "quite" P57 "prism" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "pretty" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "ball" [0.000309598] {1} 
+S -> "pretty" P60 "sphere" [0.000309598] {1} 
+S -> "pretty" P62 "side" P59 "table" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> P62 "nearer" "corner" P59 "table" [0.000309598] {1} 
+S -> P66 "triangle" [0.000309598] {1} 
+S -> P62 "near" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "box" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "very" P57 "sphere" [0.000309598] {1} 
+S -> "fairly" P57 "triangle" [0.000309598] {1} 
+S -> "rather" P57 "prism" [0.000309598] {1} 
+S -> "somewhat" P60 "triangle" [0.000309598] {1} 
+S -> "quite" P62 "nearer" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> "rather" P57 "tube" [0.000309598] {1} 
+S -> "fairly" P57 "sphere" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "fairly" P62 "farther" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "pretty" P60 "triangle" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "quite" P62 "near" "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P60 "cylinder" [0.000309598] {1} 
+S -> "quite" P57 "bottle" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "somewhat" P60 "rectangle" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "rather" P57 "cup" [0.000309598] {1} 
+S -> "rather" P57 "ball" [0.000309598] {1} 
+S -> "very" P57 "sphere" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "fairly" P60 "cylinder" [0.000309598] {1} 
+S -> "rather" P57 "box" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> "very" P57 "ball" [0.000309598] {1} 
+S -> "fairly" P57 "triangle" [0.000309598] {1} 
+S -> "fairly" P57 "triangle" [0.000309598] {1} 
+S -> "pretty" P57 "tube" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> P66 "prism" [0.000309598] {1} 
+S -> "pretty" P62 "near" "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "sphere" [0.000309598] {1} 
+S -> "fairly" P57 "prism" [0.000309598] {1} 
+S -> "rather" P57 "block" [0.000309598] {1} 
+S -> "rather" P62 "farther" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "sphere" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> P66 "sphere" [0.000309598] {1} 
+S -> P62 "far" "corner" P59 "table" [0.000309598] {1} 
+S -> "rather" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "cylinder" [0.000309598] {1} 
+S -> "on" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "cup" [0.000309598] {1} 
+S -> "quite" P57 "bottle" [0.000309598] {1} 
+S -> "fairly" P57 "triangle" [0.000309598] {1} 
+S -> "very" P57 "bottle" [0.000309598] {1} 
+S -> "quite" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "pretty" P60 "cup" [0.000309598] {1} 
+S -> "pretty" P57 "prism" [0.000309598] {1} 
+S -> "very" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P70 P68 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "bottle" [0.000309598] {1} 
+S -> "somewhat" P60 "ball" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> "pretty" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "cup" [0.000309598] {1} 
+S -> "fairly" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "sphere" [0.000309598] {1} 
+S -> "pretty" P57 "cylinder" [0.000309598] {1} 
+S -> "somewhat" P57 "sphere" [0.000309598] {1} 
+S -> "pretty" P60 "box" [0.000309598] {1} 
+S -> "pretty" P57 "cylinder" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "rather" P57 "cup" [0.000309598] {1} 
+S -> "fairly" P57 "triangle" [0.000309598] {1} 
+S -> "on" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P66 "tube" [0.000309598] {1} 
+S -> P66 "cylinder" [0.000309598] {1} 
+S -> "rather" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "sphere" [0.000309598] {1} 
+S -> "pretty" P57 "ball" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "fairly" P60 "bottle" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "fairly" P60 "sphere" [0.000309598] {1} 
+S -> "pretty" P57 "cup" [0.000309598] {1} 
+S -> "fairly" P57 "sphere" [0.000309598] {1} 
+S -> "somewhat" P62 "near" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "triangle" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "pretty" P57 "box" [0.000309598] {1} 
+S -> P66 "block" [0.000309598] {1} 
+S -> P66 "box" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "pretty" P62 "back" "corner" P59 "table" [0.000309598] {1} 
+S -> "quite" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "block" [0.000309598] {1} 
+S -> P62 "near" "corner" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "ball" [0.000309598] {1} 
+S -> P66 "tube" [0.000309598] {1} 
+S -> "fairly" P60 "tube" [0.000309598] {1} 
+S -> "very" P57 "box" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "somewhat" P57 "bottle" [0.000309598] {1} 
+S -> "very" P57 "cylinder" [0.000309598] {1} 
+S -> "very" P62 "far" "corner" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "triangle" [0.000309598] {1} 
+S -> "pretty" P57 "ball" [0.000309598] {1} 
+S -> "pretty" P57 "tube" [0.000309598] {1} 
+S -> "pretty" P60 "prism" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "somewhat" P57 "cylinder" [0.000309598] {1} 
+S -> "to" P64 P68 "edge" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "box" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "fairly" P57 "ball" [0.000309598] {1} 
+S -> P70 P63 "bottle" [0.000309598] {1} 
+S -> P70 P63 "cylinder" [0.000309598] {1} 
+S -> "pretty" P57 "box" [0.000309598] {1} 
+S -> P66 "ball" [0.000309598] {1} 
+S -> "pretty" P57 "tube" [0.000309598] {1} 
+S -> "somewhat" P57 "tube" [0.000309598] {1} 
+S -> "rather" P57 "rectangle" [0.000309598] {1} 
+S -> "somewhat" P57 "bottle" [0.000309598] {1} 
+S -> "quite" P57 "prism" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "pretty" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "quite" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "block" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> "somewhat" P62 "side" P59 "table" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "fairly" P57 "rectangle" [0.000309598] {1} 
+S -> "fairly" P57 "rectangle" [0.000309598] {1} 
+S -> P70 P63 "sphere" [0.000309598] {1} 
+S -> "very" P57 "cylinder" [0.000309598] {1} 
+S -> "fairly" P57 "triangle" [0.000309598] {1} 
+S -> P66 "prism" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "somewhat" P60 "cylinder" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> P66 "triangle" [0.000309598] {1} 
+S -> "quite" P57 "prism" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> "fairly" P60 "rectangle" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "fairly" P57 "cylinder" [0.000309598] {1} 
+S -> P66 "block" [0.000309598] {1} 
+S -> P66 "rectangle" [0.000309598] {1} 
+S -> "very" P57 "rectangle" [0.000309598] {1} 
+S -> P70 P63 "sphere" [0.000309598] {1} 
+S -> "quite" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "very" P57 "prism" [0.000309598] {1} 
+S -> "pretty" P57 "block" [0.000309598] {1} 
+S -> "somewhat" P62 "farther" "corner" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "rectangle" [0.000309598] {1} 
+S -> P66 "prism" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> P70 P63 "cylinder" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "pretty" P57 "rectangle" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> "fairly" P62 "far" "corner" P59 "table" [0.000309598] {1} 
+S -> "quite" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "sphere" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "on" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P60 "box" [0.000309598] {1} 
+S -> "very" P57 "prism" [0.000309598] {1} 
+S -> "on" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "box" [0.000309598] {1} 
+S -> "somewhat" P60 "cup" [0.000309598] {1} 
+S -> P66 "ball" [0.000309598] {1} 
+S -> "somewhat" P60 "bottle" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> "somewhat" P60 "prism" [0.000309598] {1} 
+S -> "pretty" P57 "cylinder" [0.000309598] {1} 
+S -> "somewhat" P57 "rectangle" [0.000309598] {1} 
+S -> "pretty" P57 "rectangle" [0.000309598] {1} 
+S -> "quite" P57 "tube" [0.000309598] {1} 
+S -> "fairly" P57 "block" [0.000309598] {1} 
+S -> P66 "block" [0.000309598] {1} 
+S -> "quite" P57 "triangle" [0.000309598] {1} 
+S -> "very" P57 "box" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "somewhat" P57 "bottle" [0.000309598] {1} 
+S -> "somewhat" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "rectangle" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> P70 P63 "ball" [0.000309598] {1} 
+S -> "rather" P62 "side" P59 "table" [0.000309598] {1} 
+S -> P66 "cylinder" [0.000309598] {1} 
+S -> "pretty" P57 "sphere" [0.000309598] {1} 
+S -> "very" P57 "block" [0.000309598] {1} 
+S -> P70 P63 "triangle" [0.000309598] {1} 
+S -> "pretty" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "block" [0.000309598] {1} 
+S -> "fairly" P57 "rectangle" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "pretty" P57 "cup" [0.000309598] {1} 
+S -> "very" P57 "prism" [0.000309598] {1} 
+S -> P70 P63 "tube" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "very" P57 "prism" [0.000309598] {1} 
+S -> "very" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "quite" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "cup" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> "rather" P57 "prism" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "fairly" P57 "ball" [0.000309598] {1} 
+S -> "somewhat" P60 "tube" [0.000309598] {1} 
+S -> "fairly" P57 "rectangle" [0.000309598] {1} 
+S -> "quite" P57 "cylinder" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "somewhat" P57 "block" [0.000309598] {1} 
+S -> "rather" P62 "side" P59 "table" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "very" P62 "nearer" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "tube" [0.000309598] {1} 
+S -> "quite" P57 "triangle" [0.000309598] {1} 
+S -> "pretty" P60 "box" [0.000309598] {1} 
+S -> "fairly" P60 "cup" [0.000309598] {1} 
+S -> "somewhat" "far" "from" "the" "middle" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "block" [0.000309598] {1} 
+S -> "pretty" P57 "cup" [0.000309598] {1} 
+S -> P66 "tube" [0.000309598] {1} 
+S -> "to" P64 P68 "side" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "ball" [0.000309598] {1} 
+S -> "pretty" P60 "bottle" [0.000309598] {1} 
+S -> "somewhat" P60 "box" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "fairly" P62 "back" "corner" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "box" [0.000309598] {1} 
+S -> P66 "prism" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "rather" P57 "triangle" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "somewhat" P60 "rectangle" [0.000309598] {1} 
+S -> P62 "farther" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" "far" "below" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "above" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "somewhat" P57 "bottle" [0.000309598] {1} 
+S -> "pretty" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "fairly" P57 "block" [0.000309598] {1} 
+S -> "fairly" "far" P66 "cup" [0.000309598] {1} 
+S -> "somewhat" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "to" P64 P68 "nearer" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "prism" [0.000309598] {1} 
+S -> "rather" P57 "triangle" [0.000309598] {1} 
+S -> "somewhat" P60 "block" [0.000309598] {1} 
+S -> "fairly" P57 "prism" [0.000309598] {1} 
+S -> "somewhat" P57 "cylinder" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "pretty" P60 "rectangle" [0.000309598] {1} 
+S -> "somewhat" P62 "nearer" "corner" P59 "table" [0.000309598] {1} 
+S -> P70 P63 "prism" [0.000309598] {1} 
+S -> "quite" P57 "sphere" [0.000309598] {1} 
+S -> "rather" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> P58 "middle" P59 "table" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> "pretty" P57 "bottle" [0.000309598] {1} 
+S -> "quite" P62 "farther" "corner" P59 "table" [0.000309598] {1} 
+S -> P66 "bottle" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "somewhat" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "ball" [0.000309598] {1} 
+S -> "somewhat" P57 "triangle" [0.000309598] {1} 
+S -> "rather" P57 "tube" [0.000309598] {1} 
+S -> "somewhat" P57 "ball" [0.000309598] {1} 
+S -> "very" P57 "sphere" [0.000309598] {1} 
+S -> "quite" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "rectangle" [0.000309598] {1} 
+S -> P66 "prism" [0.000309598] {1} 
+S -> P70 P63 "cup" [0.000309598] {1} 
+S -> "below" P64 "edge" P59 "table" [0.000309598] {1} 
+S -> "fairly" P60 "block" [0.000309598] {1} 
+S -> "quite" P57 "box" [0.000309598] {1} 
+S -> "behind" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> P70 P63 "block" [0.000309598] {1} 
+S -> P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "ball" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> P62 "side" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "bottle" [0.000309598] {1} 
+S -> "very" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "very" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "rather" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "somewhat" P57 "prism" [0.000309598] {1} 
+S -> "quite" P57 "block" [0.000309598] {1} 
+S -> "very" P57 "ball" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> "pretty" P57 "cup" [0.000309598] {1} 
+S -> "quite" P57 "block" [0.000309598] {1} 
+S -> P70 P63 "bottle" [0.000309598] {1} 
+S -> "pretty" P57 "ball" [0.000309598] {1} 
+S -> "very" P62 "side" P59 "table" [0.000309598] {1} 
+S -> P70 P63 "triangle" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> "somewhat" P57 "box" [0.000309598] {1} 
+S -> "pretty" P57 "block" [0.000309598] {1} 
+S -> "rather" P57 "cup" [0.000309598] {1} 
+S -> "pretty" P57 "rectangle" [0.000309598] {1} 
+S -> "pretty" P58 "middle" P59 "table" [0.000309598] {1} 
+S -> P66 "bottle" [0.000309598] {1} 
+S -> "rather" P57 "ball" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "fairly" P60 "box" [0.000309598] {1} 
+S -> "fairly" P57 "box" [0.000309598] {1} 
+S -> "above" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "fairly" P57 "rectangle" [0.000309598] {1} 
+S -> "very" P57 "tube" [0.000309598] {1} 
+S -> "pretty" P60 "ball" [0.000309598] {1} 
+S -> "rather" P57 "ball" [0.000309598] {1} 
+S -> P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "triangle" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> P70 P63 "tube" [0.000309598] {1} 
+S -> P66 "cylinder" [0.000309598] {1} 
+S -> "pretty" P60 "box" [0.000309598] {1} 
+S -> "somewhat" P57 "bottle" [0.000309598] {1} 
+S -> "very" P57 "bottle" [0.000309598] {1} 
+S -> "fairly" P65 "edge" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "cup" [0.000309598] {1} 
+S -> P66 "box" [0.000309598] {1} 
+S -> "very" P57 "prism" [0.000309598] {1} 
+S -> P66 "rectangle" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> P66 "sphere" [0.000309598] {1} 
+S -> "somewhat" P62 "side" P59 "table" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "quite" P57 "tube" [0.000309598] {1} 
+S -> "quite" P57 "block" [0.000309598] {1} 
+S -> "fairly" P57 "box" [0.000309598] {1} 
+S -> "somewhat" P57 "block" [0.000309598] {1} 
+S -> "quite" P57 "prism" [0.000309598] {1} 
+S -> "pretty" P57 "bottle" [0.000309598] {1} 
+S -> "very" P57 "box" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "quite" P57 "cylinder" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> "fairly" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "very" P57 "triangle" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> "pretty" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "rather" P57 "block" [0.000309598] {1} 
+S -> "rather" P57 "box" [0.000309598] {1} 
+S -> "somewhat" P57 "bottle" [0.000309598] {1} 
+S -> "very" P57 "triangle" [0.000309598] {1} 
+S -> "quite" P57 "triangle" [0.000309598] {1} 
+S -> P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "prism" [0.000309598] {1} 
+S -> "fairly" P57 "tube" [0.000309598] {1} 
+S -> "very" P57 "bottle" [0.000309598] {1} 
+S -> P66 "tube" [0.000309598] {1} 
+S -> "rather" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "rectangle" [0.000309598] {1} 
+S -> "quite" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P66 "bottle" [0.000309598] {1} 
+S -> "quite" P57 "cup" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "rather" P57 "prism" [0.000309598] {1} 
+S -> "pretty" P57 "ball" [0.000309598] {1} 
+S -> "rather" P57 "rectangle" [0.000309598] {1} 
+S -> "pretty" P57 "cylinder" [0.000309598] {1} 
+S -> "somewhat" P57 "cylinder" [0.000309598] {1} 
+S -> "very" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> P62 "near" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "rather" P57 "tube" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "pretty" P57 "triangle" [0.000309598] {1} 
+S -> P66 "ball" [0.000309598] {1} 
+S -> "quite" P57 "sphere" [0.000309598] {1} 
+S -> "somewhat" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "rectangle" [0.000309598] {1} 
+S -> "pretty" P60 "block" [0.000309598] {1} 
+S -> "on" "the" "table" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "rather" P57 "triangle" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "very" P57 "triangle" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> "pretty" P57 "prism" [0.000309598] {1} 
+S -> P60 "cup" [0.000309598] {1} 
+S -> "very" P57 "sphere" [0.000309598] {1} 
+S -> "somewhat" P60 "ball" [0.000309598] {1} 
+S -> "fairly" P57 "cup" [0.000309598] {1} 
+S -> "quite" P57 "box" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "quite" P57 "ball" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "somewhat" P60 "ball" [0.000309598] {1} 
+S -> "somewhat" P57 "cylinder" [0.000309598] {1} 
+S -> "fairly" P60 "bottle" [0.000309598] {1} 
+S -> P66 "block" [0.000309598] {1} 
+S -> P66 "sphere" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> "behind" "the" "middle" P59 "table" [0.000309598] {1} 
+S -> P62 "side" P59 "table" [0.000309598] {1} 
+S -> "pretty" P60 "bottle" [0.000309598] {1} 
+S -> "pretty" P57 "rectangle" [0.000309598] {1} 
+S -> "quite" P57 "block" [0.000309598] {1} 
+S -> "very" P57 "rectangle" [0.000309598] {1} 
+S -> "very" P57 "bottle" [0.000309598] {1} 
+S -> "pretty" P57 "sphere" [0.000309598] {1} 
+S -> "quite" P57 "block" [0.000309598] {1} 
+S -> "very" P57 "rectangle" [0.000309598] {1} 
+S -> "very" P57 "prism" [0.000309598] {1} 
+S -> P66 "block" [0.000309598] {1} 
+S -> "rather" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "sphere" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "very" P57 "cylinder" [0.000309598] {1} 
+S -> "fairly" P57 "cup" [0.000309598] {1} 
+S -> "pretty" P57 "tube" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "pretty" P60 "prism" [0.000309598] {1} 
+S -> "somewhat" P57 "rectangle" [0.000309598] {1} 
+S -> "pretty" P57 "rectangle" [0.000309598] {1} 
+S -> "fairly" P60 "sphere" [0.000309598] {1} 
+S -> P70 P63 "box" [0.000309598] {1} 
+S -> "pretty" P57 "box" [0.000309598] {1} 
+S -> "rather" P57 "cylinder" [0.000309598] {1} 
+S -> "pretty" P57 "tube" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "somewhat" P57 "tube" [0.000309598] {1} 
+S -> "fairly" P57 "sphere" [0.000309598] {1} 
+S -> "quite" P57 "ball" [0.000309598] {1} 
+S -> "very" P57 "cup" [0.000309598] {1} 
+S -> "fairly" P57 "block" [0.000309598] {1} 
+S -> "pretty" P57 "bottle" [0.000309598] {1} 
+S -> "rather" P57 "cylinder" [0.000309598] {1} 
+S -> "rather" P57 "sphere" [0.000309598] {1} 
+S -> "fairly" P65 "far" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P60 "sphere" [0.000309598] {1} 
+S -> P62 "nearer" "corner" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "tube" [0.000309598] {1} 
+S -> "pretty" P62 "farther" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> "pretty" P57 "ball" [0.000309598] {1} 
+S -> P62 "side" P59 "table" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> "quite" P57 "sphere" [0.000309598] {1} 
+S -> P66 "bottle" [0.000309598] {1} 
+S -> "somewhat" P57 "tube" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> "on" "the" "middle" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "sphere" [0.000309598] {1} 
+S -> "somewhat" P60 "triangle" [0.000309598] {1} 
+S -> "fairly" P57 "bottle" [0.000309598] {1} 
+S -> P70 P63 "cup" [0.000309598] {1} 
+S -> "fairly" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "very" P62 "back" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "tube" [0.000309598] {1} 
+S -> "fairly" P60 "bottle" [0.000309598] {1} 
+S -> "somewhat" P57 "rectangle" [0.000309598] {1} 
+S -> "quite" P57 "rectangle" [0.000309598] {1} 
+S -> "rather" P62 "nearer" "corner" P59 "table" [0.000309598] {1} 
+S -> "on" P64 "edge" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "cup" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> P70 P63 "block" [0.000309598] {1} 
+S -> "very" P57 "tube" [0.000309598] {1} 
+S -> "pretty" P57 "cylinder" [0.000309598] {1} 
+S -> "quite" P57 "tube" [0.000309598] {1} 
+S -> "to" P64 P68 "far" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> P70 P63 "prism" [0.000309598] {1} 
+S -> "fairly" P62 "farther" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "cylinder" [0.000309598] {1} 
+S -> "quite" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "pretty" P57 "bottle" [0.000309598] {1} 
+S -> "quite" P57 "ball" [0.000309598] {1} 
+S -> P66 "tube" [0.000309598] {1} 
+S -> "quite" P57 "bottle" [0.000309598] {1} 
+S -> P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "cup" [0.000309598] {1} 
+S -> "somewhat" P57 "prism" [0.000309598] {1} 
+S -> "somewhat" P60 "tube" [0.000309598] {1} 
+S -> "pretty" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "pretty" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "tube" [0.000309598] {1} 
+S -> "somewhat" P57 "triangle" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "very" P57 "block" [0.000309598] {1} 
+S -> "somewhat" P57 "rectangle" [0.000309598] {1} 
+S -> P62 "side" P59 "table" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> P70 P63 "cylinder" [0.000309598] {1} 
+S -> "to" P64 P59 "nearer" "left" "corner" P59 "table" [0.000309598] {1} 
+S -> P66 "tube" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> "rather" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "bottle" [0.000309598] {1} 
+S -> "somewhat" P65 "edge" P59 "table" [0.000309598] {1} 
+S -> P66 "cup" [0.000309598] {1} 
+S -> "pretty" P60 "prism" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "very" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "rather" P62 "far" "corner" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "box" [0.000309598] {1} 
+S -> "very" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "sphere" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> "pretty" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "fairly" P60 "triangle" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "on" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> "pretty" P57 "cylinder" [0.000309598] {1} 
+S -> "pretty" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "pretty" P57 "tube" [0.000309598] {1} 
+S -> "pretty" P60 "sphere" [0.000309598] {1} 
+S -> "very" P57 "cylinder" [0.000309598] {1} 
+S -> "somewhat" P60 "cylinder" [0.000309598] {1} 
+S -> "quite" P62 "side" P59 "table" [0.000309598] {1} 
+S -> P70 P63 "block" [0.000309598] {1} 
+S -> P70 P63 "block" [0.000309598] {1} 
+S -> "fairly" P57 "box" [0.000309598] {1} 
+S -> "quite" P57 "rectangle" [0.000309598] {1} 
+S -> "pretty" P57 "cup" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> P66 "rectangle" [0.000309598] {1} 
+S -> "rather" P57 "tube" [0.000309598] {1} 
+S -> "below" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "to" P64 P68 "near" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "cylinder" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "quite" P57 "cylinder" [0.000309598] {1} 
+S -> P66 "sphere" [0.000309598] {1} 
+S -> "rather" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "block" [0.000309598] {1} 
+S -> "rather" P57 "rectangle" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> P66 "rectangle" [0.000309598] {1} 
+S -> "somewhat" P57 "cup" [0.000309598] {1} 
+S -> "somewhat" P57 "rectangle" [0.000309598] {1} 
+S -> "somewhat" P60 "rectangle" [0.000309598] {1} 
+S -> "very" P57 "rectangle" [0.000309598] {1} 
+S -> "fairly" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> "very" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "above" P64 "edge" P59 "table" [0.000309598] {1} 
+S -> "pretty" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P66 "box" [0.000309598] {1} 
+S -> "very" P57 "triangle" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> "pretty" P57 "ball" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "quite" P57 "box" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> P66 "prism" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> P66 "tube" [0.000309598] {1} 
+S -> "very" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "bottle" [0.000309598] {1} 
+S -> P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "pretty" P60 "tube" [0.000309598] {1} 
+S -> "rather" P57 "tube" [0.000309598] {1} 
+S -> "quite" P57 "cup" [0.000309598] {1} 
+S -> P70 P63 "tube" [0.000309598] {1} 
+S -> "somewhat" P57 "ball" [0.000309598] {1} 
+S -> "pretty" P57 "bottle" [0.000309598] {1} 
+S -> "pretty" P62 "farther" "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "rectangle" [0.000309598] {1} 
+S -> "rather" P57 "block" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "rather" P57 "block" [0.000309598] {1} 
+S -> "somewhat" P60 "bottle" [0.000309598] {1} 
+S -> "rather" P57 "cup" [0.000309598] {1} 
+S -> "rather" P57 "bottle" [0.000309598] {1} 
+S -> "somewhat" P62 "front" "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P60 "triangle" [0.000309598] {1} 
+S -> "quite" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "triangle" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> "very" P57 "block" [0.000309598] {1} 
+S -> P66 "block" [0.000309598] {1} 
+S -> P62 "back" "corner" P59 "table" [0.000309598] {1} 
+S -> P66 "sphere" [0.000309598] {1} 
+S -> "pretty" P57 "triangle" [0.000309598] {1} 
+S -> P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P66 "sphere" [0.000309598] {1} 
+S -> P66 "triangle" [0.000309598] {1} 
+S -> "pretty" P57 "bottle" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "pretty" P57 "bottle" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "quite" P57 "triangle" [0.000309598] {1} 
+S -> "fairly" P57 "ball" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "pretty" P60 "bottle" [0.000309598] {1} 
+S -> "somewhat" P62 "side" P59 "table" [0.000309598] {1} 
+S -> P66 "sphere" [0.000309598] {1} 
+S -> "quite" P62 "far" "corner" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "bottle" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "quite" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "very" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> "pretty" P57 "ball" [0.000309598] {1} 
+S -> "very" P57 "prism" [0.000309598] {1} 
+S -> "rather" P57 "rectangle" [0.000309598] {1} 
+S -> "quite" P57 "triangle" [0.000309598] {1} 
+S -> "pretty" P57 "rectangle" [0.000309598] {1} 
+S -> "quite" P57 "prism" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> "pretty" P60 "cup" [0.000309598] {1} 
+S -> P66 "sphere" [0.000309598] {1} 
+S -> "very" P57 "bottle" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "quite" P57 "prism" [0.000309598] {1} 
+S -> "rather" P57 "cup" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> "pretty" P62 "nearer" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "quite" P57 "block" [0.000309598] {1} 
+S -> P62 "far" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P60 "prism" [0.000309598] {1} 
+S -> "rather" P57 "tube" [0.000309598] {1} 
+S -> "somewhat" P60 "cup" [0.000309598] {1} 
+S -> "quite" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "below" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P60 "triangle" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "pretty" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> P66 "ball" [0.000309598] {1} 
+S -> "fairly" P60 "block" [0.000309598] {1} 
+S -> "fairly" P60 "block" [0.000309598] {1} 
+S -> "quite" P58 "middle" P59 "table" [0.000309598] {1} 
+S -> "pretty" P60 "cylinder" [0.000309598] {1} 
+S -> P66 "ball" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> "somewhat" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "very" P57 "cylinder" [0.000309598] {1} 
+S -> "somewhat" P57 "triangle" [0.000309598] {1} 
+S -> "somewhat" P57 "sphere" [0.000309598] {1} 
+S -> "quite" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "tube" [0.000309598] {1} 
+S -> "rather" P57 "tube" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "pretty" P65 "back" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "block" [0.000309598] {1} 
+S -> "rather" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "rather" P57 "cylinder" [0.000309598] {1} 
+S -> "somewhat" P57 "triangle" [0.000309598] {1} 
+S -> "pretty" P57 "tube" [0.000309598] {1} 
+S -> "rather" P57 "rectangle" [0.000309598] {1} 
+S -> P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P62 "side" P59 "table" [0.000309598] {1} 
+S -> P66 "tube" [0.000309598] {1} 
+S -> "pretty" P60 "rectangle" [0.000309598] {1} 
+S -> P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> P66 "sphere" [0.000309598] {1} 
+S -> "rather" P57 "ball" [0.000309598] {1} 
+S -> "on" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P62 "side" P59 "table" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "somewhat" P57 "rectangle" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "somewhat" P57 "triangle" [0.000309598] {1} 
+S -> "very" P57 "box" [0.000309598] {1} 
+S -> "pretty" P60 "rectangle" [0.000309598] {1} 
+S -> P66 "bottle" [0.000309598] {1} 
+S -> "pretty" P57 "rectangle" [0.000309598] {1} 
+S -> "quite" P57 "block" [0.000309598] {1} 
+S -> "pretty" P57 "tube" [0.000309598] {1} 
+S -> P62 "far" "corner" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "triangle" [0.000309598] {1} 
+S -> P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "fairly" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "pretty" "far" "behind" P64 "side" P59 "table" [0.000309598] {1} 
+S -> "pretty" P60 "rectangle" [0.000309598] {1} 
+S -> "somewhat" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "cylinder" [0.000309598] {1} 
+S -> "fairly" P57 "rectangle" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "fairly" P57 "bottle" [0.000309598] {1} 
+S -> "quite" P57 "prism" [0.000309598] {1} 
+S -> "fairly" P57 "prism" [0.000309598] {1} 
+S -> "rather" P57 "box" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "somewhat" P65 "side" P59 "table" [0.000309598] {1} 
+S -> "very" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "box" [0.000309598] {1} 
+S -> "very" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P70 P63 "prism" [0.000309598] {1} 
+S -> "somewhat" P57 "sphere" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "quite" P57 "rectangle" [0.000309598] {1} 
+S -> "rather" P57 "prism" [0.000309598] {1} 
+S -> "fairly" P60 "ball" [0.000309598] {1} 
+S -> "rather" P57 "tube" [0.000309598] {1} 
+S -> "somewhat" P58 "middle" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P60 "ball" [0.000309598] {1} 
+S -> "rather" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "fairly" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "below" P64 "side" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "tube" [0.000309598] {1} 
+S -> "above" P64 "edge" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "cup" [0.000309598] {1} 
+S -> "pretty" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "cup" [0.000309598] {1} 
+S -> P66 "cup" [0.000309598] {1} 
+S -> "rather" P57 "rectangle" [0.000309598] {1} 
+S -> "somewhat" P57 "cup" [0.000309598] {1} 
+S -> "quite" P57 "cup" [0.000309598] {1} 
+S -> "pretty" P62 "back" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "ball" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> "very" P57 "cylinder" [0.000309598] {1} 
+S -> P70 P63 "block" [0.000309598] {1} 
+S -> "pretty" P57 "bottle" [0.000309598] {1} 
+S -> "quite" P57 "cylinder" [0.000309598] {1} 
+S -> "on" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P60 "block" [0.000309598] {1} 
+S -> P70 P68 "far" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "somewhat" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "fairly" P60 "cup" [0.000309598] {1} 
+S -> "somewhat" P57 "box" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> "somewhat" P57 "prism" [0.000309598] {1} 
+S -> "somewhat" P62 "side" P59 "table" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "rather" P57 "box" [0.000309598] {1} 
+S -> P70 P63 "bottle" [0.000309598] {1} 
+S -> "very" P57 "bottle" [0.000309598] {1} 
+S -> "pretty" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "cup" [0.000309598] {1} 
+S -> P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "below" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "somewhat" P60 "box" [0.000309598] {1} 
+S -> P70 P63 "block" [0.000309598] {1} 
+S -> "pretty" P65 "side" P59 "table" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> P66 "prism" [0.000309598] {1} 
+S -> "very" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "box" [0.000309598] {1} 
+S -> "quite" P57 "cup" [0.000309598] {1} 
+S -> "fairly" P60 "cylinder" [0.000309598] {1} 
+S -> P70 P63 "tube" [0.000309598] {1} 
+S -> "pretty" P57 "cup" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "rather" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "to" P64 P68 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "fairly" P57 "cylinder" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> "somewhat" P57 "cylinder" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "pretty" P57 "ball" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "fairly" P57 "triangle" [0.000309598] {1} 
+S -> "rather" P57 "box" [0.000309598] {1} 
+S -> "below" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "behind" P64 "edge" P59 "table" [0.000309598] {1} 
+S -> "behind" P64 "side" P59 "table" [0.000309598] {1} 
+S -> "fairly" P60 "bottle" [0.000309598] {1} 
+S -> "rather" P57 "bottle" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "fairly" P57 "prism" [0.000309598] {1} 
+S -> P70 P63 "cylinder" [0.000309598] {1} 
+S -> "rather" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "triangle" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> P70 P63 "tube" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "pretty" P57 "bottle" [0.000309598] {1} 
+S -> P66 "box" [0.000309598] {1} 
+S -> P70 P63 "tube" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "rather" P57 "sphere" [0.000309598] {1} 
+S -> "fairly" P65 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "rather" P57 "ball" [0.000309598] {1} 
+S -> P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> P66 "cup" [0.000309598] {1} 
+S -> P66 "prism" [0.000309598] {1} 
+S -> "pretty" P57 "tube" [0.000309598] {1} 
+S -> "pretty" P57 "cylinder" [0.000309598] {1} 
+S -> P66 "ball" [0.000309598] {1} 
+S -> "to" P64 P68 "farther" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P60 "cup" [0.000309598] {1} 
+S -> "very" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "very" P57 "sphere" [0.000309598] {1} 
+S -> "pretty" P57 "cup" [0.000309598] {1} 
+S -> "quite" P57 "tube" [0.000309598] {1} 
+S -> "very" P62 "side" P59 "table" [0.000309598] {1} 
+S -> P62 "side" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "triangle" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "pretty" P57 "prism" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> P62 "side" P59 "table" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> "quite" P57 "box" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> P66 "cylinder" [0.000309598] {1} 
+S -> "fairly" P57 "cup" [0.000309598] {1} 
+S -> "rather" P57 "triangle" [0.000309598] {1} 
+S -> P70 P63 "rectangle" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "fairly" P57 "bottle" [0.000309598] {1} 
+S -> "fairly" P57 "box" [0.000309598] {1} 
+S -> "rather" P57 "prism" [0.000309598] {1} 
+S -> P70 P63 "rectangle" [0.000309598] {1} 
+S -> P66 "triangle" [0.000309598] {1} 
+S -> P66 "cylinder" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "fairly" P57 "ball" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> P70 P63 "rectangle" [0.000309598] {1} 
+S -> "quite" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P60 "rectangle" [0.000309598] {1} 
+S -> "on" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> P66 "ball" [0.000309598] {1} 
+S -> "somewhat" P65 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "block" [0.000309598] {1} 
+S -> P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "fairly" P60 "triangle" [0.000309598] {1} 
+S -> "somewhat" P57 "sphere" [0.000309598] {1} 
+S -> "somewhat" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "pretty" P60 "prism" [0.000309598] {1} 
+S -> "fairly" P57 "ball" [0.000309598] {1} 
+S -> "very" P57 "cup" [0.000309598] {1} 
+S -> "somewhat" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "fairly" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P60 "bottle" [0.000309598] {1} 
+S -> "fairly" P60 "cylinder" [0.000309598] {1} 
+S -> "rather" P62 "front" "corner" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "ball" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "somewhat" P57 "prism" [0.000309598] {1} 
+S -> P66 "prism" [0.000309598] {1} 
+S -> "quite" P57 "cup" [0.000309598] {1} 
+S -> "quite" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "very" P58 "middle" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "ball" [0.000309598] {1} 
+S -> "fairly" P57 "cup" [0.000309598] {1} 
+S -> "fairly" P57 "tube" [0.000309598] {1} 
+S -> "fairly" P60 "sphere" [0.000309598] {1} 
+S -> "fairly" P57 "cylinder" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> P66 "ball" [0.000309598] {1} 
+S -> "fairly" P60 "triangle" [0.000309598] {1} 
+S -> "fairly" P57 "prism" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "very" P57 "rectangle" [0.000309598] {1} 
+S -> "quite" P57 "box" [0.000309598] {1} 
+S -> "pretty" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "bottle" [0.000309598] {1} 
+S -> "pretty" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "box" [0.000309598] {1} 
+S -> "somewhat" P57 "box" [0.000309598] {1} 
+S -> "somewhat" P57 "prism" [0.000309598] {1} 
+S -> "very" P57 "prism" [0.000309598] {1} 
+S -> "fairly" P60 "tube" [0.000309598] {1} 
+S -> "fairly" P57 "cylinder" [0.000309598] {1} 
+S -> "fairly" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "tube" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "fairly" P57 "cylinder" [0.000309598] {1} 
+S -> "fairly" P60 "prism" [0.000309598] {1} 
+S -> "fairly" P57 "ball" [0.000309598] {1} 
+S -> "very" P57 "cylinder" [0.000309598] {1} 
+S -> "quite" P57 "cylinder" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "fairly" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "bottle" [0.000309598] {1} 
+S -> "rather" P57 "box" [0.000309598] {1} 
+S -> "pretty" P60 "triangle" [0.000309598] {1} 
+S -> "pretty" P57 "block" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> P66 "box" [0.000309598] {1} 
+S -> "very" P62 "front" "corner" P59 "table" [0.000309598] {1} 
+S -> P66 "cup" [0.000309598] {1} 
+S -> P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "fairly" P60 "rectangle" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "fairly" P60 "ball" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "fairly" P57 "block" [0.000309598] {1} 
+S -> "pretty" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "to" P64 P59 "middle" P59 "table" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "fairly" P62 "back" "corner" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "sphere" [0.000309598] {1} 
+S -> "somewhat" P57 "tube" [0.000309598] {1} 
+S -> "pretty" P57 "rectangle" [0.000309598] {1} 
+S -> "pretty" P65 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> "quite" P62 "farther" "corner" P59 "table" [0.000309598] {1} 
+S -> "quite" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "quite" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "prism" [0.000309598] {1} 
+S -> "fairly" P57 "prism" [0.000309598] {1} 
+S -> "pretty" P60 "cylinder" [0.000309598] {1} 
+S -> "rather" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "ball" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> P62 "side" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "tube" [0.000309598] {1} 
+S -> "fairly" P57 "prism" [0.000309598] {1} 
+S -> P70 P63 "rectangle" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> P66 "rectangle" [0.000309598] {1} 
+S -> "fairly" P57 "cylinder" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> P66 "ball" [0.000309598] {1} 
+S -> "very" P57 "cup" [0.000309598] {1} 
+S -> "fairly" P60 "bottle" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "fairly" P57 "cup" [0.000309598] {1} 
+S -> P66 "rectangle" [0.000309598] {1} 
+S -> "very" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "very" P62 "side" P59 "table" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "triangle" [0.000309598] {1} 
+S -> P70 P63 "prism" [0.000309598] {1} 
+S -> "very" P57 "block" [0.000309598] {1} 
+S -> "rather" P57 "block" [0.000309598] {1} 
+S -> "pretty" P57 "prism" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "rather" P57 "sphere" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> "pretty" P62 "far" "corner" P59 "table" [0.000309598] {1} 
+S -> P70 P68 "edge" P59 "table" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "on" P64 "edge" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "cup" [0.000309598] {1} 
+S -> "very" P57 "ball" [0.000309598] {1} 
+S -> "rather" P57 "sphere" [0.000309598] {1} 
+S -> "fairly" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "quite" P62 "front" "corner" P59 "table" [0.000309598] {1} 
+S -> "behind" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "very" P57 "cylinder" [0.000309598] {1} 
+S -> "very" P57 "cup" [0.000309598] {1} 
+S -> "very" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "cup" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "somewhat" P57 "ball" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> P70 P63 "ball" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> "rather" P57 "block" [0.000309598] {1} 
+S -> "pretty" P57 "ball" [0.000309598] {1} 
+S -> "rather" P57 "tube" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "somewhat" P57 "box" [0.000309598] {1} 
+S -> "pretty" P62 "far" "corner" P59 "table" [0.000309598] {1} 
+S -> P70 P63 "rectangle" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "fairly" P57 "bottle" [0.000309598] {1} 
+S -> P70 P63 "ball" [0.000309598] {1} 
+S -> "very" P57 "ball" [0.000309598] {1} 
+S -> "pretty" P57 "triangle" [0.000309598] {1} 
+S -> P66 "tube" [0.000309598] {1} 
+S -> P70 P63 "rectangle" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "very" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "cup" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> P66 "block" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "rather" P57 "cup" [0.000309598] {1} 
+S -> "fairly" P57 "sphere" [0.000309598] {1} 
+S -> "fairly" P57 "triangle" [0.000309598] {1} 
+S -> "rather" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "pretty" P60 "prism" [0.000309598] {1} 
+S -> P70 P63 "cup" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> P66 "ball" [0.000309598] {1} 
+S -> "quite" P62 "farther" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P62 "front" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "fairly" P57 "tube" [0.000309598] {1} 
+S -> "pretty" P57 "box" [0.000309598] {1} 
+S -> "rather" P57 "ball" [0.000309598] {1} 
+S -> "quite" P57 "rectangle" [0.000309598] {1} 
+S -> "rather" P57 "prism" [0.000309598] {1} 
+S -> "somewhat" P57 "bottle" [0.000309598] {1} 
+S -> "very" P57 "triangle" [0.000309598] {1} 
+S -> "fairly" P57 "tube" [0.000309598] {1} 
+S -> "very" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "fairly" P57 "block" [0.000309598] {1} 
+S -> "fairly" P57 "prism" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> "fairly" P57 "tube" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> P58 "middle" P59 "table" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> "somewhat" "far" P70 P59 "middle" P59 "table" [0.000309598] {1} 
+S -> "rather" P62 "side" P59 "table" [0.000309598] {1} 
+S -> P66 "sphere" [0.000309598] {1} 
+S -> "quite" P57 "rectangle" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "rather" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "prism" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> P66 "block" [0.000309598] {1} 
+S -> "fairly" P57 "bottle" [0.000309598] {1} 
+S -> "fairly" P57 "block" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> "fairly" P65 "edge" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "sphere" [0.000309598] {1} 
+S -> "somewhat" P57 "tube" [0.000309598] {1} 
+S -> "rather" P57 "prism" [0.000309598] {1} 
+S -> "pretty" P57 "cylinder" [0.000309598] {1} 
+S -> P70 P63 "prism" [0.000309598] {1} 
+S -> P66 "triangle" [0.000309598] {1} 
+S -> "rather" P57 "cylinder" [0.000309598] {1} 
+S -> "on" P64 "edge" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "block" [0.000309598] {1} 
+S -> "somewhat" P57 "rectangle" [0.000309598] {1} 
+S -> "fairly" P57 "cup" [0.000309598] {1} 
+S -> "fairly" P60 "ball" [0.000309598] {1} 
+S -> "somewhat" P57 "box" [0.000309598] {1} 
+S -> "somewhat" P57 "bottle" [0.000309598] {1} 
+S -> P70 P63 "sphere" [0.000309598] {1} 
+S -> "somewhat" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "pretty" P60 "triangle" [0.000309598] {1} 
+S -> "very" P57 "ball" [0.000309598] {1} 
+S -> "quite" P57 "rectangle" [0.000309598] {1} 
+S -> "pretty" P57 "cup" [0.000309598] {1} 
+S -> "somewhat" P57 "cylinder" [0.000309598] {1} 
+S -> "fairly" P57 "box" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "fairly" P57 "sphere" [0.000309598] {1} 
+S -> "fairly" P60 "triangle" [0.000309598] {1} 
+S -> "somewhat" P57 "block" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> P66 "cup" [0.000309598] {1} 
+S -> "fairly" P57 "rectangle" [0.000309598] {1} 
+S -> P66 "bottle" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> "fairly" P60 "block" [0.000309598] {1} 
+S -> "quite" P57 "ball" [0.000309598] {1} 
+S -> "quite" P57 "triangle" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> P66 "bottle" [0.000309598] {1} 
+S -> "quite" P57 "block" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "very" P57 "cylinder" [0.000309598] {1} 
+S -> P66 "box" [0.000309598] {1} 
+S -> "quite" P57 "tube" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "fairly" P57 "cup" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> "fairly" P65 "side" P59 "table" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> "quite" P57 "bottle" [0.000309598] {1} 
+S -> P70 P63 "rectangle" [0.000309598] {1} 
+S -> "somewhat" P57 "cylinder" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> "fairly" P57 "prism" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "rather" P57 "cup" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "fairly" P57 "cylinder" [0.000309598] {1} 
+S -> "fairly" P57 "ball" [0.000309598] {1} 
+S -> "somewhat" P57 "sphere" [0.000309598] {1} 
+S -> "on" P64 "edge" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "triangle" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "somewhat" P65 "side" P59 "table" [0.000309598] {1} 
+S -> "below" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P62 "back" "corner" P59 "table" [0.000309598] {1} 
+S -> P70 P63 "cup" [0.000309598] {1} 
+S -> "somewhat" P60 "bottle" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "quite" P57 "bottle" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> "to" P64 P68 "farther" "corner" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "block" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "pretty" P57 "block" [0.000309598] {1} 
+S -> "rather" P57 "cup" [0.000309598] {1} 
+S -> "very" P57 "tube" [0.000309598] {1} 
+S -> P70 P63 "sphere" [0.000309598] {1} 
+S -> "rather" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "pretty" P57 "rectangle" [0.000309598] {1} 
+S -> "above" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "cylinder" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "pretty" P60 "cylinder" [0.000309598] {1} 
+S -> P66 "triangle" [0.000309598] {1} 
+S -> "pretty" P57 "ball" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "somewhat" P57 "cylinder" [0.000309598] {1} 
+S -> "somewhat" P57 "sphere" [0.000309598] {1} 
+S -> "pretty" P60 "ball" [0.000309598] {1} 
+S -> P66 "tube" [0.000309598] {1} 
+S -> "quite" P57 "box" [0.000309598] {1} 
+S -> "somewhat" P57 "rectangle" [0.000309598] {1} 
+S -> "somewhat" P57 "box" [0.000309598] {1} 
+S -> P70 P63 "box" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "quite" P57 "cylinder" [0.000309598] {1} 
+S -> "quite" P57 "ball" [0.000309598] {1} 
+S -> "fairly" P60 "tube" [0.000309598] {1} 
+S -> "pretty" P65 "edge" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "tube" [0.000309598] {1} 
+S -> "rather" P57 "tube" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> "pretty" P60 "prism" [0.000309598] {1} 
+S -> "pretty" P57 "triangle" [0.000309598] {1} 
+S -> "quite" P57 "cup" [0.000309598] {1} 
+S -> "very" P57 "prism" [0.000309598] {1} 
+S -> "pretty" P60 "ball" [0.000309598] {1} 
+S -> P66 "box" [0.000309598] {1} 
+S -> "above" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P60 "cylinder" [0.000309598] {1} 
+S -> "somewhat" P57 "sphere" [0.000309598] {1} 
+S -> P66 "bottle" [0.000309598] {1} 
+S -> "pretty" P57 "sphere" [0.000309598] {1} 
+S -> "pretty" P57 "triangle" [0.000309598] {1} 
+S -> P66 "prism" [0.000309598] {1} 
+S -> P70 P63 "sphere" [0.000309598] {1} 
+S -> "very" P57 "triangle" [0.000309598] {1} 
+S -> "fairly" P57 "bottle" [0.000309598] {1} 
+S -> "fairly" P57 "bottle" [0.000309598] {1} 
+S -> "very" P57 "prism" [0.000309598] {1} 
+S -> "quite" P57 "cylinder" [0.000309598] {1} 
+S -> "fairly" P60 "rectangle" [0.000309598] {1} 
+S -> "fairly" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P60 "cylinder" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> P70 P63 "bottle" [0.000309598] {1} 
+S -> "to" P64 P68 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "rectangle" [0.000309598] {1} 
+S -> "fairly" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "block" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> "somewhat" P60 "triangle" [0.000309598] {1} 
+S -> P66 "cylinder" [0.000309598] {1} 
+S -> "very" P57 "tube" [0.000309598] {1} 
+S -> "quite" P57 "cup" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "very" P57 "cylinder" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "fairly" P60 "ball" [0.000309598] {1} 
+S -> "quite" P57 "cup" [0.000309598] {1} 
+S -> "pretty" P57 "bottle" [0.000309598] {1} 
+S -> "somewhat" P57 "cup" [0.000309598] {1} 
+S -> P66 "triangle" [0.000309598] {1} 
+S -> "somewhat" P60 "triangle" [0.000309598] {1} 
+S -> "quite" P57 "rectangle" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> "somewhat" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P70 P63 "bottle" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "fairly" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "pretty" P57 "box" [0.000309598] {1} 
+S -> "fairly" P57 "bottle" [0.000309598] {1} 
+S -> "fairly" P60 "ball" [0.000309598] {1} 
+S -> "pretty" P57 "box" [0.000309598] {1} 
+S -> "rather" P57 "cup" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "pretty" P57 "sphere" [0.000309598] {1} 
+S -> "somewhat" P60 "rectangle" [0.000309598] {1} 
+S -> "fairly" P57 "rectangle" [0.000309598] {1} 
+S -> P70 P63 "box" [0.000309598] {1} 
+S -> "somewhat" P62 "far" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P60 "block" [0.000309598] {1} 
+S -> "quite" P57 "tube" [0.000309598] {1} 
+S -> "pretty" P60 "block" [0.000309598] {1} 
+S -> P62 "farther" "corner" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "cup" [0.000309598] {1} 
+S -> "very" P57 "bottle" [0.000309598] {1} 
+S -> "somewhat" P57 "cylinder" [0.000309598] {1} 
+S -> "pretty" P60 "prism" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> P66 "triangle" [0.000309598] {1} 
+S -> P57 "rectangle" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "somewhat" "far" P57 "sphere" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "somewhat" P62 "front" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P60 "rectangle" [0.000309598] {1} 
+S -> "pretty" P57 "box" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "fairly" P65 "side" P59 "table" [0.000309598] {1} 
+S -> "rather" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "sphere" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> "somewhat" P60 "cup" [0.000309598] {1} 
+S -> "fairly" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "prism" [0.000309598] {1} 
+S -> "behind" P69 "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "pretty" P57 "triangle" [0.000309598] {1} 
+S -> P66 "tube" [0.000309598] {1} 
+S -> "to" P64 P68 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "rectangle" [0.000309598] {1} 
+S -> "pretty" P57 "prism" [0.000309598] {1} 
+S -> "rather" P57 "prism" [0.000309598] {1} 
+S -> "pretty" P57 "cylinder" [0.000309598] {1} 
+S -> "somewhat" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P62 "right" "corner" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "prism" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> P66 "ball" [0.000309598] {1} 
+S -> P57 "cup" [0.000309598] {1} 
+S -> "somewhat" P57 "ball" [0.000309598] {1} 
+S -> "very" P62 "farther" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "triangle" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "very" P57 "block" [0.000309598] {1} 
+S -> P66 "tube" [0.000309598] {1} 
+S -> "somewhat" P57 "rectangle" [0.000309598] {1} 
+S -> "fairly" P57 "cup" [0.000309598] {1} 
+S -> "very" P57 "box" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> "pretty" P60 "tube" [0.000309598] {1} 
+S -> "somewhat" P62 "back" "corner" P59 "table" [0.000309598] {1} 
+S -> P66 "block" [0.000309598] {1} 
+S -> "quite" P58 "middle" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "cylinder" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> P70 P63 "tube" [0.000309598] {1} 
+S -> "pretty" P57 "prism" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "quite" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "block" [0.000309598] {1} 
+S -> "somewhat" P62 "near" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "prism" [0.000309598] {1} 
+S -> "rather" P57 "rectangle" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "pretty" P60 "cup" [0.000309598] {1} 
+S -> P57 "tube" [0.000309598] {1} 
+S -> "rather" P57 "ball" [0.000309598] {1} 
+S -> "rather" P58 "middle" P59 "table" [0.000309598] {1} 
+S -> P66 "sphere" [0.000309598] {1} 
+S -> "quite" P57 "cylinder" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "quite" P57 "box" [0.000309598] {1} 
+S -> P57 "sphere" [0.000309598] {1} 
+S -> P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P57 "bottle" [0.000309598] {1} 
+S -> "pretty" P57 "block" [0.000309598] {1} 
+S -> "very" P57 "rectangle" [0.000309598] {1} 
+S -> "somewhat" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P57 "block" [0.000309598] {1} 
+S -> "fairly" P57 "block" [0.000309598] {1} 
+S -> P70 P59 "middle" P59 "table" [0.000309598] {1} 
+S -> "rather" P57 "box" [0.000309598] {1} 
+S -> "somewhat" P60 "cup" [0.000309598] {1} 
+S -> "somewhat" P62 "edge" P59 "table" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> "pretty" P62 "far" "corner" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "box" [0.000309598] {1} 
+S -> P66 "prism" [0.000309598] {1} 
+S -> "somewhat" P60 "box" [0.000309598] {1} 
+S -> "pretty" P60 "cylinder" [0.000309598] {1} 
+S -> "somewhat" P57 "bottle" [0.000309598] {1} 
+S -> P66 "box" [0.000309598] {1} 
+S -> "quite" P57 "prism" [0.000309598] {1} 
+S -> "somewhat" P57 "ball" [0.000309598] {1} 
+S -> P57 "prism" [0.000309598] {1} 
+S -> "fairly" P57 "block" [0.000309598] {1} 
+S -> P70 P63 "cylinder" [0.000309598] {1} 
+S -> "rather" P57 "prism" [0.000309598] {1} 
+S -> "on" P64 "edge" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "prism" [0.000309598] {1} 
+S -> "behind" P64 "side" P59 "table" [0.000309598] {1} 
+S -> "fairly" P60 "cup" [0.000309598] {1} 
+S -> "fairly" P60 "block" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> "pretty" P57 "block" [0.000309598] {1} 
+S -> "pretty" P60 "bottle" [0.000309598] {1} 
+S -> "somewhat" P57 "prism" [0.000309598] {1} 
+S -> "pretty" P65 "side" P59 "table" [0.000309598] {1} 
+S -> P57 "ball" [0.000309598] {1} 
+S -> "pretty" P57 "cup" [0.000309598] {1} 
+S -> "on" P64 "edge" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "cup" [0.000309598] {1} 
+S -> "fairly" P60 "box" [0.000309598] {1} 
+S -> "fairly" P57 "rectangle" [0.000309598] {1} 
+S -> "somewhat" P57 "cup" [0.000309598] {1} 
+S -> "fairly" P60 "box" [0.000309598] {1} 
+S -> "somewhat" P60 "tube" [0.000309598] {1} 
+S -> "rather" P57 "sphere" [0.000309598] {1} 
+S -> "quite" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "very" P57 "block" [0.000309598] {1} 
+S -> "below" P64 "edge" P59 "table" [0.000309598] {1} 
+S -> "quite" P57 "ball" [0.000309598] {1} 
+S -> P66 "cup" [0.000309598] {1} 
+S -> "pretty" P62 "side" P59 "table" [0.000309598] {1} 
+S -> "pretty" P57 "box" [0.000309598] {1} 
+S -> "somewhat" P60 "ball" [0.000309598] {1} 
+S -> P57 "cylinder" [0.000309598] {1} 
+S -> P57 "triangle" [0.000309598] {1} 
+S -> P70 P63 "tube" [0.000309598] {1} 
+S -> "pretty" P65 "back" "corner" P59 "table" [0.000309598] {1} 
+S -> P57 "box" [0.000309598] {1} 
+S -> P66 "ball" [0.000309598] {1} 
+S -> P66 "cup" [0.000309598] {1} 
+S -> "rather" P57 "box" [0.000309598] {1} 
+S -> "below" P64 "side" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P60 "cup" [0.000309598] {1} 
+S -> "very" P62 "back" "corner" P59 "table" [0.000309598] {1} 
+S -> "fairly" P57 "box" [0.000309598] {1} 
+S -> "somewhat" P57 "cup" [0.000309598] {1} 
+S -> "somewhat" P57 "cup" [0.000309598] {1} 
+S -> "rather" P57 "cylinder" [0.000309598] {1} 
+S -> "quite" P57 "ball" [0.000309598] {1} 
+S -> "somewhat" P57 "block" [0.000309598] {1} 
+S -> "somewhat" P62 "left" "corner" P59 "table" [0.000309598] {1} 
+S -> "somewhat" P57 "tube" [0.000309598] {1} 
+E52 -> "green" [0.098597] {253}
+E52 -> "yellow" [0.0997662] {256}
+E52 -> "orange" [0.0989868] {254}
+E52 -> "blue" [0.0974279] {250}
+E52 -> "white" [0.0993765] {255}
+E52 -> "pink" [0.100935] {259}
+E52 -> "red" [0.101715] {261}
+E52 -> "purple" [0.100156] {257}
+E52 -> "black" [0.102884] {264}
+E52 -> "teal" [0.100156] {257}
+P53 -> "the" E52 [1.0] {2566}
+E54 -> "close" [0.498512] {1005}
+E54 -> "near" [0.501488] {1011}
+P55 -> E54 "to" [1.0] {2016}
+E56 -> "behind" [0.0562595] {111}
+E56 -> "on" [0.0557527] {110}
+E56 -> "below" [0.0557527] {110}
+E56 -> P55 [0.774962] {1529}
+E56 -> "above" [0.0572732] {113}
+P57 -> E56 P53 [1.0] {1973}
+P58 -> P55 "the" [1.0] {487}
+P59 -> "of" "the" [1.0] {713}
+P60 -> "far" "from" P53 [1.0] {261}
+E61 -> "nearer" [0.0841639] {76}
+E61 -> "left" [0.277962] {251}
+E61 -> "right" [0.272425] {246}
+E61 -> "farther" [0.0642303] {58}
+E61 -> "near" [0.0863787] {78}
+E61 -> "far" [0.0609081] {55}
+E61 -> "back" [0.0675526] {61}
+E61 -> "front" [0.0863787] {78}
+P62 -> P58 E61 [1.0] {473}
+P63 -> "of" P53 [1.0] {332}
+P64 -> "the" E61 [1.0] {369}
+P65 -> "far" "from" P64 [1.0] {27}
+P66 -> "to" P64 P63 [1.0] {222}
+E67 -> "far" [0.15] {6}
+E67 -> "right" [0.275] {11}
+E67 -> "farther" [0.15] {6}
+E67 -> "back" [0.15] {6}
+E67 -> "left" [0.275] {11}
+P68 -> P59 E67 [1.0] {40}
+P69 -> P64 E61 [1.0] {61}
+P70 -> "in" "front" [1.0] {130}

@@ -3,18 +3,17 @@
 from __future__ import division
 
 import sys
-# import random
-sys.path.append("..")
+import re
+
+sys.path.append('..')
 from myrandom import random
 from functools import partial
 import inspect
-from collections import defaultdict
 
 import numpy as np
 from planar import Vec2, BoundingBox
 
 # import stuff from semantics
-sys.path.append('..')
 from semantics.speaker import Speaker
 from semantics.landmark import Landmark, ObjectClass
 from semantics.representation import RectangleRepresentation, PointRepresentation
@@ -23,6 +22,12 @@ from semantics.relation import OrientationRelationSet
 from semantics.run import construct_training_scene
 
 NONTERMINALS = ('LOCATION-PHRASE', 'RELATION', 'LANDMARK-PHRASE', 'LANDMARK')
+
+def is_nonterminal(s):
+    if s == 'S': return True
+    if re.match(r'(P\d+)', s): return True
+    if re.match(r'(E\d+)', s): return True
+    return False
 
 class printcolors:
     HEADER = '\033[95m'
@@ -65,7 +70,15 @@ def count_lmk_phrases(t):
     """gets an nltk Tree and returns the number of LANDMARK-PHRASE nodes"""
     return sum(1 for n in t.subtrees() if n.node == 'LANDMARK-PHRASE')
 
+def get_landmark_parent_chain(lmk):
+    lmks = [lmk]
 
+    l = parent_landmark(lmk)
+    while l is not None:
+        lmks.append(l)
+        l = parent_landmark(l)
+
+    return lmks
 
 # a wrapper for a semantics scene
 class ModelScene(object):
@@ -158,9 +171,7 @@ def rel_type(rel):
     if rel: return rel.__class__.__name__
 
 def get_meaning(loc=None, num_ancestors=None, usebest=False):
-    if not loc:
-        loc = scene.get_rand_loc()
-
+    if not loc: loc = scene.get_rand_loc()
     lmk, rel = scene.sample_lmk_rel(Vec2(*loc), num_ancestors, usebest=usebest)
     # print 'landmark: %s (%s)' % (lmk, lmk_id(lmk))
     # print 'relation:', rel_type(rel)

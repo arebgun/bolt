@@ -1,0 +1,2266 @@
+E1001 -> "round" [0.750000] {3}
+E1001 -> "square" [0.250000] {1}
+E1003 -> "and" [0.400000] {6}
+E1003 -> P941 [0.600000] {9}
+E1005 -> "object" [0.500000] {1}
+E1005 -> "wide" [0.500000] {1}
+E1007 -> "a" [0.500000] {1}
+E1007 -> "very" [0.500000] {1}
+E1009 -> "left" [0.521739] {24}
+E1009 -> "right" [0.478261] {22}
+E1011 -> "down" [0.800000] {4}
+E1011 -> "up" [0.200000] {1}
+E1014 -> "between" [0.437500] {7}
+E1014 -> P936 [0.562500] {9}
+E1016 -> "similarly-sized" [0.500000] {1}
+E1016 -> "tiny" [0.500000] {1}
+E1020 -> "only" [0.500000] {2}
+E1020 -> "spherical" [0.250000] {1}
+E1020 -> "square" [0.250000] {1}
+E1022 -> "orange" [0.500000] {1}
+E1022 -> P962 [0.500000] {1}
+E1024 -> "large" [0.500000] {1}
+E1024 -> "right" [0.500000] {1}
+E1026 -> "beige" [0.500000] {1}
+E1026 -> P986 [0.500000] {1}
+E1028 -> P917 [0.500000] {1}
+E1028 -> P936 [0.500000] {1}
+E1030 -> "cubes" [0.500000] {1}
+E1030 -> "cylander" [0.500000] {1}
+E1033 -> P920 [0.500000] {1}
+E1033 -> P933 [0.500000] {1}
+E1036 -> "orange" [0.400000] {2}
+E1036 -> "yellow" [0.600000] {3}
+E1037 -> "block" [0.333333] {1}
+E1037 -> P1032 [0.666667] {2}
+E1039 -> "green" [0.500000] {1}
+E1039 -> "orange" [0.500000] {1}
+E1041 -> P923 [0.164384] {12}
+E1041 -> P935 [0.246575] {18}
+E1041 -> P939 [0.191781] {14}
+E1041 -> P946 [0.383562] {28}
+E1041 -> P951 [0.013699] {1}
+E1043 -> "rectangular" [0.343750] {22}
+E1043 -> P970 [0.656250] {42}
+E1045 -> "red" [0.833333] {5}
+E1045 -> "tall" [0.166667] {1}
+E1047 -> "box," [0.500000] {1}
+E1047 -> "rectangle" [0.500000] {1}
+E889 -> "block" [0.087647] {127}
+E889 -> "box" [0.128364] {186}
+E889 -> "circle" [0.035887] {52}
+E889 -> "column" [0.003451] {5}
+E889 -> "cube" [0.244997] {355}
+E889 -> "cuboid" [0.024155] {35}
+E889 -> "cylander" [0.002070] {3}
+E889 -> "cylendar" [0.001380] {2}
+E889 -> "cylindar" [0.000690] {1}
+E889 -> "cylinder" [0.143547] {208}
+E889 -> "disc" [0.008282] {12}
+E889 -> "disk" [0.006211] {9}
+E889 -> "oval" [0.002761] {4}
+E889 -> "pie" [0.004141] {6}
+E889 -> "puck" [0.006211] {9}
+E889 -> "rectangle" [0.092478] {134}
+E889 -> "shape" [0.026915] {39}
+E889 -> "sphere" [0.111111] {161}
+E889 -> "square" [0.069703] {101}
+E891 -> "In" [0.011445] {8}
+E891 -> "at" [0.177396] {124}
+E891 -> "in" [0.317597] {222}
+E891 -> "near" [0.208870] {146}
+E891 -> "on" [0.210300] {147}
+E891 -> "past" [0.001431] {1}
+E891 -> "toward" [0.017167] {12}
+E891 -> "towards" [0.055794] {39}
+E893 -> "a" [0.046735] {68}
+E893 -> "hte" [0.000687] {1}
+E893 -> "the" [0.952577] {1386}
+E895 -> "back" [0.067825] {82}
+E895 -> "beginning" [0.000827] {1}
+E895 -> "bottom" [0.009926] {12}
+E895 -> "center" [0.124897] {151}
+E895 -> "corner" [0.117452] {142}
+E895 -> "edge" [0.085194] {103}
+E895 -> "end" [0.114144] {138}
+E895 -> "front" [0.071133] {86}
+E895 -> "left" [0.086849] {105}
+E895 -> "middle" [0.205128] {248}
+E895 -> "northwest" [0.000827] {1}
+E895 -> "rear" [0.004963] {6}
+E895 -> "rest" [0.005790] {7}
+E895 -> "right" [0.087676] {106}
+E895 -> "top" [0.017370] {21}
+E897 -> "In" [0.002907] {4}
+E897 -> "On" [0.002180] {3}
+E897 -> "all" [0.029797] {41}
+E897 -> "at" [0.078488] {108}
+E897 -> "behind" [0.036337] {50}
+E897 -> "below" [0.002180] {3}
+E897 -> "in" [0.153343] {211}
+E897 -> "near" [0.095930] {132}
+E897 -> "nearest" [0.003634] {5}
+E897 -> "on" [0.132994] {183}
+E897 -> "to" [0.417878] {575}
+E897 -> "towards" [0.044331] {61}
+E899 -> "table" [0.864633] {907}
+E899 -> "table," [0.135367] {142}
+E901 -> "green" [0.329068] {180}
+E901 -> "rectangular" [0.053017] {29}
+E901 -> "small" [0.321755] {176}
+E901 -> "yellow" [0.296161] {162}
+E903 -> "coloured" [0.007663] {2}
+E903 -> "cylindrical" [0.011494] {3}
+E903 -> "green" [0.283525] {74}
+E903 -> "proportionate" [0.003831] {1}
+E903 -> "purple" [0.628352] {164}
+E903 -> "square" [0.038314] {10}
+E903 -> "violet" [0.019157] {5}
+E903 -> "wide" [0.007663] {2}
+E907 -> "green" [0.113636] {5}
+E907 -> "yellow" [0.045455] {2}
+E907 -> P902 [0.840909] {37}
+E909 -> "in" [0.127005] {95}
+E909 -> P898 [0.872995] {653}
+E911 -> "and" [0.008511] {2}
+E911 -> "blue" [0.357447] {84}
+E911 -> "color" [0.008511] {2}
+E911 -> "colored" [0.055319] {13}
+E911 -> "green" [0.238298] {56}
+E911 -> "in" [0.034043] {8}
+E911 -> "rectangle" [0.021277] {5}
+E911 -> "rectangular" [0.212766] {50}
+E911 -> "round" [0.008511] {2}
+E911 -> "shaped" [0.004255] {1}
+E911 -> "square" [0.046809] {11}
+E911 -> "upright" [0.004255] {1}
+E913 -> "back" [0.060000] {6}
+E913 -> "far" [0.170000] {17}
+E913 -> "left" [0.460000] {46}
+E913 -> "middle-left" [0.010000] {1}
+E913 -> "near" [0.030000] {3}
+E913 -> "north" [0.030000] {3}
+E913 -> "right" [0.220000] {22}
+E913 -> "upper" [0.020000] {2}
+E916 -> "closer" [0.109589] {16}
+E916 -> "next" [0.890411] {130}
+E918 -> "rectangular" [0.857143] {42}
+E918 -> "small" [0.081633] {4}
+E918 -> "yellow" [0.061225] {3}
+E919 -> "ball" [0.102041] {5}
+E919 -> "parallelepiped" [0.020408] {1}
+E919 -> "prism" [0.857143] {42}
+E919 -> "tube" [0.020408] {1}
+E921 -> "green" [0.030303] {1}
+E921 -> "rectangular" [0.909091] {30}
+E921 -> "small" [0.060606] {2}
+E922 -> "ball" [0.060606] {2}
+E922 -> "prism" [0.909091] {30}
+E922 -> "rectangula" [0.030303] {1}
+E925 -> "orange" [0.219512] {36}
+E925 -> "purple" [0.579268] {95}
+E925 -> "yellow" [0.201220] {33}
+E927 -> "back" [0.166667] {33}
+E927 -> "far" [0.151515] {30}
+E927 -> "left" [0.282828] {56}
+E927 -> "lefthand" [0.005051] {1}
+E927 -> "right" [0.393939] {78}
+E929 -> "Biggest" [0.010989] {1}
+E929 -> "ball" [0.945055] {86}
+E929 -> "semicircle" [0.010989] {1}
+E929 -> "sphere/" [0.010989] {1}
+E929 -> "tallest" [0.010989] {1}
+E929 -> "tube" [0.010989] {1}
+E932 -> P892 [0.628049] {309}
+E932 -> P904 [0.371951] {183}
+E934 -> "back" [0.131507] {48}
+E934 -> "front" [0.065753] {24}
+E934 -> "middle" [0.073973] {27}
+E934 -> "sphere" [0.005479] {2}
+E934 -> "table" [0.057534] {21}
+E934 -> P900 [0.665753] {243}
+E938 -> "back" [0.241379] {14}
+E938 -> "far" [0.206897] {12}
+E938 -> "left" [0.293103] {17}
+E938 -> "right" [0.258621] {15}
+E940 -> "close" [0.342466] {25}
+E940 -> "inear" [0.013699] {1}
+E940 -> "near" [0.178082] {13}
+E940 -> "next" [0.465753] {34}
+E942 -> "front" [0.072539] {14}
+E942 -> "middle" [0.103627] {20}
+E942 -> "sphere" [0.005181] {1}
+E942 -> P900 [0.818653] {158}
+E944 -> "a" [0.023810] {1}
+E944 -> "blue" [0.166667] {7}
+E944 -> "purple" [0.142857] {6}
+E944 -> "red" [0.285714] {12}
+E944 -> "round" [0.166667] {7}
+E944 -> "the" [0.023810] {1}
+E944 -> P902 [0.190476] {8}
+E945 -> "ball" [0.928571] {39}
+E945 -> "prism" [0.071429] {3}
+E948 -> "of" [0.350000] {42}
+E948 -> "right" [0.008333] {1}
+E948 -> P914 [0.641667] {77}
+E950 -> "blue" [0.287879] {19}
+E950 -> "purple" [0.409091] {27}
+E950 -> "red" [0.257576] {17}
+E950 -> "smallest" [0.015152] {1}
+E950 -> "sphere" [0.030303] {2}
+E952 -> "blocks" [0.008197] {1}
+E952 -> "objects" [0.778689] {95}
+E952 -> "objects," [0.106557] {13}
+E952 -> "shapes" [0.106557] {13}
+E954 -> "all" [0.400000] {24}
+E954 -> P898 [0.600000] {36}
+E956 -> "blue" [0.493827] {40}
+E956 -> "orange" [0.506173] {41}
+E958 -> "adjacent" [0.285714] {10}
+E958 -> "closest" [0.714286] {25}
+E961 -> "ball" [0.489583] {94}
+E961 -> "sphere" [0.510417] {98}
+E963 -> "back," [0.000000] {0}
+E963 -> "far" [0.571429] {8}
+E963 -> "lower" [0.428571] {6}
+E967 -> "circular" [0.250000] {5}
+E967 -> "cylindrical" [0.250000] {5}
+E967 -> "orange" [0.150000] {3}
+E967 -> "rectanglular" [0.100000] {2}
+E967 -> "shape" [0.250000] {5}
+E969 -> P898 [0.104167] {10}
+E969 -> P906 [0.125000] {12}
+E969 -> P908 [0.020833] {2}
+E969 -> P910 [0.322917] {31}
+E969 -> P917 [0.427083] {41}
+E972 -> "across" [0.210526] {4}
+E972 -> "down" [0.578947] {11}
+E972 -> "up" [0.210526] {4}
+E976 -> "bottom" [0.714286] {5}
+E976 -> "lower" [0.142857] {1}
+E976 -> "near" [0.142857] {1}
+E980 -> P890 [0.540404] {107}
+E980 -> P912 [0.459596] {91}
+E982 -> "shape" [0.500000] {1}
+E982 -> P943 [0.500000] {1}
+E985 -> "cube" [0.410256] {16}
+E985 -> "cylindrical" [0.025641] {1}
+E985 -> "disk" [0.102564] {4}
+E985 -> "rectangular" [0.128205] {5}
+E985 -> "square" [0.333333] {13}
+E987 -> "orange" [0.500000] {3}
+E987 -> "purple" [0.500000] {3}
+E988 -> "spheres" [0.500000] {1}
+E988 -> P947 [0.500000] {1}
+E990 -> "back" [0.094118] {8}
+E990 -> "left" [0.541176] {46}
+E990 -> "lefthand" [0.011765] {1}
+E990 -> "right" [0.352941] {30}
+E992 -> "his" [0.454545] {5}
+E992 -> "purple" [0.272727] {3}
+E992 -> "yellow" [0.272727] {3}
+E994 -> "dark" [0.500000] {1}
+E994 -> "is" [0.500000] {1}
+E995 -> "green" [0.500000] {3}
+E995 -> "yellow" [0.500000] {3}
+E997 -> "behind" [0.090909] {1}
+E997 -> "beside" [0.090909] {1}
+E997 -> "between" [0.272727] {3}
+E997 -> "near" [0.181818] {2}
+E997 -> "on" [0.272727] {3}
+E997 -> P941 [0.090909] {1}
+P1000 -> "in" "color" [1.000000] {18}
+P1002 -> "is" E1001 "in" "shape" [1.000000] {4}
+P1004 -> E1003 P905 "cylinder" [1.000000] {13}
+P1006 -> "is" E1005 E1003 "blue" [1.000000] {2}
+P1008 -> P926 E909 E1007 P900 [1.000000] {2}
+P1010 -> E1009 "corner" [1.000000] {46}
+P1012 -> E1011 "the" "table," [1.000000] {5}
+P1013 -> P902 E980 [1.000000] {107}
+P1015 -> E1014 "two" "yellow" [1.000000] {10}
+P1017 -> "a" E1016 E995 "cube" [1.000000] {2}
+P1018 -> P914 "table," [1.000000] {14}
+P1019 -> P902 P935 [1.000000] {62}
+P1021 -> "the" E1020 E956 "object" [1.000000] {4}
+P1023 -> "is" E1014 E1022 "and" [1.000000] {2}
+P1025 -> P935 E1014 E1024 "and" [1.000000] {2}
+P1027 -> "a" E1026 E932 "top" [1.000000] {2}
+P1029 -> "is" E1028 E987 "object" [1.000000] {2}
+P1031 -> P936 E987 E1030 "and" [1.000000] {2}
+P1032 -> "in" "colour" [1.000000] {20}
+P1034 -> "the" E995 E1033 P917 [1.000000] {2}
+P1035 -> "top" P900 [1.000000] {25}
+P1038 -> P915 E1036 E1037 "and" [1.000000] {3}
+P1040 -> P935 E1014 E1039 "rectangle" [1.000000] {2}
+P1042 -> E1041 P900 [1.000000] {73}
+P1044 -> P902 E1043 [1.000000] {58}
+P1046 -> "a" E1045 E1043 "orange" [1.000000] {6}
+P1048 -> "cylinder," E1036 E1047 "and" [1.000000] {2}
+P890 -> E889 "is" [1.000000] {1449}
+P892 -> P890 E891 "the" [1.000000] {699}
+P894 -> "of" E893 [1.000000] {1455}
+P896 -> E895 P894 [1.000000] {1209}
+P898 -> E897 "the" [1.000000] {1376}
+P900 -> P896 E899 [1.000000] {939}
+P902 -> "a" E901 [1.000000] {547}
+P904 -> E903 P892 [1.000000] {261}
+P905 -> "an" "orange" [1.000000] {137}
+P906 -> "next" "to" "a" [1.000000] {60}
+P908 -> "next" "to" E907 [1.000000] {44}
+P910 -> E909 P896 [1.000000] {216}
+P912 -> E911 P890 [1.000000] {235}
+P914 -> E913 "side" P894 [1.000000] {100}
+P915 -> "is" E909 [1.000000] {337}
+P917 -> E916 P898 [1.000000] {146}
+P920 -> E918 E919 "is" [1.000000] {49}
+P923 -> E921 E922 P915 [1.000000] {33}
+P924 -> "away" "from" "the" [1.000000] {27}
+P926 -> E925 P890 [1.000000] {164}
+P928 -> P898 E927 [1.000000] {198}
+P930 -> E929 "is" [1.000000] {91}
+P931 -> P898 E899 [1.000000] {83}
+P933 -> E932 "far" P900 [1.000000] {52}
+P935 -> E932 E934 [1.000000] {365}
+P936 -> "between" "the" [1.000000] {47}
+P937 -> "in" "front" "of" [1.000000] {32}
+P939 -> P915 E938 [1.000000] {58}
+P941 -> E940 "to" [1.000000] {73}
+P943 -> E909 E942 [1.000000] {193}
+P946 -> E944 E945 P915 [1.000000] {42}
+P947 -> P915 P900 [1.000000] {67}
+P949 -> E948 "table" [1.000000] {120}
+P951 -> E950 P930 [1.000000] {66}
+P953 -> "other" E952 [1.000000] {122}
+P955 -> E954 P953 [1.000000] {60}
+P957 -> E956 "cylinder" [1.000000] {77}
+P959 -> E958 "to" [1.000000] {35}
+P960 -> "side" P894 E899 [1.000000] {27}
+P962 -> "red" E961 [1.000000] {84}
+P964 -> E932 E963 "left" P900 [1.000000] {14}
+P965 -> P894 "table" [1.000000] {52}
+P966 -> "purple" E961 [1.000000] {48}
+P968 -> E967 "object" "is" [1.000000] {20}
+P970 -> P890 E969 [1.000000] {96}
+P971 -> "about" "three" "quarters" P894 "way" [1.000000] {8}
+P973 -> E972 "the" "table" [1.000000] {19}
+P974 -> P910 "green" [1.000000] {40}
+P975 -> P902 E932 [1.000000] {52}
+P977 -> "a" E932 E976 "left" [1.000000] {7}
+P978 -> "closest" P898 [1.000000] {37}
+P979 -> "blue" E961 [1.000000] {58}
+P981 -> E980 P928 "of" [1.000000] {14}
+P983 -> "a" E961 E982 "and" [1.000000] {2}
+P984 -> "a" E980 [1.000000] {66}
+P986 -> "blue" E985 [1.000000] {39}
+P989 -> "and" E987 E988 "and" [1.000000] {2}
+P991 -> E990 P900 [1.000000] {85}
+P993 -> "in" E992 "color" [1.000000] {11}
+P996 -> "and" E994 E995 "in" "colour" [1.000000] {2}
+P998 -> P902 E980 E997 "a" [1.000000] {11}
+P999 -> "medium" "sized" [1.000000] {13}
+S -> "A" "Round," P951 "close" P943 [0.000469] {1}
+S -> "A" "Yelow" "long" "square" "shape" "object" P947 [0.000469] {1}
+S -> "A" "coloured" "rectangle" "standing" "upright" P915 "front" "of" P955 P931 [0.000469] {1}
+S -> "A" "cube" "with" "yellow" "and" "black" "sides" P1042 P943 [0.000469] {1}
+S -> "A" "dull" P926 "placed" P898 "rear" P991 "is" "near" "some" P953 "I" "hardly" "bothered" "to" "look" "at" [0.000469] {1}
+S -> "A" "green" P1042 P906 P957 [0.000469] {1}
+S -> "A" "green" P920 P910 P953 "in" "terms" "of" "back" "to" "front" "alignement" "More" P928 "with" "proportion" P931 [0.000469] {1}
+S -> "A" "large" "yellow" P935 "right" "side" P931 [0.000469] {1}
+S -> "A" "light" "pinkish" P935 "about" "three-quarters" P894 "way" "back" [0.000469] {1}
+S -> "A" "medium," "green" "circular" P1042 P924 P953 [0.000469] {1}
+S -> "A" "narrow" "box" "on" "its" "side" P947 [0.000469] {1}
+S -> "A" "pink" "rectangular" P935 "opposite" "of" "ne" P898 "orange" "and" "purple" "rectangular" "boxes" [0.000469] {1}
+S -> "A" "purple" "Cube" "is" P959 "viewer" [0.000469] {1}
+S -> "A" "purple" "cube" "with" "a" "black" "facet" "is" "In" "foreground" P937 "all" P894 "other" "four" "objects" [0.000469] {1}
+S -> "A" "purple" "rectangular" "prism" "that" "is" "taller" "than" "it" "is" "wide" "or" "thick" "is" "farthest" P924 "foreground" "of" P898 "objects" "and" "close" P898 "upper" P1010 "from" "this" "perspective" [0.000469] {1}
+S -> "A" "purple" P920 "In" P900 [0.000469] {1}
+S -> "A" "purple" P920 "farthest" "from" "the" "viewers" "perspective" P965 [0.000469] {1}
+S -> "A" "purple" P923 "way" P928 P900 P928 P1010 [0.000469] {1}
+S -> "A" "rectangle" "laying" "down" P931 "is" "behind" P898 "objects" "except" "for" "object" "three," "it" "still" "seems" "that" "it" P947 [0.000469] {1}
+S -> "A" "red" P892 "centre" P965 [0.000469] {1}
+S -> "A" "short" "orange" P935 P1018 "behide" "the" "blue" "small" "cylinder" [0.000469] {1}
+S -> "A" "short" "orange" P935 P910 P962 [0.000469] {1}
+S -> "A" "short" P912 "Near" "the" P1035 [0.000469] {1}
+S -> "A" "short" P926 "Near" "the" P1035 [0.000469] {1}
+S -> "A" "short," P912 "halfway" P936 "centre" "and" "one" P900 "while" "a" "short," "brown" "cylinder" "and" "a" "lime" "prism" "sit" "nearby" [0.000469] {1}
+S -> "A" "small" P1042 [0.000469] {1}
+S -> "A" "small" P935 "near" "its" "far" "side" [0.000469] {1}
+S -> "A" "small" P951 "Near" "the" "middle" P917 P957 [0.000469] {1}
+S -> "A" "small," P1042 P908 P966 [0.000469] {1}
+S -> "A" "smaller," "dark" P1042 P910 "yellow" "block" [0.000469] {1}
+S -> "A" "tall," "brown" P920 "halfway" P936 "long" "edge" "and" "centre" P894 "table," "and" "no" "objects" "are" "near" "it" [0.000469] {1}
+S -> "A" "three" "dimensional" P890 P978 "point" "of" "view" [0.000469] {1}
+S -> "A" "wide" P926 "Close" P943 [0.000469] {1}
+S -> "A" "yellow" "rectangular" "prism" "on" "it's" "long" "side" "at" "a" "slight" "diagonal" "is" "foremost" "of" P898 "objects," "and" "directly" P910 P962 "It" "is" "somewhat" "close" P943 P900 "and" P898 "center" [0.000469] {1}
+S -> "A" "yellow" P1042 [0.000469] {1}
+S -> "A" "yellow" P935 P928 P1010 "is" [0.000469] {1}
+S -> "A" P1042 P917 P957 [0.000469] {1}
+S -> "A" P1042 [0.000469] {1}
+S -> "A" P890 "Behind" P955 [0.000469] {1}
+S -> "A" P904 "corner" "to" "your" "left" [0.000469] {1}
+S -> "A" P904 "far" P1010 [0.000469] {1}
+S -> "A" P912 "At" "the" P896 "group" "of" "object" [0.000469] {1}
+S -> "A" P926 "At" "the" P1010 P959 "me" [0.000469] {1}
+S -> "A" P926 "Near" "the" P991 "close" P898 "yellow" "cube" [0.000469] {1}
+S -> "A" P935 "by" "itself" [0.000469] {1}
+S -> "A" P935 [0.000469] {1}
+S -> "An" "orange" "can" P915 "middle," "by" "a" P979 [0.000469] {1}
+S -> "An" "orange" "cyllinder" "is" "right" P917 "blue" "sphere," "butting" "up" "against" "the" "left" "side" "of" "it" [0.000469] {1}
+S -> "An" "orange" "globe" "with" "complete" "flat" "sides," "so" "really" "not" "a" "globe" P947 P928 "side," P1015 "rectangles" "the" "red" "actual" "globe" [0.000469] {1}
+S -> "An" "orange" "three-d" "rectangle" "standing" "on" "end" P915 P949 "between" "objects" "five" "and" "three" [0.000469] {1}
+S -> "An" "orange" P920 "In" P900 [0.000469] {1}
+S -> "An" "orange" P935 P917 P979 [0.000469] {1}
+S -> "An" P926 "Halfway" "along" "the" "table" P898 "kept" "hand" "edge" [0.000469] {1}
+S -> "An" P926 P910 P900 [0.000469] {1}
+S -> "Ash" "tray" "is" "very" P941 "table," "kept" P928 "left" "side" [0.000469] {1}
+S -> "Block" "is" "the" "biggest" "in" "this" "group" [0.000469] {1}
+S -> "Blue" "Ball" "is" P941 "orange" "circular" "disc" [0.000469] {1}
+S -> "Blue" "Round" P915 "center" [0.000469] {1}
+S -> "Blue" "and" "kind" "of" "round" "is" P908 "rectangular" "object" [0.000469] {1}
+S -> "Blue" "ball" P939 "side" "of" "brown" "centroid" [0.000469] {1}
+S -> "Blue" "color" "six" "face" P890 "corner" "of" "that" "end" [0.000469] {1}
+S -> "Blue" "cylinder" P890 P943 [0.000469] {1}
+S -> "Blue" "rectangular" "object" "is" "directly" P917 "yellow" "ball" [0.000469] {1}
+S -> "Blue" "square" P900 "is" P917 "yellow" "circle" [0.000469] {1}
+S -> "Blue" P890 "farthest" "away," "almost" P943 [0.000469] {1}
+S -> "Blue" P890 "farthest" P943 [0.000469] {1}
+S -> "Blue" P930 P917 "cylinder" [0.000469] {1}
+S -> "Circle" "is" "beside" "the" P986 [0.000469] {1}
+S -> "Circle" "is" P917 P986 [0.000469] {1}
+S -> "Cuboid" "is" P941 "one" "side" ",one" "small" "cuboid" "," "sphere" "and" "cylinder" [0.000469] {1}
+S -> "Golden" "color" "unit" P915 "spherical" "shape" [0.000469] {1}
+S -> "Green" "ash" "tray" "is" "very" "close" P898 "rear" P900 "a" "feet" P924 "right" "end" [0.000469] {1}
+S -> "Green" "color" "unit" "is" "At" "the" P900 [0.000469] {1}
+S -> "Green" "square" "shape" "obect" "is" "on" P898 "midle" P900 [0.000469] {1}
+S -> "Green" P890 "far" "middle" P928 [0.000469] {1}
+S -> "IT" "IS" "A" "BROWN" "COLORED" "SQUARE" "BOX" "is" "AT" "THE" "FAR" "END" "OF" "THE" "TABLE" [0.000469] {1}
+S -> "In" "blue" "color" "is" "At" "the" P900 [0.000469] {1}
+S -> "It" "is" "a" "square" "and" "is" "placed" P943 "is" P941 "rectangle" [0.000469] {1}
+S -> "It" "is" "a" P892 "right" P943 [0.000469] {1}
+S -> "It" "is" "biggest" "sphere" "of" "yellow" "color" P931 "is" P917 P986 [0.000469] {1}
+S -> "It" "is" "cylindrical" "shape" "and" P947 [0.000469] {1}
+S -> "It" "is" "green" P1000 "is" "farthest" "to" P898 "objects" P931 [0.000469] {1}
+S -> "It" "is" "small" "cylindrical" "in" "nature" "is" "at" "top" P1010 [0.000469] {1}
+S -> "It" "is" P890 P943 "ot" "table" [0.000469] {1}
+S -> "It" "is" P983 "it" P947 [0.000469] {1}
+S -> "Its" "a" "violet" "colored" P912 "somewhat" "nearer" P898 P949 [0.000469] {1}
+S -> "Its" "the" "smallest" "of" "all" "objects" P931 "and" "of" "green" "color" P939 "hand" "side" P900 [0.000469] {1}
+S -> "Large" "violate" "Square" "shaped" "object" P947 [0.000469] {1}
+S -> "Large" P926 "almost" "directly" P943 "it" "is" "just" P910 P979 [0.000469] {1}
+S -> "Multimeter" "like" "object" "is" "About" "a" "feet" "from" "the" "right" "end" "and" "a" "feet" "from" "the" "rear" P900 [0.000469] {1}
+S -> "Orange" "circular" P890 "just" "above" "blue" "circular" "disc" [0.000469] {1}
+S -> "Orange" P890 "close" P943 "far" "away" "from" "any" P894 P953 [0.000469] {1}
+S -> "Orange" P920 "somewhat" "far" "away" "from" "you" [0.000469] {1}
+S -> "Orange" P920 P959 "you" [0.000469] {1}
+S -> "Purple" "Cube" P915 P949 P908 "cube" "and" P943 [0.000469] {1}
+S -> "Purple" "and" "is" "a" P1042 [0.000469] {1}
+S -> "Purple" P890 "very" P941 "you" [0.000469] {1}
+S -> "ROUND" "is" "IN" "THE" "THREE" "BY" "FOURTH" "OF" "THE" "TABLE" [0.000469] {1}
+S -> "Rectangle" "is" "yellow" P1000 [0.000469] {1}
+S -> "Rectangular" "Prism" "is" "place" P943 [0.000469] {1}
+S -> "Red" "Ball" "is" "Center" P965 "beside" "brown" "cylinder" [0.000469] {1}
+S -> "Red" "Ball" "is" "Right" P941 "Brown" "Puck" [0.000469] {1}
+S -> "Red" "Ball" "is" "above" "the" "yellow" "big" "cuboid" [0.000469] {1}
+S -> "Red" "color" "Round" "plate" "is" "Almost" P943 [0.000469] {1}
+S -> "Red" P1042 P936 "yellow" "objects" [0.000469] {1}
+S -> "Six" "face" P890 "almost" "of" "that" "end" [0.000937] {2}
+S -> "Small" "Purple" P935 "of" "them" "all" [0.000469] {1}
+S -> "Small" "green" "round" P915 "top" "roght" P960 [0.000469] {1}
+S -> "Sphere" P915 "circular" "block" [0.000469] {1}
+S -> "The" "Green" P935 P910 P951 "also" P910 P957 [0.000469] {1}
+S -> "The" "biggest" P904 "right" "side" P898 "first" "row" "far" "from" "the" P953 [0.000469] {1}
+S -> "The" "only" P926 "After" "all" P894 "purple" "boxes" [0.000469] {1}
+S -> "The" "small" P912 P974 "box" [0.000469] {1}
+S -> "The" "yellow" P999 P935 P928 "side" [0.000469] {1}
+S -> "This" "object" "is" "a" "purple" "cube" P970 P953 [0.000469] {1}
+S -> "This" "object" P915 "middle" "and" "is" "a" "brown" "rectangular" P892 P896 P953 [0.000469] {1}
+S -> "VIOLET" "CUBE" "is" "PLACE" "AT" "LEFT" "BOTTOM" "OF" "THE" "TABLE" [0.000469] {1}
+S -> "VIOLET" "RECTANGULAR" "BOX" P1042 [0.000469] {1}
+S -> "Yellow" "Sphere" P947 "grouped" "with" "blue" "cube," "green" "cube," "and" P966 [0.000469] {1}
+S -> "Yellow" "ball" P939 "hand" "side" "of" "blue" "cuboid" [0.000469] {1}
+S -> "Yellow" "small" P890 "above" "the" P962 [0.000469] {1}
+S -> "Yellow" P890 P959 "me," "on" "its" "side" [0.000469] {1}
+S -> "Yellow" P920 "Close" P898 "closest" "edge" P898 "camera," P910 "round" "circle" [0.000469] {1}
+S -> "a" "Green" P890 "Behind" "the" "yellow" "rectangle," "close" P928 "corner" "furthest" "from" "me" [0.000469] {1}
+S -> "a" "Rectangular" "Prism" P947 [0.000469] {1}
+S -> "a" "ball" "shaped" "purple" "object" P915 "second" "row" P898 "object" "in" "green" "color" [0.000469] {1}
+S -> "a" "ball" P968 "touching" "besides" P898 "round" "object" [0.000469] {1}
+S -> "a" "big" "light" "brown" "colour" "rectangular" P968 P910 P953 "of" "objects" [0.000469] {1}
+S -> "a" "big" "pink" P892 "left" "most" "front" P900 [0.000469] {1}
+S -> "a" "big" "wooden" P935 [0.000469] {1}
+S -> "a" "big" "yellow" P920 "In" "front" "of" P955 [0.000469] {1}
+S -> "a" "big" P904 "bottom" P991 [0.000469] {1}
+S -> "a" "big" P926 "bigger" "and" "wider" "than" "every" "other" "cylinder" [0.000469] {1}
+S -> "a" "big" P935 P949 [0.000469] {1}
+S -> "a" "big" P935 [0.000469] {1}
+S -> "a" "block" "of" "wood" P947 [0.000469] {1}
+S -> "a" "blue" "circle" "its" "the" "first" "object" P931 "is" "right" P943 [0.000469] {1}
+S -> "a" "blue" "colored" P904 P949 [0.000469] {1}
+S -> "a" "blue" "object" "with" "a" "number" "on" "top" "is" P910 "four" P943 [0.000469] {1}
+S -> "a" "blue" "raised" P970 "rectangle" [0.000469] {1}
+S -> "a" "blue" "reactangled" P890 P941 P902 "sphere" P898 "rear" "tble" "edge" [0.000469] {1}
+S -> "a" "blue" "rectangle," "nestled" P941 P902 P930 P910 "long" "brown" "table" [0.000469] {1}
+S -> "a" "blue" "short" P970 "green" "rectangular" "prism" "above" "the" P900 [0.000469] {1}
+S -> "a" "blue" P1042 "touching" P902 "ball" [0.000469] {1}
+S -> "a" "blue" P1042 [0.000469] {1}
+S -> "a" "blue" P892 "near" P900 [0.000469] {1}
+S -> "a" "blue" P892 "right-center" P965 P1004 [0.000469] {1}
+S -> "a" "blue" P892 "upper" "left" "quadrant" "Just" P928 "of" "4," "Almost" "directly" "below" "3," "slightly" P928 "Below" "1" "And" "above" "5" [0.000469] {1}
+S -> "a" "blue" P892 "upper," P900 "touching" "the" "yellow" "sphere" [0.000469] {1}
+S -> "a" "blue" P892 "very" "north" P965 [0.000469] {1}
+S -> "a" "blue" P892 P896 P900 "directly" "behind" P902 "ball" [0.000469] {1}
+S -> "a" "blue" P892 P949 P1004 [0.000469] {1}
+S -> "a" "blue" P912 "directly" P906 "short" "orange" "clynder" [0.000469] {1}
+S -> "a" "blue" P920 "furthest" "from" "me" [0.000469] {1}
+S -> "a" "blue" P920 "furthest" "from" "the" "observer" P943 [0.000469] {1}
+S -> "a" "blue" P920 "right" P917 "yellow" "sphere" [0.000469] {1}
+S -> "a" "blue" P923 "very" "far" P900 "just" "after" "the" "yellow" "sphere" [0.000469] {1}
+S -> "a" "blue" P933 P917 "yellow" "sphere" [0.000469] {1}
+S -> "a" "blue" P933 [0.000937] {2}
+S -> "a" "blue" P935 "Below" "4,5,3,and" "2" "It" "is" "right" P941 "2," P928 "of" "2" [0.000469] {1}
+S -> "a" "blue" P935 "just" P896 "cylinder" [0.000469] {1}
+S -> "a" "blue" P935 P898 "immediate" "right" "a" "red" "solid" "cylinder" [0.000469] {1}
+S -> "a" "blue" P935 P908 "sphere" [0.000469] {1}
+S -> "a" "blue" P935 P917 "yellow" "ball" [0.000469] {1}
+S -> "a" "blue" P935 P941 "a" "cylinder" [0.000469] {1}
+S -> "a" "blue" P935 P941 "another" "object" "slightly" P928 [0.000469] {1}
+S -> "a" "blue" P935 [0.001874] {4}
+S -> "a" "blue" P968 P974 "rectangle" [0.000469] {1}
+S -> "a" "brick" "color" "round" "piece" P915 "leftern" P960 "just" P898 "yellow" "piece" [0.000469] {1}
+S -> "a" "brown" "coloured" "circular" "tank" "is" "at" "middle" P949 P941 "big" "red" "coloured" "ball" [0.000469] {1}
+S -> "a" "brown" "flat" P935 "beside" "a" P962 [0.000469] {1}
+S -> "a" "brown" "hockey" P970 P962 P943 [0.000469] {1}
+S -> "a" "brown" "parallelepiped" "is" "behind" "a" P979 "and" "a" "flat" "brown" "cylinder," P898 "distal" "third" P965 [0.000469] {1}
+S -> "a" "brown" "rectangular" P892 P896 "black" "table" P937 "four" P953 [0.000469] {1}
+S -> "a" "brown" "rectangular" P935 [0.000469] {1}
+S -> "a" "brown" "thick" "circular" P935 P928 "side" [0.000469] {1}
+S -> "a" "brown" "very" "flat" P968 "slightly" P898 "edge" P943 [0.000469] {1}
+S -> "a" "brown" P890 "right" P906 P979 P943 [0.000469] {1}
+S -> "a" "brown" P892 "right" "side" P898 "bottom" [0.000469] {1}
+S -> "a" "brown" P892 "upper" P949 [0.000469] {1}
+S -> "a" "brown" P892 P896 "desk" P906 P979 [0.000469] {1}
+S -> "a" "brown" P892 P896 P953 [0.000469] {1}
+S -> "a" "brown" P920 "fourth" "from" "the" "front" [0.000469] {1}
+S -> "a" "brown" P933 "behind" "a" "smaller" P986 "and" P906 "smaller" "green" "disk" [0.000469] {1}
+S -> "a" "brown" P935 P991 [0.000469] {1}
+S -> "a" "brown" P935 [0.000937] {2}
+S -> "a" "brown" P970 P962 P898 "yellow" "rectangular" "block" [0.000469] {1}
+S -> "a" "brown" P970 P962 [0.000469] {1}
+S -> "a" "brownish" P935 [0.000937] {2}
+S -> "a" "brownish-colored" P970 "center-right" P931 [0.000469] {1}
+S -> "a" "chartreuse" "rectangular" "block" "with" "black-painted" "sides" P915 "foreground" P894 "scene" "above" [0.000469] {1}
+S -> "a" "circular" "orange" "object" P915 P1035 "above" "a" "smaller" "blue" "circle" [0.000469] {1}
+S -> "a" "circular" "orange" "object" P939 P991 [0.000469] {1}
+S -> "a" "circular" P970 P900 [0.000469] {1}
+S -> "a" "close" P935 [0.000469] {1}
+S -> "a" "cube" "and" "it" "is" "near" P1010 P931 [0.000469] {1}
+S -> "a" "cube" "green" P1000 "is" "near" P898 "pink" "sphere" [0.000469] {1}
+S -> "a" "cube," "lavender" P1032 "situated" "in" "a" "table" P947 [0.000469] {1}
+S -> "a" "cuboid," "lavender" P1032 P947 [0.000469] {1}
+S -> "a" "cylendrical" "red" "solid" "set" "on" "its" "circular" "side" "is" P910 "array" P898 P979 [0.000469] {1}
+S -> "a" "cylinder" "like" "flat" "object" "in" "orange" "colour" P915 P979 "object" "It" "is" "very" P941 "that" P979 "like" "object" "and" "positioned" P943 [0.000469] {1}
+S -> "a" "cylinder" "shaped" "one" P915 P962 [0.000469] {1}
+S -> "a" "cylinder," "green" P1032 P947 [0.000469] {1}
+S -> "a" "cylindrical" "flat" "object" "that" "is" "orange" P947 P906 P962 [0.000469] {1}
+S -> "a" "dark" "blue" "color" "round" "object" P947 "just" "infront" P894 "brick" "color" "object" [0.000469] {1}
+S -> "a" "dark" P912 P978 "edge" P928 "end" [0.000469] {1}
+S -> "a" "dark" P933 "right" "of" "center" [0.000469] {1}
+S -> "a" "deep" P935 [0.000469] {1}
+S -> "a" "fat" "disk," "about" "two" "inches" "high" "is" "about" P943 P917 P979 [0.000469] {1}
+S -> "a" "flat" "brown" P968 "almost" P898 "centre" P965 [0.000469] {1}
+S -> "a" "flat" "circle" P970 "bright" "green" "object" [0.000469] {1}
+S -> "a" "flat" "orange" P935 "touching" "the" P979 [0.000469] {1}
+S -> "a" "flat" "yellow" P935 "above" "a" P962 [0.000469] {1}
+S -> "a" "flat" P912 "right" "by" "the" "green" "rectangle" [0.000469] {1}
+S -> "a" "flat" P926 P974 "block" [0.000469] {1}
+S -> "a" "flat," "brown" P1042 [0.000469] {1}
+S -> "a" "flat," "brown" P935 [0.000469] {1}
+S -> "a" "flat," "orange" P935 "right" P917 P979 [0.000469] {1}
+S -> "a" "glossy" P951 "near" P905 "cylinder" "and" P1015 "prisms" [0.000469] {1}
+S -> "a" "glossy" P951 P908 "cube" [0.000469] {1}
+S -> "a" "golden" P935 "leftside" P965 [0.000469] {1}
+S -> "a" "green," "round" "object" "with" "flat" "sides" P947 P955 [0.000469] {1}
+S -> "a" "grey/green" "rectangular" "block" "sitting" "up-ended" P931 P915 "center" P900 "between" "a" "purple" "rectangular" "block" "above" "it" "and" "a" "red" "rectangular" "block" "below" "it" [0.000469] {1}
+S -> "a" "grren" P912 "almost" P943 [0.000469] {1}
+S -> "a" "half" "cylinder" "in" "brown" "color" P939 P896 P949 [0.000469] {1}
+S -> "a" "large" "dark" P935 "and" "slightly" P928 "side" [0.000469] {1}
+S -> "a" "large" "orange" "rectangular" P935 [0.000469] {1}
+S -> "a" "large" "orange" P935 [0.000469] {1}
+S -> "a" "large" "three" "dimensional" "circular" "prism" P915 "top" "lefthand" P896 "image" [0.000469] {1}
+S -> "a" "large" "yellow" "ball" P915 P1035 P917 "blue" "box" [0.000469] {1}
+S -> "a" "large" "yellow" "ball" P947 P910 "blue" "box" [0.000469] {1}
+S -> "a" "large" "yellow" P892 "farther" P900 [0.000469] {1}
+S -> "a" "large" P1008 [0.000469] {1}
+S -> "a" "large" P890 P959 "you" P931 [0.000469] {1}
+S -> "a" "large" P892 "far" P1010 [0.000469] {1}
+S -> "a" "large" P904 "centre" P965 [0.000469] {1}
+S -> "a" "large" P904 "close" P900 "slightly" "right" "of" "centre" [0.000469] {1}
+S -> "a" "large" P904 "closer" P900 P924 P953 [0.000469] {1}
+S -> "a" "large" P904 "front," "lower" "right" "quadrant" P931 [0.000469] {1}
+S -> "a" "large" P904 "lower" "left" "hand" "corner" [0.000469] {1}
+S -> "a" "large" P904 "other" P960 "apart" "from" "everything" "else" [0.000469] {1}
+S -> "a" "large" P920 P906 "blue" "block" [0.000469] {1}
+S -> "a" "large" P926 "almost" P943 [0.000469] {1}
+S -> "a" "large" P926 "by" "the" "closest" P900 [0.000469] {1}
+S -> "a" "large" P926 "near" "objects" "two" "and" "one" [0.000469] {1}
+S -> "a" "large" P926 "nearer" P898 "bottom" P900 "than" "any" "other" "object" [0.000469] {1}
+S -> "a" "large" P926 P937 P955 P898 P949 [0.000469] {1}
+S -> "a" "large" P926 P959 "me" [0.000469] {1}
+S -> "a" "large" P933 P898 "mid" "sized" "cube" [0.000469] {1}
+S -> "a" "large" P935 "and" "slightly" P928 [0.000469] {1}
+S -> "a" "large" P935 "slightly" P910 "center" [0.000469] {1}
+S -> "a" "large" P935 P906 "smaller" "purple" "cube" "and" P1044 "box" [0.000469] {1}
+S -> "a" "large" P935 P949 [0.000469] {1}
+S -> "a" "large" P935 P991 [0.000469] {1}
+S -> "a" "large" P935 [0.002343] {5}
+S -> "a" "large," "purple" "box" "with" "equal" "sides" P939 "corner" P943 [0.000469] {1}
+S -> "a" "large," P1042 [0.000469] {1}
+S -> "a" "large," P926 "off" "center," P943 [0.000469] {1}
+S -> "a" "lengthwise" P920 "directly" P910 "small" "cylindrical" "disk" [0.000469] {1}
+S -> "a" "light" "brown" "colour" "rectangular" "shape" "object" P915 "first" "position" "of" P955 "of" "object" [0.000469] {1}
+S -> "a" "light" "brown" P890 "some" "what" P943 [0.000469] {1}
+S -> "a" "light" "yellow" P1042 [0.000469] {1}
+S -> "a" "light" "yellow" P912 "between" "a" "brown" "round" "coin" "and" "green" "rectangular" "block" [0.000469] {1}
+S -> "a" "lime" P912 "near" "a" "blue" "object" [0.000469] {1}
+S -> "a" "lime" P912 P908 P966 "over" "half" P894 "way" "back" P931 [0.000469] {1}
+S -> "a" "lime-green" P912 P959 "me" P931 [0.000469] {1}
+S -> "a" "magenta" "egg-shaped" "marble" "is" "beside" P902 "green" "block" [0.000469] {1}
+S -> "a" "maroon" P970 P957 [0.000469] {1}
+S -> "a" "mauve" P892 P896 "cubes" "and" "cylinder" [0.000469] {1}
+S -> "a" "mauve" P912 "above" "the" P957 P943 [0.000469] {1}
+S -> "a" "medium" "rectangular" "green" "block," P908 P935 P898 "left," P906 "sphere" [0.000469] {1}
+S -> "a" "medium" "sized," P904 P1018 "a" "bit" "farther" P924 "middle" [0.000469] {1}
+S -> "a" "medium" "yellow" P912 P941 "my" P960 [0.000469] {1}
+S -> "a" "medium" P926 P936 "green" "block" "and" "the" P957 [0.000469] {1}
+S -> "a" "medium-sized" "blue" P935 P959 "and" "slightly" "behind" P1017 [0.000469] {1}
+S -> "a" "medium-sized" "pink" P923 "center" P900 [0.000469] {1}
+S -> "a" "medium-sized" "yellow" P892 "center" P900 [0.000469] {1}
+S -> "a" "medium-sized" P904 "near" "center/right" P900 [0.000469] {1}
+S -> "a" "medium-sized" P904 "near-left" P900 [0.000469] {1}
+S -> "a" "medium-sized" P926 "right" P906 P986 P928 P900 "Around" "the" "yellow" "sphere" "are" "a" "cube" "and" P983 "a" "cube" P898 "viewer" [0.000469] {1}
+S -> "a" "medium-sized" P926 P910 "small" "purple" "cube" [0.000469] {1}
+S -> "a" "mid" "sized" P933 P898 "edge" [0.000469] {1}
+S -> "a" "miniature" "blue" "building" P947 P908 "sphere" [0.000469] {1}
+S -> "a" "mustard" P912 "second" P978 "north" P900 [0.000469] {1}
+S -> "a" "narrow" "orange" P1042 "below" P955 [0.000469] {1}
+S -> "a" "narrow" "yellow" P1042 "below" "a" P962 [0.000469] {1}
+S -> "a" "orange" "brown" "short" "cylinder" P892 "lower" "middle" "half" P965 "and" "slight" P928 "side" [0.000469] {1}
+S -> "a" "orange" "cilander" "is" "by" "the" "upper" P1010 [0.000469] {1}
+S -> "a" "orange" "rectangular" P892 P949 [0.000469] {1}
+S -> "a" "orange" P1042 [0.000469] {1}
+S -> "a" "orangish" P890 P959 "a" P962 [0.000469] {1}
+S -> "a" "pale" "green" "brick" P890 "At" "the" P896 "group" "of" "objects" [0.000469] {1}
+S -> "a" "pale" P935 [0.000469] {1}
+S -> "a" "peach" P912 P898 "orange" P1048 P979 [0.000469] {1}
+S -> "a" "pink" "block," "smaller" "than" "the" "brown" "and" "purple" "blocks" P947 "about" "one" "third" P965 "down" "from" "the" "top" "end" [0.000469] {1}
+S -> "a" "pink" "cube" "the" "same" "size" "as" "the" "pink" P890 P978 "orange" "cube" "and" "the" "purple" "cube" [0.000469] {1}
+S -> "a" "pink" "rectangle" "cube" "object" P947 [0.000469] {1}
+S -> "a" "pink" "rectangle" "standing" "longways" P947 "between" "a" "purple" "rectangle" "and" "orange" "rectangle," "both" "standing" "longways" [0.000469] {1}
+S -> "a" "pink" P890 "not" P931 [0.000469] {1}
+S -> "a" "pink" P890 "standing" "upright," P971 P973 [0.000469] {1}
+S -> "a" "pink" P890 P936 "brown" "cube" "and" "the" "purple" "cube" [0.000469] {1}
+S -> "a" "pink" P912 "between" P905 "and" "purple" "block" [0.000469] {1}
+S -> "a" "pink" P920 "second" "from" "the" "back" [0.000469] {1}
+S -> "a" "pink" P920 P910 "orange" "rectangular" "prism" [0.000469] {1}
+S -> "a" "pink" P933 "between" "a" "purple" "box" "and" "a" "brown" "box" [0.000469] {1}
+S -> "a" "pink" P933 P898 "center" [0.000469] {1}
+S -> "a" "pink" P933 [0.000469] {1}
+S -> "a" "pink" P935 "rear" P910 "orange" "cube" [0.000469] {1}
+S -> "a" "pink" P935 P917 "back" "It" "is" P978 "purple" "and" "orange" "rectangle" [0.000469] {1}
+S -> "a" "pink" P935 [0.000937] {2}
+S -> "a" "pink" P981 "purple" "and" "orange" [0.000469] {1}
+S -> "a" "pink" P981 P905 "box" [0.000469] {1}
+S -> "a" "pista" "green" "coloured" "ball" "just" P898 "dark" "blue" "brick" "shaped" "object" P915 "small" "purple" "coloured" "ball" [0.000469] {1}
+S -> "a" "purple" "and" "black" P892 "near" P991 [0.000469] {1}
+S -> "a" "purple" "block" "bigger" "than" "the" "other" "two" "purple" "blocks" P931 P939 "hand" "bottom" P900 [0.000469] {1}
+S -> "a" "purple" "block," "rectangular" "in" P935 P917 P949 [0.000469] {1}
+S -> "a" "purple" "color" "square" "piece" "is" P910 "yellow" "square" "piece" P931 [0.000469] {1}
+S -> "a" "purple" "colored" "block" "which" "is" "slightly" "heavy" "compared" P955 P937 "it" P915 "opposite" "the" "small" "green" "square" "block" "and" "parallel" P898 "parrot" "green" "bigger" "block" [0.000469] {1}
+S -> "a" "purple" "coloured" "hexagonal" P915 "corner" P949 [0.000469] {1}
+S -> "a" "purple" "coloured" P923 "middle" P949 [0.000469] {1}
+S -> "a" "purple" "cube" "with" "a" "side" "that" "is" "darker" "than" "the" "rest" P915 "bottom" P900 [0.000469] {1}
+S -> "a" "purple" "cube," "second" "smallest" "of" "all" "is" "at" P1035 [0.000469] {1}
+S -> "a" "purple" "cube," "slightly" "larger" "than" "the" P953 P931 "except" "for" "the" P912 "directly" P910 "viewer" "If" "the" "viewer" "were" "to" "reach" "out" "his/her" "right" "hand," "they" "would" "easily" "grasp" "it" [0.000469] {1}
+S -> "a" "purple" "rectangular" P892 "farthest" "edge" "and" P898 "rights" P960 [0.000469] {1}
+S -> "a" "purple" "rectangular" P892 "very" "top" "right" "hand" "side" [0.000469] {1}
+S -> "a" "purple" "three" "dimensional" P890 "behind" P955 "on" P898 "backs" P960 [0.000469] {1}
+S -> "a" "purple" "three-d" "rectangle" "standing" "on" "end" P1042 [0.000469] {1}
+S -> "a" "purple" "upright" P1042 [0.000469] {1}
+S -> "a" "purple" "upright" P935 "edge" P928 "corner" [0.000469] {1}
+S -> "a" "purple" P912 "approximately" P943 "slightly" "rightwise" "from" "this" "point" "of" "view" [0.000469] {1}
+S -> "a" "purple" P912 "approximately" P943 [0.000469] {1}
+S -> "a" "purple" P912 "closest" P928 P991 [0.000469] {1}
+S -> "a" "purple" P912 "far" "back" P931 P928 [0.000469] {1}
+S -> "a" "purple" P912 "near" P1010 P928 P949 [0.000937] {2}
+S -> "a" "purple" P912 "the" "farthest" "away" P898 "other" P900 [0.000469] {1}
+S -> "a" "purple" P912 P924 "others" P898 "corner" [0.000469] {1}
+S -> "a" "purple" P912 P924 "others" [0.000469] {1}
+S -> "a" "purple" P912 P928 "side" "halfway" "up" "table" [0.000937] {2}
+S -> "a" "purple" P920 "farthest" "away," P898 "pink" "and" "orange" "rectangular" "prisms" [0.000469] {1}
+S -> "a" "purple" P920 "right" P943 [0.000469] {1}
+S -> "a" "purple" P923 "back" [0.000469] {1}
+S -> "a" "purple" P923 "farthest" P900 [0.000469] {1}
+S -> "a" "purple" P923 "very" "far" P900 "past" "the" "pink" "rectangular" "prism" [0.000469] {1}
+S -> "a" "purple" P923 P1035 [0.000469] {1}
+S -> "a" "purple" P935 "the" "same" "distance" "away" "as" "the" "other" "purple" "block" "that" "is" "not" P941 "me" [0.000469] {1}
+S -> "a" "purple" P981 "block" "number" "five" [0.000469] {1}
+S -> "a" "purple," P912 "close" P943 P941 "me" [0.000469] {1}
+S -> "a" "rectabgle" P915 "middle" [0.000469] {1}
+S -> "a" "rectangle" "laying" "down" "is" "about" "mid" "way" P973 [0.000469] {1}
+S -> "a" "rectangle" "thats" "standing" "up" "on" "end" "is" "below" "a" "ball" P928 "bottom" "corner" [0.000469] {1}
+S -> "a" "rectanglular" "brown" P890 "some" "what" P943 [0.000469] {1}
+S -> "a" "rectangular," "brown" P890 "almost" P943 "slightly" P928 [0.000469] {1}
+S -> "a" "rectanguluar" "object" "laying" "down" "is" "close" P943 [0.000469] {1}
+S -> "a" "red" P1025 "small" "yellow" "boxes" [0.000469] {1}
+S -> "a" "red" P1042 "close" P898 P957 [0.000469] {1}
+S -> "a" "red" P890 "behind" "object" "four," P941 "object" "two" "and" P943 "objects" "five" "and" "three" [0.000469] {1}
+S -> "a" "red" P890 "behind" P902 "rectangle" "but" "still" P898 "viewer" [0.000469] {1}
+S -> "a" "red" P890 "between" "two" "greenish" "yellow" "cubes" "and" P959 "three" "dimensional" "circular" "yellow" "object" [0.000469] {1}
+S -> "a" "red" P890 "directly" P943 [0.000469] {1}
+S -> "a" "red" P890 "just" "about" P898 "dead" P900 [0.000469] {1}
+S -> "a" "red" P890 "more" "or" "less" P943 P917 P957 [0.000469] {1}
+S -> "a" "red" P890 "on" "a" "table" "behind" P902 "block" "and" P910 "orange" "cylendar" [0.000469] {1}
+S -> "a" "red" P890 "right" P943 [0.000469] {1}
+S -> "a" "red" P890 P1015 "rectangles" "and" P941 P905 "circle" [0.000469] {1}
+S -> "a" "red" P890 P1015 "rectangular" "prisms" [0.000469] {1}
+S -> "a" "red" P890 P900 "slightly" P898 "close" "end" [0.000469] {1}
+S -> "a" "red" P892 "center" "row" P936 "two" "other" "rows" [0.000469] {1}
+S -> "a" "red" P935 "just" P898 "yellow" "rectangular" "prism" "and" P910 "orange" "hockey" "puck" [0.000469] {1}
+S -> "a" "red" P935 "parallel" "with" "the" "brown" "cylinder" [0.000469] {1}
+S -> "a" "red" P935 P1015 "rectangles" P1004 [0.000469] {1}
+S -> "a" "red" P935 P898 "yellow" "rectangle" [0.000469] {1}
+S -> "a" "red" P935 P906 "short" "cylinder," "behind" "a" "horizontal" "rectangular" "prism" [0.000469] {1}
+S -> "a" "red" P935 [0.002343] {5}
+S -> "a" "red" P970 "squat" P957 P943 [0.000469] {1}
+S -> "a" "red" P970 "upright" "yellow" "rectangle" [0.000469] {1}
+S -> "a" "red," P1042 [0.000469] {1}
+S -> "a" "round" "cylinder" "object" "that" "is" "orange" "is" P978 P949 [0.000469] {1}
+S -> "a" "round" "object" P947 "and" "beside" "a" "spherical" "object" [0.000469] {1}
+S -> "a" "round" "red" "sphere/" P930 P910 "black" "table" [0.000469] {1}
+S -> "a" "round" P892 "left" "most" P960 [0.000469] {1}
+S -> "a" "round" P951 P910 P953 P943 [0.000469] {1}
+S -> "a" "shallow" "blue" P892 "green" "rectangular" "prism," P943 [0.000469] {1}
+S -> "a" "shiny" P912 "directly" P959 "a" "tall" P957 [0.000469] {1}
+S -> "a" "shiny" P912 "just" P896 P900 "very" P898 "short" P957 [0.000469] {1}
+S -> "a" "shiny" P946 "dead" P900 [0.000469] {1}
+S -> "a" "short" "blue" "clynder" P947 P974 "rectangular" "shape" [0.000469] {1}
+S -> "a" "short" "blue" P892 "background" P908 "block" [0.000469] {1}
+S -> "a" "short" "but" "wide" "orange" P935 P917 P979 [0.000469] {1}
+S -> "a" "short" "orange" P892 "far" P1010 [0.000469] {1}
+S -> "a" "short" "orange" P933 P928 "side," "a" "little" "bit" P917 P991 "than" P898 "center" "line" [0.000469] {1}
+S -> "a" "short" "orange" P935 P898 "left," P896 P962 [0.000469] {1}
+S -> "a" "short" "orange" P935 P991 [0.000937] {2}
+S -> "a" "short" "orange" P935 [0.000469] {1}
+S -> "a" "short" P904 P1018 "very" "close" P898 "edge," "about" "half" "way" P936 "center" "line" "and" "the" P949 [0.000469] {1}
+S -> "a" "short" P904 P949 P943 [0.000469] {1}
+S -> "a" "short" P912 "close" P928 P900 "past" "a" "short" "yellow" "box" [0.000469] {1}
+S -> "a" "short" P912 P908 "rectangle" P943 [0.000469] {1}
+S -> "a" "short" P920 "diagonally" P936 "similarly" "sized" "cylindrical" "disk" "and" "small" "cube" P928 "right" [0.000469] {1}
+S -> "a" "short" P926 "slightly" P910 P900 [0.000469] {1}
+S -> "a" "short" P926 P906 P979 [0.000469] {1}
+S -> "a" "short" P926 P910 "sphere" [0.000469] {1}
+S -> "a" "short" P926 P910 P962 [0.000469] {1}
+S -> "a" "short" P933 [0.000469] {1}
+S -> "a" "short" P935 P906 "sphere" [0.000469] {1}
+S -> "a" "short" P935 [0.000469] {1}
+S -> "a" "short" P970 P979 [0.000469] {1}
+S -> "a" "short," "orange" P892 "far" P1010 [0.000469] {1}
+S -> "a" "short," "wide" "blue" P1040 "and" "orange" "cylendar" [0.000469] {1}
+S -> "a" "short," "wide" P890 "directly" P910 P962 [0.000469] {1}
+S -> "a" "slightly" "height" "skewed," P926 "slightly" P896 P900 "with" "some" "space" "between" "it" "and" "the" P953 [0.000469] {1}
+S -> "a" "slim" "green" "square" "on" "table" "is" "nextt" "to" "blue" "circle" "on" "table" [0.000469] {1}
+S -> "a" "slim" P926 "ahead" P894 "yellow" "cube" [0.000469] {1}
+S -> "a" "smal" P935 "righthand" P900 [0.000469] {1}
+S -> "a" "small," "dark" "blue" P935 [0.000469] {1}
+S -> "a" "small," "well" "lit" P912 "slightly" P910 "orange" "cylinder," "obscuring" "the" P914 "cylinder" "from" "view" [0.000469] {1}
+S -> "a" "small," P904 "far" P991 [0.000469] {1}
+S -> "a" "small," P912 "separate" "from" "the" P953 P928 P900 [0.000469] {1}
+S -> "a" "small," P935 [0.000469] {1}
+S -> "a" "small," P951 P908 "green" "rectangular" "cube," P936 "center" "and" P900 [0.000469] {1}
+S -> "a" "small," P951 P908 "rectangle" [0.000469] {1}
+S -> "a" "smaller" P935 [0.000469] {1}
+S -> "a" "solid" P933 "just" P896 "center" [0.000469] {1}
+S -> "a" "sphere," "red" P1032 P947 [0.000469] {1}
+S -> "a" "sphere," "yellow" P1032 P915 "blue" "cuboid" [0.000469] {1}
+S -> "a" "spherical" "brown" "coin" P947 [0.000469] {1}
+S -> "a" "sqaure" "with" "purple" "color" P947 [0.000469] {1}
+S -> "a" "sqaure" P915 "bottom" P991 [0.000469] {1}
+S -> "a" "square" "cube," "and" "though" "I" "am" "colorblind," "it" "appears" "purple" "is" P910 "desk" P959 "us" [0.000469] {1}
+S -> "a" "square" "laying" "down" P939 "back" "and" "shaded" "off" "onto" "the" "right" "hand" "side" "a" "bit" [0.000469] {1}
+S -> "a" "squat" "orange" P935 P991 P910 "tall" "green" "cylinder" [0.000469] {1}
+S -> "a" "squat" P926 "almost" P943 [0.000469] {1}
+S -> "a" "stout" "orangey" "brown" P892 "left" "hand" P900 "farthest" "from" "the" "viewer" [0.000469] {1}
+S -> "a" "table" "stand" P915 "middle" P949 [0.000469] {1}
+S -> "a" "table" "stand" P939 "corner" [0.000469] {1}
+S -> "a" "table" "stand" P939 P949 [0.000469] {1}
+S -> "a" "tall" "orange" P923 "front" "of" P955 "just" "right" "and" "forward" "of" P900 [0.000469] {1}
+S -> "a" "tall" "orange" P935 "slightly" "to" P917 "right" "edge" "isolated" "from" "the" P953 [0.000469] {1}
+S -> "a" "tall" "pink" P912 "further" P973 "from" "the" "cylinder" [0.000469] {1}
+S -> "a" "tall" "purple" "three" "dimensional" P935 [0.000469] {1}
+S -> "a" "tall" "purple" P920 "almost" "directly" P943 "a" "bit" P928 [0.000469] {1}
+S -> "a" "tall" "rectangler" P947 "slightly" "off" P928 [0.000469] {1}
+S -> "a" "tall" "retacgle" P915 "an" "array" [0.000469] {1}
+S -> "a" "tall" "slim" "blue" P935 "nearing" "the" "furthest" "edge" [0.000469] {1}
+S -> "a" "tall" "yellow" P935 "while" "still" "placed" P943 [0.000469] {1}
+S -> "a" "tall" P926 "behind" "a" P979 P1004 "and" "somewhat" "before" "a" "purple" "and" "a" "pink" "block" [0.000469] {1}
+S -> "a" "tall" P926 "between" "a" P979 "and" "small" "purple" "cube" [0.000469] {1}
+S -> "a" "tall" P926 "closest" P928 "upper" "corner" [0.000469] {1}
+S -> "a" "tall" P926 "slightly" P910 P900 "with" "four" "objects" "behind" "it," "further" "back" "It" "is" "the" "closest" "object" P931 [0.000469] {1}
+S -> "a" "tall" P926 P910 P962 [0.000469] {1}
+S -> "a" "tall" P926 P943 [0.000469] {1}
+S -> "a" "tall" P935 [0.001874] {4}
+S -> "a" "tall" P986 "but" "almost" P898 "verge" "of" "being" P984 "Near" "the" P991 "pretty" "centered" "in" "that" "area" "though" "It" "is" "directly" P906 "yellow," "large" "ball" "The" P890 "still" "bigger" "then" "it" "though" "It" "looks" "to" "be" "right" P898 "edge" [0.000469] {1}
+S -> "a" "tall," "blue," P912 "farthest" P924 "viewpoint" P894 "table," P906 "large" "yellow" "ball" [0.000469] {1}
+S -> "a" "tall," "pink" "rectangle" "It" "looks" "to" "be" "shorter" "or" "of" "average" "height" "as" "the" "other" "rectangles" P931 P915 "middle," "but" "farther" P900 "It" P915 "middle" "distance" "of" "two" "other" "rectangles" [0.000469] {1}
+S -> "a" "thick," "circular" "orange" P935 P991 [0.000469] {1}
+S -> "a" "thin" "green" "cylendar" "standing" "up" "on" "its" "end" "is" "close" P898 "center" P991 [0.000469] {1}
+S -> "a" "three" "dimentional" P904 "farthest" P900 [0.000469] {1}
+S -> "a" "tiny" P1042 "behind" P955 [0.000469] {1}
+S -> "a" "tiny" P904 "very" P1035 [0.000469] {1}
+S -> "a" "tiny" P912 "very" "far" "away" "from" P955 P931 [0.000469] {1}
+S -> "a" "tiny" P912 P910 "brown" "cylinder" [0.000469] {1}
+S -> "a" "tiny" P926 P910 "green," "rectangular" "box" "and" P943 [0.000469] {1}
+S -> "a" "tiny" P951 "directly" P974 "rectangle" P943 P943 [0.000469] {1}
+S -> "a" "vertically" "standing" P923 P1018 P906 "similar" "shape" "and" "behind" "a" "sphere" "and" "a" "short" "cylinder" [0.000469] {1}
+S -> "a" "very" "small" "blue" P935 "center" "part" P965 P974 "block" [0.000469] {1}
+S -> "a" "very" "small" P912 "far" P955 P898 "image," "sort" "of" "off" P898 "side" [0.000469] {1}
+S -> "a" "very" "small" P946 "center" "area" P965 "right" P908 "block" [0.000469] {1}
+S -> "a" "violate" "round" "square" P968 "on" P943 [0.000469] {1}
+S -> "a" "violet" "color" P912 P898 "yellow" "colour" "rectangular" "cube" [0.000469] {1}
+S -> "a" "violet" "colour" "rectangular" "shape" "object" P1042 [0.000469] {1}
+S -> "a" "violet" P890 P937 "yellow" "cube" [0.000469] {1}
+S -> "a" "violet" P912 "at" "bottom" P900 [0.000469] {1}
+S -> "a" "wide" "orange" P892 "far" "back" "left" "hand" P900 [0.000469] {1}
+S -> "a" "wide" "orange" P933 P928 "side" [0.000469] {1}
+S -> "a" "wide" P926 P910 P962 "that" P947 [0.000469] {1}
+S -> "a" "wooden" P890 P931 "end" [0.000469] {1}
+S -> "a" "yellow-gold" P970 P1018 "close" P898 "edge," "a" "little" "bit" "left" "of" "center" [0.000469] {1}
+S -> "a" P1008 "almost" "surrounded" "by" "the" P953 [0.000469] {1}
+S -> "a" P1025 "left" "corners" [0.000469] {1}
+S -> "a" P1042 P1004 [0.000469] {1}
+S -> "a" P1042 P1015 "boxes" [0.000937] {2}
+S -> "a" P1042 P898 "center" [0.000469] {1}
+S -> "a" P1042 P928 "side" [0.000469] {1}
+S -> "a" P1042 [0.002812] {6}
+S -> "a" P892 "highest" "part" P965 [0.000469] {1}
+S -> "a" P892 P1018 P898 "center" [0.000469] {1}
+S -> "a" P892 P896 "image" P910 "center" [0.000469] {1}
+S -> "a" P892 P949 [0.001406] {3}
+S -> "a" P904 "close" P900 [0.000469] {1}
+S -> "a" P904 "far" P1010 [0.000469] {1}
+S -> "a" P904 "forefront" P898 P949 [0.000469] {1}
+S -> "a" P904 "foreground" "on" P900 [0.000469] {1}
+S -> "a" P904 "front-left" P900 [0.000937] {2}
+S -> "a" P904 "left" "side" "halfway" "down" [0.000469] {1}
+S -> "a" P904 "left" "side" [0.000469] {1}
+S -> "a" P904 "leftside" P894 "table," "very" "close" P898 "edge" [0.000469] {1}
+S -> "a" P904 "middle-left" P894 "table," "close" P898 "edge" [0.000469] {1}
+S -> "a" P904 "near" "dge" P965 [0.000469] {1}
+S -> "a" P904 "near" P900 "far" P924 P953 [0.000469] {1}
+S -> "a" P904 "nearest" "part" P965 [0.000469] {1}
+S -> "a" P904 "proximal" P900 "just" "right" "of" "center" [0.000469] {1}
+S -> "a" P904 "right" [0.000469] {1}
+S -> "a" P904 "south" "west" P900 [0.000469] {1}
+S -> "a" P904 "very" "back," P991 [0.000469] {1}
+S -> "a" P904 "very" P900 P928 "It" "is" "behind" P955 [0.000469] {1}
+S -> "a" P904 "very" P900 [0.000469] {1}
+S -> "a" P904 P1010 P959 "us" [0.000469] {1}
+S -> "a" P904 P1018 "kind" "of" "close" P898 "edge," "and" "a" "little" "bit" P896 "center" "line" P965 [0.000469] {1}
+S -> "a" P904 P1018 P978 "person" "watching" "the" "picture" [0.000469] {1}
+S -> "a" P904 P1035 [0.000469] {1}
+S -> "a" P904 P896 "black" "box" [0.000469] {1}
+S -> "a" P904 P896 "tablewith" P953 "far" "behind" [0.000469] {1}
+S -> "a" P904 P914 P900 [0.000469] {1}
+S -> "a" P904 P949 P910 "rectangular" "cube" [0.000469] {1}
+S -> "a" P904 P949 [0.000937] {2}
+S -> "a" P904 P991 P908 "cube" [0.000469] {1}
+S -> "a" P904 P991 [0.000937] {2}
+S -> "a" P926 "Close" P943 "furthest" "from" "me" [0.000469] {1}
+S -> "a" P926 "a" "quarter" P894 "way" P973 P928 "side" [0.000469] {1}
+S -> "a" P926 "almost" P943 "slightly" "right" "of" "center" "vertically" [0.000469] {1}
+S -> "a" P926 "almost" P943 [0.000469] {1}
+S -> "a" P926 "at" "one" P900 [0.000469] {1}
+S -> "a" P926 "back" "of" "object" "two" [0.000469] {1}
+S -> "a" P926 "beside" P902 "cube," P943 [0.000469] {1}
+S -> "a" P926 "close" P898 "bottom" P991 "away" "from" P955 [0.000469] {1}
+S -> "a" P926 "close" P898 "corner" [0.000469] {1}
+S -> "a" P926 "close" P928 P900 "nearest" P902 "rectangle" "and" "a" "fatter," "purple" "rectangle" [0.000469] {1}
+S -> "a" P926 "close" P943 "about" "one" "block" "length" "moving" P924 "center" P928 "edge" "and" "two" "and" "one" "half" "block" "lengths" "from" "right" "edge" P949 [0.000469] {1}
+S -> "a" P926 "closest" P943 [0.000469] {1}
+S -> "a" P926 "farthest" "away," "almost" P943 [0.000469] {1}
+S -> "a" P926 "furthest" P924 P979 [0.000937] {2}
+S -> "a" P926 "near" "my" P900 P928 "hand" "side" [0.000469] {1}
+S -> "a" P926 "nearest" P943 "edge" P949 [0.000469] {1}
+S -> "a" P926 "not" "near" "any" P953 [0.000469] {1}
+S -> "a" P926 "on" "table" "is" "near" "middle" P949 [0.000469] {1}
+S -> "a" P926 "placed" "behind" "all" "purple" "objects," "but" P937 "all" "other" "objects;" P898 P949 [0.000469] {1}
+S -> "a" P926 "relatively" P943 [0.000469] {1}
+S -> "a" P926 "right" P908 "box" [0.000469] {1}
+S -> "a" P926 "straightly" "aligned" "to" "orange" "cuboid" "and" "nearest" P898 P949 [0.000469] {1}
+S -> "a" P926 "the" "square" "furthest" P973 P898 "bottom" P1010 [0.000469] {1}
+S -> "a" P926 "turned" "and" P959 "me" [0.000469] {1}
+S -> "a" P926 "way" P928 P900 [0.000469] {1}
+S -> "a" P926 P898 "first" "purple" "rectangle" P943 [0.000469] {1}
+S -> "a" P926 P898 "four" P953 "closest" P928 P991 [0.000469] {1}
+S -> "a" P926 P898 "way" P937 "all" "these" P953 [0.000469] {1}
+S -> "a" P926 P906 "ball," "second" P978 "viewer" [0.000469] {1}
+S -> "a" P926 P937 "everything" "else" [0.000469] {1}
+S -> "a" P926 P937 P953 [0.000469] {1}
+S -> "a" P926 P959 "our" P900 P928 "half" [0.000469] {1}
+S -> "a" P926 P974 "rectangular" "prism" [0.000469] {1}
+S -> "a" P930 "almost" "nearer" "to" "one" P894 "corners" P894 "shortest" P900 [0.000469] {1}
+S -> "a" P930 "blue" P1000 "almost" "touching" "orange" "round" "shaped" "object" [0.000469] {1}
+S -> "a" P930 "blue" P1032 [0.000469] {1}
+S -> "a" P930 P906 P979 "on" "a" "black" "table" [0.000469] {1}
+S -> "a" P930 P917 "farthest" "cube" [0.000469] {1}
+S -> "a" P933 "behind" P955 [0.000937] {2}
+S -> "a" P933 [0.001406] {3}
+S -> "a" P935 "a" "little" "bit" P928 [0.000469] {1}
+S -> "a" P935 "a" "little" "more" "than" "half" "way" "across" "and" P928 "a" "little" [0.000469] {1}
+S -> "a" P935 "closest" P928 "hand" "side" [0.000469] {1}
+S -> "a" P935 "far" P924 P896 "objects" [0.000469] {1}
+S -> "a" P935 "far" P924 P953 [0.000469] {1}
+S -> "a" P935 "just" P937 "and" P928 "of" "another" "purple" "cube" [0.000469] {1}
+S -> "a" P935 "slightly" "off" P928 [0.000469] {1}
+S -> "a" P935 "slightly" P928 [0.000469] {1}
+S -> "a" P935 P1010 "as" "you" "look" P931 [0.000469] {1}
+S -> "a" P935 P1010 [0.000469] {1}
+S -> "a" P935 P898 "foreground" [0.000469] {1}
+S -> "a" P935 P898 "viewer" [0.000469] {1}
+S -> "a" P935 P917 "green" "block" [0.000469] {1}
+S -> "a" P935 P924 "others" [0.000469] {1}
+S -> "a" P935 P924 P953 [0.000469] {1}
+S -> "a" P935 P928 "a" "bit" [0.000469] {1}
+S -> "a" P935 P928 "hand" "side" [0.000469] {1}
+S -> "a" P935 P928 "left" [0.000469] {1}
+S -> "a" P935 P928 [0.000469] {1}
+S -> "a" P935 P941 "me" [0.000469] {1}
+S -> "a" P935 P941 "object" "five" [0.000469] {1}
+S -> "a" P935 P991 "and" "is" "at" "fortyfive" "degrees" "in" "relation" P943 [0.000469] {1}
+S -> "a" P935 P991 "halfway" P936 "edge" "and" "the" P900 [0.000469] {1}
+S -> "a" P935 P991 P937 "several" "other" "similar" "shapes" [0.000469] {1}
+S -> "a" P935 P991 P978 "viewer" [0.000469] {1}
+S -> "a" P935 [0.018744] {40}
+S -> "a" P946 "front" [0.000469] {1}
+S -> "a" P946 "roughly" "the" P900 "with" "two" "blocks" "and" "a" "cylinder" "surrounding" "it" [0.000469] {1}
+S -> "a" P946 "yellow" "block," P917 "orange" "disk" [0.000469] {1}
+S -> "a" P951 "Directly" P917 "brown" "cylinder" [0.000469] {1}
+S -> "a" P951 "about" "halfway" P973 "slightly" "off" P928 [0.000469] {1}
+S -> "a" P951 "directly" "behind" P902 "block" [0.000469] {1}
+S -> "a" P951 "directly" P910 "orange" "cyclinder" [0.000469] {1}
+S -> "a" P951 "earliest" P931 [0.000469] {1}
+S -> "a" P951 "halfway" P1015 "blocks" P910 P957 [0.000469] {1}
+S -> "a" P951 "object" "with" P905 "disc" "on" "left" "and" "two" "yellow" "rectangular" "boxes" "at" "top" "and" "bottom" [0.000469] {1}
+S -> "a" P951 "slightly" "toward" "the" P900 "touching" "the" P957 [0.000469] {1}
+S -> "a" P951 P1015 "rectangles" [0.000469] {1}
+S -> "a" P951 P906 "brown" "cylinder" P937 P955 [0.000469] {1}
+S -> "a" P951 P906 "orange" "disc" [0.000469] {1}
+S -> "a" P951 P908 "cube" "and" "int" "the" P900 [0.000469] {1}
+S -> "a" P951 P910 "orangeish-brown" "cylinder" P943 [0.000469] {1}
+S -> "a" P951 P910 P957 P943 [0.000469] {1}
+S -> "a" P951 P917 "brown" "cylinder" [0.000469] {1}
+S -> "a" P951 P917 "green" "rectangle" [0.000469] {1}
+S -> "a" P951 P936 "yellow" "cubes" [0.000469] {1}
+S -> "a" P951 P941 "orange" "disc" [0.000469] {1}
+S -> "a" P951 P941 P905 "circle" [0.000469] {1}
+S -> "a" P951 P959 "brown" "cylindrical" "block" [0.000469] {1}
+S -> "a" P951 P959 "you" P941 "brown" "cylinder" [0.000469] {1}
+S -> "a" P951 P974 "object" [0.000469] {1}
+S -> "a" P951 P974 "rectangle" [0.000469] {1}
+S -> "a" P951 P978 "viewer" "and" "touching" "a" "circle" [0.000469] {1}
+S -> "a" P964 [0.002812] {6}
+S -> "a" P966 "just" P908 P890 "close" P943 [0.000469] {1}
+S -> "a" P968 "just" "behund" "and" P910 "spherical" "object" [0.000469] {1}
+S -> "a" P970 "ball" [0.000469] {1}
+S -> "a" P970 "sphere" [0.000937] {2}
+S -> "a" P970 P979 [0.000469] {1}
+S -> "a" P979 "and" "is" "the" "only" "ball" P931 "is" "close" P943 "but" "leaning" "more" P928 "side" [0.000469] {1}
+S -> "a" P979 P941 P905 "wheel" "lying" "on" "its" "side" "is" P910 "long" "brown" "table" [0.000469] {1}
+S -> "a" P981 "center" P931 [0.000469] {1}
+S -> "a" P981 "object" "2" [0.000469] {1}
+S -> "a" P981 "sphere" "number" "one" [0.000469] {1}
+S -> "a" P999 "circular" "three" "dimensional" "prism" P947 [0.000469] {1}
+S -> "a" P999 "green" "three" "d" P933 [0.000469] {1}
+S -> "a" P999 "orange" P1042 [0.000469] {1}
+S -> "a" P999 "three" "d" "square" "not" "quite" "in" "cube" P890 "close" P928 P900 P943 [0.000469] {1}
+S -> "a" P999 "yellow" P892 P1018 "left" "of" "center" [0.000469] {1}
+S -> "a" P999 "yellow" P935 "near" P902 "block" [0.000469] {1}
+S -> "a" P999 P1042 "with" "a" "orange" "brown" "short" "cylinder" "like" "object" "to" "its" "left" [0.000469] {1}
+S -> "a" P999 P926 "close" P928 P991 [0.000469] {1}
+S -> "a" P999 P935 [0.000469] {1}
+S -> "alarge" P926 "close" P898 "center" [0.000469] {1}
+S -> "an" "egg" "shaped" "yellow" "object" P915 "middle" P928 [0.000469] {1}
+S -> "an" "orangeish-brown" P890 "beside" "a" P979 P943 [0.000469] {1}
+S -> "an" "orb" "is" "center," "slightly" P928 [0.000469] {1}
+S -> "an" "upright" "orange" P920 "almost" "halfway" "back" P931 P928 [0.000469] {1}
+S -> "an" "upright" "orange" P920 "by" "itself" P936 P979 "and" "the" "purple" "box" [0.000469] {1}
+S -> "an" "upright" "rectangular" "object" "is" "behind" P955 P943 [0.000469] {1}
+S -> "an" "yellow" P892 P991 [0.000469] {1}
+S -> "ball" "in" "red" "colour" "is" "at" "middle" "and" P941 "object" "two" [0.000469] {1}
+S -> "ball" "or" P890 "in" "red" "color" "it" P947 [0.000469] {1}
+S -> "ball" "shaped" "and" P915 "red" P915 "between" "object" "four" "and" "object" "five" "and" "right" "of" "object" "two" [0.000469] {1}
+S -> "ball" P939 "side" [0.000469] {1}
+S -> "ball" P947 [0.001406] {3}
+S -> "big" "purple" "cube" P935 P898 "smallest" "purple" "cube" [0.000469] {1}
+S -> "big" "purple" P912 "sitting" P931 "not" "quite" P898 "edge" "and" "not" "quite" P910 P1010 [0.000469] {1}
+S -> "big" P890 "adjustant" "to" "ball" [0.000469] {1}
+S -> "big" P890 "in" "violet" "colour" "and" "look" "pretty" [0.000469] {1}
+S -> "big" P912 P941 "lower" "side" P949 [0.000469] {1}
+S -> "blue" "and" "circular" P915 "upper" P900 [0.000469] {1}
+S -> "blue" "and" "rectangular" P915 "yellow" "sphere" [0.000469] {1}
+S -> "blue" "and" "spherical" "is" "toward" "the" "foreground" P928 [0.000469] {1}
+S -> "blue" "circular" P930 "the" "unique" "one" P898 "picture" [0.000469] {1}
+S -> "blue" "colored" "spherical" "shaped" "object" "is" "very" "nearer" P898 "orange" "color" "object" [0.000469] {1}
+S -> "blue" "egg" P890 "nearer" P898 "big" "brown" "circle" "shape" P931 [0.000469] {1}
+S -> "blue" "in" "round" P935 [0.000469] {1}
+S -> "blue" "low" P890 P936 P957 "and" "green" "square" [0.000469] {1}
+S -> "blue" "rectangularbox" P915 "yellow" "ball" P928 "edge" [0.000469] {1}
+S -> "blue" "ring" P890 "on" "middl" "left" P949 [0.000469] {1}
+S -> "blue" "round" P930 "on" "middle" P949 [0.000469] {1}
+S -> "blue" "small" P890 "closer" "than" "half" "and" "farther" "than" "half" P894 P953 [0.000469] {1}
+S -> "blue" "small" P970 "green" "rectangular" "prism" [0.000469] {1}
+S -> "blue" "striker" P939 "of" "green" "block" [0.000469] {1}
+S -> "blue" P1000 "and" "cubical" "in" P892 "yellow" "ball" [0.000469] {1}
+S -> "blue" P1032 "is" "the" "object" P943 [0.000469] {1}
+S -> "blue" P1042 [0.000469] {1}
+S -> "blue" P892 "end" P949 [0.000469] {1}
+S -> "blue" P892 "opposing" P900 "centered," "behind" P955 [0.000469] {1}
+S -> "blue" P892 P896 "green" "brick" [0.000469] {1}
+S -> "blue" P915 "front" "right" [0.000469] {1}
+S -> "blue" P915 "very" P900 [0.000469] {1}
+S -> "blue" P923 "yellow" P989 "the" "green" "and" "purple" "rectangular" "prisms" [0.000469] {1}
+S -> "blue" P935 "behind" P902 "ball" [0.000469] {1}
+S -> "blue" P935 P949 "close" P898 "green" "box" "and" P957 [0.000469] {1}
+S -> "blue" P939 [0.000469] {1}
+S -> "blue" P964 P910 "orange" "circle," P917 "green" "rectangle" [0.000469] {1}
+S -> "blue" P993 "and" "looks" "like" P890 "on" "yje" "upper" "middle" "side" "on" "table" [0.000469] {1}
+S -> "book" P947 [0.000469] {1}
+S -> "brick" "color" "round" "piece" P939 "side" P900 "just" "behind" P894 "blue" "color" "objectpice" [0.000469] {1}
+S -> "brown" "brick" "is" P896 P900 [0.000469] {1}
+S -> "brown" "centroid" P939 "side" "of" P962 [0.000469] {1}
+S -> "brown" "circular" "slice" P939 P991 [0.000469] {1}
+S -> "brown" "color," "round" "shape" P935 [0.000469] {1}
+S -> "brown" "colored" "unit" P947 [0.000469] {1}
+S -> "brown" "round" P915 "second" [0.000469] {1}
+S -> "brown" P890 "at" "far" P991 [0.000469] {1}
+S -> "brown" P892 "furthest" "table" "edge" "and" P928 "hand" "side" [0.000469] {1}
+S -> "brown" P892 P896 P962 [0.000469] {1}
+S -> "brown" P912 P941 "nearest" P900 "toward" "the" "right" "hand" "side" [0.000469] {1}
+S -> "brown" P912 P943 [0.000469] {1}
+S -> "brown" P946 P949 [0.000469] {1}
+S -> "brown" P993 "and" "it" "looks" "like" P892 "left" "angle" P931 [0.000469] {1}
+S -> "brown" P993 "and" "looks" "like" "a" P892 "left" "side" P931 P917 P962 [0.000469] {1}
+S -> "center" P949 "and" P928 "edge" "is" P917 "right" "edge" "than" "the" "left" "edge" [0.000469] {1}
+S -> "centre" P931 "is" "right" "of" "object" "two" [0.000469] {1}
+S -> "circle" "in" "shape" "and" "yellow" P1032 "is" "right" "of" "object" "three" [0.000469] {1}
+S -> "circular" "and" "orange" P939 [0.000469] {1}
+S -> "circular" "in" P892 "upperleft" P900 [0.000469] {1}
+S -> "close" "is" P917 "camera" [0.000469] {1}
+S -> "close" P898 "edge" P915 "edge" [0.000469] {1}
+S -> "close" P943 P915 "top" "left" [0.000469] {1}
+S -> "closest" P943 "is" P978 "viewer" P931 [0.000469] {1}
+S -> "colored" "yellow" "is" "like" "the" "largest" "object" P931 [0.000469] {1}
+S -> "cube" "bigger" "than" "smallest" "but" "smaller" "than" "other" "three" "is" P936 "cubes" "of" "second" "largest" "and" "third" "largest" "area" "cubes" [0.000469] {1}
+S -> "cube" "in" "green" "color" "is" P941 "cylinder" "and" "one" "corner" [0.000469] {1}
+S -> "cubed" P915 "front" "left" "side" [0.000469] {1}
+S -> "cubical" "blue" "colour" "is" "far" "away" "from" P953 [0.000469] {1}
+S -> "cubiod" P996 P915 "first" "position" [0.000469] {1}
+S -> "cuboid" P993 P915 P962 [0.000469] {1}
+S -> "cuboid,which" "is" "pointing" "its" "height" "is" "near" P898 "second" "smallest" P900 [0.000469] {1}
+S -> "cylinderical" "bax" P947 "left" "side" [0.000469] {1}
+S -> "cylindrical" "and" "green" P1042 [0.000469] {1}
+S -> "cylindrical" "and" "orange" P939 "of" P962 [0.000469] {1}
+S -> "cylindrical" "brown" "colour" "is" "near" "ball" "type" "object" [0.000469] {1}
+S -> "cylindrical" "green" "colour" P947 [0.000469] {1}
+S -> "cylindrical" P912 "in" "top" P1010 [0.000469] {1}
+S -> "dark" "blue" "colored" P930 "beside" "the" "brown" "colored" "flat" "disc" [0.000469] {1}
+S -> "dark" P904 "bottom" P1010 [0.000469] {1}
+S -> "deep" P904 "left" "nearest" P900 [0.000469] {1}
+S -> "disk" "like" P892 "left" "rear" P900 [0.000469] {1}
+S -> "first" "of" P955 P915 "corner" P900 [0.000469] {1}
+S -> "flat" "and" "blue" P915 P914 "green" "rectangular" "piece" [0.000469] {1}
+S -> "globe" "is" "blue" P1000 [0.000469] {1}
+S -> "green" "and" "circular" "is" "along" "the" "back" "edge" [0.000469] {1}
+S -> "green" "and" "small" "is" "by" "the" "back" P1010 [0.000469] {1}
+S -> "green" "and" "the" "smallest" "box" P931 P915 "top" P991 [0.000469] {1}
+S -> "green" "coloured" "small" P935 [0.000469] {1}
+S -> "green" "cylinder" "object" P915 "other" P900 P941 "nothing" [0.000469] {1}
+S -> "green" "is" "beside" "the" "blue" [0.000469] {1}
+S -> "green" "is" P906 "blue" "disc" [0.000469] {1}
+S -> "green" "is" P906 P966 [0.000469] {1}
+S -> "green" "is" P917 P986 [0.000469] {1}
+S -> "green" "rectangle" "shaped" "one" P915 "violet" "ball" [0.000469] {1}
+S -> "green" P904 "furthest" P900 "toward" "the" "right" "hand" "side" [0.000469] {1}
+S -> "green" P904 "opposite" P960 [0.000469] {1}
+S -> "green" P912 "furthest" "back" P931 [0.000469] {1}
+S -> "green" P912 "place" "as" "the" "first" "object" P931 "when" "viewed" "from" "the" "other" P960 [0.000469] {1}
+S -> "green" P912 "very" "close" P898 P966 [0.000469] {1}
+S -> "green" P915 P1035 [0.000469] {1}
+S -> "green" P920 "just" P928 "laterally" "and" "just" P898 "upper" "quarter" "vertically" [0.000469] {1}
+S -> "green" P920 P910 "small" P966 "and" "about" "two-thirds" "table-length" P924 "front" P900 [0.000469] {1}
+S -> "green" P920 P991 [0.000469] {1}
+S -> "green" P935 [0.000469] {1}
+S -> "green" P939 "of" "violet" [0.000469] {1}
+S -> "green" P939 P1010 [0.000469] {1}
+S -> "green" P993 "and" "its" "look" "like" "dice" P915 "rihjt" "side" P931 [0.000469] {1}
+S -> "green," "and" "a" "flattened" P890 "behind" "all" P894 P953 "and" "more" P928 "right" "corned" P965 [0.000469] {1}
+S -> "green," "rectangular," "longer" "than" "it" "is" "tall" "is" P910 "short" P957 P928 "half" P965 [0.000469] {1}
+S -> "greenish" P926 "anterir" "to" "dark" "green" "cube" "and" "rear" "to" "two" "magenta" "cubes" [0.000469] {1}
+S -> "greenish" P926 P910 P962 [0.000469] {1}
+S -> "having" "small" "round" "shape" P1032 "blue" "is" "side" P900 [0.000469] {1}
+S -> "having" "the" "small" "rectangular" "shape" "with" "green" "colour" "is" P900 [0.000469] {1}
+S -> "horizontal" P890 "in" "center" P949 [0.000469] {1}
+S -> "huge" P926 "very" P941 "me" [0.000469] {1}
+S -> "in" "orange" "colour" P939 "sidevertical" [0.000469] {1}
+S -> "inclined" P904 "vertical" P960 [0.000469] {1}
+S -> "is" "a" "blue" P951 "directly" P906 "cylinder" "shaped" "object" [0.000469] {1}
+S -> "is" "a" "brown" P892 P896 P953 [0.000469] {1}
+S -> "is" "a" "circle" "shaped" "big" "object" "compared" "with" "other" "circle" "shaped" "object" "is" "second" P898 "position" "from" "the" "top" [0.000469] {1}
+S -> "is" "a" "cubiod" "and" "is" "violet" P1032 "is" "at" "last" "position" [0.000469] {1}
+S -> "is" "a" "cylinder" "shaped" "piece" P947 "directly" P906 "sphere" [0.000469] {1}
+S -> "is" "a" "large" P926 P910 "red" "circle" [0.000469] {1}
+S -> "is" "a" "puple" P935 "a" "little" "off" "center" P928 "end" "and" "right" "side" [0.000469] {1}
+S -> "is" "a" "purlple" "object" "and" "it" "is" P941 "another" "purple" "object" "is" "near" P898 P949 [0.000469] {1}
+S -> "is" "a" "purple" "rectangular" "cube" "with" "the" "short" "end" "facing" "down" "is" "Just" P910 P900 [0.000469] {1}
+S -> "is" "a" "sideways" P970 "smaller" "cylinder" "thing," P943 [0.000469] {1}
+S -> "is" "a" "tall" P923 "longest" "side" P894 "triangle" "formed" "by" "two" "other" "rectangular" "prisms" "and" P902 "cube" [0.000469] {1}
+S -> "is" "a" "three" "dimensional" "purple" "object" P939 "and" "very" P941 "where" P943 [0.000469] {1}
+S -> "is" "a" "tiny" P951 P917 "green" "square" P943 [0.000469] {1}
+S -> "is" "a" P926 "fartest" "from" "the" P896 "objects" [0.000469] {1}
+S -> "is" "a" P926 "nearest" P928 P900 [0.000469] {1}
+S -> "is" "a" P935 "third" P965 "just" P928 "of" "center" [0.000469] {1}
+S -> "is" "a" P935 [0.000937] {2}
+S -> "is" "brown" "and" "circular" P912 "nearly" P910 "the" "table" [0.000469] {1}
+S -> "is" "purple" P912 "right" "centered" "near" "front" P949 [0.000937] {2}
+S -> "is" "the" "smallest" P926 P910 "yellow" "cube" [0.000469] {1}
+S -> "is" "yellow" P912 "close" P943 "and" "near" "a" P962 P1004 [0.000469] {1}
+S -> "is" P1044 "purple" "sphere," "almost" P943 [0.000469] {1}
+S -> "is" P902 "lime" P912 "almost" P943 P928 "hand" "side" [0.000469] {1}
+S -> "is" P902 "solid" P915 "middle" [0.000469] {1}
+S -> "is" P902 P933 [0.000469] {1}
+S -> "is" P905 "half" P970 P979 [0.000469] {1}
+S -> "is" P975 P896 "farthest" P1010 P960 [0.000469] {1}
+S -> "is" P977 P900 [0.000469] {1}
+S -> "is" P984 "behind" P955 [0.000469] {1}
+S -> "is" P984 "slightly" P943 [0.000469] {1}
+S -> "is" P984 P937 P955 [0.000469] {1}
+S -> "isa" "red" "cylindrical" "object" P915 "first" "row" P898 P979 [0.000469] {1}
+S -> "it" "is" "a" "circle" "and" "of" "purple" "color" "It" "looks" "like" "a" "smallest" "object" P931 P947 "and" "very" P941 "one" P894 "object" P931 [0.000469] {1}
+S -> "it" "is" "a" "orange" P904 "centre" P965 [0.000469] {1}
+S -> "just" "near" "by" "the" "two" "object" P915 "first" "place" "and" "object" "three" "also" "done" "it" [0.000469] {1}
+S -> "large" "square" "box" "which" "is" "purple" P1000 "is" "diagonal" "to" "small" "green" "color" "square" "box" [0.000469] {1}
+S -> "large" "yellow" "ball" P915 P1035 [0.000469] {1}
+S -> "large" "yellow" "square" "shaped" "object" P915 "midle" P896 "corner" [0.000469] {1}
+S -> "large" P904 P960 P978 "viewer" [0.000469] {1}
+S -> "larger" "yellow" P935 "and" P900 [0.000469] {1}
+S -> "larger" P935 P991 [0.000469] {1}
+S -> "largest" "rectangle" "object" "is" "at" "below" P962 [0.000469] {1}
+S -> "largest" P912 "in" "one" P894 P900 [0.000469] {1}
+S -> "like" "a" "brick" P915 "front" [0.000469] {1}
+S -> "like" "a" "can" P915 P1035 [0.000469] {1}
+S -> "long" "dark" "blue" "color" "rectangle" P892 P1035 [0.000469] {1}
+S -> "lovely" "green" "is" "quite" "like" "an" "egg" "shape" [0.000469] {1}
+S -> "lying" P898 "top" "most" P900 P959 "object" "three" P1002 [0.000469] {1}
+S -> "marble" "is" P917 "green" "cube" [0.000469] {1}
+S -> "misshapen" "green" P912 "sitting" P898 "upper" "right" "hand" P900 [0.000469] {1}
+S -> "number" "yellow" "round" P898 "number" P946 "yellow" "round" P900 [0.000469] {1}
+S -> "object" "is" "cube" "and" "the" "color" "is" "blue" "is" P896 "object" [0.000469] {1}
+S -> "one" "of" "three" "boxes" "It" "is" "pink" P915 P1035 [0.000469] {1}
+S -> "one" "of" "three" "purple" "cubes" "is" "almost" "perfect" P943 P928 "side" [0.000469] {1}
+S -> "one" P894 "purple" "color" "cuboids" P894 "three," "of" "which" "two" "sides" "are" "visible" "is" P910 "other" "two" "purple" "cuboids" "if" "we" "go" "anti-clockwise" "starting" "from" "the" "cuboid" "of" "which" "three" "sides" "are" "visible" "(purple)" [0.000469] {1}
+S -> "one" P894 "yellow" "rectangles" "is" "beneath" "the" P962 "and" "the" "closest" "object" P943 [0.000469] {1}
+S -> "one" P894 P926 P943 "from" "top" "view" [0.000469] {1}
+S -> "only" "sphere" P931 "with" "orange" "color" P915 "middle" "with" "two" "yello" "bars" "and" "a" "disc" "near" "it" [0.000469] {1}
+S -> "only" P926 "at" "top" "left" P949 [0.000469] {1}
+S -> "orange" "and" "rectangular" P915 "middle" "in" "terms" "of" "position" [0.000469] {1}
+S -> "orange" "and" "rectangular" P947 P910 P953 [0.000469] {1}
+S -> "orange" "and" "round" "is" "toward" "the" P900 [0.000469] {1}
+S -> "orange" "brown" "short" P935 "with" "a" P979 "to" "its" "right" [0.000469] {1}
+S -> "orange" "colour" P892 "left" "upper" P900 [0.000469] {1}
+S -> "orange" "cyclinder" "is" P917 "blue" "circle" P931 [0.000469] {1}
+S -> "orange" "rectangular" "solid" P915 "front" "right" [0.000469] {1}
+S -> "orange" "short" P970 P914 "red" "circle" [0.000469] {1}
+S -> "orange" "tall" P935 [0.000469] {1}
+S -> "orange" P892 "left" [0.000469] {1}
+S -> "orange" P892 P896 P949 [0.000469] {1}
+S -> "orange" P915 "front" "left" [0.000469] {1}
+S -> "orange" P915 "top" P1010 [0.000469] {1}
+S -> "orange" P920 "just" P898 "top" "right" "quarter" P965 [0.000469] {1}
+S -> "orange" P923 "front" "of" "all" "other" "shapes--the" "green" "cylinder" "and" "green" "rectangular" "prism," "and" "the" "orange" "and" "blue" "cylinders" [0.000469] {1}
+S -> "orange" P939 "of" "red" [0.000469] {1}
+S -> "orange" P993 "and" "it" "is" "recantgle" P915 "middle" "on" "table," "but" "mucho" "on" "down" "and" "right" "side" [0.000469] {1}
+S -> "out" "of" "many" "cubes" "one" P890 "yellow" P1000 P915 "mormal" "size" [0.000469] {1}
+S -> "out" "of" "many" "shapes" P984 "present" "is" "yellow" P1000 "is" P917 "cube" [0.000469] {1}
+S -> "oval" "in" P892 P991 [0.000469] {1}
+S -> "parallelepiped" P915 "center" "below" [0.000469] {1}
+S -> "parallelepiped" P947 [0.000469] {1}
+S -> "pie" P890 "nex" "to" "ball" [0.000469] {1}
+S -> "piece" P894 "building" "blocks" "game" "is" "Next" "to" "small" "purple" "ball," "a" "feet" "away" "from" "left" P949 P928 "side" [0.000469] {1}
+S -> "pink" "and" "rectangular" "is" "toward" "the" P900 "but" "further" "forward" "than" "the" "purple" "cubic" "object" "It's" "slightly" P928 "of" "center" [0.000469] {1}
+S -> "pink" "and" "rectangular" P915 "upper" "middle" "part" P965 [0.000469] {1}
+S -> "pink" "colored" "squre" "is" "bigger" "then" "all" "other" "four" "objects" [0.000469] {1}
+S -> "pink" "rectangular" P892 P949 [0.000469] {1}
+S -> "pink" P1032 "is" "close" P943 [0.000469] {1}
+S -> "pink" P892 P949 P943 [0.000469] {1}
+S -> "pink" P912 "near" "two" "other" "rectangular" "boxes" [0.000469] {1}
+S -> "pink" P912 "present" "in" "between" "orange" "colored" "rectangle" "and" "violet" "colored" "square" [0.000469] {1}
+S -> "pink" P981 "orange" "cuboid" [0.000469] {1}
+S -> "pinkish" P935 "second" "from" "the" "end" [0.000469] {1}
+S -> "pista" "green" P1032 "and" "almost" P943 "It" "is" "very" "near" P898 "dark" "green" "brick" "shaped" "object" "placed" "almost" P898 "rear" P900 P915 P962 "and" P957 [0.000469] {1}
+S -> "purple" "and" "small" P939 P1010 [0.000469] {1}
+S -> "purple" "and" "tall" P915 "center" [0.000469] {1}
+S -> "purple" "and" P892 "upper" "right" [0.000469] {1}
+S -> "purple" "color" "solid" "sphere" "small" "than" "other" "yellow" "solid" P890 "very" "close" P928 "side" "of" "green" "cuboid" "and" "down" "of" "purple" "cube" [0.000469] {1}
+S -> "purple" "color" P912 "at" "top" P949 [0.000469] {1}
+S -> "purple" "colored" "rectanguler" "shaped" "object" P1042 [0.000469] {1}
+S -> "purple" "colour" P892 P960 "on" "north" "of" "pink" "colour" "cuboid" [0.000469] {1}
+S -> "purple" "retangular" "prism" "is" "directly" P943 [0.000469] {1}
+S -> "purple" "small" "round" P915 "middle" [0.000469] {1}
+S -> "purple" P1032 "is" "below" "object" "three" [0.000469] {1}
+S -> "purple" P912 "inline" "with" "object" "two" [0.000469] {1}
+S -> "purple" P915 "bottom" P900 [0.000469] {1}
+S -> "purple" P915 "middle" [0.000469] {1}
+S -> "purple" P915 "very" P900 [0.000469] {1}
+S -> "purple" P915 P949 [0.000469] {1}
+S -> "purple" P939 P991 [0.000469] {1}
+S -> "purple" P947 [0.000469] {1}
+S -> "recangular" "is" "furthest" "forward" "on" "table" [0.000469] {1}
+S -> "rectangle" "in" "shape," "being" "taller" "then" "it" P1006 P1000 P915 "very" P900 "situated" P910 "two" "sides" [0.000469] {1}
+S -> "rectangle" "shape," "green" "color" P892 P1035 [0.000469] {1}
+S -> "rectangle" P892 "left" "most" "corner" [0.000469] {1}
+S -> "rectangle" P912 P937 "me" [0.000469] {1}
+S -> "rectangle" P935 [0.000469] {1}
+S -> "rectangle" P943 "is" "now" P928 P900 [0.000469] {1}
+S -> "rectangular" "and" "purple" "is" "close" P943 [0.000469] {1}
+S -> "rectangular" "and" "yellow" "is" "central" "and" P978 "lower" P960 [0.000469] {1}
+S -> "rectangular" "box" "which" P915 "purple" "color" "is" "at" "middle" P949 [0.000469] {1}
+S -> "rectangular" "with" "orange" "color" "is" P910 P953 [0.000469] {1}
+S -> "rectangular" "yellow" "colured" "one" "is" "near" P898 P962 [0.000469] {1}
+S -> "rectangular" P892 "centre" P965 [0.000469] {1}
+S -> "rectangular" P892 "rear" P900 "somewhat" "centered" [0.000469] {1}
+S -> "rectangular" P892 "rear" P900 [0.000469] {1}
+S -> "rectangular" P892 "right" "side" [0.000469] {1}
+S -> "rectangular" P912 "at" "middle" P949 [0.000469] {1}
+S -> "rectangular" P912 "the" "object" P941 "green" "colour" "object" [0.000469] {1}
+S -> "red" "colour" "ball" P915 "centre" P965 [0.000469] {1}
+S -> "red" "is" "before" P962 [0.000469] {1}
+S -> "red" P890 "beside" "the" "orange" "cube" [0.000469] {1}
+S -> "red" P892 P949 "and" P941 "yellow" "cube" [0.000469] {1}
+S -> "red" P981 "cylinder," "betwen" "two" "yellow" "parallelepipeds" [0.000469] {1}
+S -> "round" "and" "big" P939 "left" "corner," P898 "others" [0.000469] {1}
+S -> "round" "and" "blue" "and" "short" "is" "just" P974 "box" P943 [0.000469] {1}
+S -> "round" "and" "brown" "is" P917 P979 [0.000469] {1}
+S -> "round" "and" "flat" "on" "two" "ends" P939 P1010 [0.000469] {1}
+S -> "round" "and" "orange" "is" "close" P898 "upper" P991 [0.000469] {1}
+S -> "round" "and" "orange" "is" P910 "group," P943 [0.000469] {1}
+S -> "round" "and" "orange" P915 "top" P991 [0.000469] {1}
+S -> "round" "and" "red" P1000 P915 "middle" "of" "two" "rectangle" "yellow" "box" [0.000469] {1}
+S -> "round" "flat" P890 "is" "almost" P943 "and" P917 P900 "it" "is" "positioned" "right" P917 P962 [0.000469] {1}
+S -> "round" "in" "nature" "and" "brown" P1000 "is" "near" "left" "side" P900 [0.000469] {1}
+S -> "round" "is" "last" "to" "table" [0.000469] {1}
+S -> "round" "shape" "ball" P915 "blue" "colour" "is" "behind" "to" "rectangle" "in" "brown" [0.000469] {1}
+S -> "round" "shape" P892 P991 [0.000469] {1}
+S -> "round" P1029 [0.000469] {1}
+S -> "round" P1042 [0.000469] {1}
+S -> "round" P912 "beside" "the" "rectangular" "shaped" "box" [0.000469] {1}
+S -> "round" P912 "near" P943 "shape" "object" [0.000469] {1}
+S -> "round" P915 "table" [0.000937] {2}
+S -> "round" P915 P962 [0.000469] {1}
+S -> "round" P947 [0.000469] {1}
+S -> "round" P989 P898 "others" [0.000469] {1}
+S -> "second" "position" "is" "near" "by" "the" "object" "first" [0.000469] {1}
+S -> "second" P898 "largest" "object" "is" "also" "purple" P1000 [0.000469] {1}
+S -> "section" P894 P892 "top" "leftmost" P900 [0.000469] {1}
+S -> "shiny" "and" "blue" "is" P1004 [0.000469] {1}
+S -> "short" "and" "blue" "is" P910 "green," "rectangular" "object" [0.000469] {1}
+S -> "short" "and" "wide" P926 P898 "blue" "ball," P959 "your" "point" "of" "view" [0.000469] {1}
+S -> "short" "brown" P890 "Top" P949 "above" "the" P957 [0.000469] {1}
+S -> "short" "small" "stumpy" P933 "and" "is" "the" "furthest" "object" "away" "It" "is" P917 "middle" P928 "side" [0.000469] {1}
+S -> "short" P926 P898 "imediate" "left" "and" "slightly" P898 P979 [0.000469] {1}
+S -> "short" P926 P978 "corner" [0.000469] {1}
+S -> "short" P970 P962 "and" P898 "largest" "yellow" "rectangular" "block" [0.000469] {1}
+S -> "short," P935 "right" P906 P979 [0.000469] {1}
+S -> "shorter" "than" P898 "object" P1002 [0.000469] {1}
+S -> "small" "and" "round" "is" "right" "beside" "number" "five" [0.000469] {1}
+S -> "small" "blue" "circle" P890 "nearer" P898 "big" "brown" "circle" "shape" [0.000469] {1}
+S -> "small" "blue" "wheel" "lying" "on" "its" "side" P1042 "between" P902 "rectangle" "and" "a" "larger" "orange" "wheel," "also" "in" "its" "side" [0.000469] {1}
+S -> "small" "circular" "cylinder" "with" "the" "color" "blue" "is" "placed" P898 "big" "green" "square" "and" "also" "it" P1042 [0.000469] {1}
+S -> "small" "cube" "object" "is" "far" "away" P928 P900 "from" "other" "cubes" [0.000469] {1}
+S -> "small" "green" "rectangular" P933 P928 "middle" [0.000469] {1}
+S -> "small" "rectangle" "bar" P939 "hand" "corner" [0.000469] {1}
+S -> "small" "rectangle" "shaped" "green" "object" "is" "at" "beside" "small" P979 [0.000469] {1}
+S -> "small" "rectangle" "which" "is" "yellow" P1000 "is" P941 "red" "color" "ball" [0.000469] {1}
+S -> "small" "rectangular" P926 "in" "between" "object" "two" "and" "object" "three" [0.000469] {1}
+S -> "small" P1042 [0.000469] {1}
+S -> "small" P904 "farthest" P900 [0.000469] {1}
+S -> "small" P904 P949 [0.000469] {1}
+S -> "small" P912 "between" "green" "cube" "and" "brown" "cylinder" [0.000469] {1}
+S -> "small" P912 "furthest" P924 "viewer" [0.000469] {1}
+S -> "small" P912 "right" P917 "rear" P900 [0.000469] {1}
+S -> "small" P912 P898 "north" "east" P894 "smaller" "yellow" "cube" [0.000469] {1}
+S -> "small" P912 P941 "vertical" "green" "box" [0.000469] {1}
+S -> "small" P933 "slightly" "right" "of" "centre" [0.000469] {1}
+S -> "small" P933 [0.000469] {1}
+S -> "small" P935 "laterally" "and" "upper" "third" "horizontally" [0.000469] {1}
+S -> "small" P935 "right" "corer" [0.000469] {1}
+S -> "small" P935 P917 P966 [0.000469] {1}
+S -> "small" P935 P991 [0.000469] {1}
+S -> "small" P935 [0.000469] {1}
+S -> "small" P951 "just" P896 "green" "cube" [0.000469] {1}
+S -> "small" P951 "right" "from" "the" "green" "cube" [0.000469] {1}
+S -> "small" P951 P908 "block" [0.000469] {1}
+S -> "small" P970 "cube" [0.000469] {1}
+S -> "small," "circular," "and" "blue" "is" P974 "rectangle" [0.000469] {1}
+S -> "small," "light" "green" "color" "rectangle" P892 P1035 [0.000469] {1}
+S -> "smallest" P892 P960 [0.000469] {1}
+S -> "smallest" P926 "nearest" P928 P900 [0.000469] {1}
+S -> "smallest" P951 P917 "green" "rectangle" [0.000469] {1}
+S -> "smallest," "blue" "round" "object" "is" P974 "rectangular" "object" P943 [0.000469] {1}
+S -> "smushed" "yellow" P935 [0.000469] {1}
+S -> "solid" "ring" P915 "top" P1010 P949 [0.000469] {1}
+S -> "spherical" "in" "shape" "and" "is" "red" P1032 "is" P936 "two" "rectangular" "object" [0.000469] {1}
+S -> "spherical" P915 "front" "of" "blue" [0.000469] {1}
+S -> "square" "and" "purple" "is" "close" P898 "lower" P991 [0.000469] {1}
+S -> "square" "in" "stand" "position" "is" "right" "side" "corner" "last" P898 "image" [0.000469] {1}
+S -> "square" "shape" "and" "blue" "color" "is" P910 "line" [0.000469] {1}
+S -> "square" "shape" "with" "purple" "color" P915 "front" "of" P898 "shapes" [0.000469] {1}
+S -> "square" "shaped" "is" "right" P898 "edge" [0.000469] {1}
+S -> "square" "shaped" "one" "is" "near" P898 "another" "square" "shaped" "one" [0.000469] {1}
+S -> "square" "with" "purple" "color" "is" "at" "second" "position" "from" "front" [0.000469] {1}
+S -> "standing" "tall" P947 [0.000469] {1}
+S -> "straight" P935 [0.000469] {1}
+S -> "tall" "and" "brown" P947 P928 "hand" "side" [0.000469] {1}
+S -> "tall" "brown" "rectagular" P970 "blue" "shere" "and" "brown" "cilinder" [0.000469] {1}
+S -> "tall" "is" P959 "me" [0.000937] {2}
+S -> "tall" "orange" P892 P1018 "surrounded" "by" P953 [0.000469] {1}
+S -> "tall" "pink" "prism" P915 "upper" P900 P906 "orange" "and" "purple" "prisms" [0.000469] {1}
+S -> "tall" "yellow" P935 P937 P955 [0.000469] {1}
+S -> "tall" P892 "right" "side" "about" "three" "quarters" P973 [0.000469] {1}
+S -> "taller" P926 "very" "slightly" P910 P900 [0.000469] {1}
+S -> "tallest" "roller" "is" P978 P949 [0.000469] {1}
+S -> "tallest" P890 "closest" P943 [0.000469] {1}
+S -> "tallest" P912 "above" "the" P957 [0.000469] {1}
+S -> "tallest" P935 "of" P953 [0.000469] {1}
+S -> "the" "biggest" "object" P931 "is" "not" "near" "any" "other" "object" [0.000469] {1}
+S -> "the" "biggest" "one" "is" "purple" P947 [0.000469] {1}
+S -> "the" "blue" P892 "far" P949 [0.000469] {1}
+S -> "the" "blue" P892 "very" P991 P898 "other" "four" "objects" [0.000469] {1}
+S -> "the" "bright" P912 "slightly" "off" P910 P900 P917 "cylinder" [0.000469] {1}
+S -> "the" "closest" P904 "left," "front" "corner" [0.000469] {1}
+S -> "the" "dark" "purple" P923 "back" P991 [0.000469] {1}
+S -> "the" "flat" "circle" "one" P915 "edge" [0.000469] {1}
+S -> "the" "flat" P926 P910 "red" "circle" [0.000469] {1}
+S -> "the" "green" "object" P939 P991 [0.000469] {1}
+S -> "the" "green" "square" P910 "objects" "is" "on" "a" "table" [0.000469] {1}
+S -> "the" "green" P912 "beside" "the" P957 "and" "diagonally" P936 P957 "and" "orange" "rectangular" "box" [0.000469] {1}
+S -> "the" "larger" "yellow" P1042 [0.000469] {1}
+S -> "the" "largest" "box" P931 P915 "front" P991 [0.000469] {1}
+S -> "the" "largest" "flat" P890 "almost" P943 [0.000469] {1}
+S -> "the" "largest" "object" P915 "head" P965 [0.000469] {1}
+S -> "the" "largest" "yellow" P933 "beside" "the" "rectangular" "prism" [0.000469] {1}
+S -> "the" "largest" P892 "near" P900 P898 "edge" [0.000469] {1}
+S -> "the" "largest" P904 "bottom" "left" [0.000469] {1}
+S -> "the" "largest" P926 "farthest" P924 P953 [0.000469] {1}
+S -> "the" "largest" P926 P959 "my" "perspective" [0.000469] {1}
+S -> "the" "medium-sized," "blue" P935 P917 "orange," "short" "cylinder" [0.000469] {1}
+S -> "the" "medium-sized," P935 P908 P966 [0.000469] {1}
+S -> "the" "mid" "sized" P890 "almost" "directly" P943 [0.000469] {1}
+S -> "the" "most" "visible" "object" P915 "front" "of" P955 [0.000469] {1}
+S -> "the" "object" "four" P1038 "it" P915 "rectangular" P912 "the" "object" "four" P1038 "it" P915 "rectangular" "in" "shape" [0.000469] {1}
+S -> "the" "only" "green" "rectangular" "prism-shaped" P892 "back-left" P965 [0.000469] {1}
+S -> "the" "only" "one" "yellow" "object" P931 "is" "nearly" P943 [0.000469] {1}
+S -> "the" "only" "orange" "rectangular" "prism-shaped" P892 "back-right" P965 [0.000469] {1}
+S -> "the" "only" "purple" "one" P947 [0.000469] {1}
+S -> "the" "only" "purple" "rectangle" P931 "is" "behind" P955 "located" P928 P1010 [0.000469] {1}
+S -> "the" "only" "small," "green" "square" P931 "is" "behind" P955 [0.000469] {1}
+S -> "the" "only" "sphere" P931 P915 "center" "between" "two" "rectangles" "and" "a" "cylinder" [0.000469] {1}
+S -> "the" "only" P933 "slightly" P910 "middle" [0.000469] {1}
+S -> "the" "only" P933 P928 "middle" [0.000469] {1}
+S -> "the" "only" P957 P931 "is" "behind" P955 P908 "green" "cylinder" "and" "is" "located" P928 P991 [0.000469] {1}
+S -> "the" "only" P957 P931 "it's" "a" "short" P957 "and" "quite" "small" P915 P949 P936 "green" "rectangular" "cuboid" "and" "the" "brown" "cylinder" "It" "is" "directly" P974 "rectangular" "cuboid" P928 P991 [0.000469] {1}
+S -> "the" "only" P968 P910 P962 [0.000469] {1}
+S -> "the" "orange" "flat" P968 P910 "red" "spherical" "object" P943 [0.000469] {1}
+S -> "the" "orange" "partial-cylinder" P915 "very" "top" "left" [0.000469] {1}
+S -> "the" "orange" "rectangle" "taller" "than" "the" P896 "objects" "is" "the" "closest" "obeject" "from" "this" "vantage" "point" "almost" "halfway" P973 "off" P928 [0.000469] {1}
+S -> "the" "orange" "short" P890 P928 P900 [0.000469] {1}
+S -> "the" "orange" "square" P928 P915 "two" "red" "objects" [0.000469] {1}
+S -> "the" "orange" P968 "directly" "north" P894 "blue" "circular" "object" P898 "Y" "axis," "no" "farther" "north" "than" "the" "green" "circular" "object" [0.000469] {1}
+S -> "the" "other" "purple" "block" P943 "is" "the" "other" "purple" "block" P943 [0.000469] {1}
+S -> "the" "pink" "object" P1029 "and" P1021 [0.000469] {1}
+S -> "the" "purple" "cube" P898 "foreground" "is" "by" "the" "front" P991 [0.000469] {1}
+S -> "the" "purple" "square" P974 "small" P890 "besides" "the" "other" "purple" "square" [0.000469] {1}
+S -> "the" "rectangular" "red" "cube" "standing" "on" "smallest" "side" P915 "corner" P959 "my" "right" "hand" [0.000469] {1}
+S -> "the" "red" "spherical" "object" P947 [0.000469] {1}
+S -> "the" "red" P890 "directly" P1015 "rectangles" [0.000469] {1}
+S -> "the" "red" P935 P917 "cylinder" [0.000469] {1}
+S -> "the" "round" "one" P915 "center" [0.000469] {1}
+S -> "the" "second" "tallest" P890 "closest" P943 [0.000469] {1}
+S -> "the" "short," "orange" P935 P906 "large" P962 [0.000469] {1}
+S -> "the" "smalest" P926 "about" "halfway" P1012 "close" P928 "side" [0.000469] {1}
+S -> "the" "small" "yellow" P935 P898 P957 "and" "the" "red" "circle" [0.000469] {1}
+S -> "the" "small" P926 "almost" P943 P974 "block" [0.000469] {1}
+S -> "the" "small" P926 P917 "green" "cube" [0.000469] {1}
+S -> "the" "small" P926 P936 "orange" "circular" "object" "and" "the" P962 P898 "x" "axis," "halfway" P936 "green" "square" "and" P962 P898 "y" "axis" [0.000469] {1}
+S -> "the" "small," "purple" "item" "is" P917 "green" "rectangle," P943 [0.000469] {1}
+S -> "the" "small," P933 [0.000469] {1}
+S -> "the" "smaller" "yellow" P912 "behind" "th" "ered" "ball," P928 P900 [0.000469] {1}
+S -> "the" "smallest" "piece" P947 [0.000469] {1}
+S -> "the" "smallest" "purple" P920 "just" "behind" P962 [0.000469] {1}
+S -> "the" "smallest" P890 "approximately" P943 [0.000469] {1}
+S -> "the" "smallest" P892 "highest" "part" P965 [0.000469] {1}
+S -> "the" "smallest" P894 "purple" "cubes" P947 "toward" "its" "left" "edge" [0.000469] {1}
+S -> "the" "smallest" P904 P914 P900 "third" "back," "second" "from" "the" "left" [0.000469] {1}
+S -> "the" "smallest" P926 "the" "nearest" "to" "yellow" "cuboid" [0.000469] {1}
+S -> "the" "smallest" P935 "left" [0.000469] {1}
+S -> "the" "smallest" P947 [0.000469] {1}
+S -> "the" "smallest" P970 "green" "box" [0.000469] {1}
+S -> "the" "square" P968 P936 "round" "circular" "object" "and" "the" "pink" "object" [0.000469] {1}
+S -> "the" "tall," "thin" P1042 [0.000469] {1}
+S -> "the" "tallest" "figure" "is" "the" P978 P949 [0.000469] {1}
+S -> "the" "tallest" "one" "is" "the" "closest" P943 [0.000469] {1}
+S -> "the" "tallest" P935 P928 [0.000469] {1}
+S -> "the" "tiny" P926 P974 "rectangle" [0.000469] {1}
+S -> "the" "upward" "standing" "yellow" P892 "very" P900 [0.000469] {1}
+S -> "the" "yellow" "block" "sitting" "face" "down" "is" "toward" "the" P900 P898 "green" "block" [0.000469] {1}
+S -> "the" "yellow" "block" "standing" "upright" "is" "toward" "the" P900 [0.000469] {1}
+S -> "the" "yellow" P892 "north" P900 "but" P917 "center" "than" "the" "blue" "block" [0.000469] {1}
+S -> "the" "yellow" P912 "the" "nearest" "object," "and" "at" "a" "slight" "angle" P910 "objects" [0.000469] {1}
+S -> "the" P1042 [0.000469] {1}
+S -> "the" P890 "closest" P943 [0.000469] {1}
+S -> "the" P890 "right" "beside" "the" "round" "ball" [0.000469] {1}
+S -> "the" P890 "second" "closest" P943 [0.000469] {1}
+S -> "the" P904 "far" P949 [0.000469] {1}
+S -> "the" P904 "upper" P991 [0.000469] {1}
+S -> "the" P912 "furthest" "away" P943 [0.000469] {1}
+S -> "the" P912 "furthest" P924 "front" [0.000469] {1}
+S -> "the" P912 "placed" P898 "yellow" "ball" "and" "also" "it" P915 P1035 [0.000469] {1}
+S -> "the" P912 P910 "yellow" "sphere" [0.000469] {1}
+S -> "the" P912 P910 P957 "about" "half" "way" P973 [0.000469] {1}
+S -> "the" P912 P910 P957 "and" P898 "orange" "cube" [0.000469] {1}
+S -> "the" P912 P910 P957 [0.000469] {1}
+S -> "the" P912 P910 P966 "and" P898 "purple" "cube" [0.000469] {1}
+S -> "the" P912 P917 "green" "rectangular" "prism" [0.000469] {1}
+S -> "the" P912 P917 P957 [0.000469] {1}
+S -> "the" P912 P917 P966 [0.000469] {1}
+S -> "the" P912 P928 P900 [0.000469] {1}
+S -> "the" P912 P974 "box" [0.000469] {1}
+S -> "the" P926 "behind" "all" P894 "purple" "boxes" P943 "but" P974 "box" [0.000469] {1}
+S -> "the" P926 "closest" P928 P1010 "and" "the" "smallest" "purple" "cube" [0.000469] {1}
+S -> "the" P926 "closest" P943 [0.000469] {1}
+S -> "the" P926 "directly" "north" P894 "orange" "rectangle" [0.000469] {1}
+S -> "the" P926 "extremely" "far" "from" "me" P928 [0.000469] {1}
+S -> "the" P926 "the" "nearest" "object," "and" "at" "a" "slight" "angle" [0.000469] {1}
+S -> "the" P926 P898 "blue" "circle" [0.000469] {1}
+S -> "the" P926 P898 P962 [0.000469] {1}
+S -> "the" P926 P910 "blue" "rectangle" [0.000469] {1}
+S -> "the" P926 P910 P962 [0.000937] {2}
+S -> "the" P926 P910 P979 [0.000469] {1}
+S -> "the" P926 P917 P986 "prism" [0.000469] {1}
+S -> "the" P926 P937 P955 P931 [0.000469] {1}
+S -> "the" P926 P959 "me" [0.000469] {1}
+S -> "the" P926 P978 "viewer" P943 [0.000469] {1}
+S -> "the" P930 "closer" "than" "the" P953 [0.000469] {1}
+S -> "the" P930 P910 "objects" [0.000469] {1}
+S -> "the" P930 P959 "me" [0.000469] {1}
+S -> "the" P933 [0.000469] {1}
+S -> "the" P935 "across" "from" "the" P957 [0.000469] {1}
+S -> "the" P935 "just" P974 "rectangular" "prism" [0.000469] {1}
+S -> "the" P935 [0.001874] {4}
+S -> "the" P951 "closest" P943 [0.000469] {1}
+S -> "the" P951 "the" "closest" P943 [0.000469] {1}
+S -> "the" P951 P910 P957 [0.000469] {1}
+S -> "the" P951 P917 "short" "orange" "cylinder," "closest" P943 [0.000469] {1}
+S -> "the" P951 P917 P957 [0.000469] {1}
+S -> "the" P966 "and" "the" "smallest" "object" "is" "directly" P974 "cube" "three" "quarters" "the" "way" P973 "off" "center" P928 "slightly" [0.000469] {1}
+S -> "the" P970 "cylinder" [0.000469] {1}
+S -> "the" P970 "small" "cylinder" [0.000469] {1}
+S -> "the" P970 "sphere" [0.000469] {1}
+S -> "the" P970 "tiny" "sphere" [0.000469] {1}
+S -> "the" P970 P1010 P949 [0.000469] {1}
+S -> "the" P999 P935 P928 [0.000469] {1}
+S -> "thesmaller" "hockey" "puck" "shaped" "item" P915 "left,rear" P965 [0.000469] {1}
+S -> "thin" "yellow" P904 "upper" "left" "quadrange," "inbetween" "4,5,and" "3" "Half" "a" "table" "length" "above" "2" [0.000469] {1}
+S -> "this" "is" "a" "big" "rectangular" "object" P915 "front" "side" P949 [0.000469] {1}
+S -> "this" "is" P902 "object" "with" "yellow" "color" "is" "at" "far" P949 [0.000469] {1}
+S -> "tiny" "round" P951 "right" P917 "green" "object" P928 [0.000469] {1}
+S -> "top" "most" P915 "blue" "above" "object" "yellow" [0.000469] {1}
+S -> "tower" P1042 "behind" P955 [0.000469] {1}
+S -> "two" "green" "cubes" "stacked" "on" "top" "of" "each" "other" "is" "slightly" P910 "small" P957 [0.000469] {1}
+S -> "upright" "is" "close" P943 [0.000469] {1}
+S -> "upright,long,brownish,rectangular" P939 P896 "table,between" "two" "others" "rectangular" "adn" "one" P979 "and" "one" "brownish" "circle" [0.000469] {1}
+S -> "velvet" P935 [0.000469] {1}
+S -> "vertical" "rectangular" "bar" "is" "near" "right" "end" "corner" [0.000469] {1}
+S -> "very" "small" P912 "farther" "than" P955 [0.000469] {1}
+S -> "very" "small" P951 P908 "green" "box" "just" "past" "the" P900 [0.000469] {1}
+S -> "violent" P1032 "and" "larger" "than" "all" "other" "object" P947 [0.000469] {1}
+S -> "violet" "circular" P920 "little" "away" "from" P900 [0.000469] {1}
+S -> "violet" "colour" "tallest" P912 "above" "the" "square" "cube" [0.000469] {1}
+S -> "violet" "cubiod" P915 "side" P941 "pink" "cubiod" [0.000469] {1}
+S -> "violet" "square" "shaped" "one" P947 [0.000469] {1}
+S -> "violet" P912 "present" P943 [0.000469] {1}
+S -> "violet" P939 "of" "green" [0.000469] {1}
+S -> "what" "appears" "to" "be" P902 P968 "furthest" "away" "from" "this" P900 [0.000469] {1}
+S -> "widest" "roller" "is" "closest" P928 "upper" P900 [0.000469] {1}
+S -> "yello" P935 [0.000469] {1}
+S -> "yellow" "and" "rectangular" "is" "second" "from" "the" "back" [0.000469] {1}
+S -> "yellow" "and" "round" "is" P917 "farthest" "object" P931 [0.000469] {1}
+S -> "yellow" "big" "&" "solid" P890 "very" "close" P928 "side" "of" "blue" "cuboid" "and" "second" "from" "top" [0.000469] {1}
+S -> "yellow" "box" "," "smaller" "in" "height" "than" "the" "width" P947 [0.000469] {1}
+S -> "yellow" "circular" P930 "to" "one" P900 "nearly" "center" "position" [0.000469] {1}
+S -> "yellow" "colored" "round" "shaped" "object" P915 P949 [0.000469] {1}
+S -> "yellow" "colored" "spherical" "shaped" "object" "is" "very" "nearer" P898 "blue" "color" "object" [0.000469] {1}
+S -> "yellow" "colored" P920 "bigger" "then" "number" "two" [0.000469] {1}
+S -> "yellow" "colour" P930 "at" "right" "top" "from" "the" P900 [0.000469] {1}
+S -> "yellow" "colur" P912 "at" "left" "top" "the" "table" [0.000469] {1}
+S -> "yellow" "is" P917 "blue" "block" [0.000469] {1}
+S -> "yellow" "object" P898 "shape" P894 "database" "diagram" "is" "almost" P898 "exact" P900 [0.000469] {1}
+S -> "yellow" "rectanglar" "prism" P915 "the" P962 [0.000469] {1}
+S -> "yellow" "rectangular" "object" P1023 "green" "cube" [0.000469] {1}
+S -> "yellow" "rectangular" "piece" "is" "little" P924 P900 [0.000469] {1}
+S -> "yellow" "rectangular" "piece" P939 "side" "little" P924 "center" [0.000469] {1}
+S -> "yellow" P1000 P1002 [0.000469] {1}
+S -> "yellow" P892 P1035 [0.000469] {1}
+S -> "yellow" P892 P991 "It" "is" "previous" "one" "figure" [0.000469] {1}
+S -> "yellow" P912 "adjacent" P898 P979 "and" "pink" "cube" [0.000469] {1}
+S -> "yellow" P912 "at" "one" P900 [0.000469] {1}
+S -> "yellow" P912 "in" "second" "last" "position" "on" "table" [0.000469] {1}
+S -> "yellow" P912 "just" "near" P898 "center" [0.000469] {1}
+S -> "yellow" P912 "present" P917 "blue" "colored" "square" [0.000469] {1}
+S -> "yellow" P912 "second" "from" "the" "back" [0.000469] {1}
+S -> "yellow" P912 P917 P986 [0.000469] {1}
+S -> "yellow" P912 P941 "one" "side" "and" "cuboid" [0.000469] {1}
+S -> "yellow" P912 P959 "your" "point" "of" "view," P937 P962 "and" "brick" "coloured" "cylinder" [0.000469] {1}
+S -> "yellow" P915 "middle" "of" "two" "purple" "objects" [0.000469] {1}
+S -> "yellow" P915 "very" P900 [0.000469] {1}
+S -> "yellow" P915 P1035 [0.000469] {1}
+S -> "yellow" P920 P910 P962 [0.000469] {1}
+S -> "yellow" P935 "most" "position" P931 [0.000469] {1}
+S -> "yellow" P935 P1010 [0.000469] {1}
+S -> "yellow" P935 [0.000937] {2}
+S -> "yellow" P939 "left" [0.000469] {1}
+S -> "yellow/green" P935 P928 "corner" [0.000469] {1}
+S -> P1002 "and" "colored" "red" P947 [0.000469] {1}
+S -> P1013 "Next" P898 P957 [0.000469] {1}
+S -> P1013 "One" "fourth" P894 "way" P1012 "centered," P937 P955 [0.000469] {1}
+S -> P1013 "a" "rectangle," "on" "its" "side," P971 P973 [0.000469] {1}
+S -> P1013 "about" "two" "thirds" P894 "way" P973 "slight" P928 "of" "center" "vertically" [0.000469] {1}
+S -> P1013 "above" P955 [0.000469] {1}
+S -> P1013 "adjacent" P898 P966 [0.000469] {1}
+S -> P1013 "almost" P943 [0.000469] {1}
+S -> P1013 "at" "almost" P900 [0.000937] {2}
+S -> P1013 "away" "from" P955 P931 [0.000469] {1}
+S -> P1013 "back" P949 "slightly" P928 [0.000469] {1}
+S -> P1013 "behind" "all" "objects" P928 P949 [0.000469] {1}
+S -> P1013 "behind" "all" P894 P953 P931 [0.000469] {1}
+S -> P1013 "behind" "all" P894 P953 [0.000469] {1}
+S -> P1013 "behind" P898 "other" "cubes" [0.000469] {1}
+S -> P1013 "behind" P898 "other" "sapes" [0.000469] {1}
+S -> P1013 "behind" P905 "cylinder," "a" "red" "sphere," "and" "another" "yellow" "rectangle" "It" "is" P974 "rectangle" "and" "all" "of" "these" "objects" "are" "on" "a" "brown" "table" [0.000469] {1}
+S -> P1013 "behind" P957 [0.000469] {1}
+S -> P1013 "beside" "the" "green" "square" [0.000469] {1}
+S -> P1013 "beside" P902 P986 [0.000469] {1}
+S -> P1013 "between" P902 "rectangle" P1004 P898 P949 P928 [0.000469] {1}
+S -> P1013 "between" P902 "square" "and" P905 "circle" [0.000469] {1}
+S -> P1013 "by" "itself" "in" "a" "corner" [0.000469] {1}
+S -> P1013 "by" "the" P900 [0.000469] {1}
+S -> P1013 "center," "slightly" P928 [0.000469] {1}
+S -> P1013 "close" P898 "blue" "box" P928 P900 [0.000469] {1}
+S -> P1013 "close" P898 "most" "northern" P900 P898 "mid" "right" "side" [0.000469] {1}
+S -> P1013 "close" P898 "top" P991 [0.000469] {1}
+S -> P1013 "close" P898 P962 [0.000469] {1}
+S -> P1013 "close" P928 P991 "about" "two" "block" "lengths" "from" "left" "edge" "and" "two" "and" "one" "half" "block" "lengths" "from" "back" "edge" P949 [0.000469] {1}
+S -> P1013 "close" P928 [0.000469] {1}
+S -> P1013 "close" P943 [0.000469] {1}
+S -> P1013 "closest" P928 P900 [0.000937] {2}
+S -> P1013 "closest" P928 P991 [0.000469] {1}
+S -> P1013 "closest" P943 [0.000937] {2}
+S -> P1013 "directly" "behind" "orange" "cuboid" ",nearest" P898 P949 [0.000469] {1}
+S -> P1013 "directly" P910 P957 [0.000469] {1}
+S -> P1013 "directly" P943 [0.000469] {1}
+S -> P1013 "far" "away" P928 [0.000937] {2}
+S -> P1013 "far" "away," "but" "not" "farthest" "from" "me" [0.000469] {1}
+S -> P1013 "far" "back" P931 P928 [0.000469] {1}
+S -> P1013 "farther" "away" "than" "the" P953 [0.000469] {1}
+S -> P1013 "farther" "back" P931 [0.000469] {1}
+S -> P1013 "farthest" "away" "from" "my" "sight" [0.000469] {1}
+S -> P1013 "farthest" "away" "from" "us," P898 "upper" P991 [0.000469] {1}
+S -> P1013 "farthest" "away" P931 [0.000469] {1}
+S -> P1013 "farthest" "away;" P898 "smaller" "yellow" "block" [0.000469] {1}
+S -> P1013 "first" P898 "position" P931 [0.000469] {1}
+S -> P1013 "furthest" P924 "purple" "rectangles" [0.000469] {1}
+S -> P1013 "just" P898 "orange" "disk" "and" P962 [0.000469] {1}
+S -> P1013 "just" P910 "purple" "ball," P943 [0.000469] {1}
+S -> P1013 "just" P910 "small" P957 [0.000469] {1}
+S -> P1013 "just" P910 "small" P966 [0.000469] {1}
+S -> P1013 "just" P937 "object" "the" "blue" "rectangle" [0.000469] {1}
+S -> P1013 "located" "toward" "the" "far" P900 P928 "hand" "third" P965 "It" "is" "above" "and" P910 "smaller" "yellow" "rectangular" "prism" [0.000469] {1}
+S -> P1013 "located" P928 P900 "very" P898 "edge," P917 "right" "side" "It" "is" P910 "yellow" "cube," "and" "directly" "above" "and" P910 "second" "largest" "purple" "cube" [0.000469] {1}
+S -> P1013 "nearest" P928 "side" P949 [0.000469] {1}
+S -> P1013 "nect" P928 P900 "right" "of" "center" [0.000469] {1}
+S -> P1013 "next" "closest" P928 [0.000469] {1}
+S -> P1013 "on" P900 P898 "rear" [0.000469] {1}
+S -> P1013 "on" P900 P906 P986 P898 "rear" [0.000469] {1}
+S -> P1013 "right" "of" P957 [0.000469] {1}
+S -> P1013 "right" P898 P962 [0.000469] {1}
+S -> P1013 "right" P906 "blue" "rectangle" P898 P949 P943 [0.000469] {1}
+S -> P1013 "right" P906 P966 [0.000469] {1}
+S -> P1013 "right" P908 "green" "square" [0.000469] {1}
+S -> P1013 "right" P917 P966 P898 P1035 [0.000469] {1}
+S -> P1013 "slightly" P896 "middle" P928 P900 [0.000469] {1}
+S -> P1013 "slightly" P898 "left," "and" "a" "little" "past" "the" "middle" [0.000469] {1}
+S -> P1013 "slightly" P910 "the" "blue" "cube," "but" "behind" P955 P898 P949 [0.000469] {1}
+S -> P1013 "slightly" P910 P900 "and" "very" "close" P928 P991 [0.000469] {1}
+S -> P1013 "slightly" P928 "and" "left" [0.000469] {1}
+S -> P1013 "slightly" P928 P928 P900 [0.000469] {1}
+S -> P1013 "the" "farthest" "back" "and" P928 [0.000469] {1}
+S -> P1013 P1031 "the" "green" "cube" [0.000469] {1}
+S -> P1013 P906 P966 P943 [0.000469] {1}
+S -> P1013 P908 "block" [0.000469] {1}
+S -> P1013 P908 "rectangle" "on" "a" "table" [0.000469] {1}
+S -> P1013 P910 "red" "balll" [0.000469] {1}
+S -> P1013 P917 "green" "three" "dimensional" "rectangle" [0.000469] {1}
+S -> P1013 P917 "small" P966 [0.000469] {1}
+S -> P1013 P928 "and" "a" "little" "ahead" P894 "short" P957 [0.000469] {1}
+S -> P1013 P928 P949 [0.000469] {1}
+S -> P1013 P936 "farthest" "back" "purple" "cube" "and" "the" "small/distant" "green" "cube" [0.000469] {1}
+S -> P1013 P936 "green" "block" "and" "the" "smallest" "purple" "block" [0.000469] {1}
+S -> P1013 P936 "green" "cube" "and" "the" P962 [0.000469] {1}
+S -> P1013 P936 "other" "numbers" [0.000469] {1}
+S -> P1013 P936 "right" "rear" "corner" "an" "rear" "center" "table" "edge" [0.000469] {1}
+S -> P1013 P937 P955 "when" "you" "face" "the" "table" [0.000469] {1}
+S -> P1013 P937 P955 P931 [0.000469] {1}
+S -> P1013 P937 P955 [0.000469] {1}
+S -> P1013 P943 [0.000469] {1}
+S -> P1013 P959 "me" [0.000937] {2}
+S -> P1013 P959 P902 P966 P943 [0.000469] {1}
+S -> P1013 P971 "across" "the" "table," "just" "a" "little" "bit" "left" "of" "center" [0.000469] {1}
+S -> P1013 P971 "across" "the" "table," "just" "left" "of" "center" [0.000469] {1}
+S -> P1013 P974 "rectangle" [0.000937] {2}
+S -> P1013 P974 "rectangle," "more" P898 P949 [0.000469] {1}
+S -> P1013 P978 "top" P991 [0.000469] {1}
+S -> P1013 P978 "upper" "right-hand" P960 [0.000469] {1}
+S -> P1013 P978 "viewer" [0.000469] {1}
+S -> P1013 P978 P1035 [0.000469] {1}
+S -> P1019 "almost" "near" "a" "corner" [0.000469] {1}
+S -> P1019 "behind" "a" "larger" "yellow" "rectangle" [0.000469] {1}
+S -> P1019 "behind" "all" P894 P953 "It" "is" "some" "distance" "away" "from" "them" [0.000469] {1}
+S -> P1019 "behind" P902 "rectangle" [0.000469] {1}
+S -> P1019 "by" "itself" [0.000469] {1}
+S -> P1019 "diagonally" P910 "yell" "rectangular" "prism," "above" P955 [0.000469] {1}
+S -> P1019 "distance" P965 [0.000469] {1}
+S -> P1019 "in" "ftont" P894 P986 [0.000469] {1}
+S -> P1019 "just" "off" "center" [0.000469] {1}
+S -> P1019 "just" P896 "center" "and" P908 "block" [0.000469] {1}
+S -> P1019 "near" "a" "blue" "rectanglar" "cube" [0.000469] {1}
+S -> P1019 "near" "a" P986 "shape" [0.000469] {1}
+S -> P1019 "slightly" P928 "of" "center" [0.000469] {1}
+S -> P1019 P1010 [0.000469] {1}
+S -> P1019 P898 "background" [0.000469] {1}
+S -> P1019 P898 P962 [0.000937] {2}
+S -> P1019 P900 P908 P966 [0.000469] {1}
+S -> P1019 P900 P910 P962 [0.000469] {1}
+S -> P1019 P900 [0.001874] {4}
+S -> P1019 P906 "blue" "circle" [0.000469] {1}
+S -> P1019 P908 "cube" [0.000469] {1}
+S -> P1019 P910 "brown" "cylinder" [0.000469] {1}
+S -> P1019 P910 P953 [0.000469] {1}
+S -> P1019 P917 "tiny" P966 [0.000469] {1}
+S -> P1019 P917 P966 [0.000469] {1}
+S -> P1019 P917 P986 [0.000469] {1}
+S -> P1019 P928 "corner" [0.000469] {1}
+S -> P1019 P928 "side" [0.000937] {2}
+S -> P1019 P928 [0.001406] {3}
+S -> P1019 P959 P902 P966 [0.000469] {1}
+S -> P1019 [0.011246] {24}
+S -> P1021 "is" "almost" P928 P900 "barely" P910 "middle" [0.000469] {1}
+S -> P1021 "is" "beside" "the" "orange" "circular" "object" [0.000469] {1}
+S -> P1021 P915 "middle" "set" "of" "objects," P928 [0.000469] {1}
+S -> P1027 P900 [0.000937] {2}
+S -> P1034 P957 [0.000469] {1}
+S -> P1034 P986 [0.000469] {1}
+S -> P1040 "and" "pink" "rectangle" [0.000469] {1}
+S -> P1042 "a" "bit" P928 [0.000469] {1}
+S -> P1042 "but" "closer" "than" "the" P986 "The" P953 P931 "are" "closer" "than" "it" [0.000469] {1}
+S -> P1042 "near" "a" P962 [0.000469] {1}
+S -> P1042 P917 "cylinder" [0.000469] {1}
+S -> P1042 P943 "It" "is" "by" "the" "blue" "rectangle," "but" "not" "that" "close" P955 [0.000469] {1}
+S -> P1042 P943 [0.000469] {1}
+S -> P1042 [0.002343] {5}
+S -> P1044 "blue" "block" [0.000469] {1}
+S -> P1044 "blue" "cylinder," "a" "little" "more" "than" "half" "way" P973 [0.000469] {1}
+S -> P1044 "blue" "disc" [0.000937] {2}
+S -> P1044 "blue" "prism" [0.000469] {1}
+S -> P1044 "blue" "rectangle" [0.000469] {1}
+S -> P1044 "blue" "rectangle," "behind" "three" P953 [0.000469] {1}
+S -> P1044 "box" "wider" "than" "tall" "but" "narrow" "is" P978 "foreground," "and" "central" P931 [0.000469] {1}
+S -> P1044 "box" "with" "a" "square" "face" "but" "narrow" "in" "length" "is" "close" P928 "left" "corner," P898 "purple" "boxes" "but" "before" "the" "green" "box" [0.000469] {1}
+S -> P1044 "box" [0.000469] {1}
+S -> P1044 "cube," "standing" "on" "end" P915 "very" P900 "closer" "than" "any" P894 P953 [0.000469] {1}
+S -> P1044 "cube," "with" "the" "long" "side" "laying" P931 P915 "the" "NW" "quadrant" P965 "Of" "the" "two" "green" "objects" "it" "is" "the" "only" "rectangular" "cube," "and" "it" P915 "west" P960 [0.000469] {1}
+S -> P1044 "object" "that" "is" "below" "objects" "a" "red" "sphere," "orange" P1048 "green" "rectangle" [0.000469] {1}
+S -> P1044 "other" "four" "objects," "about" "equidistant" "from" "the" "front" "two" "corners" P965 [0.000469] {1}
+S -> P1044 "prism" "on" "it's" "largest" "face" P947 "almost" "in" "line" "with" "the" "other" "yellow" "rectangular" "prism" "but" "slightly" P928 "and" P928 P900 "The" "only" "object" "behind" "it" "is" "the" "green" "one" [0.000469] {1}
+S -> P1044 "prism" "standing" "up" P947 [0.000469] {1}
+S -> P1044 "purple" "ball," "further" "away" "than" "the" "purple" "block" [0.000469] {1}
+S -> P1044 "purple" "blocks" [0.000469] {1}
+S -> P1044 "purple" "boxes" [0.000469] {1}
+S -> P1044 "purple" "object" [0.000469] {1}
+S -> P1044 "shaped" "object" "sitting" "on" "its" "large" "face" P915 "middle" "back," "behind" "a" P962 [0.000469] {1}
+S -> P1044 "short" P957 [0.000469] {1}
+S -> P1044 "small" "ball" [0.000469] {1}
+S -> P1044 "small" P962 P943 [0.000469] {1}
+S -> P1044 "small" P966 P943 [0.000469] {1}
+S -> P1044 "small" P966 [0.000937] {2}
+S -> P1044 "sphere" P943 [0.000469] {1}
+S -> P1044 "tall" P986 "box" P898 P949 [0.000469] {1}
+S -> P1044 P892 "foreground" P894 "picture" P937 P955 [0.000469] {1}
+S -> P1044 P892 "foreground" [0.000469] {1}
+S -> P1044 P935 "bottom" "portion" P894 "black" "box" [0.000469] {1}
+S -> P1044 P935 "opposite" "of" "me" "and" P917 "small" P966 [0.000469] {1}
+S -> P1044 P935 "opposite" "of" "me" P1031 "the" P962 [0.000469] {1}
+S -> P1044 P935 P906 P966 [0.000469] {1}
+S -> P1044 P935 P910 "small" "blue" "wheel-shaped" "object" [0.000469] {1}
+S -> P1044 P935 P910 P962 [0.000469] {1}
+S -> P1044 P935 P974 "cube" [0.000469] {1}
+S -> P1044 P935 [0.001406] {3}
+S -> P1044 P957 [0.002343] {5}
+S -> P1044 P966 [0.001874] {4}
+S -> P1044 P986 P943 [0.001874] {4}
+S -> P1044 P986 [0.000937] {2}
+S -> P1046 "circle" "and" P936 "yellow" "rectangles" [0.000469] {1}
+S -> P1046 "circle" [0.000469] {1}
+S -> P1046 "disc" [0.000469] {1}
+S -> P1046 "pie" [0.000469] {1}
+S -> P1046 "shape" [0.000469] {1}
+S -> P1046 P892 P896 "black" "box" [0.000469] {1}
+S -> P890 "at" "table" "edge" [0.000469] {1}
+S -> P890 "at" P900 [0.000937] {2}
+S -> P890 "back" "of" "rectangle" [0.000469] {1}
+S -> P890 "beside" "the" "ball" [0.000469] {1}
+S -> P890 "between" "yellow" "objects" [0.000469] {1}
+S -> P890 "big" "in" "size,it" "is" P902 "colour" [0.000469] {1}
+S -> P890 "bigger" "in" "size" "than" "any" P894 "objects" "shown" [0.000469] {1}
+S -> P890 "blue" P1032 [0.000469] {1}
+S -> P890 "close" P898 "circle" [0.000469] {1}
+S -> P890 "corner" "by" "the" "table" [0.000469] {1}
+S -> P890 "far" "away" "from" P898 "objects" [0.000469] {1}
+S -> P890 "in" "table" "corner" [0.000469] {1}
+S -> P890 "in" "table" "in" "side" [0.000469] {1}
+S -> P890 "in" "table" "middle" [0.000469] {1}
+S -> P890 "in" "table" "side" [0.000937] {2}
+S -> P890 "just" "near" "a" "big" "sphere" [0.000469] {1}
+S -> P890 "just" "near" P898 "cuboid" [0.000469] {1}
+S -> P890 "just" "near" P898 "small" "cylinder" [0.000469] {1}
+S -> P890 "pink" P1000 [0.000469] {1}
+S -> P890 "right" "of" P962 [0.000469] {1}
+S -> P890 "very" "close" P898 "sphere," "blue" P1032 [0.000469] {1}
+S -> P890 "with" "a" "different" "lenght" "and" "bredth" [0.000469] {1}
+S -> P890 P896 "table,," "bit" P928 [0.000469] {1}
+S -> P890 P937 "object" "3" [0.000469] {1}
+S -> P890 P937 "three" "cubes" P898 P949 [0.000469] {1}
+S -> P890 P941 "a" "cuboid" "placed" "verticaly" "along" "its" "length" P996 [0.000469] {1}
+S -> P890 P941 "a" "square" [0.000469] {1}
+S -> P890 P941 "circle" [0.000469] {1}
+S -> P890 P941 "orange" "rectangle" [0.000469] {1}
+S -> P890 P941 "rectangale" "and" "ball" [0.000469] {1}
+S -> P890 P941 "rectangle" [0.000469] {1}
+S -> P890 P941 "square" [0.000469] {1}
+S -> P890 P941 P979 P931 [0.000469] {1}
+S -> P890 P943 [0.000937] {2}
+S -> P892 "back," "left" "portion" P965 [0.000469] {1}
+S -> P892 "back," "right" "portion" P965 [0.000469] {1}
+S -> P892 "back," P991 [0.000469] {1}
+S -> P892 "centre" P965 [0.000469] {1}
+S -> P892 "first" "place" P931 [0.000469] {1}
+S -> P892 "left" "side" P949 [0.000469] {1}
+S -> P892 "right" "hand" "(north" "western)" P960 [0.000469] {1}
+S -> P892 "right" "hand" P960 [0.000469] {1}
+S -> P892 "right" "rear" P900 [0.000469] {1}
+S -> P892 "right" "side" P949 [0.000469] {1}
+S -> P892 "upper" "right" [0.000469] {1}
+S -> P892 "very" P949 "corner" [0.000469] {1}
+S -> P892 P914 "cylindrical" "object" [0.000469] {1}
+S -> P892 P949 "corner" [0.001406] {3}
+S -> P892 P960 P941 "orangle" "cylinder" [0.000469] {1}
+S -> P892 P991 [0.000469] {1}
+S -> P896 "red" P970 "brownish" "cylinder" [0.000469] {1}
+S -> P898 "camera" P915 "camera" [0.000469] {1}
+S -> P898 "closest" P900 "and" "slightly" P896 "center" "is" "closer" "than" "the" P896 "objects" [0.000469] {1}
+S -> P898 "opposite" "extreme" P965 P915 "green" "color" "almost" "near" "yellow" "purple" "color" "cubes" [0.000469] {1}
+S -> P898 "shape" P894 "green" "cylinder" "and" P915 "very" P900 "pretty" "distant" "from" "the" P953 [0.000469] {1}
+S -> P898 "shape" P894 P892 P949 [0.000469] {1}
+S -> P898 "upper" P900 "and" "close" P928 "corner" "is" "abovecloser" P928 "edge" "than" "the" P953 [0.000469] {1}
+S -> P902 "and" "round" "ball" P939 P991 [0.000469] {1}
+S -> P902 "ball" "that" "is" "is" "farthest" "away" P931 P906 P986 [0.000469] {1}
+S -> P902 "ball" P1042 "midway" P936 "corners" [0.000469] {1}
+S -> P902 "ball" P1042 [0.000469] {1}
+S -> P902 "ball" P910 "black" "table" P906 P912 "behind" "a" P966 "and" "green" "cube" [0.000469] {1}
+S -> P902 "ball" P939 "center," "slightly" "right," P906 "blue" "box" [0.000469] {1}
+S -> P902 "ball" P939 P949 [0.000469] {1}
+S -> P902 "blue" "circular" "object" P939 P991 [0.000469] {1}
+S -> P902 "blue" "circular" P935 [0.000469] {1}
+S -> P902 "blue" "cyclinder" P892 "leftside," P943 [0.000469] {1}
+S -> P902 "blue" "hockey" P890 "just" P974 "rectangular" "box" [0.000469] {1}
+S -> P902 "blue" "pie" P890 "in" "about" "the" P896 P953 [0.000469] {1}
+S -> P902 "blue" "puck" "shaped" "object" "is" P971 P1012 P928 "quarter" P894 "it" [0.000469] {1}
+S -> P902 "blue" "three-d" P981 "object" "four" [0.000469] {1}
+S -> P902 "blue" "three-dimensional" P970 "only" "green" "cube" P931 [0.000469] {1}
+S -> P902 "blue" "wheel" "is" "between" P902 "box" "and" "the" P960 [0.000469] {1}
+S -> P902 "blue" P892 "far" P1010 "the" "table," "beside" P902 "box" [0.000469] {1}
+S -> P902 "blue" P892 P1018 P917 "back" "It" "is" "near" P902 "rectangle" [0.000469] {1}
+S -> P902 "blue" P892 P949 [0.000469] {1}
+S -> P902 "blue" P935 "left" "quadrant," P898 "center" "of" "said" "quadrant" [0.000469] {1}
+S -> P902 "blue" P935 [0.000469] {1}
+S -> P902 "blue" P964 [0.000469] {1}
+S -> P902 "box" "and" "is" "the" "smallest" "box" P931 "is" P917 P900 "rather" "than" "the" "bottom," "and" "is" "leaning" P898 P949 "more" "than" "the" "right" [0.000469] {1}
+S -> P902 "box" "close" P943 "is" "adjacent" P898 P957 [0.000469] {1}
+S -> P902 "box" "shape" "and" "it" "is" "almost" P943 [0.000469] {1}
+S -> P902 "box," "more" "wide" "than" "tall," "standing" "vertically" "is" "the" "object" "furthest" "south" P931 [0.000469] {1}
+S -> P902 "colored" "cylindrical" "object" P915 "bottom" P900 [0.000469] {1}
+S -> P902 "colored" "flat" "round" "sided" "object" P939 "of" "green" "colored" "rectangular" "object" "on" "table" [0.000937] {2}
+S -> P902 "colored" "rectangular" "body" P1006 "colored" "circle" "on" "its" "left" [0.000469] {1}
+S -> P902 "colored" P892 "north" "west" P960 [0.000469] {1}
+S -> P902 "colored" P892 "south" P900 [0.000469] {1}
+S -> P902 "colour" "round" "shape" "object" P915 "last" "position" P894 P953 "of" "objects" [0.000469] {1}
+S -> P902 "coloured" "rectangular" P935 P949 P941 "prple" "small" "ball" [0.000469] {1}
+S -> P902 "cube" "about" "the" "size" P894 "baseball" P1042 "behind" "two" "purple" "cubes" [0.000469] {1}
+S -> P902 "cube" "painted" "red" "is" P910 "array" "of" "items" P931 [0.000469] {1}
+S -> P902 "cube" P906 "blue" "circular" "object" P947 [0.000469] {1}
+S -> P902 "cubelike" "object" "that" "is" "above" P955 P931 [0.000469] {1}
+S -> P902 "cuboid" "of" "which" "two" "sides" "are" "visible" "is" "very" "close" P928 "side" "of" P986 "shape" [0.000469] {1}
+S -> P902 "cylandar" "is" P978 "northeast" P900 [0.000469] {1}
+S -> P902 "cylindrical" "blue" "cap" P915 "top" "left" "corner," "under" "the" "brown" "cylinder" "cap" [0.000469] {1}
+S -> P902 "dark" P951 "directly" P974 "rectangle" [0.000469] {1}
+S -> P902 "dish" P939 P949 [0.000469] {1}
+S -> P902 "egg" "shaped" "object" P915 "middle" "back" P910 P986 [0.000469] {1}
+S -> P902 "flat" P935 P928 "side" [0.000469] {1}
+S -> P902 "green" "block" "and" "small" "in" "comparision" P955 P931 "is" "palce" P898 "furthermost" P900 "and" P902 "block" "and" "a" "round" "ball," "a" "circular" "disc" "are" "place" P937 "it" [0.000469] {1}
+S -> P902 "green" "cylindrical" "object" P915 "righthandside" P965 [0.000469] {1}
+S -> P902 "green" P912 "adjacent" P898 "squat" P957 "close" P943 [0.000469] {1}
+S -> P902 "half" P894 P890 P941 "two" "purple" "figures" "and" P1017 [0.000469] {1}
+S -> P902 "horizontal" P920 "behind" P905 "cylinder" "and" P962 [0.000469] {1}
+S -> P902 "object" "in" "this" "table" "is" "dark" "blue" P1032 [0.000469] {1}
+S -> P902 "object" "is" P910 P953 "second" "furthest" "away" P931 [0.000469] {1}
+S -> P902 "object" "sitting" "long" "ways" "on" "a" "table" P947 [0.000469] {1}
+S -> P902 "object" "standing" "upright" "on" "its" "longest" "side" "is" P910 P953 P898 "forefront" P965 [0.000469] {1}
+S -> P902 "prism" "is" "second" "to" "farthest" P928 [0.000469] {1}
+S -> P902 "prism" "is" "up" "front" [0.000469] {1}
+S -> P902 "prism" "is" P906 P957 [0.000469] {1}
+S -> P902 "prism" "is" P910 "smallest" "cube" [0.000469] {1}
+S -> P902 "prism" "that" "is" "pinkish" P1023 "purple" "prisms" P943 [0.000469] {1}
+S -> P902 "purple" "globe" "is" P910 "black" "box" P908 "box" [0.000469] {1}
+S -> P902 "purple" P920 "behind" P955 P928 P900 [0.000469] {1}
+S -> P902 "rectangle" "in" "green" "color" P947 [0.000469] {1}
+S -> P902 "rectangle" "laying" "flat" P947 P936 "green" "rectangle," "orange" "cylinder," "and" P962 [0.000469] {1}
+S -> P902 "rectangle" "lying" "on" "its" "broad" "side" "is" "mid" "table," P898 P962 "and" P957 [0.000469] {1}
+S -> P902 "rectangle" "that" "is" "standing" "on" "its" "longer," "thin" "side" "is" P910 P962 "and" "the" "orange" "object" [0.000469] {1}
+S -> P902 "rectangualr" P890 P937 P955 [0.000469] {1}
+S -> P902 "retangle" P915 "th" "emiddle" P965 "with" "a" P962 P943 "and" P902 "square" "behind" "it" [0.000469] {1}
+S -> P902 "round" "purple" "object" "is" "beside" P902 "colored" "object" "on" "table" [0.000937] {2}
+S -> P902 "round" P1042 P959 P902 "brown" "cylinder" [0.000469] {1}
+S -> P902 "round" P951 P917 "green" "cube" [0.000469] {1}
+S -> P902 "shape" "object" P915 "before" "the" "small" "cube" "object" [0.000469] {1}
+S -> P902 "solid" P915 "front" [0.000469] {1}
+S -> P902 "solid" P939 [0.000469] {1}
+S -> P902 "spherical" "item" P939 "end" P896 "black" "table" [0.000469] {1}
+S -> P902 "square" "object" P1042 [0.000469] {1}
+S -> P902 "square" "that" "is" "green" P915 "back," "closest" P928 P1010 [0.000469] {1}
+S -> P902 "square," "which" P915 "front" "of" P955 [0.000469] {1}
+S -> P902 "table" "stand" P939 P949 [0.000469] {1}
+S -> P902 "tall" P892 "top" P991 P910 "the" "fat" P957 [0.000469] {1}
+S -> P902 "three" "dimensional" "circular" "prism" P915 "top" "righthand" P896 "image" [0.000469] {1}
+S -> P902 "three" "dimensional" P890 "farthest" "from" "my" "sight" [0.000469] {1}
+S -> P902 "three" "dimensional" P890 "on" P900 P898 "rear" [0.000469] {1}
+S -> P902 "violet" "ball" P915 "green" "cube" [0.000469] {1}
+S -> P902 "violet" "colour" "round" P968 P910 P953 "of" "objects" [0.000469] {1}
+S -> P902 "yellow" P935 "above" "the" P962 [0.000469] {1}
+S -> P902 P1042 "," "slightly" "geared" "toward" "the" P1035 [0.000469] {1}
+S -> P902 P1042 P898 "small" P957 [0.000469] {1}
+S -> P902 P1042 [0.000937] {2}
+S -> P902 P920 "closest" P943 [0.000469] {1}
+S -> P902 P920 "just" "near" "pink" "sphere" [0.000469] {1}
+S -> P902 P920 "right" P917 P966 [0.000469] {1}
+S -> P902 P920 "toward" "the" P900 [0.000469] {1}
+S -> P902 P920 P908 P966 [0.000469] {1}
+S -> P902 P920 P910 "small" P966 [0.000469] {1}
+S -> P902 P920 P910 P957 [0.000469] {1}
+S -> P902 P920 P978 "observer" P943 [0.000469] {1}
+S -> P902 P920 P978 P949 [0.000469] {1}
+S -> P902 P923 "far" P991 [0.000469] {1}
+S -> P902 P923 "foreground" P937 "all" P894 P953 [0.000469] {1}
+S -> P902 P923 "front" "middle" "part" P965 P910 P962 [0.000469] {1}
+S -> P902 P926 "about" "halfway" P1012 P928 "edge" "Directly" P910 "purple" "cube" P943 [0.000469] {1}
+S -> P902 P926 "halfway" P973 "toward" "teh" "left" "edge" [0.000469] {1}
+S -> P902 P926 "off" P900 P908 "block" [0.000469] {1}
+S -> P902 P926 "right" P917 "green" "rectangle" [0.000469] {1}
+S -> P902 P926 P898 "left-middle" P960 [0.000469] {1}
+S -> P902 P926 P906 "taller" "purple" "cube" "and" P902 "cube" [0.000469] {1}
+S -> P902 P926 P917 "green" "box" [0.000469] {1}
+S -> P902 P926 P917 "green" "cube" P943 [0.000469] {1}
+S -> P902 P926 P917 "green" "cube" [0.000469] {1}
+S -> P902 P926 P917 "green" "rectangle" [0.000937] {2}
+S -> P902 P926 P928 P900 [0.000469] {1}
+S -> P902 P926 P971 P1012 P928 "edge" [0.000469] {1}
+S -> P902 P926 P974 "box" P943 [0.000469] {1}
+S -> P902 P926 P974 "square" [0.000469] {1}
+S -> P902 P926 P978 "yellow" "cube" [0.000469] {1}
+S -> P902 P930 "Close" "to" "green" "oblect," "at" "centre" "of" "table," "one" "and" "a" "half" "feet" "from" "the" "back" P949 [0.000469] {1}
+S -> P902 P930 "right" P917 "blue" "rectangle" [0.000469] {1}
+S -> P902 P930 "toward" "the" "back" P898 "right," P910 "blue" "rectangle" [0.000469] {1}
+S -> P902 P930 P906 P986 [0.000469] {1}
+S -> P902 P930 P910 P986 P910 P949 [0.000469] {1}
+S -> P902 P930 P917 P986 "cuboid" "at" "one" P900 [0.000469] {1}
+S -> P902 P930 P917 P986 [0.000469] {1}
+S -> P902 P933 "a" "third" "from" "the" "right" [0.000469] {1}
+S -> P902 P933 "and" "slightly" "right" "of" "center" [0.000469] {1}
+S -> P902 P933 "behind" P955 [0.000469] {1}
+S -> P902 P933 P898 P986 [0.000469] {1}
+S -> P902 P933 P910 "blue" "box" [0.000469] {1}
+S -> P902 P933 P917 "blue" "box" [0.000469] {1}
+S -> P902 P933 P928 "corner" [0.000469] {1}
+S -> P902 P933 P928 [0.000937] {2}
+S -> P902 P933 P943 "Half" "a" "table" "length" "above" "4" "To" "the" "right" "of" "3,5,and" "2" "3" "is" "slightly" "above" [0.000469] {1}
+S -> P902 P933 [0.003280] {7}
+S -> P902 P946 "end" "next" "a" P986 "box" "on" "a" "table" [0.000469] {1}
+S -> P902 P951 "about" "an" "inch" P974 "cube" [0.000469] {1}
+S -> P902 P951 "just" P974 "box" [0.000469] {1}
+S -> P902 P951 "just" P974 "rectangle" [0.000469] {1}
+S -> P902 P951 "kust" "under" "half" "way" "across" "from" "left" "edge," P971 "from" "leading" "edge" [0.000469] {1}
+S -> P902 P951 "right" P917 "green" "rectangle" [0.000469] {1}
+S -> P902 P951 "slightly" "above" P900 "adjacent" P898 "small" "green" "box" [0.000469] {1}
+S -> P902 P951 P908 "cube" [0.000469] {1}
+S -> P902 P951 P908 "rectangle" P943 [0.000937] {2}
+S -> P902 P951 P908 "yellow" "cylinder" P910 "brown" "table" [0.000469] {1}
+S -> P902 P951 P974 "box" [0.000469] {1}
+S -> P902 P951 P974 "rectangle" [0.000937] {2}
+S -> P902 P964 "near" "two" "purple" "boxes" "and" P902 "green" "one" [0.000469] {1}
+S -> P902 P964 [0.000937] {2}
+S -> P902 P966 "beside" P1019 "it" "is" "labeled" "as" "object" "two" [0.000469] {1}
+S -> P902 P966 "that" "is" "about" P943 "and" "next" P974 "rectangular" "cube" [0.000469] {1}
+S -> P902 P968 "close" P943 "a" "bit" P928 "side" [0.000469] {1}
+S -> P902 P968 "left" "of" "center," P943 "and" "immediately" P908 P966 [0.000469] {1}
+S -> P902 P968 "toward" "the" P900 P917 "blue" "circle" [0.000469] {1}
+S -> P902 P968 P910 P953 "of" "objects" [0.000469] {1}
+S -> P902 P968 P978 "edge" P928 "end" [0.000469] {1}
+S -> P902 P981 "yellow" "block" "number" "one" [0.000469] {1}
+S -> P902 P981 P905 "cylinder" [0.000469] {1}
+S -> P904 "centre" P965 "and" "it" "is" "the" "second" "one" "figure" [0.000469] {1}
+S -> P904 "cyan" "ballobject" [0.000469] {1}
+S -> P904 "end" P949 [0.000469] {1}
+S -> P904 "green" "cuboid" "to" "its" "right" [0.000469] {1}
+S -> P904 "left" "top" "side" P894 "table,among" "other" "rectangular" "prisms" "of" "various" "sizes" "and" "colors" [0.000469] {1}
+S -> P904 "top" "right" [0.000937] {2}
+S -> P904 "very" P900 [0.000469] {1}
+S -> P904 P991 "," "back" "of" "all" "objects" [0.000469] {1}
+S -> P904 P991 "bach" "of" "all" "objects" [0.000469] {1}
+S -> P904 P991 [0.000469] {1}
+S -> P905 "cylinder,shaped" "like" "a" "tuna" "can" P947 "adjacent" P898 "green" "cylinder" [0.000469] {1}
+S -> P905 "cylindrical" "object" P915 "line" "second" "from" "the" "front" "right" P917 P962 "item" "one" [0.000469] {1}
+S -> P905 "cylindrical" "object" P947 P906 P979 [0.000469] {1}
+S -> P905 "flat" "three" "dimensional" P970 P979 P943 [0.000469] {1}
+S -> P905 "flat" P890 "far" "away" P928 [0.000469] {1}
+S -> P905 "hockey" P890 "below" P902 "rectangle" [0.000469] {1}
+S -> P905 "hockey" P890 "directly" "adjacent" P910 P979 "and" P947 [0.000469] {1}
+S -> P905 "hockey" P935 "above" "a" "smaller" "blue" "hockey" "puck" [0.000469] {1}
+S -> P905 "hockey" P935 P906 P979 [0.000469] {1}
+S -> P905 "hockey" P935 P991 [0.000469] {1}
+S -> P905 "object" "and" "it" "is" "behind" "object" "which" "is" "blue" P947 [0.000469] {1}
+S -> P905 "object" P898 P970 P979 P943 [0.000469] {1}
+S -> P905 "rectangle" "standing" "on" "it's" "end" "is" P971 "across" "the" "table," "just" "right" "of" "center" [0.000469] {1}
+S -> P905 "rectangle," "sitting" "on" "its" "small" "end" P915 "back-right" P894 "table," P910 "group" "of" "objects" [0.000469] {1}
+S -> P905 "rectangular" "box" "taller" "than" "width" "or" "length" "is" P978 "foreground" "and" P978 "near" P1010 "and" "slightly" "off" "center" [0.000469] {1}
+S -> P905 "rectangular" "prisim" "is" P978 "viewer" [0.000469] {1}
+S -> P905 "rectangular" P1042 P936 "other" "four" "objects," "diagonal" "from" "the" "orange" "flat" "globe" [0.000469] {1}
+S -> P905 "rectangular" P892 P896 P953 [0.000937] {2}
+S -> P905 "short" P892 "upper" P991 [0.000469] {1}
+S -> P905 "squat" P933 P928 [0.000469] {1}
+S -> P905 "three-dimensional" "rectangle," "whose" "longer" "side" "is" "vertical" P915 "center" "of" "all" P894 P953 P959 "a" "smaller" "orange" "disk" "and" "a" "pink" "three-dimensional" "rectangle" [0.000469] {1}
+S -> P905 "wheel" "lying" "on" "its" "side" P906 P951 P910 "long" "dark" "brown" "table" [0.000469] {1}
+S -> P905 "wheel-shaped" "object" P947 "but" P928 "It's" P896 P962 [0.000469] {1}
+S -> P905 P1042 "slightly" "offset" P928 [0.000469] {1}
+S -> P905 P1042 [0.000469] {1}
+S -> P905 P890 "At" "the" P991 [0.000469] {1}
+S -> P905 P890 "above" "the" P957 [0.000469] {1}
+S -> P905 P890 "adjacent" P898 P962 [0.000469] {1}
+S -> P905 P890 "almost" "directly" P943 "but" "a" "little" P917 "right" "side" "It" "is" P978 P979 [0.000469] {1}
+S -> P905 P890 "almost" P928 P900 [0.000469] {1}
+S -> P905 P890 "between" "a" "pink" "rectangle" P1004 [0.000469] {1}
+S -> P905 P890 "by" "itself" [0.000469] {1}
+S -> P905 P890 "close" "by" "a" P957 "and" P902 "block" [0.000469] {1}
+S -> P905 P890 "closest" P928 P991 [0.000469] {1}
+S -> P905 P890 "directly" P910 P962 [0.000469] {1}
+S -> P905 P890 "directly" P917 "blue" "circle" [0.000469] {1}
+S -> P905 P890 "down" P894 "purple" "rectangle" [0.000469] {1}
+S -> P905 P890 "exactly" P943 [0.000469] {1}
+S -> P905 P890 "just" P910 "center," "about" "three" "fifths" P894 "way" P973 [0.000469] {1}
+S -> P905 P890 "just" P910 P900 [0.000469] {1}
+S -> P905 P890 "just" P910 P979 [0.000469] {1}
+S -> P905 P890 "near" "a" P957 [0.000469] {1}
+S -> P905 P890 "nearer" P898 "bottom" P900 "than" "any" "other" "object" [0.000469] {1}
+S -> P905 P890 "right" P943 "touching" "a" P979 [0.000469] {1}
+S -> P905 P890 "slightly" P910 P900 [0.000469] {1}
+S -> P905 P890 "the" "central" "object" P931 P917 "right" "edge," "about" "four" "block" "lengths" "The" P890 "about" "four" "block" "lengths" "from" "the" P900 "moving" "away" "from" "my" "point" "of" "view" [0.000469] {1}
+S -> P905 P890 P959 "me" [0.000469] {1}
+S -> P905 P892 "back-left" "corner" [0.000469] {1}
+S -> P905 P892 "center" P900 P910 P962 [0.000469] {1}
+S -> P905 P892 "middle-right" "position" P931 [0.000469] {1}
+S -> P905 P892 "right" "hand" P960 "about" "half" "way" "down" [0.000469] {1}
+S -> P905 P892 "right" "side" P900 [0.000469] {1}
+S -> P905 P892 "upper" P1010 [0.000469] {1}
+S -> P905 P892 "very" "top" "left" "hand" "side" [0.000469] {1}
+S -> P905 P892 "very" P900 [0.000469] {1}
+S -> P905 P892 P949 P943 [0.000469] {1}
+S -> P905 P892 P949 [0.000937] {2}
+S -> P905 P892 P991 "furthest" "away" "from" "me" [0.000469] {1}
+S -> P905 P892 P991 [0.000469] {1}
+S -> P905 P904 "other" P960 "near" "a" "pink" "block" "and" P910 "purple" "block" [0.000469] {1}
+S -> P905 P912 "farthest" P924 P953 [0.000469] {1}
+S -> P905 P912 "furthest" P924 P953 [0.000469] {1}
+S -> P905 P912 "just" P896 P900 "from" "the" "viewer's" "perspective" [0.000469] {1}
+S -> P905 P912 "right" P943 [0.000469] {1}
+S -> P905 P912 P898 P957 "and" "the" P979 [0.000469] {1}
+S -> P905 P912 P974 "circle" [0.000469] {1}
+S -> P905 P920 "behind" "a" P979 "and" P957 [0.000469] {1}
+S -> P905 P920 "midway" P973 [0.000469] {1}
+S -> P905 P923 "right" P1018 "but" "not" "quite" "the" "corner" [0.000469] {1}
+S -> P905 P923 P949 "between" "two" P953 [0.000469] {1}
+S -> P905 P935 "lefthand" "corner" [0.000469] {1}
+S -> P905 P935 P1010 "by" "itself" [0.000469] {1}
+S -> P905 P935 P906 P962 [0.000469] {1}
+S -> P905 P935 P906 P979 [0.000469] {1}
+S -> P905 P935 P928 "rear" [0.000469] {1}
+S -> P905 P935 P928 [0.000469] {1}
+S -> P905 P935 P941 "a" P979 [0.000469] {1}
+S -> P905 P935 P991 "behind" "a" "blue" "cylendar" [0.000469] {1}
+S -> P905 P935 P991 [0.000469] {1}
+S -> P905 P935 [0.002343] {5}
+S -> P905 P964 [0.000469] {1}
+S -> P905 P968 P910 "left" "and" "rear" "sides" P965 [0.000469] {1}
+S -> P905 P968 P910 "left" "hand" P960 [0.000469] {1}
+S -> P905 P970 "red" "ball," P936 "yellow" "blocks," P943 "of" "t" "he" "table" [0.000469] {1}
+S -> P905 P970 "small" "green" "pie" [0.000469] {1}
+S -> P905 P970 "small" P957 [0.000469] {1}
+S -> P905 P970 "sphere" [0.000469] {1}
+S -> P905 P970 P896 "objects," "and" "sitting" P943 [0.000469] {1}
+S -> P905 P970 P962 P931 [0.000469] {1}
+S -> P905 P970 P962 [0.001874] {4}
+S -> P905 P970 P979 P943 P910 "orange," "pink," "and" "maroon" "cubes" [0.000469] {1}
+S -> P905 P970 P979 P943 [0.000469] {1}
+S -> P905 P970 P979 [0.002812] {6}
+S -> P905 P981 "pink" "cuboid" [0.000469] {1}
+S -> P905 P981 P955 [0.000469] {1}
+S -> P912 "above" P955 [0.000469] {1}
+S -> P912 "at" "mid" "point" "of" "top" "side" [0.000469] {1}
+S -> P912 "beside" "green" "rectangle" "and" "front" "of" P957 [0.000469] {1}
+S -> P912 "beside" "green" "rectangle" [0.000469] {1}
+S -> P912 "beside" "the" "green" "rectangle" [0.000469] {1}
+S -> P912 "beside" "the" P957 P943 [0.000469] {1}
+S -> P912 "beside" "the" P986 [0.000469] {1}
+S -> P912 "beside" P957 [0.000469] {1}
+S -> P912 "closest" P943 [0.000937] {2}
+S -> P912 "directly" P910 P966 [0.000469] {1}
+S -> P912 "far" "from" P953 [0.000469] {1}
+S -> P912 "far" P1010 "behind" P953 [0.000469] {1}
+S -> P912 "in" "theleft" P900 [0.000469] {1}
+S -> P912 "second" "last" "from" "end" P949 [0.000469] {1}
+S -> P912 "straight" "to" "square" "box" "which" "is" "purple" P1000 [0.000469] {1}
+S -> P912 "third" P898 "position" [0.000469] {1}
+S -> P912 P898 "yellow" "ball" "object" [0.000469] {1}
+S -> P912 P908 "rectangle's" "left" [0.000469] {1}
+S -> P912 P908 P966 "nore" "than" "half" "way" P973 [0.000469] {1}
+S -> P912 P908 P966 [0.000469] {1}
+S -> P912 P910 "blue" "hockey" "puck" [0.000469] {1}
+S -> P912 P910 P957 [0.000937] {2}
+S -> P912 P917 "green" "box" [0.000469] {1}
+S -> P912 P917 "short" P957 [0.000469] {1}
+S -> P912 P917 "small" "purple" "circle" [0.000469] {1}
+S -> P912 P917 "small" P966 [0.000469] {1}
+S -> P912 P941 P957 [0.000469] {1}
+S -> P912 P943 [0.000469] {1}
+S -> P920 "at" "front" "of" "another" "objects" [0.000469] {1}
+S -> P920 "far" P900 [0.000469] {1}
+S -> P920 "with" "smallest" "cube" [0.000469] {1}
+S -> P920 P900 P928 [0.000469] {1}
+S -> P923 "center" "about" "two-thirds" P973 [0.000469] {1}
+S -> P923 "side" P949 [0.000469] {1}
+S -> P926 "above" "the" "sphere" [0.000469] {1}
+S -> P926 "above" "the" P962 P898 "centre" P965 [0.000469] {1}
+S -> P926 "behind" "a" P962 [0.000469] {1}
+S -> P926 "beside" "circle" [0.000469] {1}
+S -> P926 "central" "to" P955 [0.000469] {1}
+S -> P926 "closest" P931 P928 "side" [0.000469] {1}
+S -> P926 "closest" P943 [0.000937] {2}
+S -> P926 "far" P924 "viewer" [0.000469] {1}
+S -> P926 "last" P928 "corner" "above" "the" "orange" "rectangle" [0.000469] {1}
+S -> P926 "near" "and" P928 [0.000469] {1}
+S -> P926 "near" "you" [0.000469] {1}
+S -> P926 "on" "my" P960 [0.000469] {1}
+S -> P926 "on" "top" P949 [0.000469] {1}
+S -> P926 "very" P898 "bottom" P991 "far" "away" "and" "down" "left" "from" P955 [0.000469] {1}
+S -> P926 P900 "with" "three" P953 P943 "and" "one" "in" "back" [0.000469] {1}
+S -> P926 P906 P962 [0.000469] {1}
+S -> P926 P908 "cube" [0.000937] {2}
+S -> P926 P910 P962 [0.000469] {1}
+S -> P926 P917 P962 "It" P915 P949 [0.000469] {1}
+S -> P926 P917 P986 [0.000469] {1}
+S -> P926 P928 "of" "purple" "square" "number" "three" [0.000469] {1}
+S -> P926 P936 P986 "and" "the" P966 [0.000469] {1}
+S -> P926 P941 "top" P1010 "to" "table" [0.000469] {1}
+S -> P926 P941 "top" P1010 P949 [0.000469] {1}
+S -> P926 P941 P962 "at" "center" [0.000469] {1}
+S -> P926 P941 P979 [0.000469] {1}
+S -> P926 P943 [0.000469] {1}
+S -> P926 P959 "green" "cube" [0.000469] {1}
+S -> P926 P974 "rectangle" [0.000469] {1}
+S -> P926 P978 "back-left" "corner" [0.000469] {1}
+S -> P926 P978 "front-left" "corner" [0.000469] {1}
+S -> P930 P910 "circle" [0.000469] {1}
+S -> P933 P906 P957 [0.000469] {1}
+S -> P933 P928 [0.000469] {1}
+S -> P933 [0.000469] {1}
+S -> P935 "and" P943 [0.000469] {1}
+S -> P935 "by" "itself" [0.000469] {1}
+S -> P935 "far" "from" P898 "objects" [0.000469] {1}
+S -> P935 "slightly" P928 "side" [0.000469] {1}
+S -> P935 P1010 [0.000469] {1}
+S -> P935 P898 "corner" [0.000937] {2}
+S -> P935 P937 "purple" "retangle" [0.000469] {1}
+S -> P935 P949 "approximately" "two" "thirds" P894 "length" "from" "front" "edge," "along" "the" "left" "edge" [0.000469] {1}
+S -> P935 P991 "somewhat" "separated" "from" "the" P953 [0.000469] {1}
+S -> P935 [0.012184] {26}
+S -> P939 "sde" P900 "is" "last" "to" P955 [0.000469] {1}
+S -> P943 "is" "object" "three" "which" "is" "a" "rectagle" "a" "little" "more" P928 [0.000469] {1}
+S -> P946 "back," P917 P986 [0.000469] {1}
+S -> P946 "front" "of" P955 [0.000469] {1}
+S -> P946 "middle" P900 P898 P986 [0.000469] {1}
+S -> P946 "middle" [0.000469] {1}
+S -> P946 P949 [0.000469] {1}
+S -> P946 P986 [0.000469] {1}
+S -> P951 "behind" "green" "block" [0.000469] {1}
+S -> P951 "directly" P917 "wide" "short" "cylinder" [0.000469] {1}
+S -> P951 "little" "away" P898 P914 "center" [0.000469] {1}
+S -> P964 [0.000937] {2}
+S -> P970 P949 [0.000469] {1}
+S -> P975 "center" "of" "this" "the" "nearer" "third" P965 [0.000469] {1}
+S -> P975 "far" "end," "right" "center" "area" P965 [0.000469] {1}
+S -> P975 "far" P1010 [0.000469] {1}
+S -> P975 "far" P991 [0.000937] {2}
+S -> P975 "farther" P900 "," "a" "bit" P928 "side" [0.000469] {1}
+S -> P975 "farthest" "part" P965 [0.000469] {1}
+S -> P975 "farthest" P900 [0.000469] {1}
+S -> P975 "first" "position" P931 [0.000469] {1}
+S -> P975 "line" P936 "first" "and" "second" "third" P965 "just" P898 "small" "purple" "cube" [0.000469] {1}
+S -> P975 "middle," P908 P966 [0.000469] {1}
+S -> P975 "north" P896 "black" "box" [0.000469] {1}
+S -> P975 "opposite" P900 "just" P910 "center" [0.000469] {1}
+S -> P975 "opposite" P900 [0.000469] {1}
+S -> P975 "other" P900 "to" "right" P941 "nothing" [0.000469] {1}
+S -> P975 "rear" P900 P910 "small" P966 [0.000469] {1}
+S -> P975 "right" P949 [0.000469] {1}
+S -> P975 "top" "part" P965 "mid-right" "section" [0.000469] {1}
+S -> P975 "top" "right" "hand" "corner" [0.000469] {1}
+S -> P975 "top" "right" "hand" "side" [0.000469] {1}
+S -> P975 "top" P1010 [0.000469] {1}
+S -> P975 "top" P991 [0.000937] {2}
+S -> P975 "upper" "right" "hand" P900 "about" "one-third" P949 "width" "from" "the" "far" "edge," "and" "one-third" P965 "width" "from" "the" "right" "edge" [0.000469] {1}
+S -> P975 "upper" "right-hand" P900 [0.000469] {1}
+S -> P975 "upper" P896 "screen" [0.000469] {1}
+S -> P975 "upper" P949 "between" "two" "purple" "cubes" [0.000469] {1}
+S -> P975 "upper" P949 [0.000469] {1}
+S -> P975 "upper" P991 [0.000937] {2}
+S -> P975 "very" P900 "about" "halfway" P936 "center" "and" "right" "hand" "side" [0.000469] {1}
+S -> P975 "very" P900 "behind" P955 [0.000469] {1}
+S -> P975 P1018 P943 [0.000469] {1}
+S -> P975 P1018 P978 "corner" "and" P902 "yellow" "rectangular" "box" [0.000469] {1}
+S -> P975 P1035 "above" "two" P894 "purple" "cubes" [0.000469] {1}
+S -> P975 P1035 [0.000469] {1}
+S -> P975 P896 "farther" "third" P965 [0.000469] {1}
+S -> P975 P896 "group" "of" "objects" [0.000469] {1}
+S -> P975 P896 "objects" [0.000937] {2}
+S -> P975 P914 "purple" "marble" "toward" "the" P900 [0.000469] {1}
+S -> P975 P914 P966 [0.000469] {1}
+S -> P975 P949 "and" "a" "bit" P928 [0.000469] {1}
+S -> P975 P949 P898 "small" P957 [0.000469] {1}
+S -> P975 P949 P910 P957 [0.000469] {1}
+S -> P975 P949 [0.001406] {3}
+S -> P975 P991 [0.001406] {3}
+S -> P977 "corner" [0.000469] {1}
+S -> P977 P900 [0.002343] {5}
+S -> P981 "cylinder," P941 "it," P937 "parallelepipeds" [0.000469] {1}
+S -> P984 "almost" P943 [0.000469] {1}
+S -> P984 "behind" P902 "ball" [0.000469] {1}
+S -> P984 "beside" "the" "sphere" [0.000469] {1}
+S -> P984 "beside" P902 "ball" [0.000469] {1}
+S -> P984 "beyond" "a" P957 [0.000469] {1}
+S -> P984 "blue" P1000 [0.000469] {1}
+S -> P984 "center," "slightly" P928 [0.000469] {1}
+S -> P984 "close" P898 "yellow" "circle" [0.000469] {1}
+S -> P984 "close" P943 "near" P902 "cube" [0.000469] {1}
+S -> P984 "closer" "to" "me" "than" P955 [0.000469] {1}
+S -> P984 "directly" P928 "of" "green" "cuboid" [0.000469] {1}
+S -> P984 "farthest" "from" "the" "viewer," P941 "a" "ball" [0.000469] {1}
+S -> P984 "furthest" "away" "from" "my" "perspective" P943 [0.000469] {1}
+S -> P984 "furthest" P928 [0.000469] {1}
+S -> P984 "furthust" "from" "me" "relative" P955 "and" P943 [0.000469] {1}
+S -> P984 "in" "placed" P931 "with" "others" "cubes" [0.000469] {1}
+S -> P984 "just" "below" "and" P910 P900 [0.000469] {1}
+S -> P984 "just" P896 P900 [0.000469] {1}
+S -> P984 "just" P898 "yellow" "sphere" [0.000469] {1}
+S -> P984 "just" P910 "orange" "wheel-shaped" "object" P943 [0.000469] {1}
+S -> P984 "long" P898 "sides" "with" "short" "width" [0.000469] {1}
+S -> P984 "middle" "of" "table," "slightly" "left" "side" [0.000469] {1}
+S -> P984 "near" "a" "cube" P928 P900 [0.000469] {1}
+S -> P984 "near" "another" "cylinder" P928 P991 [0.000469] {1}
+S -> P984 "near" P902 "sphere" [0.000469] {1}
+S -> P984 "near" P905 "cylinder" [0.000469] {1}
+S -> P984 "not" "far" "from" "the" P1010 "a" "little" "ways" "up" [0.000469] {1}
+S -> P984 "on" P900 P1004 [0.000469] {1}
+S -> P984 "present" P943 [0.000469] {1}
+S -> P984 "right" "beside" "the" "half" "circle" P928 "side" [0.000469] {1}
+S -> P984 "second" "from" "the" "back" [0.000469] {1}
+S -> P984 "slightly" P910 "picture" [0.000469] {1}
+S -> P984 "the" "farthest" "away" P931 [0.000469] {1}
+S -> P984 "touching" P898 "small" P957 P943 [0.000469] {1}
+S -> P984 "very" "nearer" P943 [0.000469] {1}
+S -> P984 P1004 P931 [0.000469] {1}
+S -> P984 P1004 [0.000937] {2}
+S -> P984 P898 "yellow" "circle" [0.000469] {1}
+S -> P984 P898 "yellow" "sphere" [0.000469] {1}
+S -> P984 P906 "large" "brown" "cylinder" [0.000469] {1}
+S -> P984 P908 "block," "most" P894 "way" P973 [0.000469] {1}
+S -> P984 P917 "green" "rectangle" [0.000469] {1}
+S -> P984 P917 "yellow" "ball," "further" "away" "than" P955 [0.000469] {1}
+S -> P984 P917 "yellow" "sphere" [0.000469] {1}
+S -> P984 P917 P957 [0.000937] {2}
+S -> P984 P936 "3" "cylinders" [0.000469] {1}
+S -> P984 P936 "center" "and" P949 [0.000469] {1}
+S -> P984 P937 P955 "when" "you" "face" "the" "table" [0.000469] {1}
+S -> P984 P937 P955 [0.000469] {1}
+S -> P984 P941 "both" "a" "cylinder" "and" "a" "box" [0.000469] {1}
+S -> P984 P941 P905 "cyllinder" P943 [0.000469] {1}
+S -> P984 P943 "right" [0.000469] {1}
+S -> P984 P955 [0.000469] {1}
+S -> P984 P959 P905 "cylinder" P943 [0.000469] {1}
+S -> P984 P974 "block" [0.000469] {1}
+S -> P984 P974 "cube" [0.000469] {1}
+S -> P984 P978 "left-back" "corner" [0.000469] {1}
+S -> P984 P978 "yellow" "sphere" "and" "farthest" P924 "purple" "cube" [0.000469] {1}
+S -> P984 P978 P957 [0.000469] {1}
+S -> P993 "," "round" "shape" P930 "on" P1035 [0.000469] {1}
+S -> P993 "and" "cubic" P890 P943 [0.000469] {1}
+S -> P993 "and" "cubic" P912 "farthest" P898 "screen" [0.000469] {1}
+S -> P993 "is" "at" "extreme" P900 "alone" [0.000469] {1}
+S -> P993 "is" "nearest" P898 "screen" [0.000469] {1}
+S -> P998 "black" "table" P941 "another" "brown" "cylinder," "along" "with" "a" "blue" "cylinder," "and" "green" "and" "brown" "rectangles" [0.000469] {1}
+S -> P998 "black" "table," P928 P1010 [0.000469] {1}
+S -> P998 "blue" "short" "cylindre" [0.000469] {1}
+S -> P998 "cylinder" "and" "a" "sphere" [0.000469] {1}
+S -> P998 "disk" "and" "a" "block" [0.000469] {1}
+S -> P998 "larger" "orange" "disk" "and" P902 "block" [0.000469] {1}
+S -> P998 "table" P898 "center" "it" P1038 P910 "blue" "cylendar" [0.000469] {1}
+S -> P998 P962 "and" "green" "cube" [0.000469] {1}
+S -> P998 P962 "and" P957 [0.000469] {1}
+S -> P998 P962 [0.000469] {1}
+S -> P998 P966 P943 [0.000469] {1}
+S -> P999 "violet" P890 P941 "mid" "point" [0.000469] {1}
+S -> P999 P926 "almost" P898 P1035 P898 P949 [0.000469] {1}
