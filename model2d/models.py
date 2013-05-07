@@ -510,7 +510,8 @@ class CProduction(Base):
     count = Column(Float, nullable=False, default=0)
 
     def __unicode__(self):
-        return u'%s -> %s (%s)' % (self.lhs, self.rhs, self.count)
+        # return u'%s -> %s (%s)' % (self.lhs, self.rhs, self.count)
+        return u'[%d] %s -> %s p=[%s] lmk=[%s %s %s] rel=[%s %s %s]' % (self.count, self.lhs, self.rhs, self.parent, self.landmark_class, self.landmark_color, self.landmark_orientation_relations, self.relation, self.relation_degree_class, self.relation_distance_class)
 
     @classmethod
     def get_production_counts(cls,
@@ -545,6 +546,44 @@ class CProduction(Base):
             q = q.filter(CProduction.relation_degree_class==deg_class)
 
         return q
+
+    @classmethod
+    def get_productions_context(cls,
+                                lhs=None,
+                                rhs=None,
+                                parent=None,
+                                relation=None,
+                                relation_distance_class=None,
+                                relation_degree_class=None,
+                                landmark_class=None,
+                                landmark_color=None,
+                                landmark_orientation_relations=None,
+                                golden=False):
+        q = cls.query(CProduction.lhs,
+                      CProduction.rhs,
+                      CProduction.parent,
+                      CProduction.relation,
+                      CProduction.relation_distance_class,
+                      CProduction.relation_degree_class,
+                      CProduction.landmark_class,
+                      CProduction.landmark_color,
+                      CProduction.landmark_orientation_relations,
+                      func.sum(CProduction.count).label('count'),
+                      golden=golden)
+
+        if lhs is not None: q = q.filter(CProduction.lhs==lhs)
+        if rhs is not None: q = q.filter(CProduction.rhs==rhs)
+        if parent is not None: q = q.filter(CProduction.parent==parent)
+        if relation is not None: q = q.filter(CProduction.relation==relation)
+        if relation_distance_class is not None: q = q.filter(CProduction.relation_distance_class==relation_distance_class)
+        if relation_degree_class is not None: q = q.filter(CProduction.relation_degree_class==relation_degree_class)
+        if landmark_class is not None: q = q.filter(CProduction.landmark_class==landmark_class)
+        if landmark_color is not None: q = q.filter(CProduction.landmark_color==landmark_color)
+        if landmark_orientation_relations is not None: q = q.filter(CProduction.landmark_orientation_relations==landmark_orientation_relations)
+        q = q.group_by(CProduction.rhs, CProduction.parent)
+        q = q.order_by('count DESC')
+
+        return q.all()
 
     @classmethod
     def get_production_sum(cls,
@@ -586,7 +625,7 @@ class CProduction(Base):
         return q.scalar()
 
     @classmethod
-    def get_entropy_ratio(cls, lhs, rhs, column, golden=False, verbose=False):
+    def get_entropy_ratio(cls, lhs, rhs, column, parent=None, golden=False, verbose=False):
         if verbose: print 'Calculating entropy ratio for %s column' % column
 
         # column entropy unconditinal
@@ -616,20 +655,24 @@ class CProduction(Base):
         # column entropy conditioned on lhs and rhs
         q = cls.query(CProduction.lhs,
                       CProduction.rhs,
+                      CProduction.parent,
                       column,
                       func.sum(CProduction.count).label('count'),
                       golden=golden) \
                 .filter(CProduction.lhs==lhs) \
                 .filter(column!=None) \
-                .filter(column!=',,,') \
-                .group_by(column)
+                .filter(column!=',,,')
 
-        if rhs is not None: q.filter(CProduction.rhs==rhs)
+        if rhs is not None: q = q.filter(CProduction.rhs==rhs)
+        if parent is not None: q = q.filter(CProduction.parent==parent)
+
+        q = q.group_by(column, CProduction.parent)
+
         q.all()
 
         cond_entropy = 0
         cond_sum = sum([res.count for res in q])
-        if verbose: print 'total count (conditioned on lhs and rhs):', cond_sum
+        if verbose: print 'total count (conditioned on lhs: %s, rhs: %s and parent: %s):' % (lhs,rhs,parent), cond_sum
 
         for prod in q:
             p = prod.count / cond_sum
@@ -640,7 +683,192 @@ class CProduction(Base):
         if cond_sum == 0: ratio = max_entropy
 
         if verbose:
-            print 'column entropy (conditioned on lhs and rhs):', cond_entropy
+            print 'column entropy (conditioned on lhs: %s, rhs: %s and parent: %s):' % (lhs,rhs,parent), cond_entropy
+            print 'RATIO:', ratio
+
+        return ratio
+
+
+    @classmethod
+    def get_entropy_ratio_sample_dependent(cls, lhs, rhs, column, parent=None, golden=False, verbose=False):
+
+        def laplace_estimator(f, N, n):
+            return (N * f + 1) / float( N + n)
+
+        def entropy(N, ps, worst_ps):
+            nom = [laplace_estimator( f, N, len(ps) ) * ( 1 - laplace_estimator( f, N, len(ps) ) )  for f in ps]
+            denom = [ (-2 * w + 1) * laplace_estimator(w, N, len(worst_ps) ) + w * 2 for w in worst_ps]
+            return sum([ni / denomi for ni,denomi in zip(nom, denom)])
+
+        if verbose: print 'Calculating entropy ratio for %s column' % column
+
+        # column entropy unconditinal
+        z = cls.query(CProduction.lhs,
+                      CProduction.rhs,
+                      column,
+                      func.sum(CProduction.count).label('count'),
+                      golden=golden) \
+                .filter(column!=None) \
+                .filter(column!=',,,') \
+                .group_by(column) \
+                .all()
+
+
+        attr_idx = str(column).find('.')+1
+        attr_name = str(column)[attr_idx:]
+        z_cols = [getattr(row, attr_name) for row in z]
+        z_counts = [row.count for row in z]
+
+        # column entropy conditioned on lhs and rhs
+        q = cls.query(CProduction.lhs,
+                      CProduction.rhs,
+                      CProduction.parent,
+                      column,
+                      func.sum(CProduction.count).label('count'),
+                      golden=golden) \
+                .filter(CProduction.lhs==lhs) \
+                .filter(column!=None) \
+                .filter(column!=',,,')
+
+        if rhs is not None: q = q.filter(CProduction.rhs==rhs)
+        if parent is not None: q = q.filter(CProduction.parent==parent)
+
+        q = q.group_by(column, CProduction.parent)
+        q.all()
+
+        q_cols = [getattr(row, attr_name) for row in q]
+        q_counts = [row.count for row in q]
+
+        q_c = [1e-6] * len(z_counts)
+
+        for col,count in zip(q_cols, q_counts):
+            try:
+                index = z_cols.index(col)
+                q_c[index] = count
+            except:
+                pass
+
+        return entropy(sum(q_c), [c/float(sum(q_c)) for c in q_c], [c/float(sum(z_counts)) for c in z_counts])
+
+
+    @classmethod
+    def get_probability(cls, lhs, rhs, column, column_value, parent=None, golden=False, verbose=False):
+        q = cls.query(CProduction.lhs,
+                      CProduction.rhs,
+                      CProduction.parent,
+                      column,
+                      func.sum(CProduction.count).label('count'),
+                      golden=golden) \
+                .filter(CProduction.lhs==lhs) \
+                .filter(column!=None) \
+                .filter(column!=',,,')
+
+        if rhs is not None: q = q.filter(CProduction.rhs==rhs)
+        if parent is not None: q = q.filter(CProduction.parent==parent)
+
+        q = q.group_by(column, CProduction.parent)
+        q = q.order_by('count desc')
+        q.all()
+
+        attr_idx = str(column).find('.')+1
+        attr_name = str(column)[attr_idx:]
+
+        # q_sum = sum([row.count for row in q])
+
+        for row in q:
+            if getattr(row, attr_name) == column_value:
+                return row.count#/float(q_sum)
+
+        return 0
+        # q_probs = [float(row.count)/q_sum for row in q]
+        # q_prods = [(row.lhs,row.rhs,row.parent,getattr(row, attr_name)) for row in q]
+        # return zip(q_probs, q_prods)
+
+
+
+    @classmethod
+    def get_entropy_ratio_full_context(cls,
+                                       lhs,
+                                       rhs,
+                                       column,
+                                       parent=None,
+                                       lmk_class=None,
+                                       lmk_ori_rels=None,
+                                       lmk_color=None,
+                                       rel=None,
+                                       dist_class=None,
+                                       deg_class=None,
+                                       golden=False,
+                                       verbose=False):
+        if verbose: print 'Calculating entropy ratio for %s column' % column
+
+        # column entropy unconditinal
+        z = cls.query(CProduction.lhs,
+                      CProduction.rhs,
+                      column,
+                      func.sum(CProduction.count).label('count'),
+                      golden=golden) \
+                .filter(column!=None) \
+                .filter(column!=',,,') \
+                .group_by(column) \
+                .all()
+
+        max_entropy = 0
+        max_sum = sum([prod.count for prod in z])
+        if verbose: print 'total count (unconditional):', max_sum
+
+        for prod in z:
+            p = prod.count / max_sum
+            max_entropy -= p * math.log(p)
+            if verbose: print prod
+
+        if verbose:
+            print 'column entropy (unconditional):', max_entropy
+            print '*'*70
+
+        # column entropy conditioned on lhs and rhs
+        q = cls.query(CProduction.lhs,
+                      CProduction.rhs,
+                      CProduction.parent,
+                      CProduction.landmark_class,
+                      CProduction.landmark_color,
+                      CProduction.landmark_orientation_relations,
+                      CProduction.relation,
+                      CProduction.relation_degree_class,
+                      CProduction.relation_distance_class,
+                      column,
+                      func.sum(CProduction.count).label('count'),
+                      golden=golden) \
+                .filter(CProduction.lhs==lhs) \
+                .filter(column!=None) \
+                .filter(column!=',,,') \
+                .group_by(column, CProduction.parent)
+
+        if rhs is not None: q = q.filter(CProduction.rhs==rhs)
+        if parent is not None: q = q.filter(CProduction.parent==parent)
+        if lmk_class is not None: q = q.filter(CProduction.landmark_class==lmk_class)
+        if lmk_color is not None: q = q.filter(CProduction.landmark_color==lmk_color)
+        if lmk_ori_rels is not None: q = q.filter(CProduction.landmark_orientation_relations==lmk_ori_rels)
+        if rel is not None: q = q.filter(CProduction.relation==rel)
+        if deg_class is not None: q = q.filter(CProduction.relation_degree_class==deg_class)
+        if dist_class is not None: q = q.filter(CProduction.relation_distance_class==dist_class)
+
+        q.all()
+
+        cond_entropy = 0
+        cond_sum = sum([res.count for res in q])
+        if verbose: print 'total count (conditioned on lhs: %s, rhs: %s and parent: %s):' % (lhs,rhs,parent), cond_sum
+
+        for prod in q:
+            p = prod.count / cond_sum
+            cond_entropy -= p * math.log(p)
+            if verbose: print prod
+
+        ratio = cond_entropy / max_entropy
+        if cond_sum == 0: ratio = max_entropy
+
+        if verbose:
+            print 'column entropy (conditioned on lhs: %s, rhs: %s and parent: %s):' % (lhs,rhs,parent), cond_entropy
             print 'RATIO:', ratio
 
         return ratio
@@ -651,11 +879,7 @@ class CProduction(Base):
         if group_by_rhs: groupby.append(CProduction.rhs)
         if group_by_parent: groupby.append(CProduction.parent)
 
-        q = cls.query(CProduction.lhs,
-                      CProduction.rhs,
-                      CProduction.parent,
-                      golden=golden) \
-                .group_by(*groupby)
+        q = cls.query(golden=golden).group_by(*groupby)
 
         return q.all()
 

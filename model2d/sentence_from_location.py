@@ -13,6 +13,7 @@ from utils import (get_meaning,
                    get_lmk_ori_rels_str,
                    get_landmark_parent_chain,
                    logger,
+                   ngrams,
                    is_nonterminal,
                    NONTERMINALS)
 
@@ -32,6 +33,7 @@ from semantics.representation import (
 
 
 import parse_adios
+import parse_bllip
 from nltk.tree import ParentedTree
 from myrandom import random
 random = random.random
@@ -297,6 +299,7 @@ def train(meaning, sentence, update=1, printing=False):
 
     try:
         modparse = parse_adios.parse(sentence)
+        # modparse = parse_bllip.parse(sentence)
     except Exception as pe:
         logger('Failed to parse sentence "%s"' % sentence, 'warning')
         logger(str(pe), 'warning')
@@ -308,11 +311,14 @@ def train(meaning, sentence, update=1, printing=False):
               update=update,
               printing=printing)
 
+space_join = ' '.join
+
 def train_rec(tree, parent=None, lmks=None, rel=None, update=1, printing=False):
     if isinstance(tree, ParentedTree):
         for lmk in lmks:
             lhs = tree.node
-            rhs = ' '.join(n.node if isinstance(n, ParentedTree) else n for n in tree)
+            rhs = space_join(n.node if isinstance(n, ParentedTree) else n for n in tree)
+            lmk_ori_rels = get_lmk_ori_rels_str(lmk)
 
             # check if this version of nltk uses a function for parent
             if hasattr( tree.parent, '__call__' ):
@@ -320,14 +326,30 @@ def train_rec(tree, parent=None, lmks=None, rel=None, update=1, printing=False):
             else:
                 parent = tree.parent.node if tree.parent else None
 
-            update_expansion_counts(update=update,
-                                    lhs=lhs,
-                                    rhs=rhs,
-                                    parent=parent,
-                                    lmk_class=lmk.object_class,
-                                    lmk_ori_rels=get_lmk_ori_rels_str(lmk),
-                                    lmk_color=lmk.color,
-                                    rel=rel)
+            if lhs == 'S':
+                tokens = rhs.split()
+                ngram_list = ngrams(tokens)
+
+                for ngram in ngram_list:
+                    update_expansion_counts(update=update,
+                                            lhs=lhs,
+                                            rhs=space_join(ngram),
+                                            parent=parent,
+                                            lmk_class=lmk.object_class,
+                                            lmk_ori_rels=lmk_ori_rels,
+                                            lmk_color=lmk.color,
+                                            rel=rel)
+            else:
+                update_expansion_counts(update=update,
+                                        lhs=lhs,
+                                        rhs=rhs,
+                                        parent=parent,
+                                        lmk_class=lmk.object_class,
+                                        lmk_ori_rels=lmk_ori_rels,
+                                        lmk_color=lmk.color,
+                                        rel=rel)
+
+
 
             for subtree in tree:
                 train_rec(tree=subtree, parent=parent, lmks=lmks, rel=rel, printing=printing)

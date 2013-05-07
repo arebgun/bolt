@@ -29,6 +29,18 @@ def is_nonterminal(s):
     if re.match(r'(E\d+)', s): return True
     return False
 
+def ngrams(tokens):
+    result = []
+
+    n_tokens = len(tokens)
+    min_n = 1
+    max_n = n_tokens
+    for i in range(n_tokens):
+        for j in range(i + min_n, min(n_tokens, i + max_n) + 1):
+            result.append( tokens[i:j] )
+
+    return result
+
 class printcolors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
@@ -274,9 +286,9 @@ def logger(msg, color=''):
 # of start and end tokens ('<s>' and '</s>' by default)
 # `tokens` is a list of tokens which could be strings (words)
 # or objects like `models.Word`
-def ngrams(tokens, n, start_tk='<s>', end_tk='</s>'):
+def ngrams_old(tokens, n, start_tk='<s>', end_tk='</s>'):
     tokens = [start_tk] * (n-1) + tokens + [end_tk] * (n>1)
     return [tuple(tokens[i:i+n]) for i in xrange(len(tokens)-n+1)]
 
-bigrams = partial(ngrams, n=2)
-trigrams = partial(ngrams, n=3)
+bigrams = partial(ngrams_old, n=2)
+trigrams = partial(ngrams_old, n=3)

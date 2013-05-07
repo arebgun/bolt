@@ -11,12 +11,19 @@ import models
 from models import Location, Production, CProduction, SentenceParse, session
 
 import utils
-from utils import get_landmark_parent_chain, rel_type, lmk_id, get_lmk_ori_rels_str, logger
+from utils import get_landmark_parent_chain
+from utils import rel_type
+from utils import lmk_id
+from utils import get_lmk_ori_rels_str
+from utils import logger
+from utils import ngrams
 
-import parse_adios
+from parse_adios import parse as parse_adios
+from parse_bllip import parse as parse_bllip
 from semantics.run import construct_training_scene
 from semantics.landmark import Landmark
 from semantics.representation import PointRepresentation
+from semantics.speaker import Speaker
 
 from myrandom import random
 random = random.random
@@ -46,6 +53,23 @@ def save_tree(tree, loc, rel, lmks, parent=None):
             prod.landmark_orientation_relations = get_lmk_ori_rels_str(lmk)
             prod.landmark_color = lmk.color
 
+            if prod.lhs == 'S':
+                tokens = prod.rhs.split()
+                ngram_list = ngrams(tokens)
+
+                for ngram in ngram_list:
+                    s_ngram = Production()
+                    s_ngram.lhs = prod.lhs
+                    s_ngram.rhs = ' '.join(ngram)
+                    s_ngram.parent = prod.parent
+                    s_ngram.location = prod.location
+                    s_ngram.relation_distance_class = prod.relation_distance_class
+                    s_ngram.relation_degree_class = prod.relation_degree_class
+                    s_ngram.landmark = prod.landmark
+                    s_ngram.landmark_class = prod.landmark_class
+                    s_ngram.landmark_orientation_relations = prod.landmark_orientation_relations
+                    s_ngram.landmark_color = prod.landmark_color
+
             # save subtrees, keeping track of parent
             for subtree in tree:
                 save_tree(subtree, loc, rel, lmks, prod)
@@ -65,34 +89,37 @@ if __name__ == '__main__':
     unique_sentences = {}
     num_failed = 0
     syms = ['\\', '|', '/', '-']
+    console_write = sys.stdout.write
+    console_flush = sys.stdout.flush
+    describe_trajector = Speaker.describe
 
     for i in range(args.num_sentences):
         if (i % args.num_per_scene) == 0:
-            if i != 0: sys.stdout.write('\bDone.\n')
-            sys.stdout.write('Generating sentences for scene %d:  ' % (int(i/args.num_per_scene) + 1))
+            if i != 0: console_write('\bDone.\n')
+            console_write('Generating sentences for scene %d:  ' % (int(i/args.num_per_scene) + 1))
             num_objects = int(random() * (args.max_objects - args.min_objects) + args.min_objects)
             scene, speaker = construct_training_scene(random=True, num_objects=num_objects)
             utils.scene.set_scene(scene, speaker)
             table = scene.landmarks['table'].representation.rect
+            t_min = table.min_point
+            t_max = table.max_point
+            t_w = table.width
+            t_h = table.height
 
-        sys.stdout.write("\b%s" % syms[i % len(syms)])
-        sys.stdout.flush()
-
-        t_min = table.min_point
-        t_max = table.max_point
-        t_w = table.width
-        t_h = table.height
+        console_write("\b%s" % syms[i % len(syms)])
+        console_flush()
 
         # generate a random location and generate a sentence describing it
         xloc, yloc = random() * t_w + t_min.x, random() * t_h + t_min.y
-        trajector = Landmark('point', PointRepresentation( Vec2(xloc,yloc) ), None, Landmark.POINT)
-        sentence, rel, lmk = speaker.describe(trajector, scene, False, 1)
+        trajector = Landmark('point', PointRepresentation( Vec2(xloc, yloc) ), None, Landmark.POINT)
+        sentence, rel, lmk = describe_trajector(speaker, trajector, scene, False, 1)
 
         try:
-            parsestring = parse_adios.parse(sentence)
+            # parsestring = parse_adios(sentence)
+            parsestring = parse_bllip(sentence)
         except Exception as pe:
-            sys.stdout.write('\b\n')
-            sys.stdout.flush()
+            console_write('\b\n')
+            console_flush()
             logger('Failed to parse sentence "%s"' % sentence, 'warning')
             logger(str(pe), 'warning')
             num_failed += 1
@@ -116,7 +143,7 @@ if __name__ == '__main__':
 
         if i % 200 == 0: session.commit()
 
-    sys.stdout.write('\bDone.\n')
+    console_write('\bDone.\n')
 
     if SentenceParse.query().count() == 0:
         for sentence, parse in unique_sentences.items():
