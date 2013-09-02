@@ -46,6 +46,9 @@ import shelve
 
 from semantics.language_generator import describe
 from parse import ParseError
+import pprint
+pp = pprint.PrettyPrinter(indent=4)
+np.set_printoptions(threshold='nan')
 # import IPython
 # IPython.embed()
 
@@ -264,8 +267,8 @@ def autocorrect(scene_descs, test_scene_descs, turk_answers, tag='', chunksize=5
 
         scene = scene_desc['scene']
         speaker = scene_desc['speaker']
-        assert(scene == test_scene_desc['scene'])
-        assert(speaker == test_scene_desc['speaker'])
+        # assert(scene == test_scene_desc['scene'])
+        # assert(speaker == test_scene_desc['speaker'])
 
         utils.scene.set_scene(scene,speaker)
         scene_bb = scene.get_bounding_box()
@@ -290,6 +293,11 @@ def autocorrect(scene_descs, test_scene_descs, turk_answers, tag='', chunksize=5
         object_meaning_applicabilities = {}
         for obj_lmk, ms, heatmapss in loi_infos:
             for m,(h1,h2) in zip(ms, heatmapss):
+                if np.isnan(h1).any():
+                    print h1
+                    print m2s(*m)
+                    print
+                    raw_input('testing_testing.py: line 300')
                 ps = [p for (x,y),p in zip(list(product(xs,ys)),h1) if obj_lmk.representation.contains_point( Vec2(x,y) )]
                 if m not in object_meaning_applicabilities:
                     object_meaning_applicabilities[m] = {}
@@ -297,6 +305,9 @@ def autocorrect(scene_descs, test_scene_descs, turk_answers, tag='', chunksize=5
 
         k = len(loi)
         for meaning_dict in object_meaning_applicabilities.values():
+            # if np.isnan(meaning_dict.values()).any():
+            #     print meaning_dict.values()
+            #     raw_input()
             total = sum( meaning_dict.values() )
             if total != 0:
                 for obj_lmk in meaning_dict.keys():
@@ -314,6 +325,9 @@ def autocorrect(scene_descs, test_scene_descs, turk_answers, tag='', chunksize=5
                 sorted_meaning_lists[obj_lmk].append( (object_meaning_applicabilities[m][obj_lmk], m) )
         for obj_lmk in sorted_meaning_lists.keys():
             sorted_meaning_lists[obj_lmk].sort(reverse=True)
+
+        # pp.pprint(sorted_meaning_lists)
+        # raw_input()
 
         together = zip(scene_desc['lmks'],scene_desc['loc_descs'],scene_desc['ids'])
         n = int(ceil(len(together)/float(processors_per_scene)))

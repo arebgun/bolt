@@ -142,7 +142,7 @@ def get_tree_probs(tree, lmk=None, rel=None, default_prob=0.001, default_ent=100
         else:
             if printing: logger('Expanded %s (lmk_class: %s, lmk_ori_rels: %s, lmk_color: %s, rel: %s, dist_class: %s, deg_class: %s)' % (lhs, lmk_class, lmk_ori_rels, lmk_color, rel_class, dist_class, deg_class))
 
-            ckeys, ccounts = zip(*[(cword.word,cword.count) for cword in cw_db.all()])
+            # ckeys, ccounts = zip(*[(cword.word,cword.count) for cword in cw_db.all()])
 
             ccounter = {}
             for cword in cw_db.all():
@@ -170,6 +170,145 @@ def get_tree_probs(tree, lmk=None, rel=None, default_prob=0.001, default_ent=100
         term_prods.append( (lhs, rhs, lmk, rel) )
 
     return prob_chain, entropy_chain, lhs_rhs_parent_chain, term_prods
+
+def get_tree_probs2(tree, lmk=None, rel=None, default_prob=0.001, default_ent=1000, golden=False, printing=True):
+
+    lhs_rhs_parent_chain = []
+    prob_chain = []
+    entropy_chain = []
+    term_prods = []
+
+    lhs = tree.node
+
+    if isinstance(tree[0], ParentedTree): rhs = ' '.join(n.node for n in tree)
+    else: rhs = ' '.join(n for n in tree)
+
+    # check if this version of nltk uses a function for parent
+    if hasattr( tree.parent, '__call__' ):
+        parent = tree.parent().node if tree.parent() else None
+    else:
+        parent = tree.parent.node if tree.parent else None
+
+    if lhs == 'RELATION':
+        # everything under a RELATION node should ignore the landmark
+        lmk = None
+
+    if lhs == 'LANDMARK-PHRASE':
+        # everything under a LANDMARK-PHRASE node should ignore the relation
+        rel = None
+
+    if lhs == parent == 'LANDMARK-PHRASE':
+        # we need to move to the parent landmark
+        lmk = parent_landmark(lmk)
+
+    lmk_class = (lmk.object_class if lmk and lhs != 'LOCATION-PHRASE' else None)
+    lmk_ori_rels = get_lmk_ori_rels_str(lmk) if lhs != 'LOCATION-PHRASE' else None
+    lmk_color = (lmk.color if lmk and lhs != 'LOCATION-PHRASE' else None)
+    rel_class = rel_type(rel) if lhs != 'LOCATION-PHRASE' else None
+    dist_class = (rel.measurement.best_distance_class if hasattr(rel, 'measurement') and lhs != 'LOCATION-PHRASE' else None)
+    deg_class = (rel.measurement.best_degree_class if hasattr(rel, 'measurement') and lhs != 'LOCATION-PHRASE' else None)
+
+    if lhs in NONTERMINALS:
+        cp_db = CProduction.get_production_counts(lhs=lhs,
+                                                  parent=parent,
+                                                  lmk_class=lmk_class,
+                                                  lmk_ori_rels=lmk_ori_rels,
+                                                  lmk_color=lmk_color,
+                                                  rel=rel_class,
+                                                  dist_class=dist_class,
+                                                  deg_class=deg_class,
+                                                  golden=golden)
+
+        if cp_db.count() <= 0:
+            if printing: logger('Could not expand %s (parent: %s, lmk_class: %s, lmk_ori_rels: %s, lmk_color: %s, rel: %s, dist_class: %s, deg_class: %s)' % (lhs, parent, lmk_class, lmk_ori_rels, lmk_color, rel_class, dist_class, deg_class))
+            prob_chain.append( default_prob )
+            entropy_chain.append( default_ent )
+        else:
+            ckeys, ccounts = zip(*[(cprod.rhs,cprod.count) for cprod in cp_db.all()])
+            if printing: logger('Expanded %s (parent: %s, lmk_class: %s, lmk_ori_rels: %s, lmk_color: %s, rel: %s, dist_class: %s, deg_class: %s)' % (lhs, parent, lmk_class, lmk_ori_rels, lmk_color, rel_class, dist_class, deg_class))
+
+            ccounter = {}
+            for cprod in cp_db.all():
+                if cprod.rhs in ccounter: ccounter[cprod.rhs] += cprod.count
+                else: ccounter[cprod.rhs] = cprod.count + 1
+
+            # we have never seen this RHS in this context before
+            if rhs not in ccounter: ccounter[rhs] = 1
+
+            ckeys, ccounts = zip(*ccounter.items())
+
+            # add 1 smoothing
+            ccounts = np.array(ccounts, dtype=float)
+            ccount_probs = ccounts / ccounts.sum()
+            cprod_entropy = -np.sum( (ccount_probs * np.log(ccount_probs)) )
+            cprod_prob = ccounter[rhs]/ccounts.sum()
+
+            # logger('ckeys: %s' % str(ckeys))
+            # logger('ccounts: %s' % str(ccounts))
+            # logger('rhs: %s, cprod_prob: %s, cprod_entropy: %s' % (rhs, cprod_prob, cprod_entropy))
+
+            # prob_chain.append( cprod_prob )
+            prob_chain.append( cprod_prob )#**0.125 )
+            entropy_chain.append( cprod_entropy )
+
+        lhs_rhs_parent_chain.append( ( parent, lhs, rhs, lmk, rel, lmk_class, lmk_ori_rels, lmk_color, rel_class, dist_class, deg_class ) )
+
+        for subtree in tree:
+            pc, ec, lrpc, tps = get_tree_probs2(subtree, lmk, rel, default_prob, default_ent, golden=golden, printing=printing)
+            prob_chain.extend( pc )
+            entropy_chain.extend( ec )
+            lhs_rhs_parent_chain.extend( lrpc )
+            term_prods.extend( tps )
+
+    else:
+        cw_db = CWord.get_word_counts(pos=lhs,
+                                      lmk_class=lmk_class,
+                                      lmk_ori_rels=lmk_ori_rels,
+                                      lmk_color=lmk_color,
+                                      rel=rel_class,
+                                      rel_dist_class=dist_class,
+                                      rel_deg_class=deg_class,
+                                      golden=golden)
+
+        if cw_db.count() <= 0:
+            # we don't know the probability or entropy values for the context we have never seen before
+            # we just update the term_prods list
+            if printing: logger('Could not expand %s (lmk_class: %s, lmk_ori_rels: %s, lmk_color: %s, rel: %s, dist_class: %s, deg_class: %s)' % (lhs, lmk_class, lmk_ori_rels, lmk_color, rel_class, dist_class, deg_class))
+            prob_chain.append( default_prob )
+            entropy_chain.append( default_ent )
+        else:
+            if printing: logger('Expanded %s (lmk_class: %s, lmk_ori_rels: %s, lmk_color: %s, rel: %s, dist_class: %s, deg_class: %s)' % (lhs, lmk_class, lmk_ori_rels, lmk_color, rel_class, dist_class, deg_class))
+
+            ckeys, ccounts = zip(*[(cword.word,cword.count) for cword in cw_db.all()])
+
+            ccounter = {}
+            for cword in cw_db.all():
+                if cword.word in ccounter: ccounter[cword.word] += cword.count
+                else: ccounter[cword.word] = cword.count + 1
+
+            # we have never seen this RHS in this context before
+            if rhs not in ccounter: ccounter[rhs] = 1
+
+            ckeys, ccounts = zip(*ccounter.items())
+
+            # logger('ckeys: %s' % str(ckeys))
+            # logger('ccounts: %s' % str(ccounts))
+
+            # add 1 smoothing
+            ccounts = np.array(ccounts, dtype=float)
+            ccount_probs = ccounts/ccounts.sum()
+
+            w_prob = ccounter[rhs]/ccounts.sum()
+            w_entropy = -np.sum( (ccount_probs * np.log(ccount_probs)) )
+
+            prob_chain.append(w_prob)
+            entropy_chain.append(w_entropy)
+
+        term_prods.append( (lhs, rhs, lmk, rel) )
+        lhs_rhs_parent_chain.append( (parent, lhs, rhs, lmk, rel, lmk_class, lmk_ori_rels, lmk_color, rel_class, dist_class, deg_class))
+
+    return prob_chain, entropy_chain, lhs_rhs_parent_chain, term_prods
+
 
 def get_sentence_posteriors(sentence, iterations=1, extra_meaning=None, golden=False, printing=True):
     meaning_probs = {}
@@ -204,8 +343,9 @@ def get_sentence_posteriors(sentence, iterations=1, extra_meaning=None, golden=F
 
 def get_all_sentence_posteriors(sentence, meanings, golden=False, printing=True):
 
-    print 'parsing ...'
+    logger( 'parsing ...' )
     _, modparse = get_modparse(sentence)
+    logger( modparse )
     t = ParentedTree.parse(modparse)
     print '\n%s\n' % t.pprint()
     num_ancestors = count_lmk_phrases(t) - 1

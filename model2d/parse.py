@@ -100,7 +100,7 @@ def get_modparse(sentence):
         parsetree = res.original_parse
         modparsetree = res.modified_parse
     except:
-        print "parse.py: 103: " + sentence
+        print "parse.py: 104: " + sentence
         parses = parse_sentences([sentence])
         if len(parses) == 0:
             raise ParseError(printcolors.WARNING + ('ParseError: a sentence was empty'))

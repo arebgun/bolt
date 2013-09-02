@@ -4,7 +4,7 @@ from __future__ import division
 # from random import random
 import sys
 import traceback
-sys.path.append("..")
+sys.path.insert(1,"..")
 from myrandom import random
 choice = random.choice
 random = random.random
@@ -103,6 +103,7 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
 
         all_heatmaps_tupless, xs, ys = speaker.generate_all_heatmaps(scene, step=step)
         all_heatmaps_tuples = all_heatmaps_tupless[0]
+        logger("All heatmaps generated!")
         # x = np.array( [list(xs-step*0.5)]*len(ys) )
         # y = np.array( [list(ys-step*0.5)]*len(xs) ).T
         # for lamk, rel, (heatmap1,heatmap2) in all_heatmaps_tuples:
@@ -137,6 +138,7 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
 
         epsilon = 0.0001
         def heatmaps_for_sentences(sentences, all_meanings, loi_infos, xs, ys, scene, speaker, step=0.02):
+            # logger(sentences)
             printing=False
             x = np.array( [list(xs-step*0.5)]*len(ys) )
             y = np.array( [list(ys-step*0.5)]*len(xs) ).T
@@ -176,6 +178,7 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
 
                 combined_heatmap = None
                 for sentence in sentences:
+                    # logger(sentence)
                     posteriors = get_all_sentence_posteriors(sentence, all_meanings, printing=printing)
 
                     big_heatmap1 = None
@@ -205,15 +208,15 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
                     object_meaning_applicabilities[m] = {}
                 object_meaning_applicabilities[m][obj_lmk] = sum(ps)/len(ps)
 
-        k = len(loi)
+        # k = len(loi)
         for meaning_dict in object_meaning_applicabilities.values():
             total = sum( meaning_dict.values() )
             if total != 0:
                 for obj_lmk in meaning_dict.keys():
-                    meaning_dict[obj_lmk] = meaning_dict[obj_lmk]/total - 1.0/k
-                total = sum( [value for value in meaning_dict.values() if value > 0] )
-                for obj_lmk in meaning_dict.keys():
-                    meaning_dict[obj_lmk] = (2 if meaning_dict[obj_lmk] > 0 else 1)*meaning_dict[obj_lmk] - total
+                    meaning_dict[obj_lmk] = meaning_dict[obj_lmk]/total# - 1.0/k
+                # total = sum( [value for value in meaning_dict.values() if value > 0] )
+                # for obj_lmk in meaning_dict.keys():
+                #     meaning_dict[obj_lmk] = (2 if meaning_dict[obj_lmk] > 0 else 1)*meaning_dict[obj_lmk] - total
 
         sorted_meaning_lists = {}
 
@@ -256,6 +259,9 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
                 logger( 'Teacher chooses: %s' % trajector )
                 sentences = data['loc_descs'][iteration]
                 probs, sorted_meanings = zip(*sorted_meaning_lists[trajector][:30])
+                for i,(p,sm) in enumerate(zip(probs,sorted_meanings)):
+                    lm,re = sm
+                    logger( '%i: %f %s' % (i,p,m2s(*sm)) )
                 probs = np.array(probs)# - min(probs)
                 probs /= probs.sum()
                 if sentences is None:
@@ -292,6 +298,7 @@ def autocorrect(num_iterations=1, scale=1000, num_processors=7, num_samples=5,
             lmk_probs = []
 
             try:
+                # logger( sentences )
                 combined_heatmaps = heatmaps_for_sentences(sentences, all_meanings, loi_infos, xs, ys, scene, speaker, step=step)
 
                 for combined_heatmap,obj_lmk in zip(combined_heatmaps, loi):

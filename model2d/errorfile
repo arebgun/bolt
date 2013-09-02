@@ -1,0 +1,10 @@
+/usr/local/lib/python2.7/dist-packages/scikits/__init__.py:1: UserWarning: Module planar was already imported from ../planar/__init__.pyc, but /usr/local/lib/python2.7/dist-packages is being added to sys.path
+  __import__('pkg_resources').declare_namespace(__name__)
+Traceback (most recent call last):
+  File "./tasks_model.py", line 17, in <module>
+    from utils import force_unicode, bigrams, trigrams, lmk_id, logger
+  File "/home/wrightjb/Documents/minimal/model2d/utils.py", line 18, in <module>
+    from semantics.speaker import Speaker
+  File "../semantics/speaker.py", line 43, in <module>
+    from utils import categorical_sample, index_max, m2s
+ImportError: cannot import name m2s

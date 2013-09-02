@@ -4,7 +4,7 @@ from __future__ import division
 
 import sys
 # import random
-sys.path.append("..")
+sys.path.insert(1,"..")
 from myrandom import random
 from functools import partial
 import inspect
@@ -172,13 +172,47 @@ def m2s(lmk, rel):
                                                 rel.measurement.best_degree_class if hasattr(rel,'measurement') else None,
                                                 rel.measurement.best_distance_class if hasattr(rel,'measurement') else None)
 
-def entropy_of_counts(counts):
+def laplace_estimator(f, N, n):
+    return (N * f + 1) / float( N + n)
+
+def shannon_entropy_of_counts(counts, N=None, worst_counts=None):
     counts = np.array(counts, dtype=float)
     probs = counts / counts.sum()
-    return entropy_of_probs(probs)
+    if worst_counts is not None:
+        worst_counts = np.array(worst_counts, dtype=float)
+        worst_probs = worst_counts / worst_counts.sum()
+    else:
+        worst_probs = None
+    return shannon_entropy_of_probs(probs, N=N, worst_probs=worst_probs)
 
-def entropy_of_probs(probs):
-    return -np.sum( (probs * np.log(probs)) )
+def shannon_entropy_of_probs(probs, N=None, worst_probs=None):
+    probs = np.array(probs)
+    if N is not None:
+        probs = laplace_estimator(np.array(probs),N,len(probs))
+    if worst_probs is not None:
+        probs = probs*np.array(worst_probs)
+        probs = probs/probs.sum()
+    temp = (probs * np.log(probs))
+    temp[probs==0.0] = 0.0
+    return -np.sum( temp )
+
+
+def zrm_entropy(ps, worst_ps, N=None):
+    if N is not None:
+        nom = [laplace_estimator( f, N, len(ps) ) * ( 1 - laplace_estimator( f, N, len(ps) ) )  for f in ps]
+        denom = [ (-2 * w + 1) * laplace_estimator(w, N, len(worst_ps) ) + w * 2 for w in worst_ps]
+    else:
+        nom = [f * ( 1 - f )  for f in ps]
+        denom = [ (-2 * w + 1) * w + w * 2 for w in worst_ps]
+    return sum([ni / denomi for ni,denomi in zip(nom, denom)])
+
+def min_entropy(probs, N=None, worst_probs=None):
+    if N is not None:
+        probs = laplace_estimator(np.array(probs),N,len(probs))
+    if worst_probs is not None:
+        probs = probs*np.array(worst_probs)
+        probs = probs/probs.sum()
+    return -np.log(max(probs))
 
 
 

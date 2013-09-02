@@ -4,13 +4,13 @@
 from __future__ import division
 
 import sys
-sys.path.append("..")
+sys.path.insert(1,"..")
 import csv
 
 from models import (Location, Word, Production, Bigram, Trigram,
                     CWord, CProduction, SentenceParse, session)
 import utils
-from utils import parent_landmark, count_lmk_phrases, get_meaning, rel_type, lmk_id, get_lmk_ori_rels_str, scene
+from utils import parent_landmark, count_lmk_phrases, get_meaning, rel_type, lmk_id, get_lmk_ori_rels_str
 from parse import get_modparse
 from semantics.landmark import Landmark
 from semantics.representation import PointRepresentation
@@ -22,7 +22,7 @@ random = random.random
 from sqlalchemy import func
 from sqlalchemy.orm import aliased
 
-from semantics.run import construct_training_scene
+from semantics.run import construct_training_scene, read_scenes
 
 
 
@@ -74,19 +74,29 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-v', '--verbose', action='store_true')
     parser.add_argument('-i', '--iterations', type=int, default=1)
+    parser.add_argument('-d', '--scene_directory', type=str)
     args = parser.parse_args()
 
     unique_sentences = {}
 
     # scene, speaker = scene.scene, scene.speaker
+    if args.scene_directory:
+        scene_descs = read_scenes(args.scene_directory,normalize=True)
+        per_scene = int(args.iterations / len(scene_descs))
 
     for i in range(args.iterations):
         print 'sentence', i
 
-        if (i % 50) == 0:
-            scene, speaker = construct_training_scene(True)
-            utils.scene.set_scene(scene,speaker)
-            table = scene.landmarks['table'].representation.rect
+        if args.scene_directory:
+            if (i%per_scene) == 0:
+                scene, speaker = scene_descs.pop()
+                utils.scene.set_scene(scene,speaker)
+                table = scene.landmarks['table'].representation.rect
+        else:
+            if (i % 50) == 0:
+                scene, speaker = construct_training_scene(True)
+                utils.scene.set_scene(scene,speaker)
+                table = scene.landmarks['table'].representation.rect
         t_min = table.min_point
         t_max = table.max_point
         t_w = table.width

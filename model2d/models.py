@@ -7,7 +7,7 @@ from sqlalchemy import create_engine, MetaData, Table
 from sqlalchemy import Column, Integer, Float, String, ForeignKey
 from sqlalchemy.orm import relationship, backref, sessionmaker, scoped_session
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
-from sqlalchemy.ext.declarative import _declarative_constructor
+# from sqlalchemy.ext.declarative import _declarative_constructor
 from sqlalchemy import func
 
 from utils import force_unicode, bigrams, trigrams, lmk_id, logger
@@ -125,12 +125,12 @@ class Base(object):
             obj = cls(**kwargs)
         return obj
 
-    def _constructor(self, **kwargs):
-        _declarative_constructor(self, **kwargs)
-        # add self to session
-        session().add(self)
+    # def _constructor(self, **kwargs):
+    #     _declarative_constructor(self, **kwargs)
+    #     # add self to session
+    #     session().add(self)
 
-Base = declarative_base(cls=Base, constructor=Base._constructor)
+Base = declarative_base(cls=Base)#, constructor=Base._constructor)
 
 
 

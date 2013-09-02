@@ -1,0 +1,4 @@
+NP [ <1 NP & <2 (PP <-1 NP=np) & <3 PP=pp ]
+
+adjoinF (NP @) np
+move pp $- np

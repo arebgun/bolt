@@ -2,6 +2,10 @@
 # coding: utf-8
 
 from __future__ import division
+import os
+import sys
+sys.path.insert(1,"..")
+
 
 from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, Float, String, ForeignKey, DateTime, Boolean
@@ -14,10 +18,6 @@ from utils import force_unicode, bigrams, trigrams, lmk_id, logger
 
 import numpy as np
 from collections import defaultdict
-
-import os
-import sys
-sys.path.append("..")
 
 from semantics import run
 
@@ -34,8 +34,11 @@ import subprocess
 import re
 import utils
 from planar import Vec2
+print Vec2.almost_equals_points
 from utils import m2s
 from itertools import izip, product
+
+import shelve
 
 ### configuration ###
 
@@ -176,6 +179,9 @@ if __name__ == '__main__':
     engine.echo = False
     create_all()
 
+    # f = shelve.open('processed_data.shelf')
+    # if not f.has_key('all_scenes'):
+
     # test_indices = [3411,2701,1764,264,1142,852,2028,2774,3341,161,779,536,3853,357,249,2569,4175,2971,1368,3305,2586,591,3710,1909,
     # 4085,443,582,3895,3291,3535,2487,3204,476,3042,596,3524,1206,1284,4293,1168,410,3417,1332,892,623,2406,778,3472,2864,4174,1462,
     # 3416,453,4397,2036,1017,1033,3491,1207,4163,1092,2897,1445,2990,473,1155,510,1671,3957,561,1043,182,1854,238,2900,444,987,3041,
@@ -229,6 +235,7 @@ if __name__ == '__main__':
         ids = []
         #print s.id, s.name
         for scene, speaker in run.read_scenes(os.path.join(args.scene_directory,s.name), normalize=True):
+            logger( str(scene.landmarks['table'].representation.rect.width) + ', ' + str(scene.landmarks['table'].representation.rect.height))
             for t in tasks_descriptionquestion.query().filter(tasks_descriptionquestion.scene_id==s.id).all():
                 #print t.id, t.scene_id, t.entity_id, t.answer, t.object_description, t.location_description
                 entity_name = scenes_entity.query().filter(scenes_entity.id==t.entity_id).one().name
@@ -567,7 +574,8 @@ if __name__ == '__main__':
     print 'Train set:'
     for s in all_scenes:
         together = zip(s['loc_descs'],s['lmks'],s['ids'])
-        together += [(None,None,None)]*200
+        # together = [(None,None,None)]*len(together)
+        together = zip([None]*len(together),s['lmks'],s['ids'])
         shuffle(together)
         s['loc_descs'],s['lmks'],s['ids'] = zip(*together)
         print '  ',len(s['loc_descs']), len(s['lmks'])
@@ -580,6 +588,22 @@ if __name__ == '__main__':
         total+=len(s['lmks'])
     print '   total:',total
     print len(no_bad_words)
+
+    # f['all_scenes'] = all_scenes
+    # f['test_scenes'] = test_scenes
+    # f['test_set'] = test_set
+
+    # all_scenes2 = f['all_scenes']
+    # test_scenes2 = f['test_scenes']
+    # test_set2 = f['test_set']
+    # f.close()
+
+    # for i,(scene_desc, test_scene_desc) in enumerate(zip(all_scenes2,all_scenes2)):
+
+    #     scene = scene_desc['scene']
+    #     speaker = scene_desc['speaker']
+    #     assert(scene == test_scene_desc['scene'])
+    #     assert(speaker == test_scene_desc['speaker'])
 
     testing_testing.autocorrect(
         all_scenes,
@@ -597,13 +621,13 @@ if __name__ == '__main__':
     #     num_processors=args.num_processors, 
     #     num_samples=args.num_samples, 
     #     scene_descs=all_scenes,
-    #     learn_objects=True,
-    #     tag = args.tag,
+    #     # learn_objects=True,
+    #     # tag = args.tag,
     #     golden_metric=False, 
     #     mass_metric=False, 
     #     student_metric=False,
     #     choosing_metric=False, 
-    #     step=0.02)
+    #     step=0.04)
 
     # object_correction_testing.autocorrect(1,
     #     scale=args.update_scale, 
