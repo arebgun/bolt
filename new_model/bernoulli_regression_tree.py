@@ -66,7 +66,7 @@ class BernoulliRegressionTree(object):
         new_best_impurities = []
         for leaf in leaves:
             split_feature, split_value, split_impurity = \
-                leaf.select_feature(min_leaf_instances)
+                leaf.select_discrete_feature(min_leaf_instances)
             split_features.append((split_feature, split_value))
             new_best_impurities.append(split_impurity)
 
@@ -90,6 +90,11 @@ class BernoulliRegressionTree(object):
         #     discrete_features.remove(split_feature)
         #     discrete_feature_array = discrete_feature_array[discrete_features]
         # print discrete_features
+
+    @classmethod
+    def add_continuous_node(cls, tree):
+
+        pass
 
     @classmethod
     def build_greedy_trees(cls, feature_array, label_array, weight_array,
@@ -142,19 +147,22 @@ class BernoulliRegressionTree(object):
             for j, alpha_k in enumerate(alpha_ks):
                 less_than = fold_tree_alphas < alpha_k
                 highest_less_than = less_than.nonzero()[0][0]
-                alpha_k_tree_scores[i, j] = fold_tree_scores[highest_less_than]
+                alpha_k_tree_scores[i, j]=fold_tree_scores[highest_less_than]*\
+                                          weights[test_ind].sum()
 
-        mean_scores = alpha_k_tree_scores.mean(axis=1)
+        print alpha_k_tree_scores.shape
+        mean_scores = alpha_k_tree_scores.sum(axis=0)/weights.sum()
+        print mean_scores.shape
         print 'Mean scores:', mean_scores
-        max_ind = mean_scores.argmax()
-        print 'Best score:',mean_scores[max_ind]
-        print 'Best alpha:',alphas[max_ind]
+        min_ind = mean_scores.argmin()
+        print 'Best score:',mean_scores[min_ind]
+        print 'Best alpha:',alphas[min_ind]
 
         brt = BernoulliRegressionTree.__new__(BernoulliRegressionTree)
         brt._cost = 'gini'
-        brt._alpha = alphas[max_ind]
+        brt._alpha = alphas[min_ind]
         brt._min_leaf_instances = min_leaf_instances
-        brt.tree = trees[max_ind]
+        brt.tree = trees[min_ind]
         return brt
 
     def cost_complexity(self, feature_array, label_array):
@@ -258,7 +266,7 @@ class DiscreteLeaf(object):
             to_return[:] = self._most_common
         return to_return
 
-    def select_feature(self, min_instances):
+    def select_discrete_feature(self, min_instances):
 
         best_impurities = []
         best_values = []
