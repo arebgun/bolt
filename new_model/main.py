@@ -60,6 +60,8 @@ import IPython
 
 from collections import defaultdict
 
+import bernoulli_regression_tree as brt
+
 # from student_trees import trees as regression_trees
 
 def spawn(f):
@@ -182,7 +184,20 @@ features3 = [
             ,trajector_left_of
             ,trajector_right_of
             ,relation_phrase
-            ]           
+            ]
+
+feature_columns = [
+                RelationObservation.trajector_distance,
+                RelationObservation.trajector_surface,
+                RelationObservation.trajector_contained,
+                RelationObservation.trajector_in_front_of,
+                RelationObservation.trajector_behind,
+                RelationObservation.trajector_left_of,
+                RelationObservation.trajector_right_of,
+                RelationObservation.positive,
+                RelationObservation.landmark_prior,
+                RelationObservation.true_relation_applicability
+                ]
 
 instance_weight = Descriptor.new_meta_id()
 true_applicability = Descriptor.new_meta_id()
@@ -421,7 +436,7 @@ def regular_train_landmark_loop(args):
 def regular_train_relation_loop(args):
     global session_factory
     # global relation_decision_trees
-    scene_desc, iterations, cheat, test_only, TLkwargs = args
+    scene_desc, iterations, cheat, test_only, train_only, TLkwargs = args
     scene, speaker = scene_desc
     teacher = Teacher(location=speaker.location)
     utils.scene.set_scene(scene,speaker)
@@ -461,99 +476,103 @@ def regular_train_relation_loop(args):
             
             _, landmark_guess = landmark_probs[0]
 
+        if landmark_guess in object_landmarks:
+            gi = object_landmarks.index(landmark_guess)
+            trajector_candidates = object_landmarks[:gi]+\
+                object_landmarks[gi+1:]
+        else:
+            trajector_candidates = object_landmarks
         trace += 'Student landmark guess: %s\n' % str(landmark_guess)
         linguistic_features = RelationObservation.\
                                 extract_linguistic_features(session_factory(), 
                                                             utterance)
         trace += linguistic_features['relation_phrase'] + '\n'
-        try:
-            relation_table = make_orange_table(session_factory,
-                [linguistic_features['relation_phrase']])[0]
-        except Exception as e:
-            answers.append(  ( (str(meaning.relation),
-                                str(meaning.landmark),
-                                str(landmark_guess)),
-                               False )  )
-            trace += str(e)
+        if train_only:
+            answers.append(False)
         else:
-            relation_tree = make_decision_tree(relation_table,
-                                        TLkwargs=TLkwargs)
-            instances = []
-
-            if landmark_guess in object_landmarks:
-                gi = object_landmarks.index(landmark_guess)
-                trajector_candidates = object_landmarks[:gi]+\
-                    object_landmarks[gi+1:]
+            try:
+                relation_table = make_orange_table(session_factory,
+                    [linguistic_features['relation_phrase']])[0]
+            except Exception as e:
+                answers.append(  ( (str(meaning.relation),
+                                    str(meaning.landmark),
+                                    str(landmark_guess)),
+                                   False )  )
+                trace += str(e)
             else:
-                trajector_candidates = object_landmarks
+                relation_tree = make_decision_tree(relation_table,
+                                            TLkwargs=TLkwargs)
+                instances = []
 
-            for trajector_candidate in trajector_candidates:
-                semantic_features = RelationObservation.\
-                                    extract_semantic_features(teacher, 
-                                                              landmark_guess, 
-                                                              trajector_candidate)
-                # semantic_features['positive'] = False
-                instance = []
-                for feature in features:
-                    if feature.name != 'positive':
-                        value = semantic_features[feature.name]
-                        # if isinstance(feature, Discrete):
-                        #     value = str(value)
-                        #     feature.add_value(value)
-                        instance.append(value)
-                instance.append(None)
-                instances.append(instance)
 
-            for candidate, instance in zip(trajector_candidates,instances):
-                trace += str(candidate) + ' '
-                trace += str(instance) + ' '
-                trace += str(teacher.get_applicability(scene,
-                                                    meaning.relation,
-                                                    landmark_guess,
-                                                    candidate)) + ' '
-                trace += str(teacher.get_score(scene,
-                                            meaning.relation,
-                                            landmark_guess,
-                                            candidate))
-                trace += '\n'
-            # results = test_decision_tree(instances, relation_tree)
-            feature_array = np.rec.fromrecords(instances, 
-                                   names=[f.name for f in features])
-            student_applicabilities = \
-                regression_trees[linguistic_features['relation_phrase']](
-                    feature_array)
-            max_app = max(student_applicabilities)
-            results = (np.array(student_applicabilities)==max_app).astype(float)
+                for trajector_candidate in trajector_candidates:
+                    semantic_features = RelationObservation.\
+                                        extract_semantic_features(teacher, 
+                                                                  landmark_guess, 
+                                                                  trajector_candidate)
+                    # semantic_features['positive'] = False
+                    instance = []
+                    for feature in features:
+                        if feature.name != 'positive':
+                            value = semantic_features[feature.name]
+                            if isinstance(feature, Discrete):
+                                value = str(value)
+                                feature.add_value(value)
+                            instance.append(value)
+                    instance.append(None)
+                    instances.append(instance)
 
-            trace += 'Student trajector estimations:\n'
-            for result, trajector_candidate in zip(results,trajector_candidates):
-                trace += '  Object: %s, %s? %s\n' %(str(trajector_candidate),
-                                        linguistic_features['relation_phrase'],
-                                        result)
+                for candidate, instance in zip(trajector_candidates,instances):
+                    trace += str(candidate) + ' '
+                    trace += str(instance) + ' '
+                    trace += str(teacher.get_applicability(scene,
+                                                        meaning.relation,
+                                                        landmark_guess,
+                                                        candidate)) + ' '
+                    trace += str(teacher.get_score(scene,
+                                                meaning.relation,
+                                                landmark_guess,
+                                                candidate))
+                    trace += '\n'
+                results = test_decision_tree(instances, relation_tree)
 
-            # results = np.array([1.0 if result.native()=="True" else 0.0 
-            #                     for result in results])
-            # if results.sum() > 0:
-            results /= results.sum()
-            logger(results)
-            trajector_guess = utils.categorical_sample(trajector_candidates,
-                                                       results)[0]
-            # sorted_results = sorted(zip(results,object_landmarks),
-            #                        reverse=True)
-            # trace += str(sorted_results)
-            # trajector_guess = sorted_results[0][1]
-            trace += '%sStudent trajector guess: \n  %s\n  %s%s\n' % (
-                utils.printcolors.OKGREEN,
-                str(trajector_guess),
-                trajector_guess == trajector,
-                utils.printcolors.ENDC)
+                # feature_array = np.rec.fromrecords(instances, 
+                #                        names=[f.name for f in features])
+                # student_applicabilities = \
+                #     regression_trees[linguistic_features['relation_phrase']](
+                #         feature_array)
+                # max_app = max(student_applicabilities)
+                # results = (np.array(student_applicabilities)==max_app).astype(float)
 
-            answers.append(  ( (str(meaning.relation),
-                                str(meaning.landmark),
-                                str(landmark_guess) ),
-                              trajector_guess == trajector)  )
-            # else:
-            #   answers.append(False)
+                trace += 'Student trajector estimations:\n'
+                for result, trajector_candidate in zip(results,trajector_candidates):
+                    trace += '  Object: %s, %s? %s\n' %(str(trajector_candidate),
+                                            linguistic_features['relation_phrase'],
+                                            result)
+
+                results = np.array([1.0 if result.native()=="True" else 0.0 
+                                    for result in results])
+                if results.sum() > 0:
+                    results /= results.sum()
+                    logger(results)
+                    # trajector_guess = utils.categorical_sample(trajector_candidates,
+                    #                                            results)[0]
+                    sorted_results = sorted(zip(results,object_landmarks),
+                                           reverse=True)
+                    trace += str(sorted_results)
+                    trajector_guess = sorted_results[0][1]
+                    trace += '%sStudent trajector guess: \n  %s\n  %s%s\n' % (
+                        utils.printcolors.OKGREEN,
+                        str(trajector_guess),
+                        trajector_guess == trajector,
+                        utils.printcolors.ENDC)
+
+                    answers.append(  ( (str(meaning.relation),
+                                        str(meaning.landmark),
+                                        str(landmark_guess) ),
+                                      trajector_guess == trajector)  )
+                else:
+                    answers.append(False)
 
         session=session_factory()
         utterance_entry = Utterance(text=utterance)
@@ -630,7 +649,7 @@ def running_avg(arr,window):
 
 def regular_train(session_factory1, scene_descs, iterations, 
                   save_file=None, just_landmark=False, 
-                  parallel=True, cheat=False, test_only=False,
+                  parallel=True, cheat=False, test_only=False, train_only=False,
                   TLkwargs={}):
 
     global session_factory
@@ -641,6 +660,7 @@ def regular_train(session_factory1, scene_descs, iterations,
                [per_scene]*len(scene_descs),
                [cheat]*len(scene_descs),
                [test_only]*len(scene_descs),
+               [train_only]*len(scene_descs),
                [TLkwargs]*len(scene_descs))
 
     if just_landmark:
@@ -684,7 +704,8 @@ def regular_train(session_factory1, scene_descs, iterations,
 
 def random_scene_training(session_factory1, iterations, per_scene, 
                           save_file=None, just_landmark=False, parallel=True, 
-                          cheat=False, test_only=False, TLkwargs={}):
+                          cheat=False, test_only=False, train_only=False,
+                          TLkwargs={}):
 
     num_scenes = int(np.ceil(iterations/per_scene))
     scene_descs = [construct_training_scene(random=True) 
@@ -697,6 +718,7 @@ def random_scene_training(session_factory1, iterations, per_scene,
                   parallel=parallel,
                   cheat=cheat,
                   test_only=test_only,
+                  train_only=train_only,
                   TLkwargs=TLkwargs)
 
     
@@ -1131,7 +1153,7 @@ def main():
                                        time.asctime(time.localtime())
                                        .replace(' ','_').replace(':','')))
 
-    parallel = False
+    # parallel = False
 
     # random_scene_training(session_factory1=session_factory,
     #                 iterations=args.relation_iterations,
@@ -1139,6 +1161,7 @@ def main():
     #                 save_file=filename,
     #                 just_landmark=False,
     #                 cheat=args.cheat,
+    #                 train_only=True,
     #                 parallel=parallel)
     # exit()
 
@@ -1228,8 +1251,75 @@ def main():
     #                            base_features=base_feature_array,
     #                            base_weights=base_weights_array)
 
-    import bernoulli_regression_tree as brt
-    b = brt.BernoulliRegressionTree.cv_init(feature_array, label_array, weight_array)
+
+    # b = brt.BernoulliRegressionTree.cv_init2(feature_array, label_array, weight_array)
+    cost = 'gini'
+    b00 = brt.BernoulliRegressionTree(feature_array, label_array, weight_array,
+                                      cost=cost, max_split=0, max_cont=0)
+    b10 = brt.BernoulliRegressionTree(feature_array, label_array, weight_array,
+                                      cost=cost, max_split=1, max_cont=0)
+    b20 = brt.BernoulliRegressionTree(feature_array, label_array, weight_array,
+                                      cost=cost, max_split=2, max_cont=0)
+    b30 = brt.BernoulliRegressionTree(feature_array, label_array, weight_array,
+                                      cost=cost, max_split=3, max_cont=0)
+    b01 = brt.BernoulliRegressionTree(feature_array, label_array, weight_array,
+                                      cost=cost, max_split=0, max_cont=1)
+    b11 = brt.BernoulliRegressionTree(feature_array, label_array, weight_array,
+                                      cost=cost, max_split=1, max_cont=1)
+    b21 = brt.BernoulliRegressionTree(feature_array, label_array, weight_array,
+                                      cost=cost, max_split=2, max_cont=1)
+    b31 = brt.BernoulliRegressionTree(feature_array, label_array, weight_array,
+                                      cost=cost, max_split=3, max_cont=1)
+
+    best = brt.BernoulliRegressionTree.cv_init3(feature_array,
+                                                label_array,
+                                                weight_array,
+                                                cost=cost,
+                                                max_split=3,
+                                                max_cont=1)
+
+    print best.tree.nodes
+    # print best.tree.nodes[0].feature
+    # Make some graphs
+
+    colors = ['g' if p else 'r' for p in label_array]
+    # altcolors = ['b' if p else 'k' for p in label_frame.values]
+    s = 50*(4**np.array(weight_array))
+
+    plt.ion()
+    plt.subplot(251)
+    plt.scatter(feature_array['trajector_distance'], score_array, s=s, c=colors)
+    plt.ylim([-0.1,1.1])
+    plt.subplot(252)
+    plt.scatter(feature_array['trajector_distance'], b00.tree(feature_array),s=s,c=colors)
+    plt.ylim([-0.1,1.1])
+    plt.subplot(253)
+    plt.scatter(feature_array['trajector_distance'], b10.tree(feature_array),s=s,c=colors)
+    plt.ylim([-0.1,1.1])
+    plt.subplot(254)
+    plt.scatter(feature_array['trajector_distance'], b20.tree(feature_array),s=s,c=colors)
+    plt.ylim([-0.1,1.1])
+    plt.subplot(255)
+    plt.scatter(feature_array['trajector_distance'], b30.tree(feature_array),s=s,c=colors)
+    plt.ylim([-0.1,1.1])
+
+    plt.subplot(256)
+    plt.scatter(feature_array['trajector_distance'], best.tree(feature_array),s=s,c=colors)
+    plt.ylim([-0.1,1.1])
+
+    plt.subplot(257)
+    plt.scatter(feature_array['trajector_distance'], b01.tree(feature_array),s=s,c=colors)
+    plt.ylim([-0.1,1.1])
+    plt.subplot(258)
+    plt.scatter(feature_array['trajector_distance'], b11.tree(feature_array),s=s,c=colors)
+    plt.ylim([-0.1,1.1])
+    plt.subplot(259)
+    plt.scatter(feature_array['trajector_distance'], b21.tree(feature_array),s=s,c=colors)
+    plt.ylim([-0.1,1.1])
+    plt.subplot(2,5,10)
+    plt.scatter(feature_array['trajector_distance'], b31.tree(feature_array),s=s,c=colors)
+    plt.ylim([-0.1,1.1])
+    plt.show()
     IPython.embed()
     exit()
 
@@ -1246,9 +1336,7 @@ def main():
 
     weight_frame = pd.DataFrame(weight_array)
 
-    colors = ['g' if p else 'r' for p in label_frame.values]
-    altcolors = ['b' if p else 'k' for p in label_frame.values]
-    s = 50*(4**np.array(weight_array))
+
 
     logit = lambda features, params: 1./(1.+np.exp(-(params*features).sum(axis=1)))
 
@@ -1273,18 +1361,6 @@ def main():
     clf2 = sgd2.fit(f[:,:3],l,sample_weight=w)#, coef_init=[-20,-10,-10])
 
     from student_trees import trees
-
-    # plt.ion()
-    # plt.subplot(131)
-    # plt.scatter(feature_frame['trajector_distance'], score_array, s=s, c=colors)
-    # plt.ylim([-0.1,1.1])
-    # plt.subplot(132)
-    # plt.scatter(feature_frame['trajector_distance'], clf.predict_proba(f),s=s,c=colors)
-    # plt.ylim([-0.1,1.1])
-    # plt.subplot(133)
-    # plt.scatter(feature_frame['trajector_distance'], trees[relation_phrase](feature_array),s=s,c=colors)
-    # plt.ylim([-0.1,1.1])
-    # plt.show()
 
     tree_out = trees[relation_phrase](feature_array)
     # tree_labels = tree_out >= 0.5
