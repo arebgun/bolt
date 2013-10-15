@@ -305,8 +305,9 @@ def train(meaning, sentence, update=1, printing=False):
         logger(str(pe), 'warning')
         return
 
+    print lmk, rel, get_landmark_parent_chain(lmk)
     train_rec(tree=ParentedTree.parse(modparse),
-              lmks=get_landmark_parent_chain(lmk),
+              lmks=[lmk],#get_landmark_parent_chain(lmk),
               rel=rel,
               update=update,
               printing=printing)

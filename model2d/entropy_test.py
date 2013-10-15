@@ -58,6 +58,7 @@ if __name__ == '__main__':
         for col in columns:
             # ratio = CProduction.get_entropy_ratio(lhs=prod.lhs, rhs=prod.rhs, column=col, golden=golden, verbose=verbose)
             ratio = CProduction.get_entropy_ratio_sample_dependent(lhs=prod.lhs, rhs=prod.rhs, column=col, golden=golden, verbose=verbose)
+            # ratio = CProduction.get_mutual_information(lhs=prod.lhs, rhs=prod.rhs, column=col, golden=golden, verbose=verbose)
             ratios.append( (ratio, col) )
             if str(col) not in sorted_map: sorted_map[str(col)] = []
             sorted_map[str(col)].append( (ratio, prod.lhs, prod.rhs, prod.parent) )

@@ -19,12 +19,15 @@ from semantics.representation import PointRepresentation
 from semantics.run import construct_training_scene
 
 from location_from_sentence import get_all_sentence_posteriors
-from sentence_from_location import generate_sentence, train
-from utils import logger, entropy_of_probs
+from sentence_from_location import generate_sentence
+from utils import logger, rel_type, get_landmark_parent_chain, get_lmk_ori_rels_str, ngrams
 import utils
 
 import shelve
 from time import time
+from models import CProduction
+import parse_adios
+from nltk.tree import ParentedTree
 
 def spawn(f):
     def fun(ppipe, cpipe,x):
@@ -41,175 +44,259 @@ def parmap(f,X):
     [p.join() for p in proc]
     return ret
 
-def initial_train(num_iterations=1, window=20, num_processors=1, consistent=False,
-                  num_samples=10, num_per_scene=50):
-    # plt.ion()
-    printing=False
+class SamplingTrainer(object):
+    def __init__(self):
+        self.productions = {}
+        self.space_join = ' '.join
 
-    def loop(num_iterations):
-        # min_dists = []
-        # golden_log_probs = []
-        # golden_entropies = []
-        # golden_ranks = []
-        # golden_ranks = []
+    def train(self, meaning, sentence, update=1, printing=False):
+        lmk, rel = meaning
 
-        for iteration in range(num_iterations):
-            if (iteration % num_per_scene) == 0:
-                if iteration != 0: sys.stdout.write('\bDone.\n')
-                sys.stdout.write('Generating sentences for scene %d:  ' % (int(iteration/num_per_scene) + 1))
-                scene, speaker = construct_training_scene(random=True)
-                utils.scene.set_scene(scene, speaker)
-                table = scene.landmarks['table'].representation.rect
+        try:
+            modparse = parse_adios.parse(sentence)
+            # modparse = parse_bllip.parse(sentence)
+        except Exception as pe:
+            logger('Failed to parse sentence "%s"' % sentence, 'warning')
+            logger(str(pe), 'warning')
+            return
 
-                # scene_bb = scene.get_bounding_box()
-                # scene_bb = scene_bb.inflate( Vec2(scene_bb.width*0.5,scene_bb.height*0.5) )
+        print lmk, rel, get_landmark_parent_chain(lmk)
+        self.train_rec(tree=ParentedTree.parse(modparse),
+                       lmks=[lmk],#get_landmark_parent_chain(lmk),
+                       rel=rel,
+                       update=update,
+                       printing=printing)
 
-                # step = 0.1
-                # all_heatmaps_tupless, xs, ys = speaker.generate_all_heatmaps(scene, step=step)
-                # all_heatmaps_tuples = all_heatmaps_tupless[0]
-                # lmks, rels, heatmapss = zip(*all_heatmaps_tuples)
+    def train_rec(self, tree, parent=None, lmks=None, rel=None, update=1, printing=False):
+        if isinstance(tree, ParentedTree):
+            for lmk in lmks:
+                lhs = tree.node
+                rhs = self.space_join(n.node if isinstance(n, ParentedTree) else n for n in tree)
+                lmk_ori_rels = get_lmk_ori_rels_str(lmk)
 
-                # meanings = zip(lmks,rels)
-                # landmarks = list(set(lmks))
+                # check if this version of nltk uses a function for parent
+                if hasattr( tree.parent, '__call__' ):
+                    parent = tree.parent().node if tree.parent() else None
+                else:
+                    parent = tree.parent.node if tree.parent else None
 
-            logger(('Iteration %d' % iteration),'okblue')
+                if lhs == 'S':
+                    tokens = rhs.split()
+                    ngram_list = ngrams(tokens)
 
-            rand_p = Vec2(random()*table.width+table.min_point.x, random()*table.height+table.min_point.y)
-            trajector = Landmark( 'point', PointRepresentation(rand_p), None, Landmark.POINT)
-            training_sentence, sampled_relation, sampled_landmark = speaker.describe(trajector, scene, False, 1)
+                    for ngram in ngram_list:
+                        k = (lhs, self.space_join(ngram), parent, lmk.object_class, lmk_ori_rels, lmk.color, rel)
 
-            if num_samples:
-                for i in range(num_samples):
-                    landmark, relation, _ = speaker.sample_meaning(trajector, scene, 1)
-                    train((landmark,relation), training_sentence, update=1, printing=printing)
-            else:
-                for (landmark,relation),prob in speaker.all_meaning_probs( trajector, scene, 1 ):
-                    train((landmark,relation), training_sentence, update=prob, printing=printing)
+                        try:
+                            self.productions[k] += update
+                        except:
+                            self.productions[k] = 1
+                else:
+                    k = (lhs, rhs, parent, lmk.object_class, lmk_ori_rels, lmk.color, rel)
 
-        #     def probs_metric():
-        #         meaning, sentence = generate_sentence(loc=rand_p,
-        #                                               consistent=consistent,
-        #                                               scene=scene,
-        #                                               speaker=speaker,
-        #                                               usebest=True,
-        #                                               printing=printing)
+                    try:
+                        self.productions[k] += update
+                    except:
+                        self.productions[k] = 1
 
-        #         sampled_landmark, sampled_relation = meaning.args[0], meaning.args[3]
-        #         print meaning.args[0], meaning.args[3], len(sentence)
+                for subtree in tree:
+                    self.train_rec(tree=subtree, parent=lhs, lmks=lmks, rel=rel, printing=printing)
 
-        #         if sentence == "":
-        #             prob = 0
-        #             entropy = 0
-        #             rank = len(meanings)-1
-        #         else:
-        #             logger( 'Generated sentence: %s' % sentence)
+    def initial_train(self, num_iterations=1, window=20, num_processors=1, consistent=False,
+                      num_samples=10, num_per_scene=50):
+        # plt.ion()
+        printing = False
 
-        #             try:
-        #                 golden_posteriors = get_all_sentence_posteriors(sentence, meanings, golden=True, printing=printing)
-        #                 epsilon = 1e-15
-        #                 ps = np.array([golden_posteriors[(lmk,rel)] for lmk, rel in meanings])
-        #                 temp = None
-        #                 for i,p in enumerate(ps):
-        #                     lmk,rel = meanings[i]
-        #                     # logger( '%f, %s' % (p, m2s(lmk,rel)))
-        #                     head_on = speaker.get_head_on_viewpoint(lmk)
-        #                     ps[i] *= speaker.get_landmark_probability(lmk, landmarks, PointRepresentation(rand_p))[0]
-        #                     ps[i] *= speaker.get_probabilities_points(np.array([rand_p]), rel, head_on, lmk)
-        #                     if lmk == meaning.args[0] and rel == meaning.args[3]:
-        #                         temp = i
+        def loop(num_iterations):
+            min_objects = 1
+            max_objects = 7
 
-        #                 ps += epsilon
-        #                 ps = ps/ps.sum()
-        #                 prob = ps[temp]
-        #                 rank = sorted(ps, reverse=True).index(prob)
-        #                 entropy = entropy_of_probs(ps)
-        #             except Exception as pe:
-        #                 logger('Failed to parse sentence "%s"' % sentence, 'warning')
-        #                 logger(str(pe), 'warning')
+            # min_dists = []
+            # golden_log_probs = []
+            # golden_entropies = []
+            # golden_ranks = []
+            # golden_ranks = []
 
-        #                 prob = 0
-        #                 rank = len(meanings)-1
-        #                 entropy = 0
+            for iteration in range(num_iterations):
+                if (iteration % num_per_scene) == 0:
+                    if iteration != 0: sys.stdout.write('\bDone.\n')
+                    sys.stdout.write('Generating sentences for scene %d:\n' % (int(iteration/num_per_scene) + 1))
 
-        #         head_on = speaker.get_head_on_viewpoint(sampled_landmark)
-        #         all_descs = speaker.get_all_meaning_descriptions(trajector, scene, sampled_landmark, sampled_relation, head_on, 1)
-        #         distances = []
+                    num_objects = int(random() * (max_objects - min_objects) + min_objects)
+                    scene, speaker = construct_training_scene(random=True, num_objects=num_objects)
+                    utils.scene.set_scene(scene, speaker)
 
-        #         for desc in all_descs:
-        #             distances.append([edit_distance( sentence, desc ), desc])
+                    table = scene.landmarks['table'].representation.rect
 
-        #         distances.sort()
+                    # scene_bb = scene.get_bounding_box()
+                    # scene_bb = scene_bb.inflate( Vec2(scene_bb.width*0.5,scene_bb.height*0.5) )
 
-        #         return prob,entropy,rank,distances[0][0]
+                    # step = 0.1
+                    # all_heatmaps_tupless, xs, ys = speaker.generate_all_heatmaps(scene, step=step)
+                    # all_heatmaps_tuples = all_heatmaps_tupless[0]
+                    # lmks, rels, heatmapss = zip(*all_heatmaps_tuples)
+
+                    # meanings = zip(lmks,rels)
+                    # landmarks = list(set(lmks))
+
+                logger(('Iteration %d' % iteration),'okblue')
+
+                rand_p = Vec2(random()*table.width+table.min_point.x, random()*table.height+table.min_point.y)
+                trajector = Landmark( 'point', PointRepresentation(rand_p), None, Landmark.POINT)
+                training_sentence, sampled_relation, sampled_landmark = speaker.describe(trajector, scene, False, 1)
+
+                if num_samples:
+                    for i in range(num_samples):
+                        landmark, relation, _ = speaker.sample_meaning(trajector, scene, 1)
+                        self.train((landmark,relation), training_sentence, update=1, printing=printing)
+                else:
+                    for (landmark,relation),prob in speaker.all_meaning_probs( trajector, scene, 1 ):
+                        self.train((landmark,relation), training_sentence, update=prob, printing=printing)
+
+            #     def probs_metric():
+            #         meaning, sentence = generate_sentence(loc=rand_p,
+            #                                               consistent=consistent,
+            #                                               scene=scene,
+            #                                               speaker=speaker,
+            #                                               usebest=True,
+            #                                               printing=printing)
+
+            #         sampled_landmark, sampled_relation = meaning.args[0], meaning.args[3]
+            #         print meaning.args[0], meaning.args[3], len(sentence)
+
+            #         if sentence == "":
+            #             prob = 0
+            #             entropy = 0
+            #             rank = len(meanings)-1
+            #         else:
+            #             logger( 'Generated sentence: %s' % sentence)
+
+            #             try:
+            #                 golden_posteriors = get_all_sentence_posteriors(sentence, meanings, golden=True, printing=printing)
+            #                 epsilon = 1e-15
+            #                 ps = np.array([golden_posteriors[(lmk,rel)] for lmk, rel in meanings])
+            #                 temp = None
+            #                 for i,p in enumerate(ps):
+            #                     lmk,rel = meanings[i]
+            #                     # logger( '%f, %s' % (p, m2s(lmk,rel)))
+            #                     head_on = speaker.get_head_on_viewpoint(lmk)
+            #                     ps[i] *= speaker.get_landmark_probability(lmk, landmarks, PointRepresentation(rand_p))[0]
+            #                     ps[i] *= speaker.get_probabilities_points(np.array([rand_p]), rel, head_on, lmk)
+            #                     if lmk == meaning.args[0] and rel == meaning.args[3]:
+            #                         temp = i
+
+            #                 ps += epsilon
+            #                 ps = ps/ps.sum()
+            #                 prob = ps[temp]
+            #                 rank = sorted(ps, reverse=True).index(prob)
+            #                 entropy = entropy_of_probs(ps)
+            #             except Exception as pe:
+            #                 logger('Failed to parse sentence "%s"' % sentence, 'warning')
+            #                 logger(str(pe), 'warning')
+
+            #                 prob = 0
+            #                 rank = len(meanings)-1
+            #                 entropy = 0
+
+            #         head_on = speaker.get_head_on_viewpoint(sampled_landmark)
+            #         all_descs = speaker.get_all_meaning_descriptions(trajector, scene, sampled_landmark, sampled_relation, head_on, 1)
+            #         distances = []
+
+            #         for desc in all_descs:
+            #             distances.append([edit_distance( sentence, desc ), desc])
+
+            #         distances.sort()
+
+            #         return prob,entropy,rank,distances[0][0]
 
 
-        #     prob, entropy, rank, ed = probs_metric()
+            #     prob, entropy, rank, ed = probs_metric()
 
-        #     golden_log_probs.append( prob )
-        #     golden_entropies.append( entropy )
-        #     golden_ranks.append( rank )
-        #     min_dists.append( ed )
+            #     golden_log_probs.append( prob )
+            #     golden_entropies.append( entropy )
+            #     golden_ranks.append( rank )
+            #     min_dists.append( ed )
 
-        # return zip(golden_log_probs, golden_entropies, golden_ranks, min_dists)
+            # return zip(golden_log_probs, golden_entropies, golden_ranks, min_dists)
 
-    num_each = int(num_iterations/num_processors)
-    num_iterationss = [num_each]*num_processors
-    # num_iterationss[-1] += num_iterations-num_each*num_processors
-    logger( num_iterationss )
-    # lists = parmap(loop,num_iterationss)
-    parmap(loop,num_iterationss)
-    logger( '%s, %s' % (num_processors,num_each) )
-    # print lists
-    # print len(lists), len(lists[0])
-    # result = []
-    # for i in range(num_each):
-    #     logger( i )
-    #     for j in range(num_processors):
-    #         logger( '  %i %i %i' % (j,len(lists),len(lists[j])) )
-    #         result.append( lists[j][i] )
+        # num_each = int(num_iterations/num_processors)
+        # num_iterationss = [num_each]*num_processors
+        # # num_iterationss[-1] += num_iterations-num_each*num_processors
+        # logger( num_iterationss )
+        # # lists = parmap(loop,num_iterationss)
+        # parmap(loop,num_iterationss)
+        # logger( '%s, %s' % (num_processors,num_each) )
 
-    # golden_log_probs,golden_entropies,golden_ranks,min_dists = zip(*result)
+        loop(num_iterations)
+        print 'Adding/updating', len(self.productions.keys()), 'records to the database...'
 
-    # def running_avg(arr):
-    #     return [np.mean(arr[i:i+window]) for i in range(len(arr)-window)]
+        for (lhs,rhs,parent,lmk_class,lmk_ori_rels,lmk_color,rel),count in self.productions.items():
+            CProduction.update_production_counts(update=count,
+                                                 lhs=lhs,
+                                                 rhs=rhs,
+                                                 parent=parent,
+                                                 lmk_class=lmk_class,
+                                                 lmk_ori_rels=lmk_ori_rels,
+                                                 lmk_color=lmk_color,
+                                                 rel=rel_type(rel),
+                                                 dist_class=(rel.measurement.best_distance_class if hasattr(rel, 'measurement') else None),
+                                                 deg_class=(rel.measurement.best_degree_class if hasattr(rel, 'measurement') else None),
+                                                 multiply=False)
 
-    # avg_golden_log_probs = running_avg(golden_log_probs)
-    # avg_golden_entropies = running_avg(golden_entropies)
-    # avg_golden_ranks = running_avg(golden_ranks)
-    # avg_min = running_avg(min_dists)
+        print 'Done.'
 
-    # filename = 'initial_training_%d_samples_%d_iters_%d_per_scene_%f.shelf' % (num_samples, num_iterations, num_per_scene, time())
-    # f = shelve.open(filename)
-    # f['golden_log_probs'] = golden_log_probs
-    # f['golden_entropies'] = golden_entropies
-    # f['golden_ranks'] = golden_ranks
-    # f['min_dists'] = min_dists
-    # f['avg_golden_log_probs'] = avg_golden_log_probs
-    # f['avg_golden_entropies'] = avg_golden_entropies
-    # f['avg_golden_ranks'] = avg_golden_ranks
-    # f['avg_min'] = avg_min
-    # f.close()
 
-    # plt.plot(avg_min, 'o-', color='RoyalBlue')
-    # plt.ylabel('Edit Distance')
-    # plt.title('Initial Training')
-    # plt.show()
-    # plt.draw()
+        # print lists
+        # print len(lists), len(lists[0])
+        # result = []
+        # for i in range(num_each):
+        #     logger( i )
+        #     for j in range(num_processors):
+        #         logger( '  %i %i %i' % (j,len(lists),len(lists[j])) )
+        #         result.append( lists[j][i] )
 
-    # plt.figure()
-    # plt.suptitle('Initial Training')
-    # plt.subplot(211)
-    # plt.plot(golden_log_probs, 'o-', color='RoyalBlue')
-    # plt.plot(avg_golden_log_probs, 'x-', color='Orange')
-    # plt.ylabel('Golden Probability')
+        # golden_log_probs,golden_entropies,golden_ranks,min_dists = zip(*result)
 
-    # plt.subplot(212)
-    # plt.plot(golden_ranks, 'o-', color='RoyalBlue')
-    # plt.plot(avg_golden_ranks, 'x-', color='Orange')
-    # plt.ylabel('Golden Rank')
-    # plt.ioff()
-    # plt.show()
-    # plt.draw()
+        # def running_avg(arr):
+        #     return [np.mean(arr[i:i+window]) for i in range(len(arr)-window)]
+
+        # avg_golden_log_probs = running_avg(golden_log_probs)
+        # avg_golden_entropies = running_avg(golden_entropies)
+        # avg_golden_ranks = running_avg(golden_ranks)
+        # avg_min = running_avg(min_dists)
+
+        # filename = 'initial_training_%d_samples_%d_iters_%d_per_scene_%f.shelf' % (num_samples, num_iterations, num_per_scene, time())
+        # f = shelve.open(filename)
+        # f['golden_log_probs'] = golden_log_probs
+        # f['golden_entropies'] = golden_entropies
+        # f['golden_ranks'] = golden_ranks
+        # f['min_dists'] = min_dists
+        # f['avg_golden_log_probs'] = avg_golden_log_probs
+        # f['avg_golden_entropies'] = avg_golden_entropies
+        # f['avg_golden_ranks'] = avg_golden_ranks
+        # f['avg_min'] = avg_min
+        # f.close()
+
+        # plt.plot(avg_min, 'o-', color='RoyalBlue')
+        # plt.ylabel('Edit Distance')
+        # plt.title('Initial Training')
+        # plt.show()
+        # plt.draw()
+
+        # plt.figure()
+        # plt.suptitle('Initial Training')
+        # plt.subplot(211)
+        # plt.plot(golden_log_probs, 'o-', color='RoyalBlue')
+        # plt.plot(avg_golden_log_probs, 'x-', color='Orange')
+        # plt.ylabel('Golden Probability')
+
+        # plt.subplot(212)
+        # plt.plot(golden_ranks, 'o-', color='RoyalBlue')
+        # plt.plot(avg_golden_ranks, 'x-', color='Orange')
+        # plt.ylabel('Golden Rank')
+        # plt.ioff()
+        # plt.show()
+        # plt.draw()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -221,7 +308,8 @@ if __name__ == '__main__':
     parser.add_argument('--consistent', action='store_true')
     args = parser.parse_args()
 
-    initial_train(args.num_iterations, window=args.window_size,
+    st = SamplingTrainer()
+    st.initial_train(args.num_iterations, window=args.window_size,
         num_processors=args.num_processors, consistent=args.consistent,
         num_samples=args.num_samples, num_per_scene=args.num_per_scene)
 

@@ -24,6 +24,11 @@ random = random.random
 from planar import Vec2
 import shelve
 
+from matplotlib.pyplot import figure, show
+import numpy as npy
+from collections import Counter
+from random import choice
+
 
 # this class is only used for the --location command line argument
 class Point(object):
@@ -46,14 +51,14 @@ columns = [
 ]
 
 
-def generate_sentence(loc, scene, speaker, entropies, usebest=False, golden=False, printing=True, visualize=False):
-    utils.scene = utils.ModelScene(scene, speaker)
-
-    (lmk, _, _), (rel, _, _) = get_meaning(loc=loc, usebest=usebest)
+def generate_sentence(trajector, scene, speaker, entropies, golden=False, printing=True, visualize=False, meaning=None):
+    if meaning is not None:
+        lmk, rel = meaning
+        head_on = speaker.get_head_on_viewpoint(lmk)
+    else:
+        lmk, rel, head_on = speaker.sample_meaning(trajector, scene, 1)
 
     if visualize:
-        trajector = Landmark( 'point', PointRepresentation(Vec2(*loc)), None, Landmark.POINT )
-        head_on = speaker.get_head_on_viewpoint(lmk)
         speaker.visualize(scene, trajector, head_on, lmk, rel, '<empty>', 0.04)
 
     meaning1 = m2s(lmk, rel)
@@ -81,6 +86,7 @@ def generate_sentence(loc, scene, speaker, entropies, usebest=False, golden=Fals
         for score,lhs,rhs,parent in entropies[str(col)][:int(0.25*len(entropies[str(col)]))]:
             # p = '%s -> %s [%s]' % (rhs,lhs,parent)
             p = (lhs,rhs,parent)
+
             if p not in prods: prods[p] = []
             prods[p].append( (col, score) )
 
@@ -103,9 +109,17 @@ def generate_sentence(loc, scene, speaker, entropies, usebest=False, golden=Fals
 
     for k in sorted_map:
         print k
+        s = zip(*sorted_map[k])
+
+        fig = figure()
+        ax1 = fig.add_subplot(111)
+        col = ax1.scatter(s[0], s[4])
+        fig.savefig('%s_%s.png' % (k, 'golden' if golden else 'trained'))
+
+        # show()
+
         for prob,lhs,rhs,parent,entropy in sorted_map[k]:
             print '\t[%f] %s -> %s [%s] %f' % (prob,lhs,rhs,parent,entropy)
-
 
     expanded_prods = set()
 
@@ -169,31 +183,80 @@ def generate_sentence(loc, scene, speaker, entropies, usebest=False, golden=Fals
     sentence =  '\nlmk = %s [%f]\nlmk_color = %s [%f]\nlmk_ori = %s [%f]\nrel = %s [%f]\nrel_deg = %s [%f]\nrel_dist = %s [%f]' % \
         (lmk_prod, s1, lmk_color_prod, s2, lmk_ori_rels_prod, s3, rel_prod, s4, rel_deg_prod, s5, rel_dist_prod, s6)
 
-    return meaning1, sentence
+    return (lmk,rel), sentence, sorted_map
 
+def calculate_entropies():
+    group_by_parent = True
+    sorted_map = Counter()
+
+    # get all unique productions of the form lhs -> rhs
+    unique_prods = CProduction.get_unique_productions(group_by_rhs=True, group_by_parent=group_by_parent, golden=False)
+
+    for prod in unique_prods:
+        ratios = []
+
+        for col in columns:
+            ratio = CProduction.get_entropy_ratio_sample_dependent(lhs=prod.lhs, rhs=prod.rhs, column=col, golden=False, verbose=False)
+            # ratio = CProduction.get_mutual_information(lhs=prod.lhs, rhs=prod.rhs, column=col, golden=golden, verbose=verbose)
+            ratios.append( (ratio, col) )
+            if str(col) not in sorted_map: sorted_map[str(col)] = []
+            sorted_map[str(col)].append( (ratio, prod.lhs, prod.rhs, prod.parent) )
+
+    for c in sorted_map:
+        sorted_map[str(c)] = sorted(sorted_map[str(c)])
+
+    return sorted_map
+
+def calculate_score(ents):
+    scores = Counter()
+
+    for col,l in ents.items():
+        print col, len(l)
+        for freq,lhs,rhs,parent,ent in l:
+            if freq > 30:
+                print '\t', lhs,rhs,parent,ent,freq, ent/freq
+
+        col_score_total = sum([ent/freq for freq,_,_,_,ent in l if freq > 30])
+        scores[col] = col_score_total / len(l)
+
+    return scores
 
 
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument('-b', '--best', action='store_true')
-    parser.add_argument('-g', '--golden', action='store_true')
     parser.add_argument('-v', '--verbose', action='store_true')
-    parser.add_argument('-n', '--num-sentences', type=int, default=1)
+    parser.add_argument('-c', '--calculate-entropy', action='store_true')
+    parser.add_argument('-f', '--entropy-file')
     parser.add_argument('--visualize', action='store_true')
     args = parser.parse_args()
 
-    ent_filenames = [
-        'entropies_trained_grouped_ratio_sample_dep_1k.shelf',
-        # 'entropies_trained_grouped_mutual_1k.shelf',
-        # 'entropies_trained_grouped_sample_dep_1k.shelf',
+    # for each scenario
+    #    for each semantic feature
+    #       there will ditributuion over frequency and distribution over mutual information scores,
+    #       we want a histrogram of both
 
-        # 'entropies_trained_grouped_mutual_no_chain.shelf',
-        # 'entropies_trained_grouped_mutual.shelf',
-        # 'entropies_trained_grouped_sample_dep.shelf',
-        # 'entropies_trained_grouped_ratio.shelf',
-        # 'entropies_trained_grouped_mutual_alt.shelf'
-    ]
+    fn_golden = 'entropies_golden_grouped_ratio_sample_dep_200k.shelf'
+
+    if args.entropy_file:
+        fn_trained = args.entropy_file
+    else:
+        fn_trained = 'entropies_trained_grouped_ratio_sample_dep_1k.shelf'
+
+    f = shelve.open(fn_golden)
+    ents_golden = f['entropies']
+    f.close()
+
+    if args.calculate_entropy:
+        ents_trained = calculate_entropies()
+        f = shelve.open('tmp_entropies.shelf')
+        f['entropies'] = ents_trained
+        f.close()
+    else:
+        f = shelve.open(fn_trained)
+        ents_trained = f['entropies']
+        f.close()
 
     min_objects = 1
     max_objects = 7
@@ -201,6 +264,7 @@ if __name__ == '__main__':
 
     num_objects = int(random() * (max_objects - min_objects) + min_objects)
     scene, speaker = construct_training_scene(random=random_scene, num_objects=num_objects)
+    utils.scene = utils.ModelScene(scene, speaker)
 
     table = scene.landmarks['table'].representation.rect
     t_min = table.min_point
@@ -208,18 +272,44 @@ if __name__ == '__main__':
     t_w = table.width
     t_h = table.height
 
-    location = Point(str(random()*t_w+t_min.x) + ',' + str(random()*t_h+t_min.y))
-    print location
+    all_objects = [lmk for lmk in scene.landmarks.values() if lmk.name != 'table']
+    trajector = choice(all_objects)
 
-    for fn in ent_filenames:
-        print str(fn).upper()
-        f = shelve.open(fn)
-        ents = f['entropies']
-        f.close()
+    logger('Teacher chooses [%s]' % trajector)
 
-        for _ in range(args.num_sentences):
-            _, sentence = generate_sentence(location.xy, scene, speaker, ents, usebest=args.best, golden=args.golden, printing=args.verbose, visualize=args.visualize)
-            logger('Generated sentence: %s' % sentence)
-            print '\n\n'
+    (lmk,rel), sentence_golden, tmap = generate_sentence(
+        trajector,
+        scene,
+        speaker,
+        ents_golden,
+        golden=True,
+        printing=args.verbose,
+        visualize=args.visualize
+    )
 
-        print '*'*80, '\n\n\n'
+    print '\n\n', '*'*80, '\n\n\n'
+
+    _, sentence_trained, smap = generate_sentence(
+        trajector,
+        scene,
+        speaker,
+        ents_trained,
+        golden=False,
+        printing=args.verbose,
+        visualize=args.visualize,
+        meaning=(lmk,rel)
+    )
+
+    print '\n\n', '*'*80, '\n\n\n'
+
+    teach_score = calculate_score(tmap)
+    print '\n\n', '*'*80, '\n\n\n'
+    stud_score = calculate_score(smap)
+    print '\n\n', '*'*80, '\n\n\n'
+
+    logger('Generated Teacher sentence: %s' % sentence_golden)
+    logger('Current teacher score: %s' % str(teach_score))
+    print '\n\n', '*'*80, '\n\n\n'
+    logger('Generated Student sentence: %s' % sentence_trained)
+    logger('Current Student score: %s' % str(stud_score))
+

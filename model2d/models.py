@@ -459,13 +459,13 @@ class Production(Base):
     relation_degree_class = Column(String)
 
     # belongs_to
-    parent_id = Column(Integer, ForeignKey('productions.id'))
+    parent_id = Column(String)
     location_id = Column(Integer, ForeignKey('locations.id'))
 
     # has many
     words = relationship('Word', backref='parent')
-    productions = relationship('Production', backref=backref('parent',
-                                                             remote_side=[id]))
+    # productions = relationship('Production', backref=backref('parent',
+    #                                                          remote_side=[id]))
 
     def __unicode__(self):
         return u'%s -> %s' % (self.lhs, self.rhs)
@@ -629,9 +629,7 @@ class CProduction(Base):
         if verbose: print 'Calculating entropy ratio for %s column' % column
 
         # column entropy unconditinal
-        z = cls.query(CProduction.lhs,
-                      CProduction.rhs,
-                      column,
+        z = cls.query(column,
                       func.sum(CProduction.count).label('count'),
                       golden=golden) \
                 .filter(column!=None) \
@@ -703,16 +701,13 @@ class CProduction(Base):
         if verbose: print 'Calculating entropy ratio for %s column' % column
 
         # column entropy unconditinal
-        z = cls.query(CProduction.lhs,
-                      CProduction.rhs,
-                      column,
+        z = cls.query(column,
                       func.sum(CProduction.count).label('count'),
                       golden=golden) \
                 .filter(column!=None) \
                 .filter(column!=',,,') \
                 .group_by(column) \
                 .all()
-
 
         attr_idx = str(column).find('.')+1
         attr_name = str(column)[attr_idx:]
@@ -752,7 +747,26 @@ class CProduction(Base):
 
 
     @classmethod
-    def get_probability(cls, lhs, rhs, column, column_value, parent=None, golden=False, verbose=False):
+    def get_mutual_information(cls, lhs, rhs, column, golden=False, verbose=False):
+        if verbose: print 'Calculating mutual information for %s column' % column
+
+        # unconditinal
+        z = cls.query(column,
+                      func.sum(CProduction.count).label('count'),
+                      golden=golden) \
+                .filter(column!=None) \
+                .filter(column!=',,,') \
+                .group_by(column) \
+                .all()
+
+        max_sum = sum([prod.count for prod in z])
+
+        uncond = []
+        for prod in z:
+            p = prod.count / float(max_sum)
+            uncond.append( (prod, p) )
+
+        # conditioned on lhs and rhs
         q = cls.query(CProduction.lhs,
                       CProduction.rhs,
                       CProduction.parent,
@@ -764,22 +778,94 @@ class CProduction(Base):
                 .filter(column!=',,,')
 
         if rhs is not None: q = q.filter(CProduction.rhs==rhs)
+        q = q.group_by(column, CProduction.parent)
+        q.all()
+
+        max_sum = sum([prod.count for prod in q])
+
+        cond = []
+        for prod in q:
+            p = prod.count / float(max_sum)
+            cond.append( (prod, p) )
+
+        # joint
+        joint_ditribution = []
+        attr_idx = str(column).find('.')+1
+        attr_name = str(column)[attr_idx:]
+
+        for x_row,_ in cond:
+            # print x_row.lhs, x_row.rhs, x_row.parent, getattr(x_row, attr_name), x_row.count
+            for y_row,_ in uncond:
+                # print '\t', getattr(y_row, attr_name), y_row.count
+                qq = cls.query(CProduction.lhs,
+                      CProduction.rhs,
+                      CProduction.parent,
+                      column,
+                      func.sum(CProduction.count).label('count'),
+                      golden=golden)
+
+                if x_row.lhs is not None: qq = qq.filter(CProduction.lhs==x_row.lhs)
+                if x_row.rhs is not None: qq = qq.filter(CProduction.rhs==x_row.rhs)
+                if x_row.parent is not None: qq = qq.filter(CProduction.parent==x_row.parent)
+
+                attr_value = getattr(y_row, attr_name)
+                if attr_value is not None: qq = qq.filter(column==attr_value)
+
+                v = qq.one()
+                if v.count is not None:
+                    joint_ditribution.append( (x_row, y_row, v) )
+
+                    # print '\t\t%s -> %s [%s], %s -- %d' % (v.lhs, v.rhs, v.parent, getattr(v, attr_name), v.count)
+
+        max_sum = sum([prod.count for _,_,prod in joint_ditribution])
+
+        joint = {}
+        for x,y,prod in joint_ditribution:
+            p = prod.count / float(max_sum)
+            joint[(x,y)] = (prod, p)
+
+        # x = lhs,rhs,parent
+        # y = column
+        # x,y = lhs,rhs,parent,column
+        mi = 0
+        for x,p_x in cond:
+            for y,p_y in uncond:
+                if (x,y) in joint:
+                    _,j = joint[(x,y)]
+                    mi += j*math.log(j/(p_x*p_y))
+
+        return 1.0/mi if mi > 0 else 99
+
+    @classmethod
+    def get_probability(cls, lhs, rhs, column, column_value, parent=None, golden=False, verbose=False):
+        q = cls.query(CProduction.lhs,
+                      CProduction.rhs,
+                      CProduction.parent,
+                      column,
+                      func.sum(CProduction.count).label('count'),
+                      golden=golden) \
+                .filter(CProduction.lhs==lhs) \
+                .filter(column==column_value)#!=None) \
+                # .filter(column!=',,,')
+
+        if rhs is not None: q = q.filter(CProduction.rhs==rhs)
         if parent is not None: q = q.filter(CProduction.parent==parent)
 
         q = q.group_by(column, CProduction.parent)
         q = q.order_by('count desc')
-        q.all()
+        res = q.first()
+        return res.count if res else 0
 
-        attr_idx = str(column).find('.')+1
-        attr_name = str(column)[attr_idx:]
+        # attr_idx = str(column).find('.')+1
+        # attr_name = str(column)[attr_idx:]
 
-        # q_sum = sum([row.count for row in q])
+        # # q_sum = sum([row.count for row in q])
 
-        for row in q:
-            if getattr(row, attr_name) == column_value:
-                return row.count#/float(q_sum)
+        # for row in q:
+        #     if getattr(row, attr_name) == column_value:
+        #         return row.count#/float(q_sum)
 
-        return 0
+        # return 0
         # q_probs = [float(row.count)/q_sum for row in q]
         # q_prods = [(row.lhs,row.rhs,row.parent,getattr(row, attr_name)) for row in q]
         # return zip(q_probs, q_prods)

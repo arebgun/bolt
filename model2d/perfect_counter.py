@@ -31,48 +31,55 @@ random = random.random
 from planar import Vec2
 from nltk.tree import ParentedTree
 from sqlalchemy import func
-from sqlalchemy.orm import aliased
 
 
 def save_tree(tree, loc, rel, lmks, parent=None):
     if isinstance(tree, ParentedTree):
         for lmk in lmks:
-            prod = Production()
-            prod.lhs = tree.node
-            prod.rhs = ' '.join(n.node if isinstance(n, ParentedTree) else n for n in tree)
-            prod.parent = parent
-            prod.location = loc
+            lhs = tree.node
+            rhs  = ' '.join(n.node if isinstance(n, ParentedTree) else n for n in tree)
 
-            prod.relation = rel_type(rel)
-            if hasattr(rel, 'measurement'):
-                prod.relation_distance_class = rel.measurement.best_distance_class
-                prod.relation_degree_class = rel.measurement.best_degree_class
-
-            prod.landmark = lmk_id(lmk)
-            prod.landmark_class = lmk.object_class
-            prod.landmark_orientation_relations = get_lmk_ori_rels_str(lmk)
-            prod.landmark_color = lmk.color
-
-            if prod.lhs == 'S':
-                tokens = prod.rhs.split()
-                ngram_list = ngrams(tokens)
+            if lhs == 'S':
+                ngram_list = ngrams( rhs.split() )
 
                 for ngram in ngram_list:
-                    s_ngram = Production()
-                    s_ngram.lhs = prod.lhs
-                    s_ngram.rhs = ' '.join(ngram)
-                    s_ngram.parent = prod.parent
-                    s_ngram.location = prod.location
-                    s_ngram.relation_distance_class = prod.relation_distance_class
-                    s_ngram.relation_degree_class = prod.relation_degree_class
-                    s_ngram.landmark = prod.landmark
-                    s_ngram.landmark_class = prod.landmark_class
-                    s_ngram.landmark_orientation_relations = prod.landmark_orientation_relations
-                    s_ngram.landmark_color = prod.landmark_color
+                    n_prod = Production()
+                    n_prod.parent_id = parent
+                    n_prod.location = loc
+                    n_prod.relation = rel_type(rel)
+
+                    if hasattr(rel, 'measurement'):
+                        n_prod.relation_distance_class = rel.measurement.best_distance_class
+                        n_prod.relation_degree_class = rel.measurement.best_degree_class
+
+                    n_prod.landmark = lmk_id(lmk)
+                    n_prod.landmark_class = lmk.object_class
+                    n_prod.landmark_orientation_relations = get_lmk_ori_rels_str(lmk)
+                    n_prod.landmark_color = lmk.color
+
+                    n_prod.lhs = lhs
+                    n_prod.rhs = ' '.join(ngram)
+            else:
+                prod = Production()
+                prod.parent_id = parent
+                prod.location = loc
+                prod.relation = rel_type(rel)
+
+                if hasattr(rel, 'measurement'):
+                    prod.relation_distance_class = rel.measurement.best_distance_class
+                    prod.relation_degree_class = rel.measurement.best_degree_class
+
+                prod.landmark = lmk_id(lmk)
+                prod.landmark_class = lmk.object_class
+                prod.landmark_orientation_relations = get_lmk_ori_rels_str(lmk)
+                prod.landmark_color = lmk.color
+
+                prod.lhs = lhs
+                prod.rhs = rhs
 
             # save subtrees, keeping track of parent
             for subtree in tree:
-                save_tree(subtree, loc, rel, lmks, prod)
+                save_tree(subtree, loc, rel, lmks, lhs)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -115,8 +122,8 @@ if __name__ == '__main__':
         sentence, rel, lmk = describe_trajector(speaker, trajector, scene, False, 1)
 
         try:
-            # parsestring = parse_adios(sentence)
-            parsestring = parse_bllip(sentence)
+            parsestring = parse_adios(sentence)
+            # parsestring = parse_bllip(sentence)
         except Exception as pe:
             console_write('\b\n')
             console_flush()
@@ -139,7 +146,7 @@ if __name__ == '__main__':
             logger( '%s; %s' % (repr(sentence), parse.pprint) )
 
         location = Location(x=xloc, y=yloc)
-        save_tree( parse, location, rel, get_landmark_parent_chain(lmk) )
+        save_tree( parse, location, rel, [lmk] ) #get_landmark_parent_chain(lmk) )
 
         if i % 200 == 0: session.commit()
 
@@ -157,38 +164,12 @@ if __name__ == '__main__':
     logger('Failed to parse %d out of %d (%.2f%%) sentences' % (num_failed, args.num_sentences, num_failed/args.num_sentences*100))
     logger('Counting ...')
 
-    # count productions with no parent
-    parent = aliased(Production)
     qry = session.query(Production.lhs, Production.rhs,
-                        Production.landmark, Production.landmark_class, Production.landmark_orientation_relations, Production.landmark_color,
+                        Production.parent_id, Production.landmark, Production.landmark_class, Production.landmark_orientation_relations, Production.landmark_color,
                         Production.relation, Production.relation_distance_class,
                         Production.relation_degree_class, func.count(Production.id)).\
-                  filter_by(parent=None).\
                   group_by(Production.lhs, Production.rhs,
-                           Production.landmark, Production.landmark_class, Production.landmark_orientation_relations, Production.landmark_color,
-                           Production.relation, Production.relation_distance_class,
-                           Production.relation_degree_class)
-    for row in qry:
-        cp = CProduction(lhs=row[0],
-                         rhs=row[1],
-                         landmark=row[2],
-                         landmark_class=row[3],
-                         landmark_orientation_relations=row[4],
-                         landmark_color=row[5],
-                         relation=row[6],
-                         relation_distance_class=row[7],
-                         relation_degree_class=row[8],
-                         count=row[9])
-
-    # count productions with parent
-    parent = aliased(Production)
-    qry = session.query(Production.lhs, Production.rhs,
-                        parent.lhs, Production.landmark, Production.landmark_class, Production.landmark_orientation_relations, Production.landmark_color,
-                        Production.relation, Production.relation_distance_class,
-                        Production.relation_degree_class, func.count(Production.id)).\
-                  join(parent, Production.parent).\
-                  group_by(Production.lhs, Production.rhs,
-                           parent.lhs, Production.landmark, Production.landmark_class, Production.landmark_orientation_relations, Production.landmark_color,
+                           Production.parent_id, Production.landmark, Production.landmark_class, Production.landmark_orientation_relations, Production.landmark_color,
                            Production.relation, Production.relation_distance_class,
                            Production.relation_degree_class)
     for row in qry:
