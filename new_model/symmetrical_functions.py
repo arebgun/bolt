@@ -22,38 +22,30 @@ import functools as ft
 def angular_mean(x):
     return np.arctan2(np.sin(x).sum()/len(x), np.cos(x).sum()/len(x))
 
+def sample_mean_and_std(x):
+    N = x.shape[0]
+    mu = x.mean()
+    std = np.sqrt(((x-mu)**2).sum()/(N-1))
+    return mu, std
+    
+
 @automain
 def main():
 
-    def angle_diff(angles1, angle2):
-        return np.abs((angles1-angle2+np.pi)%(2*np.pi)-np.pi)
-
-    def angle_diff2(angles1, angle2):
-        return np.abs((angles1-angle2+180)%(360)-180)
+    sqrt3 = np.sqrt(3)
 
     def decay_envelope(x, loc, scale):
-        return np.exp(-angle_diff2(x,loc)/(2*scale))
+        scale /= math.e
+        return np.exp(-np.abs(x-loc)/(2*scale))
 
-    def von_mises_function(x, loc, scale):
-        return np.exp(scale*(np.cos(np.radians(x)-np.radians(loc))-1))
+    def logistic_bell(x, loc, scale):
+        return np.exp(-np.pi*(x-loc)/(scale*sqrt3))/(((1+np.exp(-np.pi*(x-loc)/(scale*sqrt3)))/2.)**2)
 
-    def logistic_function(x, loc, scale):
-        return 1./(1+np.exp(-0.01*scale*(x-loc)))
+    def gaussian_bell(x, loc, scale):
+        return np.exp(-(x-loc)**2/(2*scale**2))
 
-    def sech_family_distribution(x, loc, scale, power=1):
-        return 1/(np.cosh(((x-loc)/scale))**power)
-
-    def double_logistic_function(x, loc, scale):
-        return logistic_function(x,loc-2*scale,10*scale)*\
-               logistic_function(x,loc+2*scale,-10*scale)
-
-    def binom_errfunc(params, func, xdata, ydata):
-        epsilon = 0.000000001
-        probs = func(xdata, *params)
-        probs[np.where(probs==0)] += epsilon
-        probs[np.where(probs==1)] -= epsilon
-        # return np.product((probs**ydata)*((1-probs)**(1-ydata)))
-        return -(ydata*np.log(probs) + (1-ydata)*np.log(1-probs)).sum()
+    def sech_bell(x, loc, scale):
+        return 1/(np.cosh((np.pi*(x-loc)/(2*scale*sqrt3)))**2)
 
     def generate_training_data(x, function, params, num_trials, xnoise=0):
         xs, ys = \
@@ -66,60 +58,26 @@ def main():
         ys = np.array(ys)
         return xs, ys
 
-    def fit_function(opt_function,p0,function,train_xs,train_ys,**kwargs):
-        print 'p0',p0
-        p1 = opt_function(func=binom_errfunc,
-                          x0=p0,
-                          args=(function,train_xs,train_ys),
-                          **kwargs)[0]
-        print 'p1',p1
-        return p1
-
     def bell_initial_params(x,y):
-        return x[np.where(y==1)].mean(), 1
-
-    def angular_bell_initial_params(x,y):
-        return np.degrees(angular_mean(np.radians(x[np.where(y==1)]))), 1
-
-    def sigmoid_initial_params(x,y):
-        sort_i = np.argsort(x)
-        sorted_x = x[sort_i]
-        sorted_y = y[sort_i]
-        diffs = np.append(sorted_y[1:]-sorted_y[:-1], False)
-        diff_x = sorted_x[np.where(diffs)]
-        initial_loc = diff_x.mean()
-        initial_scale = 185./diff_x.std()
-        mean_diff = sorted_x[np.where(sorted_y)].mean() - \
-                    sorted_x[np.where(np.logical_not(sorted_y))].mean()
-        initial_scale = math.copysign(initial_scale,mean_diff)
-        return initial_loc, initial_scale
+        return sample_mean_and_std(x[np.where(y==1)])
 
 
     functions = {
-        'logistic':  {'func':logistic_function, 
-                      'bounds':[(None,None),(None,None)],
-                      'initial':sigmoid_initial_params},
-        'sech1':     {'func':sech_family_distribution,
-                      'bounds':[(None,None),(None,None)],
-                      'initial':bell_initial_params},
-        'sech2':     {'func':ft.partial(sech_family_distribution,power=2),
-                      'bounds':[(None,None),(None,None)],
-                      'initial':bell_initial_params},
-        'sech/2':     {'func':ft.partial(sech_family_distribution,power=0.5),
-                      'bounds':[(None,None),(None,None)],
-                      'initial':bell_initial_params},
-        'double log':{'func':double_logistic_function,
-                      'bounds':[(None,None),(None,None)],
-                      'initial':bell_initial_params},
-        'probit':    {'func':st.norm.cdf, 
+        'gaussian':  {'func':gaussian_bell,
                       'bounds':[(None,None),(0,None)],
-                      'initial':sigmoid_initial_params},
-        'von mises': {'func':von_mises_function, 
+                      'initial':bell_initial_params},
+        'logistic':  {'func':logistic_bell, 
                       'bounds':[(None,None),(0,None)],
-                      'initial':angular_bell_initial_params},
+                      'initial':bell_initial_params},
         'exp decay': {'func':decay_envelope, 
                       'bounds':[(None,None),(0,None)],
-                      'initial':angular_bell_initial_params},
+                      'initial':bell_initial_params},
+        'sech':      {'func':sech_bell,
+                      'bounds':[(None,None),(0,None)],
+                      'initial':bell_initial_params},
+        # 'von mises': {'func':von_mises_function, 
+        #               'bounds':[(None,None),(0,None)],
+        #               'initial':angular_bell_initial_params},
     }
 
     global function
@@ -129,31 +87,28 @@ def main():
     function = functions['logistic']['func']
     bounds = functions['logistic']['bounds']
 
-    opt_function = opt.fmin_l_bfgs_b
     fig, (ax1, ax2) = plt.subplots(2,1)
     plt.subplots_adjust(left=0.25, bottom=0.25)
     x = np.arange(-180, 180, 0.1)
     loc0 = 0
-    scale0 = 10
+    scale0 = 25
     f = function(x, loc=loc0, scale=scale0)
-    l1, = ax1.plot(x, f, lw=2, color='red')
+    l1, = ax1.plot(x, f, lw=3, color='red')
     ax1.axis([-180, 180, 0, 1])
 
     initial_params = functions['logistic']['initial']
 
     xnoise0 = 0
-    num_trials = 3
+    num_trials = 1
     train_xs, train_ys = generate_training_data(x, function, 
                                                 [loc0,scale0],
                                                 num_trials,
                                                 xnoise=xnoise0)
     # p0 = [1,1]
     print 'p',loc0,scale0
-    p0 = initial_params(train_xs,train_ys)
-    kwargs = dict(approx_grad=True, disp=True, bounds=bounds, maxfun=5)
-    p1 = fit_function(opt_function,p0,function,train_xs,train_ys,**kwargs)
-    f2 = function(x,*p1)
-    l2, = ax2.plot(x, f2, lw=2, color='red')
+    loc1, scale1 = initial_params(train_xs,train_ys)
+    f2 = function(x, loc=loc1, scale=scale1)
+    l2, = ax1.plot(x, f2, lw=2, color='blue')
     ax2.axis([-180, 180, 0, 1])
 
 
@@ -163,7 +118,7 @@ def main():
     axnoise = plt.axes([0.25, 0.17, 0.65, 0.03], axisbg=axcolor)
 
     sloc = wdg.Slider(axloc, 'Loc', -180, 180, valinit=loc0)
-    sscale = wdg.Slider(axscale, 'Scale', -20, 20, valinit=scale0)
+    sscale = wdg.Slider(axscale, 'Scale', -50, 50, valinit=scale0)
     snoise = wdg.Slider(axnoise, 'Noise', 0, 60, valinit=xnoise0)
 
     def update(val):
@@ -177,9 +132,8 @@ def main():
                                                     num_trials,
                                                     xnoise=xnoise)
         print 'p',loc,scale
-        p0 = initial_params(train_xs, train_ys)
-        p1 = fit_function(opt_function,p0,function,train_xs,train_ys,**kwargs)
-        f2 = function(x,*p1)
+        loc1, scale1 = initial_params(train_xs, train_ys)
+        f2 = function(x,loc=loc1,scale=scale1)
         l2.set_ydata(f2)
         # amp = samp.val
         # freq = sfreq.val

@@ -208,7 +208,10 @@ class Vec2(tuple):
         """The angle the vector makes to the positive x axis in the range
         ``(-180, 180]``.
         """
-        return math.degrees(math.atan2(self[1], self[0]))
+        if self.length == 0.0:
+            return float('NaN')
+        else:
+            return math.degrees(math.atan2(self[1], self[0]))
 
     def angle_to(self, other):
         """Compute the smallest angle from this vector to another.
@@ -218,11 +221,15 @@ class Vec2(tuple):
         :return: Angle in degrees in the range ``(-180, 180]``.
         :rtype: float
         """
-        return other.angle - self.angle
+        angle_diff = other.angle - self.angle
+        return (angle_diff + 180) % 360 - 180
 
     @staticmethod
     def angles(points):
-        return np.degrees(np.arctan2(*np.array(points).T))
+        x1,x2 = np.array(points).T
+        angles = np.degrees(np.arctan2(x2,x1))
+        angles[np.where(np.hypot(x2,x1)==0.0)] = float('NaN')
+        return angles
 
     def angle_to_points(self, others):
         """Compute the smallest angle from this vector to other(s).
@@ -232,7 +239,8 @@ class Vec2(tuple):
         :return: Angle in degrees in the range ``(-180, 180]``.
         :rtype: length N ndarray of floats.
         """
-        return signed_angle_diff(self.angle, self.angles(others))
+        angle_diffs = self.angles(others) - self.angle
+        return (angle_diffs + 180) % 360 - 180#signed_angle_diff(self.angle, self.angles(others))
 
     def distance_to(self, other):
         """Compute the distance to another point vector.

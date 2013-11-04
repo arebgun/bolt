@@ -105,6 +105,10 @@ class BoundingBox(object):
         return self._max.y - self._min.y
 
     @property
+    def area(self):
+        return self.width*self.height
+
+    @property
     def edge_segments(self):
         """The edges of the bounding box as LineSegments"""
         if self._edge_segments is None:
@@ -249,52 +253,6 @@ class BoundingBox(object):
             else:
                 return self._max.distance_to(point)
 
-    # def distance_to_points(self, points):
-    #     """Like distance_to but takes a list or array of points."""
-    #     points = array(points)
-    #     xs, ys = points.T
-    #     lt_min_x = xs < self._min.x
-    #     le_max_x = xs <= self._max.x
-    #     lt_min_y = ys < self._min.y
-    #     le_max_y = ys <= self._max.y
-    #     distances = zeros(len(points))
-    #     # if lt_min_x:
-    #         # if lt_min_y:
-    #     one = land(lt_min_x,lt_min_y)
-    #     distances[one] = self._min.distance_to_points(points[one,:])
-    #         # elif le_max_y:
-    #     _elif = land(le_max_y,lnot(lt_min_y))
-    #     two = land(lt_min_x,_elif)
-    #     distances[two] = self._min.x - xs[two]
-    #         # else:
-    #     _else = lnot(le_max_y)
-    #     three = land(lt_min_x,_else)
-    #     distances[three] = \
-    #         Vec2(self._min.x,self._max.y).distance_to_points(points[three,:])
-    #     # elif le_max_x:
-    #     elif_ = land(le_max_x,lnot(lt_min_x))
-    #         # if lt_min_y:
-    #     four = land(elif_,lt_min_y)
-    #     distances[four] = self._min.y - ys[four]
-    #         # elif le_max_y:
-    #     #five, these are already 0
-    #         # else:
-    #     six = land(elif_,_else)
-    #     distances[six] = ys[six] - self._max.y
-    #     # else:
-    #     else_ = lnot(le_max_x)
-    #         # if lt_min_y:
-    #     seven = land(else_,lt_min_y)
-    #     distances[seven] = \
-    #         Vec2(self._max.x,self._min.y).distance_to_points(points[seven,:])
-    #         # elif le_max_y:
-    #     eight = land(else_,_elif)
-    #     distances[eight] = xs[eight] - self._max.x
-    #         # else:
-    #     nine = land(else_,_else)
-    #     distances[nine] = self._max.distance_to_points(points[nine,:])
-    #     return distances
-
     def distance_to_points(self, points):
         xs, ys = array(points).T
         xds = array([self._min.x - xs, xs - self._max.x])
@@ -371,6 +329,26 @@ class BoundingBox(object):
             scale = planar.Affine.scale(min(self.width / shape_bbox.width,
                 self.height / shape_bbox.height))
             return shape * (offset * scale)
+
+    def overlap_with_point(self, point):
+        return 0
+
+    def overlap_with_line(self, line):
+        return 0
+
+    def overlap_with_box(self, box):
+        xdelta = min(self._max.x, box._max.x) - max(self._min.x, box._min.x)
+        ydelta = min(self._max.y, box._max.y) - max(self._min.y, box._min.y)
+        if xdelta <= 0 or ydelta <= 0:
+            return 0
+        else:
+            return xdelta * ydelta
+
+    def overlap_with_circle(self, circle):
+        raise NotImplementedError
+
+    def overlap_with_polygon(self, poly):
+        raise NotImplementedError
 
     def to_polygon(self):
         """Return a rectangular :class:`~planar.Polygon` object with the same

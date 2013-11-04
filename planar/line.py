@@ -68,9 +68,13 @@ class _LinearGeometry(object):
         self._normal = normal
         self._direction = normal.perpendicular()
 
-    def angle_to(self, point, pivot):
-        angle = self._direction.angle_to(point-pivot)
-        return min(angle, 180-angle)
+    def angle_to(self, vector):
+        return self._direction.angle_to(vector)
+        # return min(angle, angle-360)
+
+    def angle_to_points(self, vectors):
+        return self._direction.angle_to_points(vectors)
+        # return np.array([angles,angles-360]).min(axis=0)
 
     def distance_along(self, point, to):
         raise NotImplementedError
