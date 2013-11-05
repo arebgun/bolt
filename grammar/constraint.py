@@ -1,6 +1,6 @@
 import sys
 sys.path.insert(1,'..')
-from utils import logger
+import utils
 import numpy as np
 import collections as coll
 from common import Applicabilities
@@ -56,17 +56,17 @@ class PropertyConstraint(Constraint):
     '''Constraint on individual entities'''
 
     def ref_applicabilities(self, context, potential_referents, **kwargs):
-        if ApplicabilityRegister.scene == context.scene:
-            if self in ApplicabilityRegister.apps:
-                logger('Recalling apps')
-                return ApplicabilityRegister.apps[self]
-        else:
-            logger('Resetting ApplicabilityRegister')
-            ApplicabilityRegister.reset(context.scene)
+        # if ApplicabilityRegister.scene == context.scene:
+        #     if self in ApplicabilityRegister.apps:
+        #         # logger('Recalling apps')
+        #         return ApplicabilityRegister.apps[self]
+        # else:
+        #     logger('Resetting ApplicabilityRegister')
+        #     ApplicabilityRegister.reset(context.scene)
 
         apps = Applicabilities([(ref, self.ref_applicability(ref)) 
                                 for ref in potential_referents])
-        ApplicabilityRegister.apps[self] = apps
+        # ApplicabilityRegister.apps[self] = apps
         return apps
 
     def ref_applicability(self, potential_referent, **kwargs):
@@ -99,34 +99,42 @@ class RelationConstraint(Constraint):
     def ref_applicabilities(self, context, potential_referents, 
                                relata_apps, **kwargs):
         assert(relata_apps is not None)
-        apps = Applicabilities([(ref, self.ref_applicability(ref, 
+        apps = Applicabilities([(ref, self.ref_applicability(context, ref, 
                                                              relata_apps,
                                                              **kwargs))
                                 for ref in potential_referents])
         return apps
 
-    def ref_applicability(self, potential_referent, relata_apps, **kwargs):
-        probs = [self.entity_applicability(entity, relata_apps, **kwargs)
+    def ref_applicability(self, context, potential_referent, 
+                            relata_apps, **kwargs):
+        probs = [self.entity_applicability(context, entity, relata_apps, 
+                                           **kwargs)
                  for entity in potential_referent]
         return np.product(probs)
 
-    def entity_applicability(self, entity, relata_apps, **kwargs):
+    def entity_applicability(self, context, entity, relata_apps, **kwargs):
         # entity_app = 0
         # relatum_app_sum = sum(relata_apps.values())
         ps = []
         for relatum, relatum_app in relata_apps.items():
             p = np.product(
-                [self.probability_func(self.feature.observe(entity, 
-                                                            relentity,
-                                                            **kwargs))
+                [self.probability_func(self.feature.observe(
+                    entity, 
+                    relentity,
+                    viewpoint=context.speaker.get_head_on_viewpoint(relentity),
+                    **kwargs))
                  for relentity in relatum])
 
             # entity_app += p*relatum_app/relatum_app_sum
             ps.append(p*relatum_app)
-        ps = np.array(ps)
-        ps = ps**2/ps.sum()
-        # return entity_app
-        return max(ps)
+        ps = np.nan_to_num(ps)
+        pssum = ps.sum()
+        if pssum == 0:
+            return 0
+        else:
+            ps = ps**2/pssum
+            # return entity_app
+            return max(ps)
 
 
 class ConstraintCollection(coll.OrderedDict):
@@ -163,36 +171,40 @@ class ConstraintCollection(coll.OrderedDict):
         return other
 
     def ref_applicabilities(self, context, potential_referents, **kwargs):
-        if ApplicabilityRegister.scene == context.scene:
-            if self in ApplicabilityRegister.apps:
-                logger('Recalling apps')
-                return ApplicabilityRegister.apps[self]
-        else:
-            logger('Resetting ApplicabilityRegister')
-            ApplicabilityRegister.reset(context.scene)
+        # if ApplicabilityRegister.scene == context.scene:
+        #     if self in ApplicabilityRegister.apps:
+        #         # logger('Recalling apps')
+        #         return ApplicabilityRegister.apps[self]
+        # else:
+        #     logger('Resetting ApplicabilityRegister')
+        #     ApplicabilityRegister.reset(context.scene)
 
         if self.relatum_constraints is not None:
             # potential recursion here
             relata_apps = context.get_potential_referent_scores()
             relata_apps *= self.relatum_constraints.ref_applicabilities(context, 
                             relata_apps.keys())
-            viewpoint = context.speaker.location
+            # viewpoint = context.speaker.location
         else:
             relata_apps = None
-            viewpoint = None
+            # viewpoint = None
             for constraint in self.values():
                 if isinstance(constraint, RelationConstraint):
                     raise Exception('What')
 
         apps = Applicabilities([(ref,1.0) for ref in potential_referents])
         for constraint in self.values():
-            apps *= constraint.ref_applicabilities(
+            ref_apps = constraint.ref_applicabilities(
                         context=context, # <- Ignored if irrelevant
                         potential_referents=potential_referents,
-                        relata_apps=relata_apps,
-                        viewpoint=viewpoint) # <- Ignored if irrelevant
+                        relata_apps=relata_apps)
+                        # viewpoint=viewpoint) # <- Ignored if irrelevant
+            # utils.logger(constraint)
+            # utils.logger(apps)
+            # utils.logger(ref_apps)
+            apps *= ref_apps
 
-        ApplicabilityRegister.apps[self] = apps
+        # ApplicabilityRegister.apps[self] = apps
         return apps
 
     def quantity_applicability(self, context, quantity):

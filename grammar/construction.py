@@ -66,7 +66,12 @@ class LexicalItem(object):
 class Construction(object):
     
     def __init__(self, constituents):
-        assert(len(constituents) == len(self.pattern))
+        assert len(constituents) == len(self.pattern), \
+                'Pattern mismatch instantiating %s'%self.__class__.__name__
+        for c, p in zip(constituents, self.pattern):
+            assert isinstance(c, p), \
+                    'Pattern mismatch instantiating %s: %s, %s'\
+                    %(self.__class__.__name__,c,p)
         self.constituents = constituents
 
     @staticmethod
