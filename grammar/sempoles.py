@@ -7,6 +7,7 @@ from semantics.representation import (PointRepresentation, LineRepresentation,
 import probability_function as pfunc
 import constraint as const
 import gen2_features as feats
+import domain
 
 
 ######### for LexicalItems #########
@@ -49,17 +50,29 @@ table_property = const.PropertyConstraint(feature=feats.referent_class,
 
 # Object parts
 
-is_edge = pfunc.DiscreteProbFunc([('EDGE', 1.0)])
-edge_property = const.PropertyConstraint(feature=feats.referent_class,
-                                         prob_func=is_edge)
-
 is_corner = pfunc.DiscreteProbFunc([('CORNER', 1.0)])
 corner_property = const.PropertyConstraint(feature=feats.referent_class,
                                            prob_func=is_corner)
 
+is_edge = pfunc.DiscreteProbFunc([('EDGE', 1.0)])
+edge_property = const.PropertyConstraint(feature=feats.referent_class,
+                                         prob_func=is_edge)
+
+is_end = pfunc.DiscreteProbFunc([('END', 1.0)])
+end_property = const.PropertyConstraint(feature=feats.referent_class,
+                                         prob_func=is_end)
+
+is_half = pfunc.DiscreteProbFunc([('HALF', 1.0)])
+half_property = const.PropertyConstraint(feature=feats.referent_class,
+                                         prob_func=is_half)
+
 is_middle = pfunc.DiscreteProbFunc([('MIDDLE', 1.0)])
 middle_property = const.PropertyConstraint(feature=feats.referent_class,
                                            prob_func=is_middle)
+
+is_side = pfunc.DiscreteProbFunc([('SIDE', 1.0)])
+side_property = const.PropertyConstraint(feature=feats.referent_class,
+                                         prob_func=is_side)
 
 
 # Colors
@@ -90,7 +103,7 @@ purple_property = const.PropertyConstraint(feature=feats.referent_color,
 
 is_pink = pfunc.DiscreteProbFunc([('PINK', 1.0)])
 pink_property = const.PropertyConstraint(feature=feats.referent_color,
-                                           prob_func=is_pink)
+                                         prob_func=is_pink)
 
 is_black = pfunc.DiscreteProbFunc([('BLACK', 1.0)])
 black_property = const.PropertyConstraint(feature=feats.referent_color,
@@ -113,13 +126,15 @@ near_func = pfunc.LogisticSigmoid(loc=0.15, scale=-0.1, domain=None)
 
 
 # Directions
-front_func = pfunc.LogisticBell(loc=0, scale=30, domain=None)
+angle_domain = domain.CircularDomain('angle_between',float, -180, 180)
 
-back_func = pfunc.LogisticBell(loc=180, scale=30, domain=None)
+front_func = pfunc.LogisticBell(loc=0, scale=30, domain=angle_domain)
 
-left_func = pfunc.LogisticBell(loc=90, scale=30, domain=None)
+back_func = pfunc.LogisticBell(loc=180, scale=30, domain=angle_domain)
 
-right_func = pfunc.LogisticBell(loc=-90, scale=30, domain=None)
+left_func = pfunc.LogisticBell(loc=90, scale=30, domain=angle_domain)
+
+right_func = pfunc.LogisticBell(loc=-90, scale=30, domain=angle_domain)
 
 # For Semi-Constructions (Relations)
 
@@ -141,9 +156,14 @@ is_not_surface = pfunc.DiscreteProbFunc([(PointRepresentation,     1.0),
 not_surface_property = const.PropertyConstraint(feature=feats.referent_rep,
                                                 prob_func=is_not_surface)
 
+
 # Semi-Constructions
 
-# def PartOfRelate()
+def OrientationAdjectify(self, direction):
+    return const.ConstraintCollection([
+                const.RelationConstraint(feature=feats.angle_between,
+                                         prob_func=direction.sempole())
+           ])
 
 # def ContainmentRelate()
 
@@ -163,6 +183,12 @@ def OrientationRelate(self, direction):
                 not_contains_property,
                 const.RelationConstraint(feature=feats.angle_between,
                                          prob_func=direction.sempole())
+           ])
+
+def PartOfRelate(self):
+    return const.ConstraintCollection([
+                const.RelationConstraint(feature=feats.part_of,
+                                         prob_func=is_true)
            ])
 
 
@@ -186,6 +212,7 @@ def RelateToLandmark(self, relation, lmk_phrase):
     return new_sempole
 
 def NounPhraseRelate(self, noun_phrase, relation_landmark_phrase):
-    new_sempole = noun_phrase.sempole()
-    new_sempole['relation'] = relation_landmark_phrase.sempole()
-    return new_sempole
+    # new_sempole = noun_phrase.sempole()
+    # new_sempole['relation'] = relation_landmark_phrase.sempole() #TODO check key
+    # return new_sempole
+    return relation_landmark_phrase.sempole().modify(noun_phrase.sempole())

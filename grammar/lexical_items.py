@@ -47,13 +47,41 @@ cone     = Noun(regex='cone', sempole=cone_constraints)
 cylinder_constraints = const.ConstraintCollection([sp.cylinder_property])
 cylinder = Noun(regex='cylinder', sempole=cylinder_constraints)
 
+table_constraints = const.ConstraintCollection([sp.table_property])
+table = Noun(regex='table', sempole=table_constraints)
 
-class Plural(struct.LexicalItem):
-    pass
 
-_s_constraints = const.ConstraintCollection([
-    ])
-_s = Plural(regex='(?<!:\s)s(?=[\s",;.!?])', sempole=None)
+corner_constraints = const.ConstraintCollection([sp.corner_property])
+corner   = Noun(regex='corner', sempole=corner_constraints)
+corner.lmk = True
+
+edge_constraints = const.ConstraintCollection([sp.edge_property])
+edge     = Noun(regex='edge', sempole=edge_constraints)
+edge.lmk = True
+
+end_constraints = const.ConstraintCollection([sp.end_property])
+end      = Noun(regex='end', sempole=end_constraints)
+end.lmk = True
+
+half_constraints = const.ConstraintCollection([sp.half_property])
+half     = Noun(regex='half', sempole=half_constraints)
+half.lmk = True
+
+middle_constraints = const.ConstraintCollection([sp.middle_property])
+middle   = Noun(regex='middle', sempole=middle_constraints)
+middle.lmk = True
+
+side_constraints = const.ConstraintCollection([sp.side_property])
+side     = Noun(regex='side', sempole=side_constraints)
+side.lmk = True
+
+
+# class Plural(struct.LexicalItem):
+#     pass
+
+# _s_constraints = const.ConstraintCollection([
+#     ])
+# _s = Plural(regex='(?<!:\s)s(?=[\s",;.!?])', sempole=None)
 
 
 class Adjective(struct.LexicalItem):
@@ -174,10 +202,10 @@ lexical_items_list = [
     objct,
     # cube,
     block,
-    # box,
+    box,
     sphere,
-    # ball,
-    # cone,
+    ball,
+    cone,
     cylinder,
     # _s,
     # big,
@@ -188,12 +216,13 @@ lexical_items_list = [
     orange,
     yellow,
     green,
-    # blue,
-    # purple,
-    # black,
-    # white,
-    # gray,
-    # grey,
+    blue,
+    purple,
+    pink,
+    black,
+    white,
+    gray,
+    grey,
     # very,
     # somewhat,
     # pretty,

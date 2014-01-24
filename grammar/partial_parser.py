@@ -2,15 +2,17 @@
 import sys
 sys.path.insert(1, '..')
 import IPython
-import automain
 import argparse as ap
 import operator as op
+
+import utils
+import automain
 import common as cmn
 import lexical_items as li
 import constructions as con
 import construction as struct
-global lexical_items_list
-global constructions_list
+# global lexical_items_list
+# global constructions_list
 
 
 
@@ -60,12 +62,11 @@ class Parse(object):
         return hash(self) == hash(other)
 
 
-def get_all_lexical_parses(sentence):
+def get_all_lexical_parses(sentence, lexicon):
     all_matches = []
-    global lexical_items_list
-    for tc in lexical_items_list:
+    # global lexical_items_list
+    for tc in lexicon:
         all_matches.extend(tc.match(sentence))
-
     partial_parses = [[cmn.Match(0,0,li._,None)]]
 
     finished_parses = []
@@ -79,7 +80,6 @@ def get_all_lexical_parses(sentence):
             if partial_parse[-1].end == len(sentence):
                 finished_parses.append(partial_parse)
                 continue
-
             new_this_parse_list = []
             previous_end = partial_parse[-1].end
             for match in all_matches:
@@ -107,7 +107,6 @@ def get_all_lexical_parses(sentence):
                                   ))
                     new_parse.append(next_match)
                     new_this_parse_list.append(new_parse)
-                
                 if next_matches == []:
                     new_parse = list(partial_parse)
                     new_parse.append(
@@ -147,7 +146,7 @@ def lowest_between(start, end, already_found, all_matches):
     else:
         return lowest_so_far
 
-def get_all_construction_parses(lexical_parses, max_holes=0):
+def get_all_construction_parses(lexical_parses, structicon, max_holes=0):
 
     for i, parse in enumerate(lexical_parses):
         lexical_parses[i] = [match.construction for match in parse
@@ -157,30 +156,36 @@ def get_all_construction_parses(lexical_parses, max_holes=0):
 
     parses = set()
     for uparse in unfinished_parses:
-        new_parses = recursive_parse(uparse, max_holes)
+        new_parses = recursive_parse(unfinished_parse=uparse, 
+                                     structicon=structicon, 
+                                     max_holes=max_holes)
         parses.update(new_parses)
 
     return parses
 
-def recursive_parse(unfinished_parse, max_holes=0):
+def recursive_parse(unfinished_parse, structicon, max_holes=0):
     if len(unfinished_parse.current) == 1:
         return [unfinished_parse]
 
     parses = set()
-    global constructions_list
-    for c in constructions_list:
+    # global constructions_list
+    for c in structicon:
         cmatches = c.match(unfinished_parse.current)
 
         for match in cmatches:
             new_parse = unfinished_parse.update(match)
-            parses.update(recursive_parse(new_parse, max_holes))
+            parses.update(recursive_parse(unfinished_parse=new_parse, 
+                                          structicon=structicon,
+                                          max_holes=max_holes))
             
         else:
             if unfinished_parse.num_holes < max_holes:
                 partial_matches = c.partially_match(unfinished_parse.current)
                 for match in partial_matches:
                     new_parse = unfinished_parse.update(match)
-                    finished_parses = recursive_parse(new_parse, max_holes)
+                    finished_parses=recursive_parse(unfinished_parse=new_parse, 
+                                                    structicon=structicon,
+                                                    max_holes=max_holes)
                     parses.update(finished_parses)
     return parses
 

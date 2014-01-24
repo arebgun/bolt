@@ -3,7 +3,18 @@ import numpy as np
 
 class Domain(object):
     '''Base class'''
-    def __init__(self, name, lower=None, upper=None):
+    def __init__(self, name, datatype):
+        self.name = name
+        self.datatype = datatype
+
+class DiscreteDomain(Domain):
+    def __init__(self, name, datatype):
+        super(DiscreteDomain, self).__init__(name, datatype)
+
+class NumericalDomain(Domain):
+    epsilon = 0.000001
+    def __init__(self, name, datatype, lower=None, upper=None):
+        super(NumericalDomain, self).__init__(name, datatype)
         if not (self.valid(lower) and self.valid(upper)):
             raise ValueError('Bounds must be numbers or None: '
                              'lower %s, upper %s' % (lower, upper))
@@ -15,17 +26,21 @@ class Domain(object):
     def valid(self, num):
         return isinstance(num, numbers.Number) or num is None
 
+    def norm(self, numarray):
+        return numarray
+
     def sample_mean_and_std(self, numarray):
+        numarray = numarray[np.where(np.logical_not(np.isnan(numarray)))]
         mean = numarray.mean()
         std = np.sqrt(((numarray-mean)**2).sum()/(numarray.shape[0]-1))
-        return mean, std
+        return mean, std+self.epsilon
 
 
-class CircularDomain(Domain):
+class CircularDomain(NumericalDomain):
     '''For domains which wrap around'''
 
-    def __init__(self, name, lower, upper):
-        super(CircularDomain, self).__init__(name, lower=lower, upper=upper)
+    def __init__(self, name, datatype, lower, upper):
+        super(CircularDomain, self).__init__(name, datatype, lower=lower, upper=upper)
         if self.invalid(lower) or self.invalid(upper):
             raise ValueError('Invalid bounds, circular domains must be bounded:'
                              ' lower %s, upper %s' % (lower, upper))
@@ -52,5 +67,7 @@ class CircularDomain(Domain):
         return mean, std
 
     def sample_mean_and_std(self, numarray):
+        numarray = numarray[np.where(np.logical_not(np.isnan(numarray)))]
         mean, std = self.angular_mean_and_std(self.to_radians(numarray))
-        return self.from_radians(mean), self.from_radians(std)-self.lower
+        return self.from_radians(mean), \
+               self.from_radians(std)-self.lower+self.epsilon

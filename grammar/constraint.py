@@ -58,11 +58,12 @@ class PropertyConstraint(Constraint):
     def ref_applicabilities(self, context, potential_referents, **kwargs):
         # if ApplicabilityRegister.scene == context.scene:
         #     if self in ApplicabilityRegister.apps:
-        #         # logger('Recalling apps')
+        #         utils.logger('Recalling apps')
         #         return ApplicabilityRegister.apps[self]
         # else:
-        #     logger('Resetting ApplicabilityRegister')
+        #     utils.logger('Resetting ApplicabilityRegister')
         #     ApplicabilityRegister.reset(context.scene)
+        # utils.logger('Calculating')
 
         apps = Applicabilities([(ref, self.ref_applicability(ref)) 
                                 for ref in potential_referents])
@@ -98,6 +99,7 @@ class RelationConstraint(Constraint):
 
     def ref_applicabilities(self, context, potential_referents, 
                                relata_apps, **kwargs):
+        # utils.logger('Calculating (relation)')
         assert(relata_apps is not None)
         apps = Applicabilities([(ref, self.ref_applicability(context, ref, 
                                                              relata_apps,
@@ -119,9 +121,9 @@ class RelationConstraint(Constraint):
         for relatum, relatum_app in relata_apps.items():
             p = np.product(
                 [self.probability_func(self.feature.observe(
-                    entity, 
-                    relentity,
-                    viewpoint=context.speaker.get_head_on_viewpoint(relentity),
+                    context=context,
+                    referent=entity, 
+                    relatum=relentity,
                     **kwargs))
                  for relentity in relatum])
 
@@ -137,23 +139,30 @@ class RelationConstraint(Constraint):
             return max(ps)
 
 
-class ConstraintCollection(coll.OrderedDict):
+class ConstraintCollection(coll.MutableMapping):
     def __init__(self, constraints):
-        if isinstance(constraints, ConstraintCollection):
-            super(ConstraintCollection, self).__init__(constraints)
-            self.relatum_constraints = constraints.relatum_constraints
-        else:
-            pairs = [(c.domain,c) for c in constraints]
-            super(ConstraintCollection, self).__init__(pairs)
-            self.relatum_constraints = None
+        pairs = [(c.domain.name,c) for c in constraints]
+        self.odict = coll.OrderedDict(pairs)
+        # if isinstance(constraints, ConstraintCollection):
+        #     super(ConstraintCollection, self).__init__(constraints)
+        #     self.relatum_constraints = constraints.relatum_constraints
+        # else:
+        #     super(ConstraintCollection, self).__init__(pairs)
+        self.relatum_constraints = None
+
+    def copy(self):
+        copy = object.__new__(self.__class__)
+        copy.odict = coll.OrderedDict(self.items())
+        copy.relatum_constraints = self.relatum_constraints
+        return copy
 
     def __key(self):
         return (self.__class__.__name__, self.relatum_constraints)
 
     def __repr__(self):
         return self.__class__.__name__+'(constraints=['+\
-               ', '.join(c.__repr__() for c in self.values())+\
-               '],relatum_constraints='+self.relatum_constraints.__repr__()
+               ',\n '.join(c.__repr__() for c in self.values())+\
+               '],relatum_constraints='+self.relatum_constraints.__repr__()+')'
 
     def __hash__(self):
         hsh = hash(self.__key())
@@ -161,23 +170,53 @@ class ConstraintCollection(coll.OrderedDict):
             hsh ^= hash(c)
         return hsh
 
+    def __getitem__(self, key):
+        return self.odict[key]
+
+    def __setitem__(self, key, value):
+        self.odict[key] = value
+
+    def __delitem__(self, key):
+        del self.odict[key]
+
+    def __iter__(self):
+        return iter(self.odict)
+
+    def __len__(self):
+        return len(self.odict)
+
+    def values(self):
+        return self.odict.values()
+
+    def keys(self):
+        return self.odict.keys()
+
+    def items(self):
+        return self.odict.items()
+
     def modify(self, other):
         other = other.copy()
         for space in self:
+            # utils.logger(space)
             if space in other:
-                other[space] = self[space].replace(other[space])
+                other[space+'2'] = self[space]#.replace(other[space])
             else:
                 other[space] = self[space]
+        assert(self.relatum_constraints==None or 
+               other.relatum_constraints==None)
+        if self.relatum_constraints != None:
+            other.relatum_constraints = self.relatum_constraints
         return other
 
     def ref_applicabilities(self, context, potential_referents, **kwargs):
         # if ApplicabilityRegister.scene == context.scene:
         #     if self in ApplicabilityRegister.apps:
-        #         # logger('Recalling apps')
+        #         utils.logger('Recalling apps')
         #         return ApplicabilityRegister.apps[self]
         # else:
-        #     logger('Resetting ApplicabilityRegister')
+        #     utils.logger('Resetting ApplicabilityRegister')
         #     ApplicabilityRegister.reset(context.scene)
+        # utils.logger('Calculating')
 
         if self.relatum_constraints is not None:
             # potential recursion here
@@ -189,6 +228,7 @@ class ConstraintCollection(coll.OrderedDict):
             relata_apps = None
             # viewpoint = None
             for constraint in self.values():
+                # utils.logger(constraint)
                 if isinstance(constraint, RelationConstraint):
                     raise Exception('What')
 

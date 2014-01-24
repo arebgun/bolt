@@ -10,9 +10,9 @@ class Feature(object):
         assert(isinstance(other,Feature))
 
     def __make_measure_func(self, operator, other_feature):
-        def new_measure_func(referent, **kwargs):
-            return operator(self.observe(referent=referent, **kwargs),
-                    other_feature.observe(referent=referent, **kwargs))
+        def new_measure_func(featargs):
+            return operator(self.observe(featargs),
+                    other_feature.observe(featargs))
         return new_measure_func
 
     def __make_combo_feature(self, operator, other_feature):
@@ -38,3 +38,12 @@ class Feature(object):
     #     def not_feature_func(referent, relatum):
     #         return 1-self.observe(referent=referent, relatum=relatum)
     #     return Feature(self.domain, not_feature_func)
+
+
+class FeatureArgs(object):
+
+    def __init__(self, scene=None, speaker=None, referent=None, relatum=None):
+        self.scene=scene
+        self.speaker=speaker
+        self.referent=referent
+        self.relatum=relatum

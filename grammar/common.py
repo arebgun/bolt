@@ -22,6 +22,33 @@ class Applicabilities(coll.defaultdict):
         product = Applicabilities(pairs)
         return product
 
+class Context(object):
+
+    def __init__(self, scene, speaker):
+        self.scene = scene
+        self.speaker = speaker
+        self.entities = scene.landmarks.values()
+        self.potential_referents = [(entity,) for entity in self.entities]
+        self.all_potential_referents = [(entity,) for entity in self.entities]
+        self.all_potential_referents += [(landmark,) for landmark in 
+                    scene.landmarks['table'].representation.get_landmarks(1)]
+        # for r in range(2, min(len(self.entities),2)+1):
+        #     self.potential_referents.extend(it.permutations(self.entities,r))
+
+    def get_entities(self):
+        return list(self.entities)
+
+    def get_potential_referents(self):
+        return list(self.potential_referents)
+
+    def get_all_potential_referents(self):
+        return list(self.all_potential_referents)
+
+    def get_potential_referent_scores(self):
+        pairs = zip(self.potential_referents,[1]*len(self.potential_referents))
+        potential_referent_scores = Applicabilities(pairs)
+        return potential_referent_scores
+
 class Match(object):
     def __init__(self, start, end, construction, constituents):
         self.start = start
@@ -38,6 +65,12 @@ class Match(object):
        
     def __repr__(self):
         return '<%s %s>'%(self.construction,(self.start,self.end))
+
+    def find_partials(self):
+        return [self]
+
+    def get_holes(self):
+        return [c for c in self.constituents if isinstance(c, Hole)]
 
     def prettyprint(self):
         string = 'Partial '+self.construction.__name__+'\n'

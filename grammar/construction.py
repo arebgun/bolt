@@ -1,6 +1,7 @@
 import re
 # import sempoles as sp
 import common as cmn
+import utils
 
 class Property(object):
     pass
@@ -52,6 +53,9 @@ class LexicalItem(object):
     def collect_leaves(self):
         return [self.regex]
 
+    def find_partials(self):
+        return []
+
     def __hash__(self):
         return hash(self.prettyprint())
 
@@ -69,7 +73,7 @@ class Construction(object):
         assert len(constituents) == len(self.pattern), \
                 'Pattern mismatch instantiating %s'%self.__class__.__name__
         for c, p in zip(constituents, self.pattern):
-            assert isinstance(c, p), \
+            assert isinstance(c, p) or issubclass(c.construction, p), \
                     'Pattern mismatch instantiating %s: %s, %s'\
                     %(self.__class__.__name__,c,p)
         self.constituents = constituents
@@ -111,18 +115,18 @@ class Construction(object):
         # print cls.pattern
         # print '  sequence',sequence
         if len(cls.pattern) == 1:
-            return partial_matches
-            # for start in range(len(sequence)):
-            #     for end in range(start+1, len(sequence)+1):
-            #         print '    subsequence',sequence[start:end]
-            #         hole = cmn.Hole(cls.pattern,
-            #                         sequence[start:end])
-            #         partial_match = cmn.Match(start=start,
-            #                                   end=end,
-            #                                   construction=cls,
-            #                                   constituents=[hole])
-            #         partial_matches.append(partial_match)
             # return partial_matches
+            for start in range(len(sequence)):
+                for end in range(start+1, len(sequence)+1):
+                    # print '    subsequence',sequence[start:end]
+                    hole = cmn.Hole(cls.pattern,
+                                    sequence[start:end])
+                    partial_match = cmn.Match(start=start,
+                                              end=end,
+                                              construction=cls,
+                                              constituents=[hole])
+                    partial_matches.append(partial_match)
+            return partial_matches
             
 
         # First find all partial patterns missing 1 part
@@ -197,7 +201,12 @@ class Construction(object):
         #     print self.__class__, arguments[0].sempole()
         # print '80    ', arguments
         # print '81      ',self.function(*arguments)
-        return self.function(*arguments).copy()
+        to_return = self.function(*arguments).copy()
+        # utils.logger(self.__class__)
+        # utils.logger(self.function)
+        # utils.logger(to_return)
+        # utils.logger('')
+        return to_return
 
     def __repr__(self):
         return self.__class__.__name__
@@ -217,6 +226,12 @@ class Construction(object):
     def print_sentence(self):
         leaves = self.collect_leaves()
         return ' '.join(leaves)
+
+    def find_partials(self):
+        partials = []
+        for c in self.constituents:
+            partials.extend(c.find_partials())
+        return partials
 
     def __hash__(self):
         return hash(self.prettyprint())

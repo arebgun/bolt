@@ -1,6 +1,9 @@
-import numpy as np
 import math
+import numpy as np
 import collections as coll
+import domain as dom
+
+
 
 class ProbabilityFunction(object):
     '''Base class'''
@@ -8,17 +11,27 @@ class ProbabilityFunction(object):
     def __hash__(self):
         raise NotImplementedError
 
-class DiscreteProbFunc(ProbabilityFunction, coll.defaultdict):
+    @staticmethod
+    def binomial_error(probs, classes):
+        epsilon = 0.000000001
+        probs[np.where(probs==0)] += epsilon
+        probs[np.where(probs==1)] -= epsilon
+        # return np.product((probs**ydata)*((1-probs)**(1-ydata)))
+        return -(classes*np.log(probs) + (1-classes)*np.log(1-probs)).sum()
+
+class DiscreteProbFunc(ProbabilityFunction):
 
     def __init__(self, pairs):
-        super(DiscreteProbFunc, self).__init__(float)
-        self.update(pairs)
+        # super(DiscreteProbFunc, self).__init__(float)
+        # print 'probability_function.py:17: Initing DiscreteProbFunc', pairs
+        self.ddict = coll.defaultdict(float)
+        self.ddict.update(pairs)
 
     def __call__(self, key):
-        return self[key]
+        return self.ddict[key]
 
     def __hash__(self):
-        return hash(tuple(self.items()))
+        return hash(tuple(self.ddict.items()))
 
 class ContinuousProbFunc(ProbabilityFunction):
     sqrt3 = np.sqrt(3)
@@ -55,21 +68,23 @@ class CentroidalProbFunc(ContinuousProbFunc):
 
 class DecayEnvelope(CentroidalProbFunc):
     def __call__(self, x):
-        return np.exp(-math.e*np.abs(x-self.loc)/(2*self.scale))
+        return np.exp(-math.e*np.abs(self.domain.norm(x-self.loc))/
+                (2*self.scale))
 
 class LogisticBell(CentroidalProbFunc):
     def __call__(self, x):
-        return np.exp(-np.pi*(x-self.loc)/(self.scale*self.sqrt3))\
-            /(((1+np.exp(-np.pi*(x-self.loc)/(self.scale*self.sqrt3)))/2.)**2)
+        return np.exp(-np.pi*self.domain.norm(x-self.loc)/(self.scale*self.sqrt3))\
+            /(((1+np.exp(-np.pi*self.domain.norm(x-self.loc)/(self.scale*self.sqrt3)))/2.)**2)
 
 class GaussianBell(CentroidalProbFunc):
     def __call__(self, x):
-        return np.exp(-0.5*((x-self.loc)/self.scale)**2)
+        return np.exp(-0.5*(self.domain.norm(x-self.loc)/self.scale)**2)
 
 class SechBell(CentroidalProbFunc):
     '''Mathematically simpler equivalent to logistic bell'''
     def __call__(self, x):
-        return 1/(np.cosh((np.pi*(x-self.loc)/(2*self.scale*self.sqrt3)))**2)
+        return 1/(np.cosh((np.pi*self.domain.norm(x-self.loc)/
+                (2*self.scale*self.sqrt3)))**2)
 
 class VonMisesCircularBell(CentroidalProbFunc):
     def __call__(self, x):

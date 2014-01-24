@@ -27,9 +27,10 @@ pp = pprint.PrettyPrinter()
 class AllParseGenerator(object):
     
     @classmethod
-    def generate_parses(cls, targetclass, 
+    def generate_parses(cls, targetclass, lexicon, structicon,
                         max_depths={structs.ReferringExpression:2}, 
-                        current_depths=coll.defaultdict(float)):
+                        current_depths=coll.defaultdict(float),
+                        depth=0):
 
         if targetclass in max_depths:
             current_depths[targetclass]+=1
@@ -37,25 +38,28 @@ class AllParseGenerator(object):
                 return []
 
         if issubclass(targetclass, struct.LexicalItem):
-            completed_matches = [item for item in li.lexical_items_list
+            completed_matches = [item for item in lexicon
                                  if isinstance(item, targetclass)]
 
             return completed_matches
         #else:
-
-        matches = [construction for construction in structs.constructions_list
+        matches = [construction for construction in structicon
                    if issubclass(construction, targetclass)]
 
         # for each matching construction, find all the ways to fulfill pattern
         completed_matches = []
         for matching_const in matches:
 
-                
+            # print 'check 2'
             pattern_matches = []
             for subtargetclass in matching_const.pattern:
-                sub_matches = cls.generate_parses(subtargetclass, 
-                                                  max_depths,
-                                                  current_depths)
+                sub_matches = cls.generate_parses(targetclass=subtargetclass,
+                                                  lexicon=lexicon,
+                                                  structicon=structicon, 
+                                                  max_depths=max_depths,
+                                                  current_depths=current_depths,
+                                                  depth=depth+1)
+                # print 'check 3',subtargetclass
                 if sub_matches is []:
                     break
                 else:
@@ -81,7 +85,7 @@ class AllParseGenerator(object):
         return completed_matches
 
     @classmethod
-    def finish_parse(cls, targetclass, pattern_start,
+    def finish_parse(cls, targetclass, pattern_start, lexicon, structicon,
                      max_depths={structs.ReferringExpression:2}, 
                      current_depths=coll.defaultdict(float)):
         if targetclass in max_depths:
@@ -93,17 +97,19 @@ class AllParseGenerator(object):
 
         pattern_matches = pattern_start
         for subtargetclass in targetclass.pattern[len(pattern_start):]:
-            utils.logger('Matching %s' % subtargetclass)
-            sub_matches = cls.generate_parses(subtargetclass, 
-                                              max_depths,
-                                              current_depths)
+            # utils.logger('Matching %s' % subtargetclass)
+            sub_matches = cls.generate_parses(targetclass=subtargetclass,
+                                              lexicon=lexicon,
+                                              structicon=structicon, 
+                                              max_depths=max_depths,
+                                              current_depths=current_depths)
             if sub_matches is []:
                 break
             else:
                 pattern_matches.append(sub_matches)
             # utils.logger(pattern_matches)
 
-        utils.logger(len(pattern_matches[1]))
+        # utils.logger(len(pattern_matches[1]))
 
         if len(pattern_matches) < len(targetclass.pattern):
             # Not all parts of pattern had matches
@@ -121,26 +127,20 @@ class AllParseGenerator(object):
 
         return completed_matches
 
-class Context(object):
+    @classmethod
+    def generate_landmark_parses(cls, potential_referents):
+        for referent in potential_referents:
+            assert(len(referent) == 1)
+            landmark = referent[0]
+            if isinstance(landmark.representation,
+                          sem.representation.RectangleRepresentation) \
+                    and not isinstance(landmark.representation,
+                                    sem.representation.SurfaceRepresentation):
 
-    def __init__(self, scene, speaker):
-        self.scene = scene
-        self.speaker = speaker
-        self.entities = scene.landmarks.values()
-        self.potential_referents = [(entity,) for entity in self.entities]
-        # for r in range(2, min(len(self.entities),2)+1):
-        #     self.potential_referents.extend(it.permutations(self.entities,r))
+                print 'Rectangle', landmark
+            else:
+                print landmark
 
-    def get_entities(self):
-        return list(self.entities)
-
-    def get_potential_referents(self):
-        return list(self.potential_referents)
-
-    def get_potential_referent_scores(self):
-        pairs = zip(self.potential_referents,[1]*len(self.potential_referents))
-        potential_referent_scores = cmn.Applicabilities(pairs)
-        return potential_referent_scores
 
 @automain.automain
 def test():
@@ -248,11 +248,11 @@ def test():
 
     target = structs.RelationNounPhrase
     pattern_start = [[structs.NounPhrase([li.objct])]]
-    parses = AllParseGenerator.finish_parse(targetclass=target,
-                                            pattern_start=pattern_start,
-                                            current_depths=current_depths)
+    rnpparses = AllParseGenerator.finish_parse(targetclass=target,
+                                               pattern_start=pattern_start,
+                                               current_depths=current_depths)
     parses = [structs.ExtrinsicReferringExpression([li.the, parse]) 
-              for parse in parses]
+              for parse in rnpparses]
 
     print 'parses generated:', len(parses)
     print
@@ -304,4 +304,4 @@ def test():
         print parse.prettyprint()
         print parse.print_sentence()
         print 'Score:', score
-    plt.show()
+    # plt.show()

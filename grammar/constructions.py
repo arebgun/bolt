@@ -16,25 +16,39 @@ class DegreeMeasurePhrase(MeasurePhrase):
 
 
 
-class CompoundRelation(struct.Construction, struct.Relation):
-    pass
+# class CompoundRelation(struct.Construction, struct.Relation):
+#     pass
 
-class DistanceRelation(CompoundRelation):
+class DistanceRelation(struct.Construction, struct.Relation):
     pattern = [MeasurePhrase, li.DestinationTag]
     arg_indices = [0]
     function = sp.DistanceRelate
 
-class OrientationRelation(CompoundRelation):
+class OrientationRelation(struct.Construction, struct.Relation):
     pattern = [li.DestinationTag, li.Article, li.Direction, li.BelongingTag]
     arg_indices = [2]
     function = sp.OrientationRelate
 
+class PartOfRelation(struct.Construction, struct.Relation):
+    pattern= [li.BelongingTag]
+    arg_indices=[]
+    function = sp.PartOfRelate
 
+
+class OrientationAdjective(struct.Construction, li.Adjective):
+    pattern = [li.Direction]
+    arg_indices = [0]
+    function = sp.OrientationAdjectify
 
 class AdjectivePhrase(struct.Construction):
     pattern = [li.Adjective]
     arg_indices = [0]
     function = sp.ReturnUnaltered
+
+class TwoAdjectivePhrase(AdjectivePhrase):
+    pattern = [li.Adjective, li.Adjective]
+    arg_indices = [0,1]
+    function = sp.PropertyCombine
 
 class DegreeAdjectivePhrase(AdjectivePhrase):
     pattern = [li.DegreeModifier, li.GradableAdjective]

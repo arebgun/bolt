@@ -26,6 +26,13 @@ def main():
         li.sphere,
         li.ball,
         li.cylinder,
+        li.table,
+        li.corner,
+        li.edge,
+        li.end,
+        li.half,
+        li.middle,
+        li.side,
         li.red,
         li.orange,
         li.yellow,
@@ -46,22 +53,27 @@ def main():
         li.far,
         li.near,
     ]
-    t_constructicon = [
+    t_structicon = [
+        st.OrientationAdjective,
         st.AdjectivePhrase,
+        st.TwoAdjectivePhrase,
         st.DegreeAdjectivePhrase,
         st.NounPhrase,
         st.AdjectiveNounPhrase,
         st.MeasurePhrase,
         st.DegreeMeasurePhrase,
+        st.PartOfRelation,
         st.DistanceRelation,
         st.OrientationRelation,
+        st.PartOfRelation,
         st.ReferringExpression,
         st.RelationLandmarkPhrase,
         st.RelationNounPhrase,
         st.ExtrinsicReferringExpression
     ]
 
-    teacher = lu.LanguageUser(lexicon=t_lexicon, constructicon=t_constructicon)
+    teacher = lu.LanguageUser('Teach', lexicon=t_lexicon, 
+                              structicon=t_structicon, remember=False)
 
     s_lexicon = [
         li._,
@@ -72,6 +84,13 @@ def main():
         li.sphere,
         li.ball,
         li.cylinder,
+        li.table,
+        li.corner,
+        li.edge,
+        li.end,
+        li.half,
+        li.middle,
+        li.side,
         li.red,
         li.orange,
         li.yellow,
@@ -85,29 +104,34 @@ def main():
         li.front,
         li.back,
         li.left,
-        # li.right,
+        li.right,
         li.to,
         li.frm,
         li.of,
         li.far,
         li.near,
     ]
-    s_constructicon = [
+    s_structicon = [
+        st.OrientationAdjective,
         st.AdjectivePhrase,
+        st.TwoAdjectivePhrase,
         st.DegreeAdjectivePhrase,
         st.NounPhrase,
         st.AdjectiveNounPhrase,
         st.MeasurePhrase,
         st.DegreeMeasurePhrase,
+        st.PartOfRelation,
         st.DistanceRelation,
         st.OrientationRelation,
+        st.PartOfRelation,
         st.ReferringExpression,
         st.RelationLandmarkPhrase,
         st.RelationNounPhrase,
         st.ExtrinsicReferringExpression
     ]
 
-    student = lu.LanguageUser(lexicon=s_lexicon, constructicon=s_constructicon)
+    student = lu.LanguageUser('Stud', lexicon=s_lexicon, 
+                              structicon=s_structicon, remember=False)
 
     scene_descs=sem.run.read_scenes('static_scenes/',normalize=True,image=True)
 
@@ -115,18 +139,19 @@ def main():
     for scene, speaker, image in scene_descs:
         # mpl.pyplot.imshow(image)
         # mpl.pyplot.show()
+        # scene, speaker = sem.run.construct_training_scene(random=True)
 
         context = cmn.Context(scene, speaker)
         teacher.set_context(context)
         student.set_context(context)
 
         utils.logger(scene)
-        for referent in context.get_potential_referents():
+        for referent in context.get_all_potential_referents():
         # referent = random.choice(context.get_potential_referents())
-        # utils.logger(referent)
+            utils.logger(referent)
             parse = teacher.choose_top_parse(
                         teacher.weight_parses(
-                            referent, teacher.The_object__parses))
+                            referent, teacher.landmark_parses))
 
             utterance = parse.print_sentence()
 
