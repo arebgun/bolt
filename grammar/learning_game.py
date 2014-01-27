@@ -10,6 +10,8 @@ import common as cmn
 import language_user as lu
 import lexical_items as li
 import constructions as st
+import construction as cs
+import constraint
 
 import operator as op
 # import matplotlib as mpl
@@ -24,7 +26,8 @@ import os
 
 
 def one_scene(args):
-    teacher, student, just_objects, just_shapes = args
+    extrinsic = False
+    teacher, student, just_objects, just_shapes, goal_type, goal_sem = args
     scene, speaker = sem.run.construct_training_scene(random=True, 
                                                       just_shapes=just_shapes)
     context = cmn.Context(scene, speaker)
@@ -43,8 +46,8 @@ def one_scene(args):
 
     for referent in potential_referents:
         result = ''
-        if just_objects:
-            the_parses = teacher.The_object__parses
+        if extrinsic:
+            the_parses = teacher.cThe_object__parses
         else:
             the_parses = teacher.landmark_parses
 
@@ -66,8 +69,15 @@ def one_scene(args):
             parses = sorted(parses, key=op.attrgetter('hole_width'))
 
             result += 'Student could not understand.\n'
-            for parse in parses:
-                result += parse.current[0].prettyprint()+'\n'
+            result += student.construct_from_parses(parses,goal_type,goal_sem)
+
+            # Guess referent
+
+            result += student.create_new_construction_memories(parses, goal_type, 
+                                                               referent)
+
+
+                # result += parse.current[0].prettyprint()+'\n'
             # parse = parses[0]
             # result += 'Best partial parse:\nnum_holes: '+\
             #     '%s, hole_width: %s\n%s' % (parse.num_holes, parse.hole_width, 
@@ -87,7 +97,9 @@ def main():
     # if os.path.isfile(teacher_name + db_suffix):
     #     os.remove(teacher_name + db_suffix)
 
-
+    meta_grammar = {li.Noun:constraint.ConstraintSet,
+                    li.Adjective:constraint.ConstraintSet,
+                    cs.Relation:constraint.ConstraintSet}
 
     t_lexicon = [
         li._,
@@ -145,7 +157,8 @@ def main():
     ]
 
     teacher = lu.LanguageUser(name=teacher_name, lexicon=t_lexicon, 
-                              structicon=t_structicon, remember=False)
+                              structicon=t_structicon, meta=meta_grammar,
+                              remember=False)
 
     s_lexicon = [
         li._,
@@ -203,12 +216,18 @@ def main():
     ]
 
     student = lu.LanguageUser(name=student_name, lexicon=s_lexicon, 
-                    structicon=s_structicon, remember=True, reset=True)
+                              structicon=s_structicon, meta=meta_grammar,
+                              remember=True, reset=True)
+
+    goal_type = st.ReferringExpression
+    goal_sem = constraint.ConstraintSet
 
     utils.logger('Done loading!')
-    just_objects=False
+    just_objects=True
     just_shapes=True
-    args = [(teacher.copy(), student.copy(),just_objects,just_shapes) 
+    args = [(teacher.copy(), student.copy(),
+             just_objects,just_shapes,
+             goal_type, goal_sem) 
             for _ in range(5)]
     # pool = mp.Pool(7)
     # pool.map(one_scene, args)

@@ -30,10 +30,10 @@ class Parse(object):
         new = self.copy()
         # print new
         s, e = match.start, match.end
-        if match.num_holes == 0:
-            new_construction = match.construction(match.constituents)
-        else:
-            new_construction = match
+        new_construction = match.construction(match.constituents)
+        if match.num_holes != 0:
+        # else:
+            # new_construction = match
             new.num_holes += match.num_holes
             new.hole_width += match.hole_width
 

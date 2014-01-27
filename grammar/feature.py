@@ -6,6 +6,9 @@ class Feature(object):
         self.observe = measure_func
         self.domain = domain
 
+    def __repr__(self):
+        return self.observe.__name__
+
     def __validate_other(self, other):
         assert(isinstance(other,Feature))
 

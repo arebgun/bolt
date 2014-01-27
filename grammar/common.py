@@ -66,11 +66,11 @@ class Match(object):
     def __repr__(self):
         return '<%s %s>'%(self.construction,(self.start,self.end))
 
-    def find_partials(self):
-        return [self]
+    # def find_partials(self):
+    #     return [self]
 
-    def get_holes(self):
-        return [c for c in self.constituents if isinstance(c, Hole)]
+    # def get_holes(self):
+    #     return [c for c in self.constituents if isinstance(c, Hole)]
 
     def prettyprint(self):
         string = 'Partial '+self.construction.__name__+'\n'
@@ -85,6 +85,9 @@ class Hole(object):
 
     def __repr__(self):
         return '<Hole %s %s>'%(self.unmatched_pattern, self.unmatched_sequence)
+        
+    def sempole(self):
+        return self._sempole.copy()
 
     def prettyprint(self):
         string = self.__class__.__name__+' %s\n'%self.unmatched_pattern

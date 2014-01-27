@@ -160,7 +160,7 @@ not_surface_property = const.PropertyConstraint(feature=feats.referent_rep,
 # Semi-Constructions
 
 def OrientationAdjectify(self, direction):
-    return const.ConstraintCollection([
+    return const.ConstraintSet([
                 const.RelationConstraint(feature=feats.angle_between,
                                          prob_func=direction.sempole())
            ])
@@ -168,7 +168,7 @@ def OrientationAdjectify(self, direction):
 # def ContainmentRelate()
 
 def DistanceRelate(self, distance_measure):
-    return const.ConstraintCollection([
+    return const.ConstraintSet([
                 not_surface_property,
                 not_contains_property,
 
@@ -178,7 +178,7 @@ def DistanceRelate(self, distance_measure):
     
 
 def OrientationRelate(self, direction):
-    return const.ConstraintCollection([
+    return const.ConstraintSet([
                 not_surface_property,
                 not_contains_property,
                 const.RelationConstraint(feature=feats.angle_between,
@@ -186,7 +186,7 @@ def OrientationRelate(self, direction):
            ])
 
 def PartOfRelate(self):
-    return const.ConstraintCollection([
+    return const.ConstraintSet([
                 const.RelationConstraint(feature=feats.part_of,
                                          prob_func=is_true)
            ])

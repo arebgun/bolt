@@ -2,6 +2,7 @@ import random
 import numpy as np
 import operator as op
 import utils
+import common as cmn
 import lexical_items as li
 import constructions as st
 import partial_parser as pp
@@ -13,15 +14,18 @@ import gen2_features as g2f
 import probability_function as pf
 import domain as dom
 
+import IPython
+
 class LanguageUser(object):
     db_suffix = '_memories.db'
 
-    def __init__(self, name, lexicon, structicon, 
+    def __init__(self, name, lexicon, structicon, meta,
                        remember=True, reset=False):
         self.name = name
         self.db_name = self.name + self.db_suffix
         self.lexicon = lexicon
         self.structicon = structicon
+        self.meta_grammar = meta
         self.remember = remember
 
         db_name = self.name + self.db_suffix
@@ -65,7 +69,7 @@ class LanguageUser(object):
 
     def copy(self):
         return LanguageUser(self.name, self.lexicon, self.structicon, 
-                            remember=self.remember, reset=False)
+                        self.meta_grammar, remember=self.remember, reset=False)
 
     def set_context(self, context):
         utils.logger(self.name)
@@ -387,3 +391,129 @@ class LanguageUser(object):
 
 
         return result
+
+    def create_new_construction_memories(self, parses, goal_type, true_referent):
+        result = ''
+        for parse in parses:
+            assert(len(parse.current)==1)
+            root = parse.current[0]
+            cls = root.construction if isinstance(root, cmn.Match) else root.__class__
+            if issubclass(cls,goal_type):
+                result += root.prettyprint()
+                # Currently can only do single partial with single Hole
+                partials = root.find_partials()
+                assert(len(partials)==1)
+                partial = partials[0]
+                holes = partial.get_holes()
+                assert(len(holes)==1)
+                hole = holes[0]
+                leaves = []
+                for item in hole.unmatched_sequence:
+                    leaves.extend(item.collect_leaves())
+                const_string = ' '.join(leaves)
+                const_type = hole.unmatched_pattern.__name__
+
+                refexes = []
+                for constituent in partial.constituents:
+                    if isinstance(constituent,st.ReferringExpression):
+                        refexes.append(constituent)
+                assert(len(refexes)<=1)
+
+                if len(refexes)==1:
+                    relatum_constraints = refexes[0].sempole()
+
+                    relata_apps = self.context.get_all_potential_referent_scores()
+                    relata_apps *= relatum_constraints.ref_applicabilities(self.context, 
+                                relata_apps.keys())
+                else:
+                    relata_apps = {(None,):None}
+
+                keys = []
+                for referent in self.context.get_all_potential_referents():
+                    assert(len(referent)==1)
+                    for relatum, relatum_app in relata_apps.items():
+                        assert(len(relatum)==1)
+                        relatum = relatum[0]
+                        # result+= '%s==%s: %s\n' % (referent, true_referent, referent == true_referent)
+                        new_key=self.create_datapoint(referent == true_referent, 
+                                                      const_type, const_string, 
+                                                      referent[0], relatum, 
+                                                      relatum_app)
+                        keys.append(new_key)
+                result += 'Inserted %s keys\n' % len(keys)
+
+        return result
+
+
+
+    def create_datapoint(self, exemplary, construction, string, referent, 
+                         relatum, relatum_app):
+        kwargs = {'construction':construction,
+                  'string':string,
+                  'exemplary':exemplary,
+                  'lmk_prob':relatum_app,
+                  }
+        for feature in g2f.feature_list:
+            kwargs[feature.domain.name] = \
+                feature.observe(referent=referent,
+                                relatum=relatum,
+                                context=self.context)
+                # feature.domain.datatype(
+                #     feature.observe(referent=referent,
+                #                     relatum=relatum,
+                #                     context=self.context))
+        new_key = self.connection.execute(self.unknown_structs.insert(), 
+                                          scene_id=self.scene_key, 
+                                          **kwargs
+                                          ).inserted_primary_key[0]
+        # result += 'Inserted positive observation %i\n' % new_key
+        return new_key
+
+
+    def construct_from_parses(self, parses, goal_type, goal_sem):
+        result = ''
+        for parse in parses:
+            assert(len(parse.current)==1)
+            root = parse.current[0]
+            cls = root.construction if isinstance(root, cmn.Match) else root.__class__
+            if issubclass(cls,goal_type):
+                result += root.prettyprint()
+                partials = root.find_partials()
+                assert(len(partials)==1)
+                partial = partials[0]
+                holes = partial.get_holes()
+                assert(len(holes)==1)
+                hole = holes[0]
+                leaves = []
+                for item in hole.unmatched_sequence:
+                    leaves.extend(item.collect_leaves())
+                const_string = ' '.join(leaves)
+                const_type = hole.unmatched_pattern
+                result += '%s %s\n' % (const_type, const_string)
+                if const_type in self.meta_grammar:
+                    hole._sempole = self.meta_grammar[const_type]()
+                    utils.logger(root.sempole())
+                    # IPython.embed()
+                    result += self.construct(const_type.__name__,const_string)
+                    result += '\n'
+        return result
+
+    def construct(self, const_type, const_string):
+        result = ''
+        query = alc.sql.select([self.unknown_structs]).where(
+            self.unknown_structs.c.construction==const_type).where(
+            self.unknown_structs.c.string==const_string)
+        results = list(self.connection.execute(query))
+        if len(results) == 0:
+            return 'First sighting of "%s --> %s"\n' % (const_type,const_string)
+        else:
+            separated = zip(*results)
+            classes = np.array(separated[4])
+            probs = np.array(separated[5])
+            feature_values = separated[6:]
+            for feature, values in zip(g2f.feature_list, feature_values):
+                values = [float('nan') if v is None else v for v in values]
+                values = np.array(values)
+                result += 'Feature: %s\nValues: %s\nClasses: %s\nProbs: %s\n' % \
+                            (feature.domain.name, values, classes, probs)
+            return result

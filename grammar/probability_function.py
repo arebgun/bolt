@@ -27,6 +27,9 @@ class DiscreteProbFunc(ProbabilityFunction):
         self.ddict = coll.defaultdict(float)
         self.ddict.update(pairs)
 
+    def __repr__(self):
+        return '<DiscretePF %s>' % self.ddict
+
     def __call__(self, key):
         return self.ddict[key]
 
@@ -43,6 +46,10 @@ class ContinuousProbFunc(ProbabilityFunction):
 
     def __call__(self, x):
         raise NotImplementedError
+
+    def __repr__(self):
+        return "<%s loc=%s, scale=%s>" % (self.__class__.__name__, 
+                                          self.loc, self.scale)
 
     def __key(self):
         return (self.__class__.__name__, self.loc, self.scale, self.domain)

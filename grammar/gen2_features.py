@@ -16,10 +16,12 @@ def __referent_known(referent, **kwargs):
 # For properties
 # 1-part features
 def __referent_rep(referent, **kwargs):
-    return referent.representation.__class__
+    return referent.representation.__class__.__name__
 
 def __relatum_rep(relatum, **kwargs):
-    return relatum.representation.__class__
+    if relatum is None:
+        return None
+    return relatum.representation.__class__.__name__
 
 def __referent_color(referent, **kwargs):
     return referent.color
@@ -42,20 +44,30 @@ def __referent_volume(referent, **kwargs):
 # 2-part features (for relations)
 
 def __not_equal(referent, relatum, **kwargs):
+    if relatum is None:
+        return None
     return referent != relatum
 
 def __part_of(referent, relatum, **kwargs):
+    if relatum is None:
+        return None
     return referent.get_parent_landmark() == relatum
 
 def __contains(referent, relatum, **kwargs):
+    if relatum is None:
+        return None
     return relatum.contains(referent)
 
 def __distance_between(referent, relatum, **kwargs):
+    if relatum is None:
+        return None
     distance = referent.distance_to(relatum.representation)
     # print referent, relatum, distance
     return distance
 
 def __angle_between(referent, relatum, context, **kwargs):
+    if relatum is None:
+        return None
     viewpoint = context.speaker.get_head_on_viewpoint(relatum)
     # viewpoint = speaker.get_headon_viewpoint(referent)
     angle = relatum.angle_between(viewpoint, referent)

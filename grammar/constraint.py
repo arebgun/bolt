@@ -139,15 +139,15 @@ class RelationConstraint(Constraint):
             return max(ps)
 
 
-class ConstraintCollection(coll.MutableMapping):
-    def __init__(self, constraints):
+class ConstraintSet(coll.MutableMapping):
+    def __init__(self, constraints=[]):
         pairs = [(c.domain.name,c) for c in constraints]
         self.odict = coll.OrderedDict(pairs)
-        # if isinstance(constraints, ConstraintCollection):
-        #     super(ConstraintCollection, self).__init__(constraints)
+        # if isinstance(constraints, ConstraintSet):
+        #     super(ConstraintSet, self).__init__(constraints)
         #     self.relatum_constraints = constraints.relatum_constraints
         # else:
-        #     super(ConstraintCollection, self).__init__(pairs)
+        #     super(ConstraintSet, self).__init__(pairs)
         self.relatum_constraints = None
 
     def copy(self):

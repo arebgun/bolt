@@ -31,6 +31,9 @@ class Unknown(object):
     def prettyprint(self):
         return self.__repr__() + '\n'
 
+    def collect_leaves(self):
+        return [self.string]
+
 class LexicalItem(object):
     def __init__(self, regex, sempole):
         self.regex = regex
@@ -70,12 +73,16 @@ class LexicalItem(object):
 class Construction(object):
     
     def __init__(self, constituents):
+        self.partial = False
         assert len(constituents) == len(self.pattern), \
                 'Pattern mismatch instantiating %s'%self.__class__.__name__
         for c, p in zip(constituents, self.pattern):
-            assert isinstance(c, p) or issubclass(c.construction, p), \
+            # assert isinstance(c, p) or issubclass(c.construction, p), \
+            assert isinstance(c, p) or issubclass(c.unmatched_pattern, p), \
                     'Pattern mismatch instantiating %s: %s, %s'\
                     %(self.__class__.__name__,c,p)
+            if isinstance(c, cmn.Hole) and issubclass(c.unmatched_pattern, p):
+                self.partial = True
         self.constituents = constituents
 
     @staticmethod
@@ -119,7 +126,7 @@ class Construction(object):
             for start in range(len(sequence)):
                 for end in range(start+1, len(sequence)+1):
                     # print '    subsequence',sequence[start:end]
-                    hole = cmn.Hole(cls.pattern,
+                    hole = cmn.Hole(cls.pattern[0],
                                     sequence[start:end])
                     partial_match = cmn.Match(start=start,
                                               end=end,
@@ -150,7 +157,7 @@ class Construction(object):
                             p2match=(p1match[1]+p2match[0],p1match[1]+p2match[1])
                             # print '      p2', p2match
                             hole_end = p2match[0]
-                            hole = cmn.Hole([cls.pattern[missing_ind]],
+                            hole = cmn.Hole(cls.pattern[missing_ind],
                                             sequence[hole_start:hole_end])
                             constituents = (sequence[p1match[0]:p1match[1]]+
                                             [hole]+
@@ -163,7 +170,7 @@ class Construction(object):
                     else: # Nothing to match for part2
                         # Hole could cover 1 item to full remainder of sequence
                         for hole_end in range(hole_start+1, len(sequence)+1):
-                            hole = cmn.Hole([cls.pattern[missing_ind]],
+                            hole = cmn.Hole(cls.pattern[missing_ind],
                                             sequence[hole_start:hole_end])
                             constituents = (sequence[p1match[0]:p1match[1]]+
                                             [hole])
@@ -181,7 +188,7 @@ class Construction(object):
                     hole_end = p2match[0]
                     for hole_start in range(0,hole_end):
                         # print '         ',hole_start, hole_end
-                        hole = cmn.Hole([cls.pattern[missing_ind]],
+                        hole = cmn.Hole(cls.pattern[missing_ind],
                                         sequence[hole_start:hole_end])
                         constituents = ([hole]+
                                         sequence[p2match[0]:p2match[1]])
@@ -229,9 +236,15 @@ class Construction(object):
 
     def find_partials(self):
         partials = []
+        if self.partial:
+            partials = [self]
         for c in self.constituents:
-            partials.extend(c.find_partials())
+            if not isinstance(c, cmn.Hole):
+                partials.extend(c.find_partials())
         return partials
+
+    def get_holes(self):
+        return [c for c in self.constituents if isinstance(c, cmn.Hole)]
 
     def __hash__(self):
         return hash(self.prettyprint())
