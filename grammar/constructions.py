@@ -20,7 +20,7 @@ class DegreeMeasurePhrase(MeasurePhrase):
 #     pass
 
 class DistanceRelation(struct.Construction, struct.Relation):
-    pattern = [MeasurePhrase, li.DestinationTag]
+    pattern = [MeasurePhrase]#, li.DestinationTag]
     arg_indices = [0]
     function = sp.DistanceRelate
 

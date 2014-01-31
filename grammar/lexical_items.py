@@ -189,8 +189,8 @@ class GradableMeasure(Measure, struct.Gradable):
 class DistanceMeasure(GradableMeasure):
     pass
 
-far = DistanceMeasure(regex='far', sempole=sp.far_func)
-near = DistanceMeasure(regex='near', sempole=sp.near_func)
+far = DistanceMeasure(regex='far from', sempole=sp.far_func)
+near = DistanceMeasure(regex='near to', sempole=sp.near_func)
 
 
 

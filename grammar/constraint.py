@@ -126,17 +126,23 @@ class RelationConstraint(Constraint):
                     relatum=relentity,
                     **kwargs))
                  for relentity in relatum])
-
+            # utils.logger(self.probability_func)
+            # utils.logger(self.feature)
+            # utils.logger(relatum)
+            # utils.logger(relatum_app)
+            # utils.logger(p)
+            # utils.logger(p*relatum_app)
             # entity_app += p*relatum_app/relatum_app_sum
             ps.append(p*relatum_app)
         ps = np.nan_to_num(ps)
-        pssum = ps.sum()
-        if pssum == 0:
-            return 0
-        else:
-            ps = ps**2/pssum
-            # return entity_app
-            return max(ps)
+        return max(ps)
+        # pssum = ps.sum()
+        # if pssum == 0:
+        #     return 0
+        # else:
+        #     ps = ps**2/pssum
+        #     # return entity_app
+        #     return max(ps)
 
 
 class ConstraintSet(coll.MutableMapping):
@@ -219,10 +225,21 @@ class ConstraintSet(coll.MutableMapping):
         # utils.logger('Calculating')
 
         if self.relatum_constraints is not None:
+            # utils.logger(self.relatum_constraints)
             # potential recursion here
-            relata_apps = context.get_potential_referent_scores()
+            relata_apps = context.get_all_potential_referent_scores()
             relata_apps *= self.relatum_constraints.ref_applicabilities(context, 
                             relata_apps.keys())
+            relata, apps = zip(*relata_apps.items())
+            apps = np.array(apps)
+            appsum = apps.sum()
+            if appsum == 0:
+                apps[:] = 0
+            else:
+                apps = (apps**2)/float(appsum)
+            relata_apps = Applicabilities(zip(relata,apps))
+            # for item, i in relata_apps.items():
+            #     utils.logger('%s %s'%(i,item))
             # viewpoint = context.speaker.location
         else:
             relata_apps = None
@@ -232,6 +249,7 @@ class ConstraintSet(coll.MutableMapping):
                 if isinstance(constraint, RelationConstraint):
                     raise Exception('What')
 
+        # utils.logger(self)
         apps = Applicabilities([(ref,1.0) for ref in potential_referents])
         for constraint in self.values():
             ref_apps = constraint.ref_applicabilities(
@@ -240,8 +258,12 @@ class ConstraintSet(coll.MutableMapping):
                         relata_apps=relata_apps)
                         # viewpoint=viewpoint) # <- Ignored if irrelevant
             # utils.logger(constraint)
-            # utils.logger(apps)
-            # utils.logger(ref_apps)
+            # utils.logger('                            Apps')
+            # for item,i in apps.items():
+            #     utils.logger('%s %s'%(i,item))
+            # utils.logger('                            Ref_apps')
+            # for item,i in ref_apps.items():
+            #     utils.logger('%s %s'%(i,item))
             apps *= ref_apps
 
         # ApplicabilityRegister.apps[self] = apps

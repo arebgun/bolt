@@ -7,7 +7,7 @@ class Feature(object):
         self.domain = domain
 
     def __repr__(self):
-        return self.observe.__name__
+        return self.domain.name
 
     def __validate_other(self, other):
         assert(isinstance(other,Feature))

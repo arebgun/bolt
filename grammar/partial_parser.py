@@ -154,14 +154,15 @@ def get_all_construction_parses(lexical_parses, structicon, max_holes=0):
 
     unfinished_parses = [Parse(lp) for lp in lexical_parses]
 
-    parses = set()
-    for uparse in unfinished_parses:
-        new_parses = recursive_parse(unfinished_parse=uparse, 
-                                     structicon=structicon, 
-                                     max_holes=max_holes)
-        parses.update(new_parses)
+    # parses = set()
+    # for uparse in unfinished_parses:
+    #     new_parses = recursive_parse(unfinished_parse=uparse, 
+    #                                  structicon=structicon, 
+    #                                  max_holes=max_holes)
+    #     parses.update(new_parses)
 
-    return parses
+    # return parses
+    return queue_parse(unfinished_parses, structicon, max_holes)
 
 def recursive_parse(unfinished_parse, structicon, max_holes=0):
     if len(unfinished_parse.current) == 1:
@@ -188,6 +189,34 @@ def recursive_parse(unfinished_parse, structicon, max_holes=0):
                                                     max_holes=max_holes)
                     parses.update(finished_parses)
     return parses
+
+def queue_parse(lexical_parses, structicon, max_holes=0):
+    unfin_parses = set(lexical_parses)
+    fin_parses = set()
+
+    while len(unfin_parses) > 0:
+        # utils.logger('Finished: %s, Unfinished %s           ' %(len(fin_parses),len(unfin_parses)), overwrite=True)
+        unfinished_parse = unfin_parses.pop()
+        for c in structicon:
+            cmatches = c.match(unfinished_parse.current)
+            for match in cmatches:
+                new_parse = unfinished_parse.update(match)
+                if len(new_parse.current) == 1:
+                    fin_parses.add(new_parse)
+                else:
+                    unfin_parses.add(new_parse)
+                
+            else:
+                if unfinished_parse.num_holes < max_holes:
+                    partial_matches = c.partially_match(unfinished_parse.current)
+                    for match in partial_matches:
+                        new_parse = unfinished_parse.update(match)
+                        if len(new_parse.current) == 1:
+                            fin_parses.add(new_parse)
+                        else:
+                            unfin_parses.add(new_parse)
+    # utils.logger('')
+    return fin_parses
 
 
 @automain.automain

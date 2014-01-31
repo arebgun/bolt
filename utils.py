@@ -291,12 +291,15 @@ def force_unicode(s, encoding='utf-8', errors='strict'):
         return str(s).decode(encoding, errors)
 
 
-def logger(msg, color=''):
+def logger(msg, overwrite=False, color=''):
     color = printcolors.map[color] if color in printcolors.map else ''
-    end = '' if color == '' else ''
+    # end = '' if color == '' else ''
     fn, line = inspect.stack()[1][1:3]
     fn = fn[fn.rfind('/')+1:]
-    print "%s%s:%d - %s%s" % (color, fn, line, msg, printcolors.ENDC)
+    if overwrite:
+        print "%s%s:%d - %s%s\r" % (color, fn, line, msg, printcolors.ENDC),
+    else:
+        print "%s%s:%d - %s%s" % (color, fn, line, msg, printcolors.ENDC)
 
 
 # generates a list of tuples of size `n`

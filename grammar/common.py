@@ -49,6 +49,11 @@ class Context(object):
         potential_referent_scores = Applicabilities(pairs)
         return potential_referent_scores
 
+    def get_all_potential_referent_scores(self):
+        pairs = zip(self.all_potential_referents,[1]*len(self.all_potential_referents))
+        potential_referent_scores = Applicabilities(pairs)
+        return potential_referent_scores
+
 class Match(object):
     def __init__(self, start, end, construction, constituents):
         self.start = start
@@ -88,6 +93,22 @@ class Hole(object):
         
     def sempole(self):
         return self._sempole.copy()
+
+    def equivalence(self, other):
+        if other == None:
+            return -2
+        else:
+            return other.equivalence(self)
+
+    def collect_leaves(self):
+        leaves = []
+        for constituent in self.unmatched_sequence:
+            leaves.extend(constituent.collect_leaves())
+        return leaves
+
+    def print_sentence(self):
+        leaves = self.collect_leaves()
+        return ' '.join(leaves)
 
     def prettyprint(self):
         string = self.__class__.__name__+' %s\n'%self.unmatched_pattern

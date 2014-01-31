@@ -1,9 +1,31 @@
 import math
 import numpy as np
 import collections as coll
+import itertools as it
 import domain as dom
+import utils
 
+import IPython
 
+def count_weighted(iterable, weights, counter=None):
+    if counter is None:
+        counter = coll.Counter()
+    for elem, weight in zip(iterable, weights):
+        counter[elem] += weight
+    return counter
+
+def weighted_gini_purity(instance_labels, instance_weights):
+    counts = np.array(
+        count_weighted(instance_labels, instance_weights).values())
+    return np.sum((counts/counts.sum())**2)
+
+def fraction_correct(torf, assignment, labels, weights):
+    w = np.where(assignment==torf)
+    s = float(weights[w].sum())
+    if s > 0:
+        return weights[np.where(labels[w]==torf)].sum()/s
+    else:
+        return 0.0
 
 class ProbabilityFunction(object):
     '''Base class'''
@@ -19,6 +41,12 @@ class ProbabilityFunction(object):
         # return np.product((probs**ydata)*((1-probs)**(1-ydata)))
         return -(classes*np.log(probs) + (1-classes)*np.log(1-probs)).sum()
 
+
+def powerset(iterable):
+    xs = list(iterable)
+    # note we return an iterator rather than a list
+    return it.chain.from_iterable( it.combinations(xs,n) for n in range(1,len(xs)) )
+
 class DiscreteProbFunc(ProbabilityFunction):
 
     def __init__(self, pairs):
@@ -31,10 +59,39 @@ class DiscreteProbFunc(ProbabilityFunction):
         return '<DiscretePF %s>' % self.ddict
 
     def __call__(self, key):
-        return self.ddict[key]
+        if isinstance(key, np.ndarray):
+            value_set = set(key)
+            to_return = np.zeros(len(key))
+            for value in value_set:
+                to_return[np.where(key==value)] = self.ddict[value]
+            return to_return
+        else:
+            return self.ddict[key]
 
     def __hash__(self):
         return hash(tuple(self.ddict.items()))
+
+    @staticmethod
+    def build_binary(fvalues, real_labels, weights, errfunc):
+        result = ''
+        value_set = set(fvalues)
+        if len(value_set) < 2:
+            return None, 'len(value_set) < 2\n'
+
+        scores = []
+        for value_subset in powerset(value_set):
+            labels = np.in1d(fvalues, value_subset)
+            true_negative = fraction_correct(False,labels,real_labels,weights)
+            true_positive = fraction_correct(True,labels,real_labels,weights)
+            score = (true_negative+true_positive)/2.0
+            scores.append((score,value_subset))
+        scores.sort(reverse=True)
+        # IPython.embed()
+        best_set = scores[0][1]
+        pairs = zip(best_set,[1.0]*len(best_set))
+        to_return = DiscreteProbFunc(pairs)
+        return to_return, result
+
 
 class ContinuousProbFunc(ProbabilityFunction):
     sqrt3 = np.sqrt(3)
@@ -64,6 +121,11 @@ class ContinuousProbFunc(ProbabilityFunction):
     def estimate_parameters(domain, x):
         raise NotImplementedError
 
+    @classmethod
+    def build(cls, domain, xs, ys):
+        loc, scale = cls.estimate_parameters(domain, xs, ys)
+        return cls(loc, scale, domain)
+
 
 
 class CentroidalProbFunc(ContinuousProbFunc):
@@ -71,7 +133,6 @@ class CentroidalProbFunc(ContinuousProbFunc):
     @staticmethod
     def estimate_parameters(domain, xs, ys):
         return domain.sample_mean_and_std(xs[np.where(ys)]) #TODO correct for non-uniform distribution (use ys)
-
 
 class DecayEnvelope(CentroidalProbFunc):
     def __call__(self, x):
@@ -108,8 +169,8 @@ class SigmoidProbFunc(ContinuousProbFunc):
         sorted_y = y[sort_i]
         diffs = sorted_y[1:]-sorted_y[:-1]
         # diff_x = sorted_x[np.where(diffs)]
-        diff_x = (sorted_x[np.where(diffs)]+
-                 sorted_x[np.where(diffs[1:])])/2.0
+        diff_x = (sorted_x[1:][np.where(diffs)]+
+                 sorted_x[:-1][np.where(diffs)])/2.0
         initial_loc = diff_x.mean()
         initial_scale = diff_x.std()
         mean_diff = sorted_x[np.where(sorted_y)].mean() - \

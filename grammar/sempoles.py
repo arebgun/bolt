@@ -149,10 +149,10 @@ zero_false = pfunc.DiscreteProbFunc([(0.0, 1.0)])
 not_contains_property = const.RelationConstraint(feature=feats.contains,
                                                  prob_func=zero_false)
 
-is_not_surface = pfunc.DiscreteProbFunc([(PointRepresentation,     1.0),
-                                         (LineRepresentation,      1.0),
-                                         (RectangleRepresentation, 1.0),
-                                         (SurfaceRepresentation,   0.0)])
+is_not_surface = pfunc.DiscreteProbFunc([('PointRepresentation',     1.0),
+                                         ('LineRepresentation',      1.0),
+                                         ('RectangleRepresentation', 1.0),
+                                         ('SurfaceRepresentation',   0.0)])
 not_surface_property = const.PropertyConstraint(feature=feats.referent_rep,
                                                 prob_func=is_not_surface)
 

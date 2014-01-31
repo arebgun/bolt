@@ -22,71 +22,113 @@ import gen2_features as g2f
 
 import os
 
+import matplotlib.pyplot as plt
+
+import IPython
+import traceback
 
 
+# global answers
+# answers = []
 
 def one_scene(args):
-    extrinsic = False
-    teacher, student, just_objects, just_shapes, goal_type, goal_sem = args
-    scene, speaker = sem.run.construct_training_scene(random=True, 
-                                                      just_shapes=just_shapes)
-    context = cmn.Context(scene, speaker)
-    teacher.set_context(context)
-    student.connect_to_memories()
-    student.set_context(context)
+    # global answers
+    try:
+        teacher,student,just_objects,just_shapes,extrinsic,goal_type,goal_sem = args
+        scene, speaker = sem.run.construct_training_scene(random=True, 
+                                                          just_shapes=just_shapes)
+        utils.logger(scene)
+        context = cmn.Context(scene, speaker)
+        teacher.set_context(context)
+        student.connect_to_memories()
+        student.set_context(context)
 
+        # IPython.embed()
 
-    # conn = engine.connect()
-    # scene_key = conn.execute(scenes.insert()).inserted_primary_key[0]
-
-    if just_objects:
-        potential_referents = context.get_potential_referents()
-    else:
-        potential_referents = context.get_all_potential_referents()
-
-    for referent in potential_referents:
-        result = ''
-        if extrinsic:
-            the_parses = teacher.cThe_object__parses
+        if just_objects:
+            potential_referents = context.get_potential_referents()
         else:
-            the_parses = teacher.landmark_parses
+            potential_referents = context.get_all_potential_referents()
 
-        parse_weights = teacher.weight_parses(referent, 
-                                              the_parses)
-        parse = teacher.choose_top_parse(parse_weights)
+        answers = []
+        for referent in potential_referents:
+            result = ''
+            if extrinsic:
+                the_parses = teacher.The_object__parses
+            else:
+                the_parses = teacher.landmark_parses
+            parse_weights = teacher.weight_parses(referent, 
+                                                  the_parses)
+            parse = teacher.choose_top_parse(parse_weights)
 
-        utterance = parse.print_sentence()
-        result += 'Teacher describes the %s as: %s\n' % (referent, utterance)
+            utterance = parse.print_sentence()
+            result += 'Teacher describes the %s as: %s\n' % (referent, utterance)
+            # utils.logger('Teacher describes the %s as: %s\n' % (referent, utterance))
 
-        guess = None
-        try:
-            guess = student.choose_referent(utterance)
-            result += 'Student guesses %s\n' % guess
-            if guess == referent:
-                result += 'Student is correct.\n'
-        except AttributeError:
-            parses = student.parse(utterance)
-            parses = sorted(parses, key=op.attrgetter('hole_width'))
+            guess = None
+            try:
+                # utils.logger('Begin parsing')
+                parses = student.parse(utterance)
+                # utils.logger('Finished parsing')
+                parses = sorted(parses, key=op.attrgetter('hole_width'))
+                guess = student.choose_referent(parses)
+                result += 'Student guesses %s\n' % guess
+                # utils.logger('Student guesses %s\n' % guess)
+                if guess == referent:
+                    result += 'Student is correct.\n'
+            except AttributeError:
+                result += 'Student could not understand.\n'
+                # utils.logger('Student could not understand.')
+                completed, result1 = student.construct_from_parses(parses,
+                                                                   goal_type,
+                                                                   goal_sem)
+                # result += result1
+                if len(completed)==0:
+                    result += 'First time student has seen this construction\n'
+                    # utils.logger('First time student has seen this construction')
+                else:
+                    if len(completed) > 1:
+                        # utils.logger(parse)
+                        # utils.logger(parse.prettyprint())
+                        completed = [(parse.equivalence(r),r) for r in completed]
+                        completed.sort(reverse=True)
+                        # for e,c in completed[:5]:
+                        #     result += '%s' % c.prettyprint()
+                        #     result += '%s\n' % e
+                        complete = completed[0][1]
+                    else:
+                        complete = completed[0]
+                        
+                    # result += '%s\n' % complete.prettyprint()
+                    # result += '%s\n\n' % complete.sempole()
+                    hole = complete.find_partials()[0].get_holes()[0]
+                    result += '%s\n' % hole.prettyprint()
+                    result += '%s\n\n' % hole.sempole()
+                    guess = student.choose_from_tree(complete)
 
-            result += 'Student could not understand.\n'
-            result += student.construct_from_parses(parses,goal_type,goal_sem)
+                    result += 'Student guesses %s\n' % guess
+                    # utils.logger('Student guesses %s\n' % guess)
+                    if referent == guess:
+                        result += 'Student is correct.\n'
 
-            # Guess referent
+                # Guess referent
 
-            result += student.create_new_construction_memories(parses, goal_type, 
-                                                               referent)
-
-
-                # result += parse.current[0].prettyprint()+'\n'
-            # parse = parses[0]
-            # result += 'Best partial parse:\nnum_holes: '+\
-            #     '%s, hole_width: %s\n%s' % (parse.num_holes, parse.hole_width, 
-            #                                 parse.current[0].prettyprint())
-            # result += student.create_relation_memories(parse=parse, 
-            #                                            true_referent=referent)
-            # result += student.create_relation_construction(parse=parse)
-
-        utils.logger(result)
+                try:
+                    # utils.logger('Creating memories')
+                    student.create_new_construction_memories(parses, 
+                                                             goal_type, 
+                                                             referent)
+                    # utils.logger('Done creating memories')
+                except Exception as e:
+                    result += str(e)+'\n'
+            answers.append(referent==guess if guess!=None else None)
+            result += str(answers)+'\n'
+            utils.logger(result)
+    except Exception, exception:
+        print exception
+        traceback.print_exc()
+        raise
+    return answers
 
 @automain.automain
 def main():
@@ -118,15 +160,15 @@ def main():
         li.middle,
         li.side,
         li.red,
-        li.orange,
-        li.yellow,
+        # li.orange,
+        # li.yellow,
         li.green,
         li.blue,
-        li.purple,
-        li.pink,
+        # li.purple,
+        # li.pink,
         li.black,
         li.white,
-        li.gray,
+        # li.gray,
         li.front,
         li.back,
         li.left,
@@ -164,11 +206,11 @@ def main():
         li._,
         li.the,
         li.objct,
-        # li.block,
+        li.block,
         # li.box,
-        # li.sphere,
+        li.sphere,
         # li.ball,
-        # li.cylinder,
+        li.cylinder,
         li.table,
         li.corner,
         li.edge,
@@ -177,15 +219,15 @@ def main():
         li.middle,
         li.side,
         li.red,
-        li.orange,
-        li.yellow,
+        # li.orange,
+        # li.yellow,
         li.green,
         li.blue,
-        li.purple,
-        li.pink,
+        # li.purple,
+        # li.pink,
         li.black,
         li.white,
-        li.gray,
+        # li.gray,
         li.front,
         li.back,
         li.left,
@@ -206,9 +248,8 @@ def main():
         st.MeasurePhrase,
         st.DegreeMeasurePhrase,
         st.PartOfRelation,
-        st.DistanceRelation,
-        st.OrientationRelation,
-        st.PartOfRelation,
+        # st.DistanceRelation,
+        # st.OrientationRelation,
         st.ReferringExpression,
         st.RelationLandmarkPhrase,
         st.RelationNounPhrase,
@@ -224,14 +265,20 @@ def main():
 
     utils.logger('Done loading!')
     just_objects=True
-    just_shapes=True
+    just_shapes=False
+    extrinsic=True
+    num_scenes = 10
     args = [(teacher.copy(), student.copy(),
-             just_objects,just_shapes,
+             just_objects,just_shapes,extrinsic,
              goal_type, goal_sem) 
-            for _ in range(5)]
-    # pool = mp.Pool(7)
-    # pool.map(one_scene, args)
-    map(one_scene, args)
+            for _ in range(num_scenes)]
+    pool = mp.Pool(7)
+    all_answers = pool.map(one_scene, args)
+    # all_answers = map(one_scene, args)
+    utils.logger(all_answers)
+
+    exit()
+
 
     # scene_descs=sem.run.read_scenes('static_scenes/',normalize=True,image=True)
 

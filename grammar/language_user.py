@@ -2,6 +2,7 @@ import random
 import numpy as np
 import operator as op
 import utils
+import domain as dom
 import common as cmn
 import lexical_items as li
 import constructions as st
@@ -13,7 +14,9 @@ import sqlalchemy as alc
 import gen2_features as g2f
 import probability_function as pf
 import domain as dom
+import constraint as cnstrnt
 
+import inspect
 import IPython
 
 class LanguageUser(object):
@@ -77,19 +80,22 @@ class LanguageUser(object):
             self.scene_key = self.connection.execute(self.scenes.insert()
                                 ).inserted_primary_key[0]
         self.context = context
-        self.complete_The_object__parses()
         self.generate_landmark_parses()
+        self.complete_The_object__parses()
 
-    def choose_referent(self, referring_expression, return_all_tied=False):
-        parses = self.parse(utterance=referring_expression)
-        parses = sorted(parses, key=op.attrgetter('hole_width'))
+    def choose_referent(self, sorted_parses, return_all_tied=False):
+        # parses = self.parse(utterance=referring_expression)
+        # parses = sorted(parses, key=op.attrgetter('hole_width'))
         # for parse in parses:
         #     utils.logger(parse.current)
         #     utils.logger(parse.hole_width)
         #     raw_input()
-        parse = parses[0].current[0]
+        tree = sorted_parses[0].current[0]
+        return self.choose_from_tree(tree, return_all_tied)
+
+    def choose_from_tree(self, tree_root, return_all_tied=False):
         potential_referents = self.context.get_all_potential_referents()
-        apps = parse.sempole().ref_applicabilities(self.context, 
+        apps = tree_root.sempole().ref_applicabilities(self.context, 
                                                    potential_referents)
         app_items = sorted(apps.items(), key=op.itemgetter(1), reverse=True)
         best_app = app_items[0][1]
@@ -208,23 +214,54 @@ class LanguageUser(object):
             simplenps+adjnps+simplelmknps+onedirection+twodirection
 
 
+    # def complete_The_object__parses(self):
+    #     target = st.RelationNounPhrase
+    #     pattern_start = [[st.NounPhrase([li.objct])]]
+    #     current_depths = {st.ReferringExpression:1}
+    #     rnpparses = apg.finish_parse(targetclass=target,
+    #                                  pattern_start=pattern_start,
+    #                                  lexicon=self.lexicon,
+    #                                  structicon=self.structicon,
+    #                                  current_depths=current_depths)
+    #     parses = [st.ExtrinsicReferringExpression([li.the, parse]) 
+    #               for parse in rnpparses]
+    #     self.The_object__parses = parses
+
     def complete_The_object__parses(self):
-        target = st.RelationNounPhrase
-        pattern_start = [[st.NounPhrase([li.objct])]]
-        current_depths = {st.ReferringExpression:1}
-        rnpparses = apg.finish_parse(targetclass=target,
-                                     pattern_start=pattern_start,
-                                     lexicon=self.lexicon,
-                                     structicon=self.structicon,
-                                     current_depths=current_depths)
-        parses = [st.ExtrinsicReferringExpression([li.the, parse]) 
-                  for parse in rnpparses]
-        self.The_object__parses = parses
+
+        rel_parses = apg.generate_parses(targetclass=st.OrientationRelation,
+                                         lexicon=self.lexicon,
+                                         structicon=self.structicon)
+        rel_parses+= apg.generate_parses(targetclass=st.DistanceRelation,
+                                         lexicon=self.lexicon,
+                                         structicon=self.structicon)
+        # rel_parses+= apg.generate_parses(targetclass=st.ContainmentRelation,
+        #                                  lexicon=self.lexicon,
+        #                                  structicon=self.structicon)
+
+        rnpparses = []
+        for refex in self.landmark_parses:
+            for rel in rel_parses:
+                parse = st.ExtrinsicReferringExpression([
+                            li.the,
+                            st.RelationNounPhrase([
+                                st.NounPhrase([li.objct]),
+                                st.RelationLandmarkPhrase([
+                                    rel,
+                                    refex
+                                ])
+                            ])
+                        ])
+                rnpparses.append(parse)
+        self.The_object__parses = rnpparses
 
     def weight_parses(self, referent, parses):
         potential_referents = self.context.get_all_potential_referents()
         scores = []
-        for parse in parses:
+        # num_parses = len(parses)
+        for i, parse in enumerate(parses):
+            # print '{0}\r'.format(i),
+            # utils.logger('Parse %s of %s' % (i,num_parses))
             # utils.logger(parse.prettyprint())
             applicabilities = parse.sempole().ref_applicabilities(self.context, 
                                     potential_referents)
@@ -411,7 +448,7 @@ class LanguageUser(object):
                 for item in hole.unmatched_sequence:
                     leaves.extend(item.collect_leaves())
                 const_string = ' '.join(leaves)
-                const_type = hole.unmatched_pattern.__name__
+                const_type = hole.unmatched_pattern
 
                 refexes = []
                 for constituent in partial.constituents:
@@ -426,21 +463,30 @@ class LanguageUser(object):
                     relata_apps *= relatum_constraints.ref_applicabilities(self.context, 
                                 relata_apps.keys())
                 else:
-                    relata_apps = {(None,):None}
+                    relata_apps = {(None,):1}
 
-                keys = []
-                for referent in self.context.get_all_potential_referents():
-                    assert(len(referent)==1)
-                    for relatum, relatum_app in relata_apps.items():
-                        assert(len(relatum)==1)
-                        relatum = relatum[0]
-                        # result+= '%s==%s: %s\n' % (referent, true_referent, referent == true_referent)
-                        new_key=self.create_datapoint(referent == true_referent, 
-                                                      const_type, const_string, 
-                                                      referent[0], relatum, 
-                                                      relatum_app)
-                        keys.append(new_key)
-                result += 'Inserted %s keys\n' % len(keys)
+                if const_type in self.meta_grammar:
+                    hole._sempole = self.meta_grammar[const_type]()
+                    referent_apps = self.context.get_all_potential_referent_scores()
+                    referent_apps *= root.sempole().ref_applicabilities(self.context,
+                                    referent_apps.keys())
+                    keys = []
+                    for referent, ref_app in referent_apps.items():
+                        if ref_app > 0:
+                            assert(len(referent)==1)
+                            for relatum, relatum_app in relata_apps.items():
+                                assert(len(relatum)==1)
+                                relatum = relatum[0]
+                                weight = ref_app*relatum_app
+                                # result+= '%s==%s: %s\n' % (referent, true_referent, referent == true_referent)
+                                if weight > 0:
+                                    new_key=self.create_datapoint(referent == true_referent, 
+                                                                  const_type.__name__, 
+                                                                  const_string, 
+                                                                  referent[0], relatum, 
+                                                                  weight)
+                                    keys.append(new_key)
+                    result += 'Inserted %s keys\n' % len(keys)
 
         return result
 
@@ -472,6 +518,7 @@ class LanguageUser(object):
 
     def construct_from_parses(self, parses, goal_type, goal_sem):
         result = ''
+        completed = []
         for parse in parses:
             assert(len(parse.current)==1)
             root = parse.current[0]
@@ -491,12 +538,26 @@ class LanguageUser(object):
                 const_type = hole.unmatched_pattern
                 result += '%s %s\n' % (const_type, const_string)
                 if const_type in self.meta_grammar:
-                    hole._sempole = self.meta_grammar[const_type]()
-                    utils.logger(root.sempole())
+                    # new_sempole = self.meta_grammar[const_type]()
+
                     # IPython.embed()
-                    result += self.construct(const_type.__name__,const_string)
+                    constraint_set, result1 = self.construct(
+                                                const_type.__name__,
+                                                const_string)
+                    result += result1
+                    if constraint_set:
+                        hole._sempole = constraint_set
+                        completed.append(root)
+                        result += str(root.sempole())
                     result += '\n'
-        return result
+
+
+        return completed, result
+
+    @staticmethod
+    def binomial_cost(probs, labels, weights):
+        notlabels = np.logical_not(labels)
+        return 1-np.dot(labels*probs+notlabels*(1-probs), weights)/weights.sum()
 
     def construct(self, const_type, const_string):
         result = ''
@@ -505,15 +566,77 @@ class LanguageUser(object):
             self.unknown_structs.c.string==const_string)
         results = list(self.connection.execute(query))
         if len(results) == 0:
-            return 'First sighting of "%s --> %s"\n' % (const_type,const_string)
+            return None, 'First sighting of "%s --> %s"\n' % (const_type,const_string)
         else:
             separated = zip(*results)
             classes = np.array(separated[4])
-            probs = np.array(separated[5])
+            weights = np.array(separated[5])
             feature_values = separated[6:]
+
+            result += 'Classes: %s\n' % classes
+            result += 'Weights: %s\n' % weights
+
+            constraints = []
             for feature, values in zip(g2f.feature_list, feature_values):
-                values = [float('nan') if v is None else v for v in values]
                 values = np.array(values)
-                result += 'Feature: %s\nValues: %s\nClasses: %s\nProbs: %s\n' % \
-                            (feature.domain.name, values, classes, probs)
-            return result
+                result += '%s positive Values: %s\n' %(feature,values[np.where(classes==True)])
+                result += '%s negative Values: %s\n' %(feature,values[np.where(classes==False)])
+                if isinstance(feature.domain,dom.DiscreteDomain):
+                    values = np.array(['' if v is None else v for v in values])
+                    pfunc, result1=pf.DiscreteProbFunc.build_binary(values,
+                                                           classes,weights,
+                                                           self.binomial_cost)
+                    result += result1
+                    if pfunc:
+                        cost = self.binomial_cost(pfunc(values),
+                                                  classes,
+                                                  weights)
+                        result += '%s: %s, %s\n' % (feature,
+                                                    cost,
+                                                    pfunc)
+                        constraints.append((cost,pfunc,feature))
+                else:
+                    if len(filter(None,values)) == 0:
+                        break
+                    values = np.array([float('nan') if v is None else v for v in values])
+                    pfunc=pf.LogisticBell.build(feature.domain,
+                                                values,
+                                                classes)
+                    cost = self.binomial_cost(pfunc(values),
+                                              classes,
+                                              weights)
+                    result += '%s: %s, %s\n' % (feature,
+                                                cost,
+                                                pfunc)
+                    constraints.append((cost,pfunc,feature))
+
+                    pfunc=pf.LogisticSigmoid.build(feature.domain,
+                                                   values,
+                                                   classes)
+                    cost = self.binomial_cost(pfunc(values),
+                                              classes,
+                                              weights)
+                    result += '%s: %s, %s\n' % (feature,
+                                                cost,
+                                                pfunc)
+                    constraints.append((cost,pfunc,feature))
+
+            if len(constraints) < 1:
+                return None, 'No constraints found'
+            else:
+                constraints.sort()
+                _, pfunc, feature = constraints[0]
+                if 'relatum' in inspect.getargspec(feature.observe).args:
+                    constraint = cnstrnt.RelationConstraint(feature,pfunc)
+                else:
+                    constraint = cnstrnt.PropertyConstraint(feature,pfunc)
+                constraint_set = cnstrnt.ConstraintSet([constraint])
+
+
+                # for feature, values in zip(g2f.feature_list, feature_values):
+                #     values = [float('nan') if v is None else v for v in values]
+                #     values = np.array(values)
+                #     result += 'Feature: %s\nValues: %s\nClasses: %s\nProbs: %s\n' % \
+                #                 (feature.domain.name, values, classes, probs)
+                    #
+                return constraint_set, result

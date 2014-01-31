@@ -39,6 +39,23 @@ class LexicalItem(object):
         self.regex = regex
         self._sempole = sempole
 
+    def equivalence(self, other):
+        if isinstance(other,LexicalItem):
+            m = 1 if self.__class__ == other.__class__ else -1
+            m += 1 if self.regex == other.regex else -1
+        elif isinstance(other,Construction):
+            m = 1 if self.__class__ == other.__class__ else -1
+            return other.equivalence(self)
+        elif isinstance(other,cmn.Hole):
+            m = 1 if self.__class__ == other.unmatched_pattern else -1
+            m += 1 if self.print_sentence() == other.print_sentence() else -1
+        elif other == None:
+            m = -2
+        else:
+            utils.logger(other)
+
+        return m
+
     def match(self, text):
         matches = re.finditer(self.regex, text)
         intervals = [cmn.Match(m.start(),m.end(), self, None) for m in matches]
@@ -55,6 +72,9 @@ class LexicalItem(object):
 
     def collect_leaves(self):
         return [self.regex]
+
+    def print_sentence(self):
+        return ' '.join(self.collect_leaves())
 
     def find_partials(self):
         return []
@@ -84,6 +104,38 @@ class Construction(object):
             if isinstance(c, cmn.Hole) and issubclass(c.unmatched_pattern, p):
                 self.partial = True
         self.constituents = constituents
+
+    def equivalence(self, other):
+        scs = self.constituents
+
+        if isinstance(other,Construction):
+            ocs = other.constituents
+            m = 1 if self.__class__ == other.__class__ else -1
+
+            if len(scs) > len(ocs):
+                ocs = ocs + [None]*(len(scs)-len(ocs))
+                return sum([sc.equivalence(oc) for sc,oc in zip(scs,ocs)]) + m
+            elif len(ocs) > len(scs):
+                s = sum([sc.equivalence(oc) for sc,oc in zip(scs,ocs)])
+                s+= sum([oc.equivalence(None) for oc in ocs[len(scs):]])
+                return s + m
+            else:
+                return sum([sc.equivalence(oc) for sc,oc in zip(scs,ocs)]) + m
+
+        elif isinstance(other,cmn.Hole):
+            m = 1 if self.__class__ == other.unmatched_pattern else -1
+            m += 1 if self.print_sentence() == other.print_sentence() else -1
+        elif isinstance(other,LexicalItem):
+            m = -1
+            m += 1 if self.print_sentence() == other.print_sentence() else -1
+        elif other == None:
+            m = -1
+        # else:
+        #     utils.logger(other)
+
+        return sum([sc.equivalence(None) for sc in scs]) + m
+            
+
 
     @staticmethod
     def match_template(seq, pat):
@@ -122,18 +174,18 @@ class Construction(object):
         # print cls.pattern
         # print '  sequence',sequence
         if len(cls.pattern) == 1:
-            # return partial_matches
-            for start in range(len(sequence)):
-                for end in range(start+1, len(sequence)+1):
-                    # print '    subsequence',sequence[start:end]
-                    hole = cmn.Hole(cls.pattern[0],
-                                    sequence[start:end])
-                    partial_match = cmn.Match(start=start,
-                                              end=end,
-                                              construction=cls,
-                                              constituents=[hole])
-                    partial_matches.append(partial_match)
             return partial_matches
+        #     for start in range(len(sequence)):
+        #         for end in range(start+1, len(sequence)+1):
+        #             # print '    subsequence',sequence[start:end]
+        #             hole = cmn.Hole(cls.pattern[0],
+        #                             sequence[start:end])
+        #             partial_match = cmn.Match(start=start,
+        #                                       end=end,
+        #                                       construction=cls,
+        #                                       constituents=[hole])
+        #             partial_matches.append(partial_match)
+        #     return partial_matches
             
 
         # First find all partial patterns missing 1 part
