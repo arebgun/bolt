@@ -22,13 +22,23 @@ class Applicabilities(coll.defaultdict):
         product = Applicabilities(pairs)
         return product
 
+    def uniquify(self):
+        keys, apps = zip(*self.items())
+        apps = np.array(apps)
+        s = apps.sum()
+        if s != 0:
+            apps *= apps/s
+            self.clear()
+            self.update(zip(keys,apps))
+
 class Context(object):
 
     def __init__(self, scene, speaker):
         self.scene = scene
         self.speaker = speaker
         self.entities = scene.landmarks.values()
-        self.potential_referents = [(entity,) for entity in self.entities]
+        self.potential_referents = [(entity,) for entity in self.entities 
+                                    if entity.name != 'table']
         self.all_potential_referents = [(entity,) for entity in self.entities]
         self.all_potential_referents += [(landmark,) for landmark in 
                     scene.landmarks['table'].representation.get_landmarks(1)]

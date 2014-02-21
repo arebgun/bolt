@@ -26,6 +26,8 @@ import matplotlib.pyplot as plt
 
 import IPython
 import traceback
+import shelve
+import time
 
 
 # global answers
@@ -34,7 +36,7 @@ import traceback
 def one_scene(args):
     # global answers
     try:
-        teacher,student,just_objects,just_shapes,extrinsic,goal_type,goal_sem = args
+        teacher,student,just_objects,just_shapes,extrinsic,goal_type = args
         scene, speaker = sem.run.construct_training_scene(random=True, 
                                                           just_shapes=just_shapes)
         utils.logger(scene)
@@ -52,6 +54,9 @@ def one_scene(args):
 
         answers = []
         for referent in potential_referents:
+            construction_name = None
+            construction_string = None
+            construction_sem = None
             result = ''
             if extrinsic:
                 the_parses = teacher.The_object__parses
@@ -64,24 +69,33 @@ def one_scene(args):
             utterance = parse.print_sentence()
             result += 'Teacher describes the %s as: %s\n' % (referent, utterance)
             # utils.logger('Teacher describes the %s as: %s\n' % (referent, utterance))
+            result += str(parse.sempole()
+                               .ref_applicabilities(context,
+                                                    potential_referents))+'\n'
 
             guess = None
             try:
                 # utils.logger('Begin parsing')
                 parses = student.parse(utterance)
+
                 # utils.logger('Finished parsing')
                 parses = sorted(parses, key=op.attrgetter('hole_width'))
                 guess = student.choose_referent(parses)
                 result += 'Student guesses %s\n' % guess
                 # utils.logger('Student guesses %s\n' % guess)
+                result += str(parses[0].current[0].sempole()
+                                .ref_applicabilities(context,
+                                                    potential_referents))+'\n'
                 if guess == referent:
                     result += 'Student is correct.\n'
-            except AttributeError:
+            except AttributeError, e:
+                # print e
+                # traceback.print_exc()
+                # exit()
                 result += 'Student could not understand.\n'
                 # utils.logger('Student could not understand.')
                 completed, result1 = student.construct_from_parses(parses,
-                                                                   goal_type,
-                                                                   goal_sem)
+                                                                   goal_type)
                 # result += result1
                 if len(completed)==0:
                     result += 'First time student has seen this construction\n'
@@ -92,6 +106,8 @@ def one_scene(args):
                         # utils.logger(parse.prettyprint())
                         completed = [(parse.equivalence(r),r) for r in completed]
                         completed.sort(reverse=True)
+                        # completed = [(parse.get_hole_size(),r) for r in completed]
+                        # completed.sort()
                         # for e,c in completed[:5]:
                         #     result += '%s' % c.prettyprint()
                         #     result += '%s\n' % e
@@ -102,12 +118,21 @@ def one_scene(args):
                     # result += '%s\n' % complete.prettyprint()
                     # result += '%s\n\n' % complete.sempole()
                     hole = complete.find_partials()[0].get_holes()[0]
+                    construction_name = hole.unmatched_pattern.__name__
+                    result += '%s\n' % construction_name
+                    construction_string = hole.print_sentence()
+                    result += '%s\n' % construction_string
+                    construction_sem = hole.sempole()
+                    result += '%s\n' % construction_sem
                     result += '%s\n' % hole.prettyprint()
                     result += '%s\n\n' % hole.sempole()
                     guess = student.choose_from_tree(complete)
 
                     result += 'Student guesses %s\n' % guess
                     # utils.logger('Student guesses %s\n' % guess)
+                    result += str(complete.sempole()
+                               .ref_applicabilities(context,
+                                                    potential_referents))+'\n'
                     if referent == guess:
                         result += 'Student is correct.\n'
 
@@ -115,14 +140,20 @@ def one_scene(args):
 
                 try:
                     # utils.logger('Creating memories')
-                    student.create_new_construction_memories(parses, 
+                    student.create_new_construction_memories(utterance,
+                                                             parses, 
                                                              goal_type, 
                                                              referent)
                     # utils.logger('Done creating memories')
                 except Exception as e:
                     result += str(e)+'\n'
-            answers.append(referent==guess if guess!=None else None)
-            result += str(answers)+'\n'
+
+            answers.append((time.time(),
+                            construction_name,
+                            construction_string,
+                            construction_sem,
+                            referent==guess if guess!=None else None))
+            # result += str(answers)+'\n'
             utils.logger(result)
     except Exception, exception:
         print exception
@@ -148,9 +179,9 @@ def main():
         li.the,
         li.objct,
         li.block,
-        li.box,
+        # li.box,
         li.sphere,
-        li.ball,
+        # li.ball,
         li.cylinder,
         li.table,
         li.corner,
@@ -218,15 +249,15 @@ def main():
         li.half,
         li.middle,
         li.side,
-        li.red,
+        # li.red,
         # li.orange,
         # li.yellow,
-        li.green,
-        li.blue,
+        # li.green,
+        # li.blue,
         # li.purple,
         # li.pink,
-        li.black,
-        li.white,
+        # li.black,
+        # li.white,
         # li.gray,
         li.front,
         li.back,
@@ -259,24 +290,29 @@ def main():
     student = lu.LanguageUser(name=student_name, lexicon=s_lexicon, 
                               structicon=s_structicon, meta=meta_grammar,
                               remember=True, reset=True)
-
+    # student.connect_to_memories()
+    # student.construct('Relation','near to')
+    # exit()
     goal_type = st.ReferringExpression
-    goal_sem = constraint.ConstraintSet
 
     utils.logger('Done loading!')
     just_objects=True
     just_shapes=False
-    extrinsic=True
-    num_scenes = 10
+    extrinsic=False
+    num_scenes = 64
     args = [(teacher.copy(), student.copy(),
              just_objects,just_shapes,extrinsic,
-             goal_type, goal_sem) 
+             goal_type) 
             for _ in range(num_scenes)]
-    pool = mp.Pool(7)
+    pool = mp.Pool(8)
     all_answers = pool.map(one_scene, args)
     # all_answers = map(one_scene, args)
     utils.logger(all_answers)
 
+    filename = 'learning_game_results.shelf'
+    f = shelve.open(filename)
+    f['all_answers'] = all_answers
+    f.close()
     exit()
 
 

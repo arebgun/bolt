@@ -15,6 +15,7 @@ import gen2_features as g2f
 import probability_function as pf
 import domain as dom
 import constraint as cnstrnt
+import sempoles
 
 import inspect
 import IPython
@@ -52,6 +53,7 @@ class LanguageUser(object):
         alc.Table('unknown_structs', metadata,
             alc.Column('id', alc.Integer, primary_key=True),
             alc.Column('scene_id', None, alc.ForeignKey('scenes.id')),
+            alc.Column('utterance', alc.String),
             alc.Column('construction', alc.String),
             alc.Column('string', alc.String),
             alc.Column('exemplary', alc.Boolean),
@@ -429,8 +431,9 @@ class LanguageUser(object):
 
         return result
 
-    def create_new_construction_memories(self, parses, goal_type, true_referent):
+    def create_new_construction_memories(self, utterance, parses, goal_type, true_referent):
         result = ''
+        already_done = []
         for parse in parses:
             assert(len(parse.current)==1)
             root = parse.current[0]
@@ -449,52 +452,57 @@ class LanguageUser(object):
                     leaves.extend(item.collect_leaves())
                 const_string = ' '.join(leaves)
                 const_type = hole.unmatched_pattern
+                signature = (const_type.__name__, const_string)
+                if not signature in already_done:
+                    already_done.append(signature)
 
-                refexes = []
-                for constituent in partial.constituents:
-                    if isinstance(constituent,st.ReferringExpression):
-                        refexes.append(constituent)
-                assert(len(refexes)<=1)
+                    refexes = []
+                    for constituent in partial.constituents:
+                        if isinstance(constituent,st.ReferringExpression):
+                            refexes.append(constituent)
+                    assert(len(refexes)<=1)
 
-                if len(refexes)==1:
-                    relatum_constraints = refexes[0].sempole()
+                    if len(refexes)==1:
+                        relatum_constraints = refexes[0].sempole()
 
-                    relata_apps = self.context.get_all_potential_referent_scores()
-                    relata_apps *= relatum_constraints.ref_applicabilities(self.context, 
-                                relata_apps.keys())
-                else:
-                    relata_apps = {(None,):1}
+                        relata_apps = self.context.get_all_potential_referent_scores()
+                        relata_apps *= relatum_constraints.ref_applicabilities(self.context, 
+                                    relata_apps.keys())
+                    else:
+                        relata_apps = {(None,):1}
 
-                if const_type in self.meta_grammar:
-                    hole._sempole = self.meta_grammar[const_type]()
-                    referent_apps = self.context.get_all_potential_referent_scores()
-                    referent_apps *= root.sempole().ref_applicabilities(self.context,
-                                    referent_apps.keys())
-                    keys = []
-                    for referent, ref_app in referent_apps.items():
-                        if ref_app > 0:
-                            assert(len(referent)==1)
-                            for relatum, relatum_app in relata_apps.items():
-                                assert(len(relatum)==1)
-                                relatum = relatum[0]
-                                weight = ref_app*relatum_app
-                                # result+= '%s==%s: %s\n' % (referent, true_referent, referent == true_referent)
-                                if weight > 0:
-                                    new_key=self.create_datapoint(referent == true_referent, 
-                                                                  const_type.__name__, 
-                                                                  const_string, 
-                                                                  referent[0], relatum, 
-                                                                  weight)
-                                    keys.append(new_key)
-                    result += 'Inserted %s keys\n' % len(keys)
+                    if const_type in self.meta_grammar:
+                        hole._sempole = self.meta_grammar[const_type]()
+                        referent_apps = self.context.get_all_potential_referent_scores()
+                        referent_apps *= root.sempole().ref_applicabilities(self.context,
+                                        referent_apps.keys())
+                        keys = []
+                        for referent, ref_app in referent_apps.items():
+                            if ref_app > 0:
+                                assert(len(referent)==1)
+                                for relatum, relatum_app in relata_apps.items():
+                                    assert(len(relatum)==1)
+                                    relatum = relatum[0]
+                                    weight = ref_app*relatum_app
+                                    # result+= '%s==%s: %s\n' % (referent, true_referent, referent == true_referent)
+                                    if weight > 0:
+                                        new_key=self.create_datapoint(referent == true_referent, 
+                                                                      utterance,
+                                                                      const_type.__name__, 
+                                                                      const_string, 
+                                                                      referent[0], relatum, 
+                                                                      weight)
+                                        keys.append(new_key)
+                        result += 'Inserted %s keys\n' % len(keys)
 
         return result
 
 
 
-    def create_datapoint(self, exemplary, construction, string, referent, 
-                         relatum, relatum_app):
-        kwargs = {'construction':construction,
+    def create_datapoint(self, exemplary, utterance,construction, string, 
+                         referent, relatum, relatum_app):
+        kwargs = {'utterance':utterance,
+                  'construction':construction,
                   'string':string,
                   'exemplary':exemplary,
                   'lmk_prob':relatum_app,
@@ -516,7 +524,7 @@ class LanguageUser(object):
         return new_key
 
 
-    def construct_from_parses(self, parses, goal_type, goal_sem):
+    def construct_from_parses(self, parses, goal_type):#, goal_sem):
         result = ''
         completed = []
         for parse in parses:
@@ -557,7 +565,9 @@ class LanguageUser(object):
     @staticmethod
     def binomial_cost(probs, labels, weights):
         notlabels = np.logical_not(labels)
-        return 1-np.dot(labels*probs+notlabels*(1-probs), weights)/weights.sum()
+        w = np.where(np.logical_not(np.isnan(probs)))
+        return 1-np.dot(labels[w]*probs[w]+notlabels[w]*(1-probs[w]), 
+                        weights[w])/weights.sum()
 
     def construct(self, const_type, const_string):
         result = ''
@@ -569,9 +579,11 @@ class LanguageUser(object):
             return None, 'First sighting of "%s --> %s"\n' % (const_type,const_string)
         else:
             separated = zip(*results)
-            classes = np.array(separated[4])
-            weights = np.array(separated[5])
-            feature_values = separated[6:]
+            classes = np.array(separated[5])
+            weights = np.array(separated[6])
+            feature_values = separated[7:]
+            # nc = np.array(feature_values[-3]) == 0
+            # wnc = np.where(nc)
 
             result += 'Classes: %s\n' % classes
             result += 'Weights: %s\n' % weights
@@ -581,11 +593,16 @@ class LanguageUser(object):
                 values = np.array(values)
                 result += '%s positive Values: %s\n' %(feature,values[np.where(classes==True)])
                 result += '%s negative Values: %s\n' %(feature,values[np.where(classes==False)])
+
+
                 if isinstance(feature.domain,dom.DiscreteDomain):
                     values = np.array(['' if v is None else v for v in values])
+                    # pfunc, result1=pf.DiscreteProbFunc.build_binary(values[wnc],
+                    #                                        classes[wnc],weights[wnc],
+                    #                                        self.binomial_cost)
                     pfunc, result1=pf.DiscreteProbFunc.build_binary(values,
-                                                           classes,weights,
-                                                           self.binomial_cost)
+                                       classes,weights,
+                                       self.binomial_cost)
                     result += result1
                     if pfunc:
                         cost = self.binomial_cost(pfunc(values),
@@ -599,9 +616,15 @@ class LanguageUser(object):
                     if len(filter(None,values)) == 0:
                         break
                     values = np.array([float('nan') if v is None else v for v in values])
+                    # w = np.where(np.logical_and(np.logical_not(np.isnan(values)),nc))
+                    w = np.where(np.logical_not(np.isnan(values)))
+                    classes_ = classes[w]
+                    values_ = values[w]
+                    weights_ = weights[w]
                     pfunc=pf.LogisticBell.build(feature.domain,
-                                                values,
-                                                classes)
+                                                values_,
+                                                classes_,
+                                                weights_)
                     cost = self.binomial_cost(pfunc(values),
                                               classes,
                                               weights)
@@ -611,8 +634,9 @@ class LanguageUser(object):
                     constraints.append((cost,pfunc,feature))
 
                     pfunc=pf.LogisticSigmoid.build(feature.domain,
-                                                   values,
-                                                   classes)
+                                                   values_,
+                                                   classes_,
+                                                   weights_)
                     cost = self.binomial_cost(pfunc(values),
                                               classes,
                                               weights)

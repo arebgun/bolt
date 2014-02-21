@@ -119,6 +119,8 @@ class RelationConstraint(Constraint):
         # relatum_app_sum = sum(relata_apps.values())
         ps = []
         for relatum, relatum_app in relata_apps.items():
+            if entity in relatum:
+                continue
             p = np.product(
                 [self.probability_func(self.feature.observe(
                     context=context,

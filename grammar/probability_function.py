@@ -5,6 +5,8 @@ import itertools as it
 import domain as dom
 import utils
 
+import scipy.optimize as opt
+
 import IPython
 
 def count_weighted(iterable, weights, counter=None):
@@ -34,12 +36,13 @@ class ProbabilityFunction(object):
         raise NotImplementedError
 
     @staticmethod
-    def binomial_error(probs, classes):
+    def binomial_error(probs, classes, weights):
         epsilon = 0.000000001
         probs[np.where(probs==0)] += epsilon
         probs[np.where(probs==1)] -= epsilon
         # return np.product((probs**ydata)*((1-probs)**(1-ydata)))
-        return -(classes*np.log(probs) + (1-classes)*np.log(1-probs)).sum()
+        # return -(classes*np.log(probs) + (1-classes)*np.log(1-probs)).sum()
+        return -np.dot(classes*np.log(probs) + (1-classes)*np.log(1-probs), weights)
 
 
 def powerset(iterable):
@@ -93,8 +96,8 @@ class DiscreteProbFunc(ProbabilityFunction):
         return to_return, result
 
 
+sqrt3 = np.sqrt(3)
 class ContinuousProbFunc(ProbabilityFunction):
-    sqrt3 = np.sqrt(3)
 
     def __init__(self, loc, scale, domain):
         self.loc = loc
@@ -102,7 +105,7 @@ class ContinuousProbFunc(ProbabilityFunction):
         self.domain = domain
 
     def __call__(self, x):
-        raise NotImplementedError
+        return self.shape_function(x, self.domain, self.loc, self.scale)
 
     def __repr__(self):
         return "<%s loc=%s, scale=%s>" % (self.__class__.__name__, 
@@ -121,9 +124,30 @@ class ContinuousProbFunc(ProbabilityFunction):
     def estimate_parameters(domain, x):
         raise NotImplementedError
 
+    @staticmethod
+    def binom_errfunc(params, func, domain, xdata, ydata, weights):
+        epsilon = 0.000000001
+        probs = func(xdata, domain, *params)
+        probs[np.where(probs==0)] += epsilon
+        probs[np.where(probs==1)] -= epsilon
+        # return np.product((probs**ydata)*((1-probs)**(1-ydata)))
+        return -np.dot(ydata*np.log(probs) + (1-ydata)*np.log(1-probs), weights)
+
     @classmethod
-    def build(cls, domain, xs, ys):
-        loc, scale = cls.estimate_parameters(domain, xs, ys)
+    def fit_function(cls,p0,function,domain,train_xs,train_ys,weights,**kwargs):
+        p1 = opt.fmin_l_bfgs_b(func=cls.binom_errfunc,
+                               x0=p0,
+                               args=(function,domain,train_xs,train_ys,weights),
+                               **kwargs)[0]
+        return p1
+
+    @classmethod
+    def build(cls, domain, xs, ys, weights):
+        loc, scale = cls.estimate_parameters(domain, xs, ys, weights)
+        # xs = np.array(xs,dtype=float)
+        # ys = np.array(ys,dtype=float)
+        # kwargs = dict(approx_grad=True, disp=False, maxfun=5)
+        # loc, scale = cls.fit_function((loc,scale),cls.shape_function,domain,xs,ys,weights,**kwargs)
         return cls(loc, scale, domain)
 
 
@@ -131,55 +155,65 @@ class ContinuousProbFunc(ProbabilityFunction):
 class CentroidalProbFunc(ContinuousProbFunc):
     '''Functions such that loc and scale are the mean and standard deviation'''
     @staticmethod
-    def estimate_parameters(domain, xs, ys):
-        return domain.sample_mean_and_std(xs[np.where(ys)]) #TODO correct for non-uniform distribution (use ys)
+    def estimate_parameters(domain, xs, ys, weights):
+        return domain.sample_mean_and_std(xs[np.where(ys)], weights=weights) #TODO correct for non-uniform distribution (use ys)
 
 class DecayEnvelope(CentroidalProbFunc):
-    def __call__(self, x):
-        return np.exp(-math.e*np.abs(self.domain.norm(x-self.loc))/
-                (2*self.scale))
+    @staticmethod
+    def shape_function(x, domain, loc, scale):
+        return np.exp(-math.e*np.abs(domain.norm(x-loc))/
+                (2*scale))
+
 
 class LogisticBell(CentroidalProbFunc):
-    def __call__(self, x):
-        return np.exp(-np.pi*self.domain.norm(x-self.loc)/(self.scale*self.sqrt3))\
-            /(((1+np.exp(-np.pi*self.domain.norm(x-self.loc)/(self.scale*self.sqrt3)))/2.)**2)
+    @staticmethod
+    def shape_function(x, domain, loc, scale):
+        return np.exp(-np.pi*domain.norm(x-loc)/(scale*sqrt3))\
+            /(((1+np.exp(-np.pi*domain.norm(x-loc)/(scale*sqrt3)))/2.)**2)
 
 class GaussianBell(CentroidalProbFunc):
-    def __call__(self, x):
-        return np.exp(-0.5*(self.domain.norm(x-self.loc)/self.scale)**2)
+    @staticmethod
+    def shape_function(x, domain, loc, scale):
+        return np.exp(-0.5*(domain.norm(x-loc)/scale)**2)
 
 class SechBell(CentroidalProbFunc):
     '''Mathematically simpler equivalent to logistic bell'''
-    def __call__(self, x):
-        return 1/(np.cosh((np.pi*self.domain.norm(x-self.loc)/
-                (2*self.scale*self.sqrt3)))**2)
+    @staticmethod
+    def shape_function(x, domain, loc, scale):
+        return 1/(np.cosh((np.pi*domain.norm(x-loc)/
+                (2*scale*sqrt3)))**2)
 
 class VonMisesCircularBell(CentroidalProbFunc):
-    def __call__(self, x):
-        return np.exp(self.scale*(np.cos(self.domain.to_radians(x)-
-                                         self.domain.to_radians(self.loc))-1))
+    @staticmethod
+    def shape_function(x, domain, loc, scale):
+        return np.exp(scale*(np.cos(domain.to_radians(x)-
+                                         domain.to_radians(loc))-1))
 
 
 
 class SigmoidProbFunc(ContinuousProbFunc):
     @staticmethod
-    def estimate_parameters(domain, x, y):#TODO correct for non-uniform distribution (use ys)
+    def estimate_parameters(domain, x, y, weights):#TODO correct for non-uniform distribution (use ys)
         sort_i = np.argsort(x)
         sorted_x = x[sort_i]
         sorted_y = y[sort_i]
+        sorted_weights = weights[sort_i]
         diffs = sorted_y[1:]-sorted_y[:-1]
         # diff_x = sorted_x[np.where(diffs)]
-        diff_x = (sorted_x[1:][np.where(diffs)]+
-                 sorted_x[:-1][np.where(diffs)])/2.0
-        initial_loc = diff_x.mean()
-        initial_scale = diff_x.std()
-        mean_diff = sorted_x[np.where(sorted_y)].mean() - \
-                    sorted_x[np.where(np.logical_not(sorted_y))].mean()
+        w = np.where(diffs)
+        diff_x = (sorted_x[1:][w]+sorted_x[:-1][w])/2.0
+        diff_weights = (sorted_weights[1:][w]+sorted_weights[:-1][w])/2.0
+        initial_loc = np.average(diff_x, weights=diff_weights)
+        initial_scale = np.average((diff_x-initial_loc)**2, weights=diff_weights)
+        w = np.where(sorted_y)
+        nw = np.where(np.logical_not(sorted_y))
+        mean_diff = np.average(sorted_x[w], weights=sorted_weights[w]) - \
+                    np.average(sorted_x[nw], weights=sorted_weights[nw])
         initial_scale = math.copysign(initial_scale,mean_diff)
         return initial_loc, initial_scale*np.sqrt(3)/np.pi
 
 class LogisticSigmoid(SigmoidProbFunc):
-    sqrt3 = np.sqrt(3)
-    def __call__(self, x):
-        return 1./(1+np.exp(-np.pi*(x-self.loc)/(self.scale*self.sqrt3)))
+    @staticmethod
+    def shape_function(x, domain, loc, scale):
+        return 1./(1+np.exp(-np.pi*(x-loc)/(scale*sqrt3)))
 

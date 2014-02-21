@@ -174,18 +174,18 @@ class Construction(object):
         # print cls.pattern
         # print '  sequence',sequence
         if len(cls.pattern) == 1:
+            # return partial_matches
+            for start in range(len(sequence)):
+                for end in range(start+1, len(sequence)+1):
+                    # print '    subsequence',sequence[start:end]
+                    hole = cmn.Hole(cls.pattern[0],
+                                    sequence[start:end])
+                    partial_match = cmn.Match(start=start,
+                                              end=end,
+                                              construction=cls,
+                                              constituents=[hole])
+                    partial_matches.append(partial_match)
             return partial_matches
-        #     for start in range(len(sequence)):
-        #         for end in range(start+1, len(sequence)+1):
-        #             # print '    subsequence',sequence[start:end]
-        #             hole = cmn.Hole(cls.pattern[0],
-        #                             sequence[start:end])
-        #             partial_match = cmn.Match(start=start,
-        #                                       end=end,
-        #                                       construction=cls,
-        #                                       constituents=[hole])
-        #             partial_matches.append(partial_match)
-        #     return partial_matches
             
 
         # First find all partial patterns missing 1 part
@@ -297,6 +297,15 @@ class Construction(object):
 
     def get_holes(self):
         return [c for c in self.constituents if isinstance(c, cmn.Hole)]
+
+    def get_hole_size(self):
+        hole_size = 0
+        partials = self.find_partials()
+        for partial in partials:
+            holes = partial.get_holes()
+            for hole in holes:
+                hole_size += len(hole.print_sentence())
+        return hole_size
 
     def __hash__(self):
         return hash(self.prettyprint())
