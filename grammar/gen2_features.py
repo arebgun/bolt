@@ -56,7 +56,9 @@ def __part_of(referent, relatum, **kwargs):
 def __contains(referent, relatum, **kwargs):
     if relatum is None:
         return None
-    return relatum.contains(referent)
+    c = relatum.contains(referent)
+    # utils.logger("%s %s %s" % (c,referent,relatum))
+    return c >= 0.8
 
 def __distance_between(referent, relatum, **kwargs):
     if relatum is None:

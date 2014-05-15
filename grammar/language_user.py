@@ -19,6 +19,9 @@ import sempoles
 
 import inspect
 import IPython
+import random as rand
+import itertools as it
+from scipy.stats.stats import nanmean
 
 class LanguageUser(object):
     db_suffix = '_memories.db'
@@ -86,12 +89,6 @@ class LanguageUser(object):
         self.complete_The_object__parses()
 
     def choose_referent(self, sorted_parses, return_all_tied=False):
-        # parses = self.parse(utterance=referring_expression)
-        # parses = sorted(parses, key=op.attrgetter('hole_width'))
-        # for parse in parses:
-        #     utils.logger(parse.current)
-        #     utils.logger(parse.hole_width)
-        #     raw_input()
         tree = sorted_parses[0].current[0]
         return self.choose_from_tree(tree, return_all_tied)
 
@@ -198,36 +195,10 @@ class LanguageUser(object):
                             
                         ]))
 
-        # for snp in simplenps:
-        #     print snp.prettyprint()
-        # print
-        # print
-        # for anp in adjnps:
-        #     print anp.prettyprint()
-
-        # for slnp in simplelmknps:
-        #     print slnp.prettyprint()
-        # for od in onedirection:
-        #     print od.prettyprint()
-        # for td in twodirection:
-        #     print td.prettyprint()
 
         self.landmark_parses = \
             simplenps+adjnps+simplelmknps+onedirection+twodirection
 
-
-    # def complete_The_object__parses(self):
-    #     target = st.RelationNounPhrase
-    #     pattern_start = [[st.NounPhrase([li.objct])]]
-    #     current_depths = {st.ReferringExpression:1}
-    #     rnpparses = apg.finish_parse(targetclass=target,
-    #                                  pattern_start=pattern_start,
-    #                                  lexicon=self.lexicon,
-    #                                  structicon=self.structicon,
-    #                                  current_depths=current_depths)
-    #     parses = [st.ExtrinsicReferringExpression([li.the, parse]) 
-    #               for parse in rnpparses]
-    #     self.The_object__parses = parses
 
     def complete_The_object__parses(self):
 
@@ -237,9 +208,7 @@ class LanguageUser(object):
         rel_parses+= apg.generate_parses(targetclass=st.DistanceRelation,
                                          lexicon=self.lexicon,
                                          structicon=self.structicon)
-        # rel_parses+= apg.generate_parses(targetclass=st.ContainmentRelation,
-        #                                  lexicon=self.lexicon,
-        #                                  structicon=self.structicon)
+        # rel_parses+= [li.on]
 
         rnpparses = []
         for refex in self.landmark_parses:
@@ -393,6 +362,8 @@ class LanguageUser(object):
         results = list(self.connection.execute(query))
         if len(results) > 0:
             separated = zip(*results)
+            IPython.embed()
+            exit()
             classes = np.array(separated[4])
             probs = np.array(separated[5])
             feature_values = separated[6:]
@@ -549,9 +520,12 @@ class LanguageUser(object):
                     # new_sempole = self.meta_grammar[const_type]()
 
                     # IPython.embed()
-                    constraint_set, result1 = self.construct(
+                    constraint_set, result1 = self.old_construct(
                                                 const_type.__name__,
                                                 const_string)
+                    # constraint_set, result1 = self.cv_build(
+                                                # const_type.__name__,
+                                                # const_string)
                     result += result1
                     if constraint_set:
                         hole._sempole = constraint_set
@@ -567,100 +541,246 @@ class LanguageUser(object):
         notlabels = np.logical_not(labels)
         w = np.where(np.logical_not(np.isnan(probs)))
         return 1-np.dot(labels[w]*probs[w]+notlabels[w]*(1-probs[w]), 
-                        weights[w])/weights.sum()
+                        weights[w])/weights[w].sum()
 
-    def construct(self, const_type, const_string):
-        result = ''
+    def cv_build(self, const_type, const_string, num_functions=3, num_folds=10):
         query = alc.sql.select([self.unknown_structs]).where(
             self.unknown_structs.c.construction==const_type).where(
             self.unknown_structs.c.string==const_string)
         results = list(self.connection.execute(query))
         if len(results) == 0:
             return None, 'First sighting of "%s --> %s"\n' % (const_type,const_string)
-        else:
-            separated = zip(*results)
-            classes = np.array(separated[5])
-            weights = np.array(separated[6])
-            feature_values = separated[7:]
-            # nc = np.array(feature_values[-3]) == 0
-            # wnc = np.where(nc)
+        #else:
 
-            result += 'Classes: %s\n' % classes
-            result += 'Weights: %s\n' % weights
+        result = ''
+        separated = zip(*results)
+        classes = np.array(separated[5])
+        weights = np.array(separated[6])
+        feature_values = np.array(separated[7:]).T
 
-            constraints = []
-            for feature, values in zip(g2f.feature_list, feature_values):
-                values = np.array(values)
-                result += '%s positive Values: %s\n' %(feature,values[np.where(classes==True)])
-                result += '%s negative Values: %s\n' %(feature,values[np.where(classes==False)])
-
-
-                if isinstance(feature.domain,dom.DiscreteDomain):
-                    values = np.array(['' if v is None else v for v in values])
-                    # pfunc, result1=pf.DiscreteProbFunc.build_binary(values[wnc],
-                    #                                        classes[wnc],weights[wnc],
-                    #                                        self.binomial_cost)
-                    pfunc, result1=pf.DiscreteProbFunc.build_binary(values,
-                                       classes,weights,
-                                       self.binomial_cost)
-                    result += result1
-                    if pfunc:
-                        cost = self.binomial_cost(pfunc(values),
-                                                  classes,
-                                                  weights)
-                        result += '%s: %s, %s\n' % (feature,
-                                                    cost,
-                                                    pfunc)
-                        constraints.append((cost,pfunc,feature))
-                else:
-                    if len(filter(None,values)) == 0:
-                        break
-                    values = np.array([float('nan') if v is None else v for v in values])
-                    # w = np.where(np.logical_and(np.logical_not(np.isnan(values)),nc))
-                    w = np.where(np.logical_not(np.isnan(values)))
-                    classes_ = classes[w]
-                    values_ = values[w]
-                    weights_ = weights[w]
-                    pfunc=pf.LogisticBell.build(feature.domain,
-                                                values_,
-                                                classes_,
-                                                weights_)
-                    cost = self.binomial_cost(pfunc(values),
-                                              classes,
-                                              weights)
-                    result += '%s: %s, %s\n' % (feature,
-                                                cost,
-                                                pfunc)
-                    constraints.append((cost,pfunc,feature))
-
-                    pfunc=pf.LogisticSigmoid.build(feature.domain,
-                                                   values_,
-                                                   classes_,
-                                                   weights_)
-                    cost = self.binomial_cost(pfunc(values),
-                                              classes,
-                                              weights)
-                    result += '%s: %s, %s\n' % (feature,
-                                                cost,
-                                                pfunc)
-                    constraints.append((cost,pfunc,feature))
-
-            if len(constraints) < 1:
-                return None, 'No constraints found'
+        numpos = sum(classes)
+        if numpos < 2:
+            fold_csets,_ = self.construct(g2f.feature_list,
+                                        feature_values,
+                                        classes,
+                                        weights,
+                                        how_many = 1)
+            if len(fold_csets) == 1:
+                return fold_csets[0], ''
             else:
-                constraints.sort()
-                _, pfunc, feature = constraints[0]
-                if 'relatum' in inspect.getargspec(feature.observe).args:
-                    constraint = cnstrnt.RelationConstraint(feature,pfunc)
-                else:
-                    constraint = cnstrnt.PropertyConstraint(feature,pfunc)
-                constraint_set = cnstrnt.ConstraintSet([constraint])
+                return None, ''
+        else:
+            num_folds = min(numpos,num_folds)
+        # utils.logger('num_folds %s' % num_folds)
+        # utils.logger('len weights %s' % len(weights))
+
+        result += 'Classes: %s\n' % classes
+        result += 'Weights: %s\n' % weights
+
+        num_funcs = range(1,num_functions+1)
+        folds_indices = self.select_folds(classes, num_folds)
+        # utils.logger(folds_indices)
+
+        fold_scores = np.zeros((num_folds, len(num_funcs)))
+        for i in range(num_folds):
+            # utils.logger('fold %s' % i)
+            test_ind = folds_indices[i]
+            train_ind = list(it.chain(*(folds_indices[:i]+folds_indices[i+1:])))
+            # utils.logger('fold train size %s' % len(train_ind))
+
+            fold_csets,_ = self.construct(g2f.feature_list,
+                                        feature_values[train_ind],
+                                        classes[train_ind],
+                                        weights[train_ind],
+                                        how_many = num_functions)
+
+            if fold_csets == []:
+                continue
+            # utils.logger(fold_csets)
+            # shortcut, the last cset has all the functions, so have it 
+            # return probs from 1st, 1st and 2nd, etc
+            temp = fold_csets[-1]
+            test_features = feature_values[test_ind]
+            fold_probs = temp.judge_array(g2f.feature_list, test_features)
+            for j, probs in enumerate(fold_probs):
+                fold_scores[i,j] = self.binomial_cost(probs, 
+                                                      classes[test_ind], 
+                                                      weights[test_ind])
+
+        utils.logger("\n%s" % fold_scores)
+        mean_scores = nanmean(fold_scores,axis=0)
+        # utils.logger(mean_scores)
+        utils.logger('Mean scores: %s' % mean_scores)
+        min_ind = mean_scores.argmin()
+        utils.logger('Best score: %s %s' % (min_ind, mean_scores[min_ind]))
+
+        result,_ = self.construct(g2f.feature_list,
+                              feature_values,
+                              classes,
+                              weights,
+                              how_many = min_ind+1)
+        # utils.logger(g2f.feature_list)
+        return result[-1], ''
+
+    @staticmethod
+    def select_folds(labels, num_folds):
+        w = list(np.where(labels)[0])
+        nw = list(np.where(1-labels)[0])
+        wper_fold = int(len(w)/num_folds)
+        nwper_fold = int(len(nw)/num_folds)
+        # utils.logger(w)
+        # utils.logger(nw)
+        # utils.logger(wper_fold)
+        # utils.logger(nwper_fold)
+        utils.logger('%s %s %s %s' % (len(labels), 
+                                      wper_fold*num_folds, 
+                                      nwper_fold*num_folds,
+                                      wper_fold*num_folds+nwper_fold*num_folds))
+        # indices = np.arange(num_instances)
+        rand.shuffle(w)
+        rand.shuffle(nw)
+        wchunks = chunks(w, wper_fold)
+        nwchunks = chunks(nw, nwper_fold)
+        result = [w+nw for w,nw in zip(wchunks,nwchunks)]
+
+        return result
+    def old_construct(self, const_type, const_string):
+        query = alc.sql.select([self.unknown_structs]).where(
+            self.unknown_structs.c.construction==const_type).where(
+            self.unknown_structs.c.string==const_string)
+        results = list(self.connection.execute(query))
+        if len(results) == 0:
+            return None, 'First sighting of "%s --> %s"\n' % (const_type,const_string)
+        #else:
+
+        separated = zip(*results)
+        classes = np.array(separated[5])
+        weights = np.array(separated[6])
+        feature_values = np.array(separated[7:]).T
+        constraint, fi, result1 = self.build_constraint(g2f.feature_list,
+                                                            feature_values,
+                                                            classes,
+                                                            weights)
+        if constraint:
+            return cnstrnt.ConstraintSet([constraint]), result1
+        else:
+            return None, result1
+
+    def construct(self,feature_list,feature_values,classes,weights,how_many=1):
+        feature_list = list(feature_list)
+        result = ''
+
+        # w = np.where(1-classes)
+        constraints = []
+        weights = np.array(weights)
+        # a = zip(feature_list,zip(*feature_values))
+        for _ in range(min(how_many,len(feature_list))):
+            c, fi, res = self.build_constraint(feature_list, feature_values,
+                                               classes, weights)
+            # x =sorted(zip(classes, weights, a[7][1], a[8][1]))
+            # utils.logger(_)
+            # utils.logger(c)
+            # IPython.embed()
+            if c is None:
+                break
+            constraints.append(c)
+            result += res
+            feature_list[fi] = None
+            weights *= cnstrnt.ConstraintSet([c]).judge_array(g2f.feature_list,feature_values)[-1]
 
 
-                # for feature, values in zip(g2f.feature_list, feature_values):
-                #     values = [float('nan') if v is None else v for v in values]
-                #     values = np.array(values)
-                #     result += 'Feature: %s\nValues: %s\nClasses: %s\nProbs: %s\n' % \
-                #                 (feature.domain.name, values, classes, probs)
-                    #
-                return constraint_set, result
+
+        l = len(constraints)
+        return [cnstrnt.ConstraintSet(constraints[:i]) for i in range(1,l+1)], \
+               result
+
+    def build_constraint(self,feature_list,feature_values,classes,weights):
+        result = ''
+        possible = []
+        for fi, (feature, values) in enumerate(zip(feature_list, feature_values.T)):
+            if feature is None:
+                continue
+            # utils.logger(feature)
+            # utils.logger(values[:10])
+            # raw_input()
+            # values = np.array(values)
+            result += '%s positive Values: %s\n' %(feature,values[np.where(classes==True)])
+            result += '%s negative Values: %s\n' %(feature,values[np.where(classes==False)])
+
+
+            if isinstance(feature.domain,dom.DiscreteDomain):
+                # utils.logger('  discrete')
+                values = np.array(['None' if v is None else v for v in values])
+                # pfunc, result1=pf.DiscreteProbFunc.build_binary(values[wnc],
+                #                                        classes[wnc],weights[wnc],
+                #                                        self.binomial_cost)
+                pfunc, result1=pf.DiscreteProbFunc.build_binary(values,
+                                   classes,weights,
+                                   self.binomial_cost)
+                # utils.logger(pfunc)
+                # utils.logger(result1)
+                result += result1
+                if pfunc:
+                    cost = self.binomial_cost(pfunc(values),
+                                              classes,
+                                              weights)
+                    result += '%s: %s, %s\n' % (feature,
+                                                cost,
+                                                pfunc)
+                    # utils.logger('%s: %s, %s\n' % (feature,cost,pfunc))
+                    possible.append((cost,pfunc,feature,fi))
+            else:
+                # utils.logger('  continuous')
+                if len(filter(None,values)) == 0:
+                    continue
+                values = values.astype(float)
+                # values = np.array([float('nan') if v is None else v for v in values])
+                # w = np.where(np.logical_and(np.logical_not(np.isnan(values)),nc))
+                w = np.where(np.logical_not(np.isnan(values)))
+                classes_ = classes[w]
+                values_ = values[w]
+                weights_ = weights[w]
+                pfunc=pf.LogisticBell.build(feature.domain,
+                                            values_,
+                                            classes_,
+                                            weights_)
+                if pfunc:
+                    cost = self.binomial_cost(pfunc(values),
+                                              classes,
+                                              weights)
+                    result += '%s: %s, %s\n' % (feature,
+                                                cost,
+                                                pfunc)
+                    # utils.logger('%s: %s, %s\n' % (feature,cost,pfunc))
+                    possible.append((cost,pfunc,feature,fi))
+
+                pfunc=pf.LogisticSigmoid.build(feature.domain,
+                                               values_,
+                                               classes_,
+                                               weights_)
+                if pfunc:
+                    cost = self.binomial_cost(pfunc(values),
+                                              classes,
+                                              weights)
+                    result += '%s: %s, %s\n' % (feature,
+                                                cost,
+                                                pfunc)
+                    # utils.logger('%s: %s, %s\n' % (feature,cost,pfunc))
+                    possible.append((cost,pfunc,feature,fi))
+
+        if len(possible) < 1:
+            return None, 0, 'No constraints found'
+        else:
+            possible.sort()
+            _, pfunc, feature, fi = possible[0]
+            if 'relatum' in inspect.getargspec(feature.observe).args:
+                constraint = cnstrnt.RelationConstraint(feature,pfunc)
+            else:
+                constraint = cnstrnt.PropertyConstraint(feature,pfunc)
+            return constraint, fi, result
+
+def chunks(l, n):
+    """ Yield successive n-sized chunks from l.
+    """
+    for i in xrange(0, len(l), n):
+        yield l[i:i+n]

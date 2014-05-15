@@ -25,7 +25,7 @@ def fraction_correct(torf, assignment, labels, weights):
     w = np.where(assignment==torf)
     s = float(weights[w].sum())
     if s > 0:
-        return weights[np.where(labels[w]==torf)].sum()/s
+        return weights[w][np.where(labels[w]==torf)].sum()/s
     else:
         return 0.0
 
@@ -144,6 +144,8 @@ class ContinuousProbFunc(ProbabilityFunction):
     @classmethod
     def build(cls, domain, xs, ys, weights):
         loc, scale = cls.estimate_parameters(domain, xs, ys, weights)
+        if loc is None:
+            return None
         # xs = np.array(xs,dtype=float)
         # ys = np.array(ys,dtype=float)
         # kwargs = dict(approx_grad=True, disp=False, maxfun=5)
@@ -156,7 +158,8 @@ class CentroidalProbFunc(ContinuousProbFunc):
     '''Functions such that loc and scale are the mean and standard deviation'''
     @staticmethod
     def estimate_parameters(domain, xs, ys, weights):
-        return domain.sample_mean_and_std(xs[np.where(ys)], weights=weights) #TODO correct for non-uniform distribution (use ys)
+        w = np.where(ys)
+        return domain.sample_mean_and_std(xs[w], weights=weights[w]) #TODO correct for non-uniform distribution (use ys)
 
 class DecayEnvelope(CentroidalProbFunc):
     @staticmethod
@@ -168,18 +171,21 @@ class DecayEnvelope(CentroidalProbFunc):
 class LogisticBell(CentroidalProbFunc):
     @staticmethod
     def shape_function(x, domain, loc, scale):
+        if isinstance(x,np.ndarray): x = x.astype(float)
         return np.exp(-np.pi*domain.norm(x-loc)/(scale*sqrt3))\
             /(((1+np.exp(-np.pi*domain.norm(x-loc)/(scale*sqrt3)))/2.)**2)
 
 class GaussianBell(CentroidalProbFunc):
     @staticmethod
     def shape_function(x, domain, loc, scale):
+        if isinstance(x,np.ndarray): x = x.astype(float)
         return np.exp(-0.5*(domain.norm(x-loc)/scale)**2)
 
 class SechBell(CentroidalProbFunc):
     '''Mathematically simpler equivalent to logistic bell'''
     @staticmethod
     def shape_function(x, domain, loc, scale):
+        if isinstance(x,np.ndarray): x = x.astype(float)
         return 1/(np.cosh((np.pi*domain.norm(x-loc)/
                 (2*scale*sqrt3)))**2)
 
@@ -194,6 +200,8 @@ class VonMisesCircularBell(CentroidalProbFunc):
 class SigmoidProbFunc(ContinuousProbFunc):
     @staticmethod
     def estimate_parameters(domain, x, y, weights):#TODO correct for non-uniform distribution (use ys)
+        if len(weights) <= 1 or sum(weights) == 0:
+            return None, None
         sort_i = np.argsort(x)
         sorted_x = x[sort_i]
         sorted_y = y[sort_i]
@@ -203,10 +211,14 @@ class SigmoidProbFunc(ContinuousProbFunc):
         w = np.where(diffs)
         diff_x = (sorted_x[1:][w]+sorted_x[:-1][w])/2.0
         diff_weights = (sorted_weights[1:][w]+sorted_weights[:-1][w])/2.0
+        if sum(diff_weights) == 0:
+            return None, None
         initial_loc = np.average(diff_x, weights=diff_weights)
         initial_scale = np.average((diff_x-initial_loc)**2, weights=diff_weights)
         w = np.where(sorted_y)
         nw = np.where(np.logical_not(sorted_y))
+        if sum(sorted_weights[w]) == 0 or sum(sorted_weights[nw]) == 0:
+            return None, None
         mean_diff = np.average(sorted_x[w], weights=sorted_weights[w]) - \
                     np.average(sorted_x[nw], weights=sorted_weights[nw])
         initial_scale = math.copysign(initial_scale,mean_diff)
@@ -215,5 +227,6 @@ class SigmoidProbFunc(ContinuousProbFunc):
 class LogisticSigmoid(SigmoidProbFunc):
     @staticmethod
     def shape_function(x, domain, loc, scale):
+        if isinstance(x,np.ndarray): x = x.astype(float)
         return 1./(1+np.exp(-np.pi*(x-loc)/(scale*sqrt3)))
 

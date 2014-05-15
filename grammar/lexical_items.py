@@ -193,7 +193,10 @@ far = DistanceMeasure(regex='far from', sempole=sp.far_func)
 near = DistanceMeasure(regex='near to', sempole=sp.near_func)
 
 
+class OnRelation(struct.LexicalItem, struct.Relation):
+    pass
 
+on = OnRelation(regex='on', sempole=const.ConstraintSet([sp.on_property]))
 
 lexical_items_list = [
     _,
@@ -240,4 +243,5 @@ lexical_items_list = [
     of,
     far,
     near,
+    on,
 ]

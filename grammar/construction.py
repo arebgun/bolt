@@ -174,18 +174,18 @@ class Construction(object):
         # print cls.pattern
         # print '  sequence',sequence
         if len(cls.pattern) == 1:
-            # return partial_matches
-            for start in range(len(sequence)):
-                for end in range(start+1, len(sequence)+1):
-                    # print '    subsequence',sequence[start:end]
-                    hole = cmn.Hole(cls.pattern[0],
-                                    sequence[start:end])
-                    partial_match = cmn.Match(start=start,
-                                              end=end,
-                                              construction=cls,
-                                              constituents=[hole])
-                    partial_matches.append(partial_match)
             return partial_matches
+            # for start in range(len(sequence)):
+            #     for end in range(start+1, len(sequence)+1):
+            #         # print '    subsequence',sequence[start:end]
+            #         hole = cmn.Hole(cls.pattern[0],
+            #                         sequence[start:end])
+            #         partial_match = cmn.Match(start=start,
+            #                                   end=end,
+            #                                   construction=cls,
+            #                                   constituents=[hole])
+            #         partial_matches.append(partial_match)
+            # return partial_matches
             
 
         # First find all partial patterns missing 1 part

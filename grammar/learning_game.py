@@ -28,6 +28,7 @@ import IPython
 import traceback
 import shelve
 import time
+import numpy as np
 
 
 # global answers
@@ -52,6 +53,36 @@ def one_scene(args):
         else:
             potential_referents = context.get_all_potential_referents()
 
+        # test_parse = st.ExtrinsicReferringExpression([
+        #                 li.the,
+        #                 st.RelationNounPhrase([
+        #                     st.NounPhrase([li.objct]),
+        #                     st.RelationLandmarkPhrase([
+        #                         li.on,
+        #                         st.ExtrinsicReferringExpression([
+        #                             li.the,
+        #                             st.RelationNounPhrase([
+        #                                 st.AdjectiveNounPhrase([
+        #                                     st.AdjectivePhrase([
+        #                                         st.OrientationAdjective([
+        #                                             li.front])]),
+        #                                     li.half]),
+        #                                 st.RelationLandmarkPhrase([
+        #                                     st.PartOfRelation([
+        #                                         li.of]),
+        #                                     st.ReferringExpression([
+        #                                         li.the,
+        #                                         st.NounPhrase([
+        #                                             li.table])
+        #                                         ])])])])])])])
+
+        # f_surf = context.scene.landmarks['table'].representation.landmarks['f_surf']
+        # f_surf_app = cmn.Applicabilities([((f_surf,),1.0)])
+        # on = li.on.sempole().odict['contains']
+        # # for ref in context.get_potential_referents():
+        # refs = context.get_potential_referents()
+        # utils.logger(on.ref_applicabilities(context,refs,f_surf_app))
+        # exit()
         answers = []
         for referent in potential_referents:
             construction_name = None
@@ -62,8 +93,29 @@ def one_scene(args):
                 the_parses = teacher.The_object__parses
             else:
                 the_parses = teacher.landmark_parses
+
+            # parse_weights = teacher.weight_parses(referent, 
+            #                                       [test_parse])
+            # for weight, parse in parse_weights:
+            #     utils.logger(weight)
+            #     utils.logger(parse.prettyprint())
+            # utils.logger('\n\n\n\n\n\n\n')
+            # continue
+            # for parse in the_parses:
+            #     print parse.prettyprint()
+            #     print
+            # exit()
+
             parse_weights = teacher.weight_parses(referent, 
                                                   the_parses)
+            # for weight, parse in parse_weights[:10]:
+            #     utils.logger(weight)
+            #     utils.logger(parse.prettyprint())
+            # utils.logger('\n\n\n\n\n\n\n')
+            # continue
+            # exit()
+            # weights= np.array(zip(*parse_weights)[0])
+            # utils.logger(weights)
             parse = teacher.choose_top_parse(parse_weights)
 
             utterance = parse.print_sentence()
@@ -148,6 +200,10 @@ def one_scene(args):
                 except Exception as e:
                     result += str(e)+'\n'
 
+            assert( construction_name != '' )
+            assert( construction_string != '' )
+            assert( construction_sem != '' )
+
             answers.append((time.time(),
                             construction_name,
                             construction_string,
@@ -209,6 +265,7 @@ def main():
         li.of,
         li.far,
         li.near,
+        li.on
     ]
     t_structicon = [
         st.OrientationAdjective,
@@ -219,7 +276,6 @@ def main():
         st.AdjectiveNounPhrase,
         st.MeasurePhrase,
         st.DegreeMeasurePhrase,
-        st.PartOfRelation,
         st.DistanceRelation,
         st.OrientationRelation,
         st.PartOfRelation,
@@ -249,16 +305,16 @@ def main():
         li.half,
         li.middle,
         li.side,
-        # li.red,
+        li.red,
         # li.orange,
         # li.yellow,
-        # li.green,
-        # li.blue,
+        li.green,
+        li.blue,
         # li.purple,
         # li.pink,
-        # li.black,
-        # li.white,
-        # li.gray,
+        li.black,
+        li.white,
+        li.gray,
         li.front,
         li.back,
         li.left,
@@ -266,8 +322,9 @@ def main():
         li.to,
         li.frm,
         li.of,
-        li.far,
-        li.near,
+        # li.far,
+        # li.near,
+        # li.on
     ]
     s_structicon = [
         st.OrientationAdjective,
@@ -298,8 +355,8 @@ def main():
     utils.logger('Done loading!')
     just_objects=True
     just_shapes=False
-    extrinsic=False
-    num_scenes = 64
+    extrinsic=True
+    num_scenes = 60
     args = [(teacher.copy(), student.copy(),
              just_objects,just_shapes,extrinsic,
              goal_type) 

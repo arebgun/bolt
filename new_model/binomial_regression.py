@@ -41,7 +41,7 @@ def main():
         return 1./(1+np.exp(-0.01*scale*(x-loc)))
 
     def sech_family_distribution(x, loc, scale, power=1):
-        return 1/(np.cosh(((x-loc)/scale))**power)
+        return 1/(np.cosh((angle_diff2(x,loc)/scale))**power)
 
     def double_logistic_function(x, loc, scale):
         return logistic_function(x,loc-2*scale,10*scale)*\
@@ -129,6 +129,9 @@ def main():
     function = functions['logistic']['func']
     bounds = functions['logistic']['bounds']
 
+    fig0, ax0 = plt.subplots()
+
+
     opt_function = opt.fmin_l_bfgs_b
     fig, (ax1, ax2) = plt.subplots(2,1)
     plt.subplots_adjust(left=0.25, bottom=0.25)
@@ -156,6 +159,13 @@ def main():
     l2, = ax2.plot(x, f2, lw=2, color='red')
     ax2.axis([-180, 180, 0, 1])
 
+    l0, = ax0.plot(x, f2, lw=2, color='red')
+    ax0.set_ylim((-0.1,1.1))
+    # l01 = ax0.scatter(train_xs[100:],train_ys[100:])
+    # ax0.axis([-0.2, 1.4, -0.1, 1.1])
+
+
+
 
     axcolor = 'lightgoldenrodyellow'
     axloc = plt.axes([0.25, 0.07, 0.65, 0.03], axisbg=axcolor)
@@ -177,14 +187,16 @@ def main():
                                                     num_trials,
                                                     xnoise=xnoise)
         print 'p',loc,scale
-        p0 = initial_params(train_xs, train_ys)
-        p1 = fit_function(opt_function,p0,function,train_xs,train_ys,**kwargs)
+        p1 = initial_params(train_xs, train_ys)
+        # p1 = fit_function(opt_function,p0,function,train_xs,train_ys,**kwargs)
         f2 = function(x,*p1)
         l2.set_ydata(f2)
+        l0.set_ydata(f2)
         # amp = samp.val
         # freq = sfreq.val
         # l.set_ydata(amp*np.sin(2*np.pi*freq*t))
         fig.canvas.draw_idle()
+        fig0.canvas.draw_idle()
     sloc.on_changed(update)
     sscale.on_changed(update)
     snoise.on_changed(update)

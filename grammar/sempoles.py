@@ -156,6 +156,9 @@ is_not_surface = pfunc.DiscreteProbFunc([('PointRepresentation',     1.0),
 not_surface_property = const.PropertyConstraint(feature=feats.referent_rep,
                                                 prob_func=is_not_surface)
 
+on = pfunc.DiscreteProbFunc([(True, 1.0)])
+on_property = const.RelationConstraint(feature=feats.contains,
+                                       prob_func=on)
 
 # Semi-Constructions
 
@@ -182,7 +185,9 @@ def OrientationRelate(self, direction):
                 not_surface_property,
                 not_contains_property,
                 const.RelationConstraint(feature=feats.angle_between,
-                                         prob_func=direction.sempole())
+                                         prob_func=direction.sempole()),
+                # const.RelationConstraint(feature=feats.distance_between,
+                #                          prob_func=near_func)
            ])
 
 def PartOfRelate(self):

@@ -39,6 +39,15 @@ class Constraint(object):
     def ref_applicability(self, potential_referent, **kwargs):
         return self.probability_func(self.feature.observe(potential_referent))
 
+    def quantity_applicability(self, quantities):
+        probs = self.probability_func(quantities)
+        if isinstance(quantities,np.ndarray):
+            probs[np.where(np.isnan(probs))] = 0
+        else:
+            if np.isnan(probs):
+                probs = 0
+        return probs
+
 
     # def applicabilities(self, potential_referents, **kwargs):
     #     return dict([(ref, self.applicability(ref, **kwargs)) 
@@ -74,9 +83,6 @@ class PropertyConstraint(Constraint):
         probs = [self.quantity_applicability(self.feature.observe(entity)) 
                  for entity in potential_referent]
         return np.product(probs)
-
-    def quantity_applicability(self, quantity):
-        return self.probability_func(quantity)
 
 
 class Degree(object):
@@ -271,9 +277,43 @@ class ConstraintSet(coll.MutableMapping):
         # ApplicabilityRegister.apps[self] = apps
         return apps
 
-    def quantity_applicability(self, context, quantity):
+    def quantity_applicability(self, context, quantities):
         app = 1
         for constraint in self.values():
             app *= constraint.quantity_applicability(context=context,
-                                                     quantity=quantity)
+                                                     quantity=quantities)
         return app
+
+    def judge_array(self, feature_list, feature_array):
+        result = []
+        feature_array = feature_array.T
+        probs = np.ones(feature_array[0].shape)
+        for constraint in self.values():
+            i = feature_list.index(constraint.feature)
+            # utils.logger(i)
+            # utils.logger(feature_array[i])
+            # utils.logger(constraint.quantity_applicability(feature_array[i]))
+            probs *= constraint.quantity_applicability(feature_array[i])
+            result.append(np.array(probs))
+        return result
+
+    def common(self, other):
+        common = []
+        for key in self.odict:
+            if key in other.odict:
+                c1 = self.odict[key]
+                c2 = other.odict[key]
+                shared = [key]
+                # if type(c1) == type(c2):
+                #     shared.append(type(c1).__name__)
+                if type(c1.probability_func) == type(c2.probability_func):
+                    shared.append(type(c1.probability_func).__name__)
+                common.append(shared)
+        return common
+
+    def tuples(self):
+        tups = []
+        for key in self.odict:
+            tups.append((key,))
+            tups.append((key,type(self.odict[key].probability_func).__name__))
+        return tups

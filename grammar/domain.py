@@ -1,5 +1,6 @@
 import numbers
 import numpy as np
+import utils
 
 class Domain(object):
     '''Base class'''
@@ -30,9 +31,16 @@ class NumericalDomain(Domain):
         return numarray
 
     def sample_mean_and_std(self, numarray, weights=None):
+        if len(numarray) < 1:
+            return None, None
+        # utils.logger(numarray)
+        # utils.logger(weights)
         w = np.where(np.logical_not(np.isnan(numarray)))
         numarray = numarray[w]
         if not weights is None: weights = weights[w]
+        if sum(weights) == 0:
+            return None, None
+        # utils.logger(weights)
         mean = np.average(numarray, weights=weights)
         std = np.average((numarray-mean)**2, weights=weights)
         return mean, std+self.epsilon
@@ -62,6 +70,10 @@ class CircularDomain(NumericalDomain):
 
     @staticmethod
     def angular_mean_and_std(radarray, weights=None):
+        if len(radarray) < 1 or sum(weights) == 0:
+            return None, None
+        # utils.logger(radarray)
+        # utils.logger(weights)
         sin = np.average(np.sin(radarray), weights=weights)
         cos = np.average(np.cos(radarray), weights=weights)
         mean = np.arctan2(sin, cos)
@@ -74,5 +86,8 @@ class CircularDomain(NumericalDomain):
         if not weights is None: weights = weights[w]
         mean, std = self.angular_mean_and_std(self.to_radians(numarray), 
                                               weights=weights)
-        return self.from_radians(mean), \
-               self.from_radians(std)-self.lower+self.epsilon
+        if mean is None:
+            return mean, std
+        else:
+            return self.from_radians(mean), \
+                   self.from_radians(std)-self.lower+self.epsilon
