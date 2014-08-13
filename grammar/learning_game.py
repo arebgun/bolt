@@ -53,36 +53,6 @@ def one_scene(args):
         else:
             potential_referents = context.get_all_potential_referents()
 
-        # test_parse = st.ExtrinsicReferringExpression([
-        #                 li.the,
-        #                 st.RelationNounPhrase([
-        #                     st.NounPhrase([li.objct]),
-        #                     st.RelationLandmarkPhrase([
-        #                         li.on,
-        #                         st.ExtrinsicReferringExpression([
-        #                             li.the,
-        #                             st.RelationNounPhrase([
-        #                                 st.AdjectiveNounPhrase([
-        #                                     st.AdjectivePhrase([
-        #                                         st.OrientationAdjective([
-        #                                             li.front])]),
-        #                                     li.half]),
-        #                                 st.RelationLandmarkPhrase([
-        #                                     st.PartOfRelation([
-        #                                         li.of]),
-        #                                     st.ReferringExpression([
-        #                                         li.the,
-        #                                         st.NounPhrase([
-        #                                             li.table])
-        #                                         ])])])])])])])
-
-        # f_surf = context.scene.landmarks['table'].representation.landmarks['f_surf']
-        # f_surf_app = cmn.Applicabilities([((f_surf,),1.0)])
-        # on = li.on.sempole().odict['contains']
-        # # for ref in context.get_potential_referents():
-        # refs = context.get_potential_referents()
-        # utils.logger(on.ref_applicabilities(context,refs,f_surf_app))
-        # exit()
         answers = []
         for referent in potential_referents:
             construction_name = None
@@ -94,28 +64,9 @@ def one_scene(args):
             else:
                 the_parses = teacher.landmark_parses
 
-            # parse_weights = teacher.weight_parses(referent, 
-            #                                       [test_parse])
-            # for weight, parse in parse_weights:
-            #     utils.logger(weight)
-            #     utils.logger(parse.prettyprint())
-            # utils.logger('\n\n\n\n\n\n\n')
-            # continue
-            # for parse in the_parses:
-            #     print parse.prettyprint()
-            #     print
-            # exit()
-
             parse_weights = teacher.weight_parses(referent, 
                                                   the_parses)
-            # for weight, parse in parse_weights[:10]:
-            #     utils.logger(weight)
-            #     utils.logger(parse.prettyprint())
-            # utils.logger('\n\n\n\n\n\n\n')
-            # continue
-            # exit()
-            # weights= np.array(zip(*parse_weights)[0])
-            # utils.logger(weights)
+
             parse = teacher.choose_top_parse(parse_weights)
 
             utterance = parse.print_sentence()
@@ -154,21 +105,13 @@ def one_scene(args):
                     # utils.logger('First time student has seen this construction')
                 else:
                     if len(completed) > 1:
-                        # utils.logger(parse)
-                        # utils.logger(parse.prettyprint())
                         completed = [(parse.equivalence(r),r) for r in completed]
                         completed.sort(reverse=True)
-                        # completed = [(parse.get_hole_size(),r) for r in completed]
-                        # completed.sort()
-                        # for e,c in completed[:5]:
-                        #     result += '%s' % c.prettyprint()
-                        #     result += '%s\n' % e
+
                         complete = completed[0][1]
                     else:
                         complete = completed[0]
                         
-                    # result += '%s\n' % complete.prettyprint()
-                    # result += '%s\n\n' % complete.sempole()
                     hole = complete.find_partials()[0].get_holes()[0]
                     construction_name = hole.unmatched_pattern.__name__
                     result += '%s\n' % construction_name
@@ -371,43 +314,3 @@ def main():
     f['all_answers'] = all_answers
     f.close()
     exit()
-
-
-    # scene_descs=sem.run.read_scenes('static_scenes/',normalize=True,image=True)
-
-    # # mpl.pyplot.ion()
-    # for scene, speaker, image in scene_descs:
-    #     # mpl.pyplot.imshow(image)
-    #     # mpl.pyplot.show()
-
-    #     context = cmn.Context(scene, speaker)
-    #     teacher.set_context(context)
-    #     student.set_context(context)
-
-    #     utils.logger(scene)
-    #     for referent in context.get_potential_referents():
-    #     # referent = random.choice(context.get_potential_referents())
-    #     # utils.logger(referent)
-    #         parse = teacher.choose_top_parse(
-    #                     teacher.weight_parses(
-    #                         referent, teacher.The_object__parses))
-
-    #         utterance = parse.print_sentence()
-
-    #         utils.logger('Teacher describes the %s as: %s' % (referent, utterance))
-
-    #         try:
-    #             guess = student.choose_referent(utterance)
-    #             utils.logger('Student guesses %s' % guess)
-    #         except AttributeError:
-    #             parses = student.parse(utterance)
-    #             parses = sorted(parses, key=op.attrgetter('hole_width'))
-
-    #             utils.logger('Student could not understand.')
-    #             parse = parses[0]
-    #             utils.logger('Best partial parse:\nnum_holes: '
-    #                          '%s, hole_width: %s\n%s' % 
-    #                          (parse.num_holes, parse.hole_width, 
-    #                           parse.current[0].prettyprint()))
-    #             for hole in parse.current[0].find_holes():
-    #                 utils.logger(hole.prettyprint())

@@ -4,15 +4,30 @@ import utils
 import numpy as np
 import collections as coll
 from common import Applicabilities
+import lexical_items as li
 
-class ApplicabilityRegister:
-    scene = None
-    apps = dict()
+# class SummableDefaultDict(coll.defaultdict):
+#     def __add__(self, other):
+#         keys = list(set(self.keys()+other.keys()))
+#         new = self.copy()
+#         for key in keys:
+#             new[key] += other[key]
+#         return new
 
-    @staticmethod
-    def reset(scene):
-        ApplicabilityRegister.scene = scene
-        ApplicabilityRegister.apps = dict()
+    # def __iadd__(self,other):
+    #     keys = list(set(self.keys()+other.keys()))
+    #     for key in keys:
+    #         self[key] += other[key]
+    #     return self
+
+# class ApplicabilityRegister:
+#     scene = None
+#     apps = dict()
+
+#     @staticmethod
+#     def reset(scene):
+#         ApplicabilityRegister.scene = scene
+#         ApplicabilityRegister.apps = dict()
 
 class Constraint(object):
 
@@ -37,7 +52,7 @@ class Constraint(object):
         return self.feature.domain
 
     def ref_applicability(self, potential_referent, **kwargs):
-        return self.probability_func(self.feature.observe(potential_referent))
+        return self.probability_func(self.feature.observe(potential_referent,string=True))
 
     def quantity_applicability(self, quantities):
         probs = self.probability_func(quantities)
@@ -132,6 +147,7 @@ class RelationConstraint(Constraint):
                     context=context,
                     referent=entity, 
                     relatum=relentity,
+                    string=True,
                     **kwargs))
                  for relentity in relatum])
             # utils.logger(self.probability_func)
@@ -222,7 +238,7 @@ class ConstraintSet(coll.MutableMapping):
             other.relatum_constraints = self.relatum_constraints
         return other
 
-    def ref_applicabilities(self, context, potential_referents, **kwargs):
+    def ref_applicabilities(self, context, potential_referents, separate=False, **kwargs):
         # if ApplicabilityRegister.scene == context.scene:
         #     if self in ApplicabilityRegister.apps:
         #         utils.logger('Recalling apps')
@@ -231,6 +247,16 @@ class ConstraintSet(coll.MutableMapping):
         #     utils.logger('Resetting ApplicabilityRegister')
         #     ApplicabilityRegister.reset(context.scene)
         # utils.logger('Calculating')
+        add_relatum_constraints = False
+        if self.relatum_constraints is None:
+            for constraint in self.values():
+                # utils.logger(constraint)
+                if isinstance(constraint, RelationConstraint):
+                    add_relatum_constraints = True
+                    utils.logger('Warning: relation with no landmark: %s' % self)
+
+            if add_relatum_constraints:
+                self.relatum_constraints = li.table_constraints
 
         if self.relatum_constraints is not None:
             # utils.logger(self.relatum_constraints)
@@ -238,41 +264,57 @@ class ConstraintSet(coll.MutableMapping):
             relata_apps = context.get_all_potential_referent_scores()
             relata_apps *= self.relatum_constraints.ref_applicabilities(context, 
                             relata_apps.keys())
-            relata, apps = zip(*relata_apps.items())
-            apps = np.array(apps)
-            appsum = apps.sum()
-            if appsum == 0:
-                apps[:] = 0
-            else:
-                apps = (apps**2)/float(appsum)
-            relata_apps = Applicabilities(zip(relata,apps))
+            # relata, apps = zip(*relata_apps.items())
+            # apps = np.array(apps)
+            # appsum = apps.sum()
+            # if appsum == 0:
+            #     apps[:] = 0
+            # else:
+            #     apps = (apps**2)/float(appsum)
+            # relata_apps = Applicabilities(zip(relata,apps))
             # for item, i in relata_apps.items():
             #     utils.logger('%s %s'%(i,item))
             # viewpoint = context.speaker.location
         else:
             relata_apps = None
-            # viewpoint = None
-            for constraint in self.values():
-                # utils.logger(constraint)
-                if isinstance(constraint, RelationConstraint):
-                    raise Exception('What')
+        #     # viewpoint = None
+        #     for constraint in self.values():
+        #         # utils.logger(constraint)
+        #         if isinstance(constraint, RelationConstraint):
+        #             utils.logger('Warning: relation with no landmark: %s' % self)# raise Exception('What')
 
         # utils.logger(self)
-        apps = Applicabilities([(ref,1.0) for ref in potential_referents])
-        for constraint in self.values():
-            ref_apps = constraint.ref_applicabilities(
-                        context=context, # <- Ignored if irrelevant
-                        potential_referents=potential_referents,
-                        relata_apps=relata_apps)
-                        # viewpoint=viewpoint) # <- Ignored if irrelevant
-            # utils.logger(constraint)
-            # utils.logger('                            Apps')
-            # for item,i in apps.items():
-            #     utils.logger('%s %s'%(i,item))
-            # utils.logger('                            Ref_apps')
-            # for item,i in ref_apps.items():
-            #     utils.logger('%s %s'%(i,item))
-            apps *= ref_apps
+        if separate:
+            apps = coll.defaultdict(list)
+            for constraint in self.values():
+                # utils.logger(apps)
+                ref_apps = constraint.ref_applicabilities(
+                            context=context, # <- Ignored if irrelevant
+                            potential_referents=potential_referents,
+                            relata_apps=relata_apps)
+                # utils.logger(ref_apps)
+                # apps += ref_apps
+                keys = list(set(apps.keys()+ref_apps.keys()))
+                for key in keys:
+                    apps[key].append(ref_apps[key])
+                # utils.logger(apps)
+
+        else:
+            apps = Applicabilities([(ref,1.0) for ref in potential_referents])
+            for constraint in self.values():
+                ref_apps = constraint.ref_applicabilities(
+                            context=context, # <- Ignored if irrelevant
+                            potential_referents=potential_referents,
+                            relata_apps=relata_apps)
+                            # viewpoint=viewpoint) # <- Ignored if irrelevant
+                # utils.logger(constraint)
+                # utils.logger('                            Apps')
+                # for item,i in apps.items():
+                #     utils.logger('%s %s'%(i,item))
+                # utils.logger('                            Ref_apps')
+                # for item,i in ref_apps.items():
+                #     utils.logger('%s %s'%(i,item))
+                apps *= ref_apps
 
         # ApplicabilityRegister.apps[self] = apps
         return apps

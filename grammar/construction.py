@@ -34,6 +34,13 @@ class Unknown(object):
     def collect_leaves(self):
         return [self.string]
 
+    def print_sentence(self):
+        leaves = self.collect_leaves()
+        return ' '.join(leaves)
+
+    def count(self):
+        return 1
+
 class LexicalItem(object):
     def __init__(self, regex, sempole):
         self.regex = regex
@@ -88,6 +95,9 @@ class LexicalItem(object):
     def applicabilities(self, context):
         potential_referent_scores = context.get_potential_referent_scores()
         return self.sempole.applicabilities(potential_referent_scores)
+
+    def count(self):
+        return 1
 
 
 class Construction(object):
@@ -174,18 +184,18 @@ class Construction(object):
         # print cls.pattern
         # print '  sequence',sequence
         if len(cls.pattern) == 1:
-            return partial_matches
-            # for start in range(len(sequence)):
-            #     for end in range(start+1, len(sequence)+1):
-            #         # print '    subsequence',sequence[start:end]
-            #         hole = cmn.Hole(cls.pattern[0],
-            #                         sequence[start:end])
-            #         partial_match = cmn.Match(start=start,
-            #                                   end=end,
-            #                                   construction=cls,
-            #                                   constituents=[hole])
-            #         partial_matches.append(partial_match)
             # return partial_matches
+            for start in range(len(sequence)):
+                for end in range(start+1, len(sequence)+1):
+                    # print '    subsequence',sequence[start:end]
+                    hole = cmn.Hole(cls.pattern[0],
+                                    sequence[start:end])
+                    partial_match = cmn.Match(start=start,
+                                              end=end,
+                                              construction=cls,
+                                              constituents=[hole])
+                    partial_matches.append(partial_match)
+            return partial_matches
             
 
         # First find all partial patterns missing 1 part
@@ -306,6 +316,9 @@ class Construction(object):
             for hole in holes:
                 hole_size += len(hole.print_sentence())
         return hole_size
+
+    def count(self):
+        return sum([c.count()+1 for c in self.constituents])
 
     def __hash__(self):
         return hash(self.prettyprint())

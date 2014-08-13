@@ -11,7 +11,7 @@ from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, Float, String, ForeignKey, DateTime, Boolean
 from sqlalchemy.orm import relationship, backref, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
-from sqlalchemy.ext.declarative import _declarative_constructor
+from sqlalchemy.ext.declarative.api import _declarative_constructor
 from sqlalchemy import func
 
 from utils import force_unicode, bigrams, trigrams, lmk_id, logger
@@ -24,8 +24,8 @@ from semantics import run
 from parse import parse_sentences, modify_parses, get_modparse, ParseError
 from models import SentenceParse
 
-import object_correction_testing
-import testing_testing
+# import object_correction_testing
+# import testing_testing
 
 from location_from_sentence import get_all_sentence_posteriors
 
@@ -222,6 +222,18 @@ if __name__ == '__main__':
         pass
     total = 0
 
+    dids = [245,265,351,366,370,410,525,538,737,797,800,812,850,858,859,883,889,
+    933,987,988,989,991,992,1043,1045,1092,1102,1115,1135,1142,1181,1206,1273,
+    1332,1420,1445,1462,1490,1527,1582,1697,1756,1764,1848,1893,1903,1917,1940,
+    2020,2028,2098,2191,2218,2277,2332,2338,2442,2443,2487,2489,2568,2569,2572,
+    2585,2632,2638,2650,2656,2680,2681,2798,2818,2828,2829,2871,2883,2887,2900,
+    2937,2938,2941,2977,2983,2986,3026,3042,3046,3088,3090,3096,3144,3183,3204,
+    3214,3223,3248,3287,3300,3312,3313,3345,3361,3435,3464,3473,3476,3485,3518,
+    3521,3555,3573,3584,3594,3618,3652,3684,3689,3746,3777,3788,3830,3836,3842,
+    3933,3940,3996,4023,4024,4037,4053,4065,4188,4200,4202,4232,4235,4260,4279,
+    4326,4397]
+
+
     # run.read_scenes(sys.argv[1])
     all_scenes   = []
     all_descs = []
@@ -234,7 +246,7 @@ if __name__ == '__main__':
         loc_descs    = []
         ids = []
         #print s.id, s.name
-        for scene, speaker in run.read_scenes(os.path.join(args.scene_directory,s.name), normalize=True):
+        for _, scene, speaker in run.read_scenes(os.path.join(args.scene_directory,s.name), normalize=True):
             logger( str(scene.landmarks['table'].representation.rect.width) + ', ' + str(scene.landmarks['table'].representation.rect.height))
             for t in tasks_descriptionquestion.query().filter(tasks_descriptionquestion.scene_id==s.id).all():
                 #print t.id, t.scene_id, t.entity_id, t.answer, t.object_description, t.location_description
@@ -249,9 +261,10 @@ if __name__ == '__main__':
                     if len(test_set[description_id]) < 5:
                         del test_set[description_id]
                     else:
-                        for binding in test_set[description_id]:
-                            turkers_correct.append( binding == int(entity_name) )
-                            bindings.append( 'object_%s' % binding )
+                        if description_id in dids:
+                            for binding in test_set[description_id]:
+                                turkers_correct.append( binding == int(entity_name) )
+                                bindings.append( 'object_%s' % binding )
                         test_set[description_id] = bindings
 
                 # print lmk, entity_name, lmk_desc, loc_desc
@@ -310,339 +323,339 @@ if __name__ == '__main__':
     print 'loaded', len(all_scenes), 'scenes'
     print 'Turkers_correct: Total: %i, Out of: %i, Fraction: %f' % (sum(turkers_correct),len(turkers_correct),float(sum(turkers_correct))/len(turkers_correct))
 
+    exit()
+#     #choose new test set
+#     from random import shuffle
+#     shuffle(all_ids)
+#     test_set = all_ids[:350]
 
-    #choose new test set
-    from random import shuffle
-    shuffle(all_ids)
-    test_set = all_ids[:350]
+#     # import shelve
+#     # f = shelve.open('testing_u1000_not_memory_Fri_Feb__8_145640_2013.shelf')
+#     # f['turk_answers'] = test_set
+#     # f.close()
+#     # exit()
 
-    # import shelve
-    # f = shelve.open('testing_u1000_not_memory_Fri_Feb__8_145640_2013.shelf')
-    # f['turk_answers'] = test_set
-    # f.close()
-    # exit()
+#     # for value in test_set.values():
+#     #     print value
+#     # exit()
 
-    # for value in test_set.values():
-    #     print value
-    # exit()
+#     # print words
+#     # print 'Sum:',sum(words.values())
+#     # # print typos
+#     # print 'Typos:',len(typos)
+#     # print 'Total:',total
+#     # print 'Good:',len(no_bad_words)
 
-    # print words
-    # print 'Sum:',sum(words.values())
-    # # print typos
-    # print 'Typos:',len(typos)
-    # print 'Total:',total
-    # print 'Good:',len(no_bad_words)
-
-    # import IPython
-    # IPython.embed()
-    # exit()
-
-
-    sp_db = SentenceParse.get_sentence_parse(all_descs[0])
-    try:
-        res = sp_db.all()[0]
-    except IndexError:
-
-        parses = parse_sentences(all_descs,n=5,threads=8)
-
-        # temp = tempfile.NamedTemporaryFile()
-        # for p in parses:
-        #     temp.write(p)
-        # temp.flush()
-        # proc = subprocess.Popen(['java -mx100m -cp stanford-tregex/stanford-tregex.jar \
-        #                           edu.stanford.nlp.trees.tregex.tsurgeon.Tsurgeon \
-        #                           -s -treeFile %s surgery/*' % temp.name],
-        #                         shell=True,
-        #                         stdout=subprocess.PIPE,
-        #                         stderr=subprocess.PIPE)
-        # modparses = proc.communicate()[0].splitlines()
-        # temp.close()
-        modparses = modify_parses(parses)
-
-        for i,chunk in enumerate(modparses[:]):
-            for j,modparse in enumerate(chunk):
-                if 'LANDMARK-PHRASE' in modparse:
-                    modparses[i] = modparse
-                    parses[i] = parses[i][j]
-                    break
-            if isinstance(modparses[i],list):
-                modparses[i] = modparses[i][0]
-                parses[i] = parses[i][0]
+#     # import IPython
+#     # IPython.embed()
+#     # exit()
 
 
-        for s,p,m in zip(all_descs,parses,modparses):
-            print s,'\n',p,'\n',m,'\n\n'
-            SentenceParse.add_sentence_parse(s,p,m)
-        exit("Parsed everything")
+#     sp_db = SentenceParse.get_sentence_parse(all_descs[0])
+#     try:
+#         res = sp_db.all()[0]
+#     except IndexError:
 
-    test_scenes = []
+#         parses = parse_sentences(all_descs,n=5,threads=8)
 
-    for s in all_scenes:
-        toremove = []
-        test_scene = {'scene':s['scene'],
-                      'speaker':s['speaker'],
-                      'lmks':[],
-                      'loc_descs':[],
-                      'ids':[]}
-        for i,(lmk,sentence_chunks, eyedee) in enumerate(zip(s['lmks'], s['loc_descs'], s['ids'])):
-            original = list(sentence_chunks)
-            # print i, lmk,
-            # for l in sentence_chunks:
-            #     print l,'--',
-            # print
-            for chunk in list(sentence_chunks):
-                try:
-                    parsetree, modparsetree = get_modparse(chunk)
-                    # print modparsetree
-                    # raw_input()
-#                    if ('(NP' in modparsetree or '(PP' in modparsetree):
-#                        sentence_chunks.remove(chunk)
-                   # if 'objects' in chunk:
-                   #     sentence_chunks.remove(chunk)
-#                    elif (' side' in chunk or
-#                          'end' in chunk or
-#                          'edge' in chunk or
-#                          'corner' in chunk or 
-#                          'middle' in chunk or 
-#                          'center' in chunk or
-#                          'centre' in chunk) and not ('table' in chunk):
-#                        sentence_chunks.remove(chunk)
-#                    elif 'viewer' in chunk or 'between' in chunk:
-#                        sentence_chunks.remove(chunk)
+#         # temp = tempfile.NamedTemporaryFile()
+#         # for p in parses:
+#         #     temp.write(p)
+#         # temp.flush()
+#         # proc = subprocess.Popen(['java -mx100m -cp stanford-tregex/stanford-tregex.jar \
+#         #                           edu.stanford.nlp.trees.tregex.tsurgeon.Tsurgeon \
+#         #                           -s -treeFile %s surgery/*' % temp.name],
+#         #                         shell=True,
+#         #                         stdout=subprocess.PIPE,
+#         #                         stderr=subprocess.PIPE)
+#         # modparses = proc.communicate()[0].splitlines()
+#         # temp.close()
+#         modparses = modify_parses(parses)
+
+#         for i,chunk in enumerate(modparses[:]):
+#             for j,modparse in enumerate(chunk):
+#                 if 'LANDMARK-PHRASE' in modparse:
+#                     modparses[i] = modparse
+#                     parses[i] = parses[i][j]
+#                     break
+#             if isinstance(modparses[i],list):
+#                 modparses[i] = modparses[i][0]
+#                 parses[i] = parses[i][0]
+
+
+#         for s,p,m in zip(all_descs,parses,modparses):
+#             print s,'\n',p,'\n',m,'\n\n'
+#             SentenceParse.add_sentence_parse(s,p,m)
+#         exit("Parsed everything")
+
+#     test_scenes = []
+
+#     for s in all_scenes:
+#         toremove = []
+#         test_scene = {'scene':s['scene'],
+#                       'speaker':s['speaker'],
+#                       'lmks':[],
+#                       'loc_descs':[],
+#                       'ids':[]}
+#         for i,(lmk,sentence_chunks, eyedee) in enumerate(zip(s['lmks'], s['loc_descs'], s['ids'])):
+#             original = list(sentence_chunks)
+#             # print i, lmk,
+#             # for l in sentence_chunks:
+#             #     print l,'--',
+#             # print
+#             for chunk in list(sentence_chunks):
+#                 try:
+#                     parsetree, modparsetree = get_modparse(chunk)
+#                     # print modparsetree
+#                     # raw_input()
+# #                    if ('(NP' in modparsetree or '(PP' in modparsetree):
+# #                        sentence_chunks.remove(chunk)
+#                    # if 'objects' in chunk:
+#                    #     sentence_chunks.remove(chunk)
+# #                    elif (' side' in chunk or
+# #                          'end' in chunk or
+# #                          'edge' in chunk or
+# #                          'corner' in chunk or 
+# #                          'middle' in chunk or 
+# #                          'center' in chunk or
+# #                          'centre' in chunk) and not ('table' in chunk):
+# #                        sentence_chunks.remove(chunk)
+# #                    elif 'viewer' in chunk or 'between' in chunk:
+# #                        sentence_chunks.remove(chunk)
     
-                except ParseError:
-                    sentence_chunks.remove(chunk)
-                    continue
+#                 except ParseError:
+#                     sentence_chunks.remove(chunk)
+#                     continue
 
-            if eyedee in test_set:
-                toremove.append(i)
-                test_scene['lmks'].append(lmk)
-                if len(sentence_chunks) == 0:
-                    test_scene['loc_descs'].append(original)
-                else:
-                    test_scene['loc_descs'].append(sentence_chunks)
-                test_scene['ids'].append(eyedee)
-            elif len(sentence_chunks) == 0:
-                toremove.append(i)
+#             if eyedee in test_set:
+#                 toremove.append(i)
+#                 test_scene['lmks'].append(lmk)
+#                 if len(sentence_chunks) == 0:
+#                     test_scene['loc_descs'].append(original)
+#                 else:
+#                     test_scene['loc_descs'].append(sentence_chunks)
+#                 test_scene['ids'].append(eyedee)
+#             elif len(sentence_chunks) == 0:
+#                 toremove.append(i)
             
-        test_scenes.append(test_scene)
+#         test_scenes.append(test_scene)
 
-        for i in reversed(toremove):
-            try:
-                no_bad_words.remove(s['ids'][i])
-            except:
-                pass
-            del s['lmks'][i]
-            del s['loc_descs'][i]
-            del s['ids'][i]
+#         for i in reversed(toremove):
+#             try:
+#                 no_bad_words.remove(s['ids'][i])
+#             except:
+#                 pass
+#             del s['lmks'][i]
+#             del s['loc_descs'][i]
+#             del s['ids'][i]
 
-    # all_meanings = speaker1.get_all_meanings(scene1)
+#     # all_meanings = speaker1.get_all_meanings(scene1)
 
-    # s = all_scenes[0]
-    # for lmk, loc_desc in zip(s['lmks'],s['loc_descs']):
-    #     print lmk,
-    #     for l in loc_desc:
-    #         print l,'--',
-    #     print
+#     # s = all_scenes[0]
+#     # for lmk, loc_desc in zip(s['lmks'],s['loc_descs']):
+#     #     print lmk,
+#     #     for l in loc_desc:
+#     #         print l,'--',
+#     #     print
 
-    # exit()
+#     # exit()
 
-    # f = open('meaning_annotations.txt')
-    # lines = f.readlines()
-    # f.close()
+#     # f = open('meaning_annotations.txt')
+#     # lines = f.readlines()
+#     # f.close()
 
-    # scene0descs = []
-    # for line in lines:
-    #     line = line.strip()
-    #     if line == '-'*48:
-    #         # scenes.append(scene)
-    #         # scene = []
-    #         break
-    #     else:
-    #         user, annotation = line.split(' ---- ')
-    #         user = [[x] for x in user.split(' -- ')]
-    #         annotation = [[None if y.lower() == 'none' else y for y in x.split('; ')] for x in annotation.split(' -- ')]
-    #         # print user,'----',annotation
-    #         scene0descs.append((user,annotation))
+#     # scene0descs = []
+#     # for line in lines:
+#     #     line = line.strip()
+#     #     if line == '-'*48:
+#     #         # scenes.append(scene)
+#     #         # scene = []
+#     #         break
+#     #     else:
+#     #         user, annotation = line.split(' ---- ')
+#     #         user = [[x] for x in user.split(' -- ')]
+#     #         annotation = [[None if y.lower() == 'none' else y for y in x.split('; ')] for x in annotation.split(' -- ')]
+#     #         # print user,'----',annotation
+#     #         scene0descs.append((user,annotation))
 
-    # data = all_scenes[0]
+#     # data = all_scenes[0]
 
-    # # if 'num_iterations' in data:
-    # #     scene, speaker = construct_training_scene(True)
-    # #     num_iterations = data['num_iterations']
-    # # else:
-    # scene = data['scene']
-    # speaker = data['speaker']
-    # num_iterations = len(data['loc_descs'])
+#     # # if 'num_iterations' in data:
+#     # #     scene, speaker = construct_training_scene(True)
+#     # #     num_iterations = data['num_iterations']
+#     # # else:
+#     # scene = data['scene']
+#     # speaker = data['speaker']
+#     # num_iterations = len(data['loc_descs'])
 
-    # # users,annotations = zip(*scene0descs)
-    # # for obj, l, sentences, annotations in zip(data['lmks'], data['loc_descs'],users, annotations):
-    # #     print obj, l, sentences, annotations
-    # # exit()
+#     # # users,annotations = zip(*scene0descs)
+#     # # for obj, l, sentences, annotations in zip(data['lmks'], data['loc_descs'],users, annotations):
+#     # #     print obj, l, sentences, annotations
+#     # # exit()
 
-    # step = 0.02
-    # utils.scene.set_scene(scene,speaker)
+#     # step = 0.02
+#     # utils.scene.set_scene(scene,speaker)
 
-    # scene_bb = scene.get_bounding_box()
-    # scene_bb = scene_bb.inflate( Vec2(scene_bb.width*0.5,scene_bb.height*0.5) )
-    # table = scene.landmarks['table'].representation.get_geometry()
+#     # scene_bb = scene.get_bounding_box()
+#     # scene_bb = scene_bb.inflate( Vec2(scene_bb.width*0.5,scene_bb.height*0.5) )
+#     # table = scene.landmarks['table'].representation.get_geometry()
 
-    # # step = 0.04
-    # loi = [lmk for lmk in scene.landmarks.values() if lmk.name != 'table']
-    # all_heatmaps_tupless, xs, ys = speaker.generate_all_heatmaps(scene, step=step, loi=loi)
+#     # # step = 0.04
+#     # loi = [lmk for lmk in scene.landmarks.values() if lmk.name != 'table']
+#     # all_heatmaps_tupless, xs, ys = speaker.generate_all_heatmaps(scene, step=step, loi=loi)
 
-    # loi_infos = []
-    # all_meanings = set()
-    # for obj_lmk,all_heatmaps_tuples in zip(loi, all_heatmaps_tupless):
+#     # loi_infos = []
+#     # all_meanings = set()
+#     # for obj_lmk,all_heatmaps_tuples in zip(loi, all_heatmaps_tupless):
 
-    #     lmks, rels, heatmapss = zip(*all_heatmaps_tuples)
-    #     meanings = zip(lmks,rels)
-    #     # print meanings
-    #     all_meanings.update(meanings)
-    #     loi_infos.append( (obj_lmk, meanings, heatmapss) )
+#     #     lmks, rels, heatmapss = zip(*all_heatmaps_tuples)
+#     #     meanings = zip(lmks,rels)
+#     #     # print meanings
+#     #     all_meanings.update(meanings)
+#     #     loi_infos.append( (obj_lmk, meanings, heatmapss) )
 
-    # all_heatmaps_tupless, xs, ys = speaker.generate_all_heatmaps(scene, step=step)
-    # all_heatmaps_tuples = all_heatmaps_tupless[0]
+#     # all_heatmaps_tupless, xs, ys = speaker.generate_all_heatmaps(scene, step=step)
+#     # all_heatmaps_tuples = all_heatmaps_tupless[0]
 
-    # object_meaning_applicabilities = {}
-    # for obj_lmk, ms, heatmapss in loi_infos:
-    #     for m,(h1,h2) in zip(ms, heatmapss):
-    #         ps = [p for (x,y),p in zip(list(product(xs,ys)),h1) if obj_lmk.representation.contains_point( Vec2(x,y) )]
-    #         if m not in object_meaning_applicabilities:
-    #             object_meaning_applicabilities[m] = {}
-    #         object_meaning_applicabilities[m][obj_lmk] = sum(ps)/len(ps)
+#     # object_meaning_applicabilities = {}
+#     # for obj_lmk, ms, heatmapss in loi_infos:
+#     #     for m,(h1,h2) in zip(ms, heatmapss):
+#     #         ps = [p for (x,y),p in zip(list(product(xs,ys)),h1) if obj_lmk.representation.contains_point( Vec2(x,y) )]
+#     #         if m not in object_meaning_applicabilities:
+#     #             object_meaning_applicabilities[m] = {}
+#     #         object_meaning_applicabilities[m][obj_lmk] = sum(ps)/len(ps)
 
-    # # k = len(loi)
-    # # for meaning_dict in object_meaning_applicabilities.values():
-    # #     total = sum( meaning_dict.values() )
-    # #     if total != 0:
-    # #         for obj_lmk in meaning_dict.keys():
-    # #             meaning_dict[obj_lmk] = meaning_dict[obj_lmk]/total - 1.0/k
-    # #         total = sum( [value for value in meaning_dict.values() if value > 0] )
-    # #         for obj_lmk in meaning_dict.keys():
-    # #             meaning_dict[obj_lmk] = (2 if meaning_dict[obj_lmk] > 0 else 1)*meaning_dict[obj_lmk] - total
+#     # # k = len(loi)
+#     # # for meaning_dict in object_meaning_applicabilities.values():
+#     # #     total = sum( meaning_dict.values() )
+#     # #     if total != 0:
+#     # #         for obj_lmk in meaning_dict.keys():
+#     # #             meaning_dict[obj_lmk] = meaning_dict[obj_lmk]/total - 1.0/k
+#     # #         total = sum( [value for value in meaning_dict.values() if value > 0] )
+#     # #         for obj_lmk in meaning_dict.keys():
+#     # #             meaning_dict[obj_lmk] = (2 if meaning_dict[obj_lmk] > 0 else 1)*meaning_dict[obj_lmk] - total
 
-    # sorted_meaning_lists = {}
+#     # sorted_meaning_lists = {}
 
-    # for m in object_meaning_applicabilities.keys():
-    #     for obj_lmk in object_meaning_applicabilities[m].keys():
-    #         if obj_lmk not in sorted_meaning_lists:
-    #             sorted_meaning_lists[obj_lmk] = []
-    #         sorted_meaning_lists[obj_lmk].append( (object_meaning_applicabilities[m][obj_lmk], m) )
-    # for obj_lmk in sorted_meaning_lists.keys():
-    #     sorted_meaning_lists[obj_lmk].sort(reverse=True)
+#     # for m in object_meaning_applicabilities.keys():
+#     #     for obj_lmk in object_meaning_applicabilities[m].keys():
+#     #         if obj_lmk not in sorted_meaning_lists:
+#     #             sorted_meaning_lists[obj_lmk] = []
+#     #         sorted_meaning_lists[obj_lmk].append( (object_meaning_applicabilities[m][obj_lmk], m) )
+#     # for obj_lmk in sorted_meaning_lists.keys():
+#     #     sorted_meaning_lists[obj_lmk].sort(reverse=True)
 
-    # users,annotations = zip(*scene0descs)
-    # for trajector, sentences, annotations in zip(s['lmks'],users,annotations):
-    #     probs, sorted_meanings = zip(*sorted_meaning_lists[trajector][:30])
-    #     probs = np.array(probs)# - min(probs)
-    #     probs /= probs.sum()
+#     # users,annotations = zip(*scene0descs)
+#     # for trajector, sentences, annotations in zip(s['lmks'],users,annotations):
+#     #     probs, sorted_meanings = zip(*sorted_meaning_lists[trajector][:30])
+#     #     probs = np.array(probs)# - min(probs)
+#     #     probs /= probs.sum()
 
-    #     for sentence,annotation in zip(sentences,annotations):
-    #         print sentence, annotation
-    #         for chunk in annotation:
-    #             if chunk is not None:
-    #                 try:
-    #                     golden_posteriors = get_all_sentence_posteriors(chunk, all_meanings, golden=True, printing=False)
-    #                 except ParseError as e:
-    #                     logger( e )
-    #                     prob = 0
-    #                     rank = len(meanings)-1
-    #                     entropy = 0
-    #                     ed = len(sentence)
-    #                     golden_log_probs.append( prob )
-    #                     golden_entropies.append( entropy )
-    #                     golden_ranks.append( rank )
-    #                     min_dists.append( ed )
-    #                     continue
-    #                 epsilon = 1e-15
-    #                 ps = [[golden_posteriors[lmk]*golden_posteriors[rel],(lmk,rel)] for lmk, rel in all_meanings]
-    #                 ps = sorted(ps,reverse=True)
-    #                 print chunk
-    #                 for p,m in ps[:10]:
-    #                     print p, m2s(*m)
-    #                 raw_input()
+#     #     for sentence,annotation in zip(sentences,annotations):
+#     #         print sentence, annotation
+#     #         for chunk in annotation:
+#     #             if chunk is not None:
+#     #                 try:
+#     #                     golden_posteriors = get_all_sentence_posteriors(chunk, all_meanings, golden=True, printing=False)
+#     #                 except ParseError as e:
+#     #                     logger( e )
+#     #                     prob = 0
+#     #                     rank = len(meanings)-1
+#     #                     entropy = 0
+#     #                     ed = len(sentence)
+#     #                     golden_log_probs.append( prob )
+#     #                     golden_entropies.append( entropy )
+#     #                     golden_ranks.append( rank )
+#     #                     min_dists.append( ed )
+#     #                     continue
+#     #                 epsilon = 1e-15
+#     #                 ps = [[golden_posteriors[lmk]*golden_posteriors[rel],(lmk,rel)] for lmk, rel in all_meanings]
+#     #                 ps = sorted(ps,reverse=True)
+#     #                 print chunk
+#     #                 for p,m in ps[:10]:
+#     #                     print p, m2s(*m)
+#     #                 raw_input()
 
-        # for i,(p,sm) in enumerate(zip(probs[:15],sorted_meanings[:15])):
-        #     lm,re = sm
-        #     logger( '%i: %f %s' % (i,p,m2s(*sm)) )
+#         # for i,(p,sm) in enumerate(zip(probs[:15],sorted_meanings[:15])):
+#         #     lm,re = sm
+#         #     logger( '%i: %f %s' % (i,p,m2s(*sm)) )
 
-    # # print 'good', good
-    # print 'bad', bad
+#     # # print 'good', good
+#     # print 'bad', bad
 
-    total = 0
-    print 'Train set:'
-    for s in all_scenes:
-        together = zip(s['loc_descs'],s['lmks'],s['ids'])
-        # together = [(None,None,None)]*len(together)
-        together = zip([None]*len(together),s['lmks'],s['ids'])
-        shuffle(together)
-        s['loc_descs'],s['lmks'],s['ids'] = zip(*together)
-        print '  ',len(s['loc_descs']), len(s['lmks'])
-        total+=len(s['lmks'])
-    print '   total:',total
-    total = 0
-    print 'Test set:'
-    for s in test_scenes:
-        print '  ',len(s['loc_descs']), len(s['lmks'])
-        total+=len(s['lmks'])
-    print '   total:',total
-    print len(no_bad_words)
+#     total = 0
+#     print 'Train set:'
+#     for s in all_scenes:
+#         together = zip(s['loc_descs'],s['lmks'],s['ids'])
+#         # together = [(None,None,None)]*len(together)
+#         together = zip([None]*len(together),s['lmks'],s['ids'])
+#         shuffle(together)
+#         s['loc_descs'],s['lmks'],s['ids'] = zip(*together)
+#         print '  ',len(s['loc_descs']), len(s['lmks'])
+#         total+=len(s['lmks'])
+#     print '   total:',total
+#     total = 0
+#     print 'Test set:'
+#     for s in test_scenes:
+#         print '  ',len(s['loc_descs']), len(s['lmks'])
+#         total+=len(s['lmks'])
+#     print '   total:',total
+#     print len(no_bad_words)
 
-    # f['all_scenes'] = all_scenes
-    # f['test_scenes'] = test_scenes
-    # f['test_set'] = test_set
+#     # f['all_scenes'] = all_scenes
+#     # f['test_scenes'] = test_scenes
+#     # f['test_set'] = test_set
 
-    # all_scenes2 = f['all_scenes']
-    # test_scenes2 = f['test_scenes']
-    # test_set2 = f['test_set']
-    # f.close()
+#     # all_scenes2 = f['all_scenes']
+#     # test_scenes2 = f['test_scenes']
+#     # test_set2 = f['test_set']
+#     # f.close()
 
-    # for i,(scene_desc, test_scene_desc) in enumerate(zip(all_scenes2,all_scenes2)):
+#     # for i,(scene_desc, test_scene_desc) in enumerate(zip(all_scenes2,all_scenes2)):
 
-    #     scene = scene_desc['scene']
-    #     speaker = scene_desc['speaker']
-    #     assert(scene == test_scene_desc['scene'])
-    #     assert(speaker == test_scene_desc['speaker'])
+#     #     scene = scene_desc['scene']
+#     #     speaker = scene_desc['speaker']
+#     #     assert(scene == test_scene_desc['scene'])
+#     #     assert(speaker == test_scene_desc['speaker'])
 
-    testing_testing.autocorrect(
-        all_scenes,
-        test_scenes,
-        test_set,
-        scale=args.update_scale, 
-        num_processors=args.num_processors, 
-        num_samples=args.num_samples,
-        tag=args.tag,
-        step=0.02,
-        chunksize=1)
+#     testing_testing.autocorrect(
+#         all_scenes,
+#         test_scenes,
+#         test_set,
+#         scale=args.update_scale, 
+#         num_processors=args.num_processors, 
+#         num_samples=args.num_samples,
+#         tag=args.tag,
+#         step=0.02,
+#         chunksize=1)
 
-    # object_correction_testing.autocorrect(1,
-    #     scale=args.update_scale, 
-    #     num_processors=args.num_processors, 
-    #     num_samples=args.num_samples, 
-    #     scene_descs=all_scenes,
-    #     # learn_objects=True,
-    #     # tag = args.tag,
-    #     golden_metric=False, 
-    #     mass_metric=False, 
-    #     student_metric=False,
-    #     choosing_metric=False, 
-    #     step=0.04)
+#     # object_correction_testing.autocorrect(1,
+#     #     scale=args.update_scale, 
+#     #     num_processors=args.num_processors, 
+#     #     num_samples=args.num_samples, 
+#     #     scene_descs=all_scenes,
+#     #     # learn_objects=True,
+#     #     # tag = args.tag,
+#     #     golden_metric=False, 
+#     #     mass_metric=False, 
+#     #     student_metric=False,
+#     #     choosing_metric=False, 
+#     #     step=0.04)
 
-    # object_correction_testing.autocorrect(1,
-    #     scale=args.update_scale, 
-    #     num_processors=args.num_processors, 
-    #     num_samples=args.num_samples, 
-    #     scene_descs=test_scenes,
-    #     learn_objects=False,
-    #     tag = args.tag,
-    #     golden_metric=False, 
-    #     mass_metric=False, 
-    #     student_metric=False,
-    #     choosing_metric=False, 
-    #     step=0.02)
+#     # object_correction_testing.autocorrect(1,
+#     #     scale=args.update_scale, 
+#     #     num_processors=args.num_processors, 
+#     #     num_samples=args.num_samples, 
+#     #     scene_descs=test_scenes,
+#     #     learn_objects=False,
+#     #     tag = args.tag,
+#     #     golden_metric=False, 
+#     #     mass_metric=False, 
+#     #     student_metric=False,
+#     #     choosing_metric=False, 
+#     #     step=0.02)
 
-#    print 'trained on:',len(all_scenes[0]['lmks'])+len(all_scenes[1]['lmks'])+len(all_scenes[2]['lmks'])+len(all_scenes[3]['lmks'])
-#    print 'tested on:',len(all_scenes[4]['lmks'])
-    print 'Trained on:',len(all_scenes[0]['lmks'])+len(all_scenes[1]['lmks'])+len(all_scenes[2]['lmks'])+len(all_scenes[3]['lmks'])+len(all_scenes[4]['lmks'])
-    print 'Tested on:',len(test_scenes[0]['lmks'])+len(test_scenes[1]['lmks'])+len(test_scenes[2]['lmks'])+len(test_scenes[3]['lmks'])+len(test_scenes[4]['lmks'])
+# #    print 'trained on:',len(all_scenes[0]['lmks'])+len(all_scenes[1]['lmks'])+len(all_scenes[2]['lmks'])+len(all_scenes[3]['lmks'])
+# #    print 'tested on:',len(all_scenes[4]['lmks'])
+#     print 'Trained on:',len(all_scenes[0]['lmks'])+len(all_scenes[1]['lmks'])+len(all_scenes[2]['lmks'])+len(all_scenes[3]['lmks'])+len(all_scenes[4]['lmks'])
+#     print 'Tested on:',len(test_scenes[0]['lmks'])+len(test_scenes[1]['lmks'])+len(test_scenes[2]['lmks'])+len(test_scenes[3]['lmks'])+len(test_scenes[4]['lmks'])

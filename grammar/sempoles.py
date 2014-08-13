@@ -58,9 +58,9 @@ is_edge = pfunc.DiscreteProbFunc([('EDGE', 1.0)])
 edge_property = const.PropertyConstraint(feature=feats.referent_class,
                                          prob_func=is_edge)
 
-is_end = pfunc.DiscreteProbFunc([('END', 1.0)])
+# is_end = pfunc.DiscreteProbFunc([('END', 1.0)])
 end_property = const.PropertyConstraint(feature=feats.referent_class,
-                                         prob_func=is_end)
+                                         prob_func=is_edge)
 
 is_half = pfunc.DiscreteProbFunc([('HALF', 1.0)])
 half_property = const.PropertyConstraint(feature=feats.referent_class,
@@ -70,9 +70,9 @@ is_middle = pfunc.DiscreteProbFunc([('MIDDLE', 1.0)])
 middle_property = const.PropertyConstraint(feature=feats.referent_class,
                                            prob_func=is_middle)
 
-is_side = pfunc.DiscreteProbFunc([('SIDE', 1.0)])
+# is_side = pfunc.DiscreteProbFunc([('SIDE', 1.0)])
 side_property = const.PropertyConstraint(feature=feats.referent_class,
-                                         prob_func=is_side)
+                                         prob_func=is_edge)
 
 
 # Colors
@@ -123,6 +123,7 @@ gray_property = const.PropertyConstraint(feature=feats.referent_color,
 far_func = pfunc.LogisticSigmoid(loc=0.55, scale=0.1, domain=None)
 
 near_func = pfunc.LogisticSigmoid(loc=0.15, scale=-0.1, domain=None)
+less_near_func = pfunc.LogisticSigmoid(loc=0.50, scale=-0.1, domain=None)
 
 
 # Directions
@@ -145,7 +146,7 @@ contains_property = const.RelationConstraint(feature=feats.contains,
 
 
 # Common to Distance and Orientation Relations
-zero_false = pfunc.DiscreteProbFunc([(0.0, 1.0)])
+zero_false = pfunc.DiscreteProbFunc([('False', 1.0)])
 not_contains_property = const.RelationConstraint(feature=feats.contains,
                                                  prob_func=zero_false)
 
@@ -165,7 +166,9 @@ on_property = const.RelationConstraint(feature=feats.contains,
 def OrientationAdjectify(self, direction):
     return const.ConstraintSet([
                 const.RelationConstraint(feature=feats.angle_between,
-                                         prob_func=direction.sempole())
+                                         prob_func=direction.sempole()),
+                # const.RelationConstraint(feature=feats.distance_between,
+                #                          prob_func=near_func)
            ])
 
 # def ContainmentRelate()
@@ -186,11 +189,12 @@ def OrientationRelate(self, direction):
                 not_contains_property,
                 const.RelationConstraint(feature=feats.angle_between,
                                          prob_func=direction.sempole()),
-                # const.RelationConstraint(feature=feats.distance_between,
-                #                          prob_func=near_func)
+                const.RelationConstraint(feature=feats.distance_between,
+                                         prob_func=less_near_func)
            ])
 
 def PartOfRelate(self):
+    # [c.sempole() for c in self.constituents]
     return const.ConstraintSet([
                 const.RelationConstraint(feature=feats.part_of,
                                          prob_func=is_true)

@@ -75,6 +75,11 @@ class ReferringExpression(struct.Construction):
     arg_indices = [0,1]
     function = sp.ArticleCombine
 
+class ReferringExpression2(ReferringExpression):
+    pattern = [NounPhrase]
+    arg_indices = [0]
+    function = sp.ReturnUnaltered
+
 class RelationLandmarkPhrase(struct.Construction):
     pattern = [struct.Relation, ReferringExpression]
     arg_indices = [0,1]
@@ -90,6 +95,10 @@ class ExtrinsicReferringExpression(ReferringExpression):
     arg_indices = [0,1]
     function = sp.ArticleCombine
 
+class ExtrinsicReferringExpression2(ReferringExpression):
+    pattern = [RelationNounPhrase]
+    arg_indices = [0]
+    function = sp.ReturnUnaltered
 
 
 constructions_list = [

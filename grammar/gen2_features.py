@@ -23,6 +23,16 @@ def __relatum_rep(relatum, **kwargs):
         return None
     return relatum.representation.__class__.__name__
 
+def __relatum_color(relatum, **kwargs):
+    if relatum is None:
+        return None
+    return relatum.color
+
+def __relatum_class(relatum, **kwargs):
+    if relatum is None:
+        return None
+    return relatum.object_class
+
 def __referent_color(referent, **kwargs):
     return referent.color
 
@@ -51,25 +61,28 @@ def __not_equal(referent, relatum, **kwargs):
 def __part_of(referent, relatum, **kwargs):
     if relatum is None:
         return None
-    return referent.get_parent_landmark() == relatum
+    return bool(referent.get_parent_landmark() == relatum)
 
-def __contains(referent, relatum, **kwargs):
+def __contains(referent, relatum, string=False, **kwargs):
     if relatum is None:
         return None
     c = relatum.contains(referent)
     # utils.logger("%s %s %s" % (c,referent,relatum))
-    return c >= 0.8
+    b = bool(c >= 0.2)#0.8)
+    if string:
+        b = str(b)
+    return b
 
 def __distance_between(referent, relatum, **kwargs):
     if relatum is None:
-        return None
+        return float('nan')
     distance = referent.distance_to(relatum.representation)
     # print referent, relatum, distance
     return distance
 
 def __angle_between(referent, relatum, context, **kwargs):
     if relatum is None:
-        return None
+        return float('nan')
     viewpoint = context.speaker.get_head_on_viewpoint(relatum)
     # viewpoint = speaker.get_headon_viewpoint(referent)
     angle = relatum.angle_between(viewpoint, referent)
@@ -85,8 +98,6 @@ referent_known = feat.Feature(measure_func=__referent_known,
                               domain=dom.DiscreteDomain('referent_known', bool))
 referent_rep = feat.Feature(measure_func=__referent_rep,
                             domain=dom.DiscreteDomain('referent_rep', str))
-relatum_rep = feat.Feature(measure_func=__relatum_rep,
-                           domain=dom.DiscreteDomain('relatum_rep', str))
 referent_color = feat.Feature(measure_func=__referent_color,
                               domain=dom.DiscreteDomain('referent_color', str))
 referent_class = feat.Feature(measure_func=__referent_class,
@@ -99,6 +110,12 @@ referent_length = feat.Feature(measure_func=__referent_length,
                                domain=dom.Domain('referent_length', float))
 referent_volume = feat.Feature(measure_func=__referent_volume,
                                domain=dom.Domain('referent_volume', float))
+relatum_rep = feat.Feature(measure_func=__relatum_rep,
+                           domain=dom.DiscreteDomain('relatum_rep', str))
+relatum_color = feat.Feature(measure_func=__relatum_color,
+                           domain=dom.DiscreteDomain('relatum_color', str))
+relatum_class = feat.Feature(measure_func=__relatum_class,
+                           domain=dom.DiscreteDomain('relatum_class', str))
 part_of = feat.Feature(measure_func=__part_of,
                        domain=dom.DiscreteDomain('part_of', bool))
 contains = feat.Feature(measure_func=__contains,
@@ -113,9 +130,11 @@ feature_list = [
     # group_cardinality,
     referent_known,
     referent_rep,
-    relatum_rep,
     referent_color,
     referent_class,
+    # relatum_rep,
+    # relatum_color,
+    # relatum_class, 
     part_of,
     contains,
     distance_between,

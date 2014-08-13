@@ -313,3 +313,9 @@ def ngrams(tokens, n, start_tk='<s>', end_tk='</s>'):
 
 bigrams = partial(ngrams, n=2)
 trigrams = partial(ngrams, n=3)
+
+def chunks(l, n):
+    """ Yield successive n-sized chunks from l.
+    """
+    for i in xrange(0, len(l), n):
+        yield l[i:i+n]

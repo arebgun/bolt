@@ -191,30 +191,43 @@ def recursive_parse(unfinished_parse, structicon, max_holes=0):
     return parses
 
 def queue_parse(lexical_parses, structicon, max_holes=0):
-    unfin_parses = set(lexical_parses)
+    unfin_parses = list(set(lexical_parses))
     fin_parses = set()
+    tried_parses = set()
+    # unfin_parses = lexical_parses
+    # unfin_parses.add = unfin_parses.append
+    # fin_parses = []
+    # fin_parses.add = fin_parses.append
 
-    while len(unfin_parses) > 0:
-        # utils.logger('Finished: %s, Unfinished %s           ' %(len(fin_parses),len(unfin_parses)), overwrite=True)
+    while len(unfin_parses) > 0 and len(tried_parses) < 300000:
+        # utils.logger('Finished: %s, Unfinished %s, Tried %s           ' %(len(fin_parses),len(unfin_parses),len(tried_parses)), overwrite=True)
         unfinished_parse = unfin_parses.pop()
         for c in structicon:
             cmatches = c.match(unfinished_parse.current)
             for match in cmatches:
                 new_parse = unfinished_parse.update(match)
-                if len(new_parse.current) == 1:
-                    fin_parses.add(new_parse)
-                else:
-                    unfin_parses.add(new_parse)
+                if new_parse not in tried_parses:
+                    tried_parses.add(new_parse)
+                    if len(new_parse.current) == 1:
+                        fin_parses.add(new_parse)
+                        # fin_parses.append(new_parse)
+                    else:
+                        # unfin_parses.add(new_parse)
+                        unfin_parses.append(new_parse)
                 
             else:
                 if unfinished_parse.num_holes < max_holes:
                     partial_matches = c.partially_match(unfinished_parse.current)
                     for match in partial_matches:
                         new_parse = unfinished_parse.update(match)
-                        if len(new_parse.current) == 1:
-                            fin_parses.add(new_parse)
-                        else:
-                            unfin_parses.add(new_parse)
+                        if new_parse not in tried_parses:
+                            tried_parses.add(new_parse)
+                            if len(new_parse.current) == 1:
+                                fin_parses.add(new_parse)
+                                # fin_parses.append(new_parse)
+                            else:
+                                # unfin_parses.add(new_parse)
+                                unfin_parses.append(new_parse)
     # utils.logger('')
     return fin_parses
 

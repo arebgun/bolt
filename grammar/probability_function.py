@@ -146,10 +146,10 @@ class ContinuousProbFunc(ProbabilityFunction):
         loc, scale = cls.estimate_parameters(domain, xs, ys, weights)
         if loc is None:
             return None
-        # xs = np.array(xs,dtype=float)
-        # ys = np.array(ys,dtype=float)
-        # kwargs = dict(approx_grad=True, disp=False, maxfun=5)
-        # loc, scale = cls.fit_function((loc,scale),cls.shape_function,domain,xs,ys,weights,**kwargs)
+        xs = np.array(xs,dtype=float)
+        ys = np.array(ys,dtype=float)
+        kwargs = dict(approx_grad=True, disp=False, maxfun=5)
+        loc, scale = cls.fit_function((loc,scale),cls.shape_function,domain,xs,ys,weights,**kwargs)
         return cls(loc, scale, domain)
 
 

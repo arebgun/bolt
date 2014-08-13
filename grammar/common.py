@@ -1,5 +1,6 @@
 import collections as coll
 import numpy as np
+import operator as op
 
 def indent(lines, amount=2, ch=' '):
     padding = amount * ch
@@ -21,6 +22,17 @@ class Applicabilities(coll.defaultdict):
                 pairs.append((key, self[key]*other[key]))
         product = Applicabilities(pairs)
         return product
+
+    # def __add__(self, other):
+        
+
+    # def listify(self):
+    #     for key in self.keys():
+    #         self[key] = list(self[key])
+
+    # def delistify(self):
+    #     for key in self.keys():
+    #         self[key] = reduce(op.mul,self[key],1)
 
     def uniquify(self):
         keys, apps = zip(*self.items())
@@ -76,7 +88,9 @@ class Match(object):
             for c in constituents:
                 if isinstance(c, Hole):
                     self.num_holes += 1
-                    self.hole_width += len(c.unmatched_sequence)
+                    for el in c.unmatched_sequence:
+                        self.hole_width += len(el.print_sentence())
+                    # self.hole_width += len(c.unmatched_sequence)
        
     def __repr__(self):
         return '<%s %s>'%(self.construction,(self.start,self.end))
@@ -125,6 +139,9 @@ class Hole(object):
         for item in self.unmatched_sequence:
             string += indent(item.prettyprint())
         return string
+
+    def count(self):
+        return sum([el.count() for el in self.unmatched_sequence])
 
 
 def tuple_extend(tup, to_extend):
